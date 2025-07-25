@@ -1,0 +1,280 @@
+<%- include('layouts/header'); -%>
+<body>
+  <%- include('layouts/navbar'); -%>
+
+  <div class="container mt-5 pt-5">
+    <div class="row justify-content-center">
+      <!-- Main Box Outline for Aptitude Test -->
+      <!-- <div class="col-md-10"> -->
+        <div class="card shadow-lg" style="width: 1500px;">
+          <div class="card-body">
+
+            <!-- Title Section -->
+            <div class="text-center mb-4" style="font-family: 'Times new roman', sans-serif; font-weight: bold;">
+              <h1>Aptitude Test</h1>
+            </div>
+
+            <div class="row">
+              <!-- Right Section for Timer and Navigation -->
+              <div class="col-md-3">
+                <!-- Timer and Navigation with Scroll -->
+                <div class="card bg-light mb-3 text-center" style="height: 100%; max-height: 400px;  overflow-y: auto;">
+                  <div class="card-body">
+                    <!-- Add XP Section above timer -->
+                    <div class="xp-section mb-3" style="background: #2C3E50; color: white; padding: 10px; border-radius: 8px;">
+                      <div class="level-badge" style="font-size: 1.2rem; font-weight: bold;">
+                        <i class="fas fa-star"></i> Level <span id="user-level">1</span>
+                      </div>
+                      <div class="xp-progress mt-2">
+                        <div class="progress" style="height: 8px;">
+                          <div id="xp-bar" class="progress-bar bg-warning" role="progressbar" style="width: 0%"></div>
+                        </div>
+                        <small class="mt-1 d-block">XP: <span id="current-xp">0</span>/<span id="next-level-xp">100</span></small>
+                      </div>
+                    </div>
+
+                    <h5 class="card-title">Time Left</h5>
+                    <div id="timer" class="display-4">60:00</div>
+                    <!-- Start Test Button -->
+                    <button id="start-btn" class="btn btn-primary btn-lg mt-3" onclick="startTest()">Start Test</button>
+                  </div>
+              
+                  <!-- Question Navigation -->
+                  <div class="card-body">
+                    <h5 class="card-title" >Jump to Question</h5>
+              
+                    <h6 class="mt-3" style="font-family: 'Times new roman', sans-serif; font-weight: bold;">Verbal Ability</h6>
+                    <% questions.filter(q => q.section === 'Verbal Ability').forEach((question, index) => { %>
+                      <button type="button" id="nav-verbal-<%= index %>" class="btn btn-outline-danger btn-sm mb-1" onclick="jumpToQuestion(<%= index %>)">Q<%= index + 1 %></button>
+                    <% }) %>
+              
+                    <h6 class="mt-3" style="font-family: 'Times new roman', sans-serif; font-weight: bold;">Logical Reasoning</h6>
+                    <% questions.filter(q => q.section === 'Logical Reasoning').forEach((question, index) => { %>
+                      <button type="button" id="nav-logical-<%= index %>" class="btn btn-outline-danger btn-sm mb-1" onclick="jumpToQuestion(<%= index + 20 %>)">Q<%= index + 1 %></button>
+                    <% }) %>
+              
+                    <h6 class="mt-3" style="font-family: 'Times new roman', sans-serif; font-weight: bold;">Quantitative Aptitude</h6>
+                    <% questions.filter(q => q.section === 'Quantitative Aptitude').forEach((question, index) => { %>
+                      <button type="button" id="nav-quant-<%= index %>" class="btn btn-outline-danger btn-sm mb-1" onclick="jumpToQuestion(<%= index + 40 %>)">Q<%= index + 1 %></button>
+                    <% }) %>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Left Section for Questions -->
+              <div class="col-md-9">
+                <!-- Questions Section -->
+                <form id="aptitudeForm" action="/responses/submit" method="POST" style="display: none;" onsubmit="disableSubmitButton()">
+                  <div id="questions-container">
+                    <% questions.forEach((question, index) => { %>
+                      <div class="card mb-4 question" id="question-<%= index %>" style="display: <%= index === 0 ? 'block' : 'none' %>;">
+                        <div class="card-body">
+                          <h5 class="card-title">Q<%= index + 1 %>: <%= question.questionText %></h5>
+                          <div class="row" style="padding-top: 50px;">
+                            <% Object.entries(question.options).forEach(([key, value], optIndex) => { %>
+                              <div class="col-md-6 mb-2" style="padding-bottom: 25px;">
+                                <div class="form-check">
+                                  <input class="form-check-input" type="radio" name="question-<%= question._id %>" value="<%= key %>">
+                                  <label class="form-check-label">
+                                    (<%= key %>) <%= value %>
+                                  </label>
+                                </div>
+                              </div>
+                            <% }) %>
+                          </div>
+
+                          <!-- Navigation buttons -->
+                          <div class="d-flex justify-content-between mt-3" style="padding-top: 25px;">
+                            <button type="button" class="btn btn-secondary" onclick="previousQuestion()">Previous</button>
+                            <button type="button" class="btn btn-primary" onclick="nextQuestion()">Next</button>
+                            <button type="button" class="btn btn-success" onclick="saveAnswer('<%= question._id %>', <%= index %>)">Save and Next</button>
+                          </div>
+                        </div>
+                      </div>
+                    <% }) %>
+                  </div>
+
+                  <!-- Submit Test Button -->
+                  <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-danger btn-lg">Submit Test</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      <!-- </div> -->
+    </div>
+  </div>
+
+  <%- include('layouts/footer'); -%>
+
+  <!-- Timer and Navigation Scripts -->
+  <script>
+    let timer;
+    let totalTime = 3600; // 60 minutes in seconds
+    let currentQuestion = 0;
+    let answers = {}; // Store user answers
+
+    // XP System
+    let userXP = 0;
+    let userLevel = 1;
+    const baseXP = 100; // Base XP needed for first level
+
+    function calculateXPForLevel(level) {
+      return baseXP * level;
+    }
+
+    function awardXP(amount) {
+      userXP += amount;
+      const nextLevelXP = calculateXPForLevel(userLevel);
+      
+      // Check for level up
+      if (userXP >= nextLevelXP) {
+        userLevel++;
+        // Play level up animation
+        showLevelUpAnimation();
+      }
+      
+      // Update UI
+      document.getElementById('current-xp').textContent = userXP;
+      document.getElementById('next-level-xp').textContent = calculateXPForLevel(userLevel);
+      document.getElementById('user-level').textContent = userLevel;
+      
+      // Update progress bar
+      const progress = (userXP % calculateXPForLevel(userLevel)) / calculateXPForLevel(userLevel) * 100;
+      document.getElementById('xp-bar').style.width = `${progress}%`;
+    }
+
+    function showLevelUpAnimation() {
+      const levelUpAlert = document.createElement('div');
+      levelUpAlert.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(44, 62, 80, 0.9);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        animation: fadeInOut 2s forwards;
+        z-index: 1000;
+      `;
+      levelUpAlert.innerHTML = `
+        <h3>🎉 Level Up!</h3>
+        <p>You reached Level ${userLevel}</p>
+      `;
+      document.body.appendChild(levelUpAlert);
+      
+      setTimeout(() => {
+        levelUpAlert.remove();
+      }, 2000);
+    }
+
+    // Start the test and the timer
+    function startTest() {
+      document.getElementById('start-btn').style.display = 'none'; // Hide start button
+      document.getElementById('aptitudeForm').style.display = 'block'; // Show questions
+
+      timer = setInterval(() => {
+        const minutes = Math.floor(totalTime / 60);
+        const seconds = totalTime % 60;
+        document.getElementById('timer').innerHTML = `${minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
+        totalTime--;
+
+        if (totalTime < 0) {
+          clearInterval(timer);
+          alert("Time's up! Submitting your test.");
+          document.getElementById('aptitudeForm').submit(); // Automatically submit when time's up
+        }
+      }, 1000);
+    }
+
+    // Jump to a specific question
+    function jumpToQuestion(questionNum) {
+      document.querySelectorAll('.question').forEach((q, i) => {
+        q.style.display = i === questionNum ? 'block' : 'none'; // Display the selected question
+      });
+      currentQuestion = questionNum;
+    }
+
+    // Go to the next question
+    function nextQuestion() {
+      let questions = document.querySelectorAll('.question');
+      if (currentQuestion < questions.length - 1) {
+        questions[currentQuestion].style.display = 'none';
+        currentQuestion++;
+        questions[currentQuestion].style.display = 'block';
+      }
+    }
+
+    // Go to the previous question
+    function previousQuestion() {
+      let questions = document.querySelectorAll('.question');
+      if (currentQuestion > 0) {
+        questions[currentQuestion].style.display = 'none';
+        currentQuestion--;
+        questions[currentQuestion].style.display = 'block';
+      }
+    }
+
+    // Modify saveAnswer function to include XP rewards
+    function saveAnswer(questionId, questionIndex) {
+      let selectedOption = document.querySelector(`input[name="question-${questionId}"]:checked`);
+      if (selectedOption) {
+        // Original save answer logic
+        answers[questionId] = selectedOption.value;
+        const section = getSection(questionIndex);
+        let navIndex = 0;
+        if (section === 'verbal') {
+          navIndex = questionIndex;
+        } else if (section === 'logical') {
+          navIndex = questionIndex - 20;
+        } else if (section === 'quant') {
+          navIndex = questionIndex - 40;
+        }
+
+        // Award XP (you can adjust these values)
+        const baseXPReward = 10;
+        const speedBonus = Math.max(0, 30 - Math.floor((Date.now() - questionStartTime) / 1000));
+        const totalXP = baseXPReward + speedBonus;
+        awardXP(totalXP);
+
+        // Update navigation button
+        document.getElementById(`nav-${section}-${navIndex}`).classList.remove('btn-outline-danger');
+        document.getElementById(`nav-${section}-${navIndex}`).classList.add('btn-outline-success');
+
+        nextQuestion();
+      } else {
+        alert("Please select an answer before saving.");
+      }
+    }
+
+    // Determine the section (verbal, logical, or quant) based on question index
+    function getSection(index) {
+      if (index < 20) return 'verbal';
+      if (index < 40) return 'logical';
+      return 'quant';
+    }
+
+    //to disable submit
+    function disableSubmitButton() {
+    document.getElementById('submit-btn').disabled = true; // Disable the submit button to prevent multiple submissions
+  }
+
+    // Add this style to your existing styles
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes fadeInOut {
+        0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+        10% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+        20% { transform: translate(-50%, -50%) scale(1); }
+        80% { opacity: 1; }
+        100% { opacity: 0; }
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
+</body>
+</html>

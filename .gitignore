@@ -1,0 +1,8 @@
+
+node_modules/
+.env
+*.exe
+*.o
+*.out
+ desktop.ini
+ *.mp4

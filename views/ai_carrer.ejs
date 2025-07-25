@@ -1,0 +1,745 @@
+<head>
+  <%- include('layouts/header'); -%>
+  <style>
+    :root {
+      --primary: #7C3AED;
+      --primary-dark: #6D28D9;
+      --secondary: #EC4899;
+      --accent: #8B5CF6;
+      --background: #F3F4F6;
+      --card-bg: #FFFFFF;
+      --text-primary: #1F2937;
+      --text-secondary: #4B5563;
+      --success: #10B981;
+      --error: #EF4444;
+      --warning: #F59E0B;
+    }
+
+    body {
+      background: linear-gradient(135deg, #7C3AED 0%, #EC4899 100%);
+      background-size: 400% 400%;
+      animation: gradient 15s ease infinite;
+      font-family: 'Inter', sans-serif;
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding: 2rem 0;
+    }
+
+    @keyframes gradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 1rem;
+      animation: fadeIn 1s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .form-container {
+      background-color: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      padding: 2.5rem;
+      margin: 2rem auto;
+      position: relative;
+      overflow: hidden;
+      animation: slideUp 0.8s ease-out;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .form-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+    }
+
+    .form-label {
+      font-weight: 600;
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .form-control {
+      border: 2px solid #E5E7EB;
+      border-radius: 10px;
+      padding: 12px 16px;
+      background-color: var(--background);
+      font-size: 1rem;
+      width: 100%;
+      margin-bottom: 1.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+      outline: none;
+    }
+
+    .form-control:hover {
+      border-color: var(--secondary);
+    }
+
+    .navigation-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 2rem;
+      gap: 1rem;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      min-width: 120px;
+      justify-content: center;
+    }
+
+    .btn-prev {
+      background-color: var(--background);
+      color: var(--text-primary);
+    }
+
+    .btn-prev:hover {
+      background-color: #E5E7EB;
+      transform: translateX(-2px);
+    }
+
+    .btn-next {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-next:hover {
+      background-color: var(--primary-dark);
+      transform: translateX(2px);
+    }
+
+    .btn-submit {
+      background-color: var(--success);
+      color: white;
+    }
+
+    .btn-submit:hover {
+      background-color: #059669;
+      transform: translateY(-2px);
+    }
+
+    .progress-container {
+      width: 100%;
+      height: 6px;
+      background-color: var(--background);
+      border-radius: 10px;
+      margin: 0 0 2.5rem 0;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+      border-radius: 10px;
+      transition: width 0.4s ease;
+      animation: shimmer 2s infinite linear;
+      background-size: 200% 100%;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .question-container {
+      display: none;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.4s ease;
+    }
+
+    .question-container.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+      animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(50px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .form-heading {
+      font-size: 2.5rem;
+      font-weight: 800;
+      text-align: center;
+      color: white;
+      margin-bottom: 1rem;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      letter-spacing: -0.02em;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .form-subheading {
+      text-align: center;
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      font-weight: 400;
+    }
+
+    .question-number {
+      color: var(--primary);
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .question-number::after {
+      content: '';
+      height: 2px;
+      background-color: #E5E7EB;
+      flex: 1;
+    }
+
+    /* Custom datalist styling */
+    input::-webkit-calendar-picker-indicator {
+      display: none !important;
+    }
+
+    datalist {
+      display: none;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 640px) {
+      .form-container {
+        padding: 1.5rem;
+        margin: 1rem;
+      }
+
+      .form-heading {
+        font-size: 2rem;
+      }
+
+      .btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+      }
+    }
+
+    /* Additional animations */
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+      100% { transform: translateY(0px); }
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+
+<body>
+  <%- include('layouts/navbar'); -%>
+
+  <div class="container">
+    <h1 class="form-heading">AI Career Guidance</h1>
+    <p class="form-subheading">Let's analyze your personality traits to find your perfect career path</p>
+    
+    <div class="form-container">
+      <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+
+      <form id="careerForm" action="/Ai_Insights" method="post">
+        <!-- Openness -->
+        <div class="question-container active" data-question="1">
+          <div class="question-number">Question 1 of 8</div>
+          <label class="form-label">How open are you to new experiences and ideas?</label>
+          <div class="personality-scale">
+            <input type="range" class="form-range" id="Openness" name="Openness" min="1" max="5" step="1" required>
+            <div class="scale-labels">
+              <span>Very Traditional</span>
+              <span>Balanced</span>
+              <span>Very Creative</span>
+            </div>
+          </div>
+          <div class="trait-description">
+            <p>This measures your creativity, curiosity, and openness to trying new things.</p>
+          </div>
+        </div>
+
+        <!-- Conscientiousness -->
+        <div class="question-container" data-question="2">
+          <div class="question-number">Question 2 of 8</div>
+          <label class="form-label">How organized and goal-oriented are you?</label>
+          <div class="personality-scale">
+            <input type="range" class="form-range" id="Conscientiousness" name="Conscientiousness" min="1" max="5" step="1" required>
+            <div class="scale-labels">
+              <span>Very Flexible</span>
+              <span>Balanced</span>
+              <span>Very Organized</span>
+            </div>
+          </div>
+          <div class="trait-description">
+            <p>This measures your level of organization, responsibility, and goal-oriented behavior.</p>
+          </div>
+        </div>
+
+        <!-- Extraversion -->
+        <div class="question-container" data-question="3">
+          <div class="question-number">Question 3 of 8</div>
+          <label class="form-label">How do you prefer to interact with others?</label>
+          <div class="personality-scale">
+            <input type="range" class="form-range" id="Extraversion" name="Extraversion" min="1" max="5" step="1" required>
+            <div class="scale-labels">
+              <span>Very Reserved</span>
+              <span>Balanced</span>
+              <span>Very Outgoing</span>
+            </div>
+          </div>
+          <div class="trait-description">
+            <p>This measures your social energy and preference for social interactions.</p>
+          </div>
+        </div>
+
+        <!-- Agreeableness -->
+        <div class="question-container" data-question="4">
+          <div class="question-number">Question 4 of 8</div>
+          <label class="form-label">How do you typically approach conflicts and cooperation?</label>
+          <div class="personality-scale">
+            <input type="range" class="form-range" id="Agreeableness" name="Agreeableness" min="1" max="5" step="1" required>
+            <div class="scale-labels">
+              <span>Very Direct</span>
+              <span>Balanced</span>
+              <span>Very Accommodating</span>
+            </div>
+          </div>
+          <div class="trait-description">
+            <p>This measures your approach to relationships and handling conflicts.</p>
+          </div>
+        </div>
+
+        <!-- Neuroticism -->
+        <div class="question-container" data-question="5">
+          <div class="question-number">Question 5 of 8</div>
+          <label class="form-label">How do you typically handle stress and emotions?</label>
+          <div class="personality-scale">
+            <input type="range" class="form-range" id="Neuroticism" name="Neuroticism" min="1" max="5" step="1" required>
+            <div class="scale-labels">
+              <span>Very Calm</span>
+              <span>Balanced</span>
+              <span>Very Sensitive</span>
+            </div>
+          </div>
+          <div class="trait-description">
+            <p>This measures your emotional stability and stress response.</p>
+          </div>
+        </div>
+
+        <!-- Education Background -->
+        <div class="question-container" data-question="6">
+          <div class="question-number">Question 6 of 8</div>
+          <label class="form-label">What is your educational background?</label>
+          <input type="text" class="form-control" id="Education" name="Education" required placeholder="Enter your highest level of education and field of study">
+          <div class="trait-description">
+            <p>This helps us understand your academic foundation and expertise.</p>
+          </div>
+        </div>
+        <div class="question-container" data-question="8">
+          <div class="question-number">Question 8 of 8</div>
+          <label class="form-label">Tell us more about yourself</label>
+          <textarea class="form-control" id="selfDescription" name="selfDescription" rows="4" required 
+            placeholder="Share anything else you'd like us to know about your interests, aspirations, or experiences..."></textarea>
+          <div class="trait-description">
+            <p>Your personal insights help us provide more accurate career recommendations.</p>
+          </div>
+        </div>
+        <!-- Social Media Analysis Permission -->
+        <div class="question-container" data-question="7">
+          <div class="question-number">Question 7 of 8</div>
+          <label class="form-label">Would you like us to analyze your social media profiles for better career recommendations?</label>
+          <div class="social-media-section">
+            <div class="social-media-options">
+              <div class="social-media-card">
+                <div class="social-media-header">
+                  <i class="fab fa-linkedin"></i>
+                  <span>LinkedIn Profile</span>
+                  <div class="status-badge connected">
+                    <i class="fas fa-check-circle"></i> Connected
+                  </div>
+                </div>
+                <div class="profile-preview">
+                  <small>@sachinchaurasiya</small>
+                  <div class="analysis-status">
+                    <div class="analysis-progress">
+                      <div class="analysis-bar"></div>
+                    </div>
+                    <span class="status-text">Analyzing profile data...</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="social-media-card">
+                <div class="social-media-header">
+                  <i class="fab fa-twitter"></i>
+                  <span>Twitter Profile</span>
+                  <div class="status-badge connected">
+                    <i class="fas fa-check-circle"></i> Connected
+                  </div>
+                </div>
+                <div class="profile-preview">
+                  <small>@sachindev69</small>
+                  <div class="analysis-status">
+                    <div class="analysis-progress">
+                      <div class="analysis-bar"></div>
+                    </div>
+                    <span class="status-text">Analyzing profile data...</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="privacy-notice">
+              <p><i class="fas fa-shield-alt"></i> Your privacy is important to us. We only analyze public information to provide better career recommendations.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Self Description -->
+        
+
+        <div class="navigation-buttons">
+          <button type="button" class="btn btn-prev" id="prevBtn" style="display: none;">
+            <i class="fas fa-arrow-left"></i> Previous
+          </button>
+          <button type="button" class="btn btn-next" id="nextBtn">
+            Next <i class="fas fa-arrow-right"></i>
+          </button>
+          <button type="submit" class="btn btn-submit" id="submitBtn" style="display: none;">
+            <i class="fas fa-check"></i> Get Career Insights
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('careerForm');
+      const questions = document.querySelectorAll('.question-container');
+      const progressBar = document.getElementById('progressBar');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const submitBtn = document.getElementById('submitBtn');
+      
+      let currentQuestion = 1;
+      const totalQuestions = 8;
+
+      // Update progress bar
+      function updateProgress() {
+        const progress = (currentQuestion - 1) / (totalQuestions - 1) * 100;
+        progressBar.style.width = `${progress}%`;
+      }
+
+      // Show specific question
+      function showQuestion(questionNumber) {
+        questions.forEach(q => {
+          q.classList.remove('active');
+        });
+        
+        const questionToShow = document.querySelector(`[data-question="${questionNumber}"]`);
+        questionToShow.classList.add('active');
+
+        prevBtn.style.display = questionNumber === 1 ? 'none' : 'block';
+        nextBtn.style.display = questionNumber === totalQuestions ? 'none' : 'block';
+        submitBtn.style.display = questionNumber === totalQuestions ? 'block' : 'none';
+
+        updateProgress();
+      }
+
+      // Simulate profile analysis animation
+      function startAnalysisAnimation() {
+        const bars = document.querySelectorAll('.analysis-bar');
+        bars.forEach(bar => {
+          bar.style.width = '0%';
+          setTimeout(() => {
+            bar.style.width = '100%';
+          }, 100);
+        });
+      }
+
+      // Start analysis animation when reaching the social media question
+      questions.forEach(question => {
+        question.addEventListener('transitionend', function() {
+          if (this.classList.contains('active') && this.dataset.question === '7') {
+            startAnalysisAnimation();
+          }
+        });
+      });
+
+      // Navigation handlers
+      nextBtn.addEventListener('click', function() {
+        if (currentQuestion < totalQuestions) {
+          currentQuestion++;
+          showQuestion(currentQuestion);
+        }
+      });
+
+      prevBtn.addEventListener('click', function() {
+        if (currentQuestion > 1) {
+          currentQuestion--;
+          showQuestion(currentQuestion);
+        }
+      });
+
+      // Form submission
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Validate form
+        const requiredInputs = form.querySelectorAll('input[required], textarea[required]');
+        let isValid = true;
+
+        requiredInputs.forEach(input => {
+          if (!input.value) {
+            isValid = false;
+            input.classList.add('shake');
+            setTimeout(() => input.classList.remove('shake'), 500);
+          }
+        });
+
+        if (!isValid) return;
+
+        // Submit the form
+        this.submit();
+      });
+
+      // Initialize
+      updateProgress();
+    });
+  </script>
+
+  <style>
+    /* Additional styles for personality assessment */
+    .personality-scale {
+      margin: 2rem 0;
+      padding: 0 1rem;
+    }
+
+    .form-range {
+      width: 100%;
+      height: 8px;
+      border-radius: 5px;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+      -webkit-appearance: none;
+    }
+
+    .form-range::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      background: white;
+      border: 2px solid var(--primary);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .form-range::-webkit-slider-thumb:hover {
+      transform: scale(1.2);
+    }
+
+    .scale-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .trait-description {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .social-media-section {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .social-media-options {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .form-check {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .form-check-label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-primary);
+      cursor: pointer;
+    }
+
+    .privacy-notice {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .privacy-notice i {
+      color: var(--success);
+    }
+
+    .social-media-card {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+      padding: 1.2rem;
+      margin-bottom: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .social-media-card:hover {
+      transform: translateY(-2px);
+      border-color: var(--primary);
+    }
+
+    .social-media-header {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .social-media-header i {
+      font-size: 1.2rem;
+      color: var(--primary);
+    }
+
+    .status-badge {
+      margin-left: auto;
+      font-size: 0.8rem;
+      padding: 0.3rem 0.6rem;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .status-badge.connected {
+      background: rgba(34, 197, 94, 0.1);
+      color: #22c55e;
+    }
+
+    .profile-preview {
+      padding: 0.8rem;
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+    }
+
+    .profile-preview small {
+      color: var(--text-secondary);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .analysis-status {
+      margin-top: 0.8rem;
+    }
+
+    .analysis-progress {
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 0.5rem;
+    }
+
+    .analysis-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      width: 0;
+      transition: width 2s ease-in-out;
+    }
+
+    .status-text {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    textarea.form-control {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-primary);
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    textarea.form-control:focus {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.1);
+    }
+  </style>
+
+  <style>
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-10px); }
+      75% { transform: translateX(10px); }
+    }
+
+    .shake {
+      animation: shake 0.3s ease-in-out;
+      border-color: var(--error) !important;
+    }
+  </style>
+</body>
