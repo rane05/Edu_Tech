@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Interview Simulator - EduNavigator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e1b4b 0%, #0f172a 50%, #312e81 100%);
+            color: white;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px rgba(96, 165, 250, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #cbd5e1;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .form-section, .results-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .form-section h2, .results-section h2 {
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            color: #fbbf24;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #e2e8f0;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #60a5fa;
+            box-shadow: 0 0 20px rgba(96, 165, 250, 0.3);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px 5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-group {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #cbd5e1;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid #60a5fa;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .feedback-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .sentiment-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .sentiment-positive {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+        }
+
+        .sentiment-negative {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+        }
+
+        .sentiment-neutral {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+            color: white;
+        }
+
+        .confidence-bar {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            height: 20px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981);
+            border-radius: 10px;
+            transition: width 1s ease;
+        }
+
+        .feedback-section {
+            margin: 20px 0;
+        }
+
+        .feedback-section h3 {
+            color: #fbbf24;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .feedback-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .feedback-list li {
+            background: rgba(255, 255, 255, 0.1);
+            margin: 8px 0;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border-left: 4px solid #60a5fa;
+        }
+
+        .camera-section {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+        }
+
+        .camera-section h3 {
+            color: #fbbf24;
+            margin-bottom: 15px;
+        }
+
+        #video {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .camera-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            .form-section, .results-section {
+                padding: 20px;
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header fade-in">
+            <h1>🎤 AI Interview Simulator</h1>
+            <p>Practice your interview skills with AI-powered questions and get instant feedback on your responses. Perfect for job seekers and career development.</p>
+        </div>
+
+        <div class="main-content">
+            <div class="form-section fade-in">
+                <h2>📝 Interview Setup</h2>
+                <form id="interviewForm">
+                    <div class="form-group">
+                        <label for="role">Job Role:</label>
+                        <input type="text" id="role" name="role" placeholder="e.g., Software Developer, Product Manager" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="seniority">Seniority Level:</label>
+                        <select id="seniority" name="seniority" required>
+                            <option value="">Select level</option>
+                            <option value="entry">Entry Level</option>
+                            <option value="mid">Mid Level</option>
+                            <option value="senior">Senior Level</option>
+                        </select>
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="button" class="btn" id="generateQuestionsBtn">🎯 Generate Questions</button>
+                    </div>
+                </form>
+
+                <div id="questionsContainer" style="display: none;">
+                    <h3 style="color: #fbbf24; margin: 20px 0 15px 0;">📋 Interview Questions</h3>
+                    <div id="questionsList"></div>
+                    
+                    <div class="form-group" style="margin-top: 25px;">
+                        <label for="transcript">Your Response:</label>
+                        <textarea id="transcript" name="transcript" placeholder="Type or speak your interview response here..."></textarea>
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="button" class="btn" id="recordBtn">🎙️ Start Recording</button>
+                        <button type="button" class="btn" id="stopRecordBtn" style="display: none;">⏹️ Stop Recording</button>
+                        <button type="button" class="btn" id="analyzeBtn">🔍 Analyze Response</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="results-section fade-in">
+                <h2>📊 AI Analysis</h2>
+                <div id="loadingSection" class="loading" style="display: none;">
+                    <div class="spinner"></div>
+                    <p>Analyzing your response...</p>
+                </div>
+                
+                <div id="feedbackContainer" style="display: none;">
+                    <div class="feedback-container">
+                        <div id="sentimentBadge" class="sentiment-badge"></div>
+                        
+                        <div class="feedback-section">
+                            <h3>Confidence Level</h3>
+                            <div class="confidence-bar">
+                                <div id="confidenceFill" class="confidence-fill" style="width: 0%"></div>
+                            </div>
+                            <p id="confidenceText"></p>
+                        </div>
+
+                        <div class="feedback-section">
+                            <h3>Summary</h3>
+                            <p id="summaryText"></p>
+                        </div>
+
+                        <div class="feedback-section">
+                            <h3>Strengths</h3>
+                            <ul id="strengthsList" class="feedback-list"></ul>
+                        </div>
+
+                        <div class="feedback-section">
+                            <h3>Areas for Improvement</h3>
+                            <ul id="gapsList" class="feedback-list"></ul>
+                        </div>
+
+                        <div class="feedback-section">
+                            <h3>Recommendations</h3>
+                            <ul id="recommendationsList" class="feedback-list"></ul>
+                        </div>
+
+                        <div class="feedback-section">
+                            <h3>Follow-up Question</h3>
+                            <p id="followUpQuestion" style="background: rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 8px; border-left: 4px solid #fbbf24;"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="camera-section fade-in">
+            <h3>📹 Facial Confidence Detection (Optional)</h3>
+            <video id="video" autoplay muted></video>
+            <div class="camera-controls">
+                <button class="btn" id="startCameraBtn">📷 Start Camera</button>
+                <button class="btn" id="stopCameraBtn" style="display: none;">⏹️ Stop Camera</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+    <script>
+        // Speech-to-Text using Web Speech API
+        let recognition;
+        let isRecording = false;
+        let stream = null;
+
+        // Initialize speech recognition
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            
+            recognition.onresult = function(event) {
+                let finalTranscript = '';
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    if (event.results[i].isFinal) {
+                        finalTranscript += event.results[i].transcript;
+                    }
+                }
+                if (finalTranscript) {
+                    document.getElementById('transcript').value += finalTranscript + ' ';
+                }
+            };
+        }
+
+        // Event Listeners
+        document.getElementById('generateQuestionsBtn').addEventListener('click', generateQuestions);
+        document.getElementById('recordBtn').addEventListener('click', startRecording);
+        document.getElementById('stopRecordBtn').addEventListener('click', stopRecording);
+        document.getElementById('analyzeBtn').addEventListener('click', analyzeResponse);
+        document.getElementById('startCameraBtn').addEventListener('click', startCamera);
+        document.getElementById('stopCameraBtn').addEventListener('click', stopCamera);
+
+        // Generate interview questions
+        async function generateQuestions() {
+            const role = document.getElementById('role').value;
+            const seniority = document.getElementById('seniority').value;
+            
+            if (!role || !seniority) {
+                alert('Please fill in both role and seniority level.');
+                return;
+            }
+
+            try {
+                const response = await fetch('/interview/questions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ role, seniority })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayQuestions(data.questions);
+                    document.getElementById('questionsContainer').style.display = 'block';
+                } else {
+                    alert('Failed to generate questions: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to generate questions. Please try again.');
+            }
+        }
+
+        // Display questions
+        function displayQuestions(questions) {
+            const questionsList = document.getElementById('questionsList');
+            questionsList.innerHTML = '';
+            
+            questions.forEach((question, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.style.cssText = 'background: rgba(255, 255, 255, 0.1); padding: 15px; margin: 10px 0; border-radius: 8px; border-left: 4px solid #60a5fa;';
+                questionDiv.innerHTML = `<strong>Q${index + 1}:</strong> ${question}`;
+                questionsList.appendChild(questionDiv);
+            });
+        }
+
+        // Start recording
+        function startRecording() {
+            if (!recognition) {
+                alert('Speech recognition is not supported in your browser.');
+                return;
+            }
+
+            recognition.start();
+            isRecording = true;
+            document.getElementById('recordBtn').style.display = 'none';
+            document.getElementById('stopRecordBtn').style.display = 'inline-block';
+            document.getElementById('recordBtn').textContent = '🎙️ Recording...';
+        }
+
+        // Stop recording
+        function stopRecording() {
+            if (recognition) {
+                recognition.stop();
+            }
+            isRecording = false;
+            document.getElementById('recordBtn').style.display = 'inline-block';
+            document.getElementById('stopRecordBtn').style.display = 'none';
+            document.getElementById('recordBtn').textContent = '🎙️ Start Recording';
+        }
+
+        // Analyze response
+        async function analyzeResponse() {
+            const role = document.getElementById('role').value;
+            const seniority = document.getElementById('seniority').value;
+            const transcript = document.getElementById('transcript').value;
+            
+            if (!transcript.trim()) {
+                alert('Please provide a response to analyze.');
+                return;
+            }
+
+            showAnalyzing();
+            
+            try {
+                const response = await fetch('/interview/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ role, seniority, transcript })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    renderFeedback(data.analysis);
+                } else {
+                    alert('Failed to analyze response: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to analyze response. Please try again.');
+            }
+        }
+
+        // Show analyzing state
+        function showAnalyzing() {
+            document.getElementById('loadingSection').style.display = 'block';
+            document.getElementById('feedbackContainer').style.display = 'none';
+        }
+
+        // Render feedback
+        function renderFeedback(analysis) {
+            document.getElementById('loadingSection').style.display = 'none';
+            document.getElementById('feedbackContainer').style.display = 'block';
+
+            // Set sentiment badge
+            const sentimentBadge = document.getElementById('sentimentBadge');
+            sentimentBadge.textContent = analysis.sentiment.charAt(0).toUpperCase() + analysis.sentiment.slice(1);
+            sentimentBadge.className = `sentiment-badge sentiment-${analysis.sentiment}`;
+
+            // Set confidence
+            setConfidence(analysis.confidence);
+
+            // Set summary
+            document.getElementById('summaryText').textContent = analysis.summary;
+
+            // Set lists
+            setList('strengthsList', analysis.strengths);
+            setList('gapsList', analysis.gaps);
+            setList('recommendationsList', analysis.recommendations);
+
+            // Set follow-up question
+            document.getElementById('followUpQuestion').textContent = analysis.followUpQuestion;
+        }
+
+        // Set confidence bar
+        function setConfidence(confidence) {
+            const confidenceFill = document.getElementById('confidenceFill');
+            const confidenceText = document.getElementById('confidenceText');
+            
+            confidenceFill.style.width = confidence + '%';
+            confidenceText.textContent = `${confidence}% - ${getConfidenceLabel(confidence)}`;
+        }
+
+        // Get confidence label
+        function getConfidenceLabel(confidence) {
+            if (confidence >= 80) return 'Very High';
+            if (confidence >= 60) return 'High';
+            if (confidence >= 40) return 'Medium';
+            if (confidence >= 20) return 'Low';
+            return 'Very Low';
+        }
+
+        // Set list items
+        function setList(listId, items) {
+            const list = document.getElementById(listId);
+            list.innerHTML = '';
+            
+            items.forEach(item => {
+                const li = document.createElement('li');
+                li.textContent = item;
+                list.appendChild(li);
+            });
+        }
+
+        // Camera functions
+        async function startCamera() {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                document.getElementById('video').srcObject = stream;
+                document.getElementById('startCameraBtn').style.display = 'none';
+                document.getElementById('stopCameraBtn').style.display = 'inline-block';
+            } catch (error) {
+                console.error('Error accessing camera:', error);
+                alert('Unable to access camera. Please check permissions.');
+            }
+        }
+
+        function stopCamera() {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                document.getElementById('video').srcObject = null;
+                document.getElementById('startCameraBtn').style.display = 'inline-block';
+                document.getElementById('stopCameraBtn').style.display = 'none';
+            }
+        }
+
+        // Load face-api models for facial analysis
+        async function loadFaceApiModels() {
+            try {
+                await faceapi.nets.tinyFaceDetector.loadFromUri('/models');
+                await faceapi.nets.faceExpressionNet.loadFromUri('/models');
+            } catch (error) {
+                console.log('Face-api models not available, facial analysis disabled');
+            }
+        }
+
+        // Initialize face-api
+        loadFaceApiModels();
+    </script>
+</body>
+</html>

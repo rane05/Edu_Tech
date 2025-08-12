@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analyzer - EduNavigator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .tool-card {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            transition: transform 0.3s ease;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .tool-card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .analyze-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .analyze-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .results-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            margin-top: 30px;
+            display: none;
+        }
+
+        .results-section.show {
+            display: block;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .result-card h3 {
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+
+        .result-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            backdrop-filter: blur(5px);
+        }
+
+        .result-item h4 {
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .result-stats {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .stat {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 14px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 AI-Powered Analyzer</h1>
+            <p>Analyze profiles, projects, and research with advanced AI insights</p>
+        </div>
+
+        <div class="tools-grid">
+            <!-- LinkedIn Profile Analysis -->
+            <div class="tool-card">
+                <h2>🔗 LinkedIn Profile Analysis</h2>
+                <form id="linkedinForm">
+                    <div class="form-group">
+                        <label for="linkedinUrl">LinkedIn Profile URL</label>
+                        <input type="url" id="linkedinUrl" name="profileUrl" placeholder="https://linkedin.com/in/username" required>
+                    </div>
+                    <button type="submit" class="analyze-btn">🔍 Analyze Profile</button>
+                </form>
+            </div>
+
+            <!-- GitHub Repository Analysis -->
+            <div class="tool-card">
+                <h2>📚 GitHub Project Evaluation</h2>
+                <form id="githubForm">
+                    <div class="form-group">
+                        <label for="githubUrl">GitHub Repository URL</label>
+                        <input type="url" id="githubUrl" name="repositoryUrl" placeholder="https://github.com/username/repo" required>
+                    </div>
+                    <button type="submit" class="analyze-btn">🔍 Evaluate Project</button>
+                </form>
+            </div>
+
+            <!-- Google Scholar Research Analysis -->
+            <div class="tool-card">
+                <h2>📖 Research Topic Analysis</h2>
+                <form id="scholarForm">
+                    <div class="form-group">
+                        <label for="researchTopic">Research Topic</label>
+                        <textarea id="researchTopic" name="researchTopic" rows="3" placeholder="Describe your research area or topic of interest" required></textarea>
+                    </div>
+                    <button type="submit" class="analyze-btn">🔍 Analyze Research</button>
+                </form>
+            </div>
+
+            <!-- Certification Management -->
+            <div class="tool-card">
+                <h2>🏆 Certification Tracker</h2>
+                <form id="certificationForm">
+                    <div class="form-group">
+                        <label for="certificateId">Certificate ID</label>
+                        <input type="text" id="certificateId" name="certificateId" placeholder="Enter certificate ID" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="issuer">Issuing Organization</label>
+                        <input type="text" id="issuer" name="issuer" placeholder="e.g., Microsoft, AWS, Google" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="issueDate">Issue Date</label>
+                        <input type="date" id="issueDate" name="issueDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="expirationDate">Expiration Date (Optional)</label>
+                        <input type="date" id="expirationDate" name="expirationDate">
+                    </div>
+                    <div class="form-group">
+                        <label for="skillsCovered">Skills Covered</label>
+                        <input type="text" id="skillsCovered" name="skillsCovered" placeholder="e.g., JavaScript, React, Node.js" required>
+                    </div>
+                    <button type="submit" class="analyze-btn">➕ Add Certification</button>
+                </form>
+            </div>
+
+            <!-- Certification Verification -->
+            <div class="tool-card">
+                <h2>✅ Verify Certification</h2>
+                <form id="verificationForm">
+                    <div class="form-group">
+                        <label for="verifyCertificateId">Certificate ID</label>
+                        <input type="text" id="verifyCertificateId" name="certificateId" placeholder="Enter certificate ID to verify" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="verifyIssuer">Issuing Organization</label>
+                        <input type="text" id="verifyIssuer" name="issuer" placeholder="e.g., Microsoft, AWS, Google" required>
+                    </div>
+                    <button type="submit" class="analyze-btn">✅ Verify Certificate</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-section" id="resultsSection">
+            <div class="loading" id="loadingSection">
+                <div class="spinner"></div>
+                <h3>AI is analyzing your data...</h3>
+                <p>This may take a few moments</p>
+            </div>
+
+            <div id="resultsContent" style="display: none;">
+                <!-- Results will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // LinkedIn Profile Analysis
+        document.getElementById('linkedinForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            await analyzeData('/api/linkedin-analysis', formData, 'LinkedIn Profile Analysis');
+        });
+
+        // GitHub Repository Analysis
+        document.getElementById('githubForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            await analyzeData('/api/github-analysis', formData, 'GitHub Repository Analysis');
+        });
+
+        // Google Scholar Research Analysis
+        document.getElementById('scholarForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            await analyzeData('/api/google-scholar-analysis', formData, 'Research Topic Analysis');
+        });
+
+        // Add Certification
+        document.getElementById('certificationForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            await analyzeData('/api/certifications/add', formData, 'Certification Added');
+        });
+
+        // Verify Certification
+        document.getElementById('verificationForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            await analyzeData('/api/certifications/verify', formData, 'Certification Verification');
+        });
+
+        async function analyzeData(endpoint, formData, analysisType) {
+            // Show loading
+            document.getElementById('resultsSection').classList.add('show');
+            document.getElementById('loadingSection').style.display = 'block';
+            document.getElementById('resultsContent').style.display = 'none';
+
+            try {
+                const data = {};
+                for (let [key, value] of formData.entries()) {
+                    data[key] = value;
+                }
+
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    displayResults(result, analysisType);
+                } else {
+                    throw new Error(result.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('resultsContent').innerHTML = `
+                    <div style="color: #e74c3c; text-align: center; padding: 20px;">
+                        <h3>❌ Analysis Failed</h3>
+                        <p>${error.message || 'Something went wrong. Please try again.'}</p>
+                    </div>
+                `;
+            } finally {
+                document.getElementById('loadingSection').style.display = 'none';
+                document.getElementById('resultsContent').style.display = 'block';
+            }
+        }
+
+        function displayResults(result, analysisType) {
+            let content = `<h2 style="color: #667eea; margin-bottom: 25px;">🔍 ${analysisType} Results</h2>`;
+
+            if (analysisType === 'LinkedIn Profile Analysis') {
+                const analysis = result.analysis;
+                content += `
+                    <div class="result-card">
+                        <h3>📊 Profile Analysis</h3>
+                        <div class="result-item">
+                            <h4>Profile Strength</h4>
+                            <div class="result-stats">
+                                <span class="stat">📈 ${analysis.profileStrength}%</span>
+                                <span class="stat">🎯 ${analysis.experienceLevel}</span>
+                                <span class="stat">🏭 ${analysis.industryFit}</span>
+                            </div>
+                        </div>
+                        <div class="result-item">
+                            <h4>Key Skills</h4>
+                            <p>${analysis.keySkills.join(', ')}</p>
+                        </div>
+                        <div class="result-item">
+                            <h4>Recommendations</h4>
+                            <ul style="margin-left: 20px;">
+                                ${analysis.recommendations.map(rec => `<li>${rec}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="result-item">
+                            <h4>Growth Areas</h4>
+                            <p>${analysis.growthAreas.join(', ')}</p>
+                        </div>
+                    </div>
+                `;
+            } else if (analysisType === 'GitHub Repository Analysis') {
+                const analysis = result.analysis;
+                content += `
+                    <div class="result-card">
+                        <h3>📚 Repository Analysis</h3>
+                        <div class="result-item">
+                            <h4>Code Quality Metrics</h4>
+                            <div class="result-stats">
+                                <span class="stat">💻 ${analysis.codeQuality}%</span>
+                                <span class="stat">📖 ${analysis.documentation}%</span>
+                                <span class="stat">📈 ${analysis.activity}%</span>
+                                <span class="stat">🤝 ${analysis.collaboration}%</span>
+                            </div>
+                        </div>
+                        <div class="result-item">
+                            <h4>Technologies Used</h4>
+                            <p>${analysis.technologies.join(', ')}</p>
+                        </div>
+                        <div class="result-item">
+                            <h4>Strengths</h4>
+                            <ul style="margin-left: 20px;">
+                                ${analysis.strengths.map(strength => `<li>${strength}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="result-item">
+                            <h4>Areas for Improvement</h4>
+                            <ul style="margin-left: 20px;">
+                                ${analysis.improvements.map(improvement => `<li>${improvement}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            } else if (analysisType === 'Research Topic Analysis') {
+                const analysis = result.analysis;
+                content += `
+                    <div class="result-card">
+                        <h3>🔬 Research Analysis</h3>
+                        <div class="result-item">
+                            <h4>Relevance Score</h4>
+                            <div class="result-stats">
+                                <span class="stat">📊 ${analysis.relevance}%</span>
+                            </div>
+                        </div>
+                        <div class="result-item">
+                            <h4>Current Trends</h4>
+                            <ul style="margin-left: 20px;">
+                                ${analysis.currentTrends.map(trend => `<li>${trend}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="result-item">
+                            <h4>Key Researchers</h4>
+                            <ul style="margin-left: 20px;">
+                                ${analysis.keyResearchers.map(researcher => `<li>${researcher}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="result-item">
+                            <h4>Funding Opportunities</h4>
+                            <ul style="margin-left: 20px;">
+                                ${analysis.fundingOpportunities.map(opportunity => `<li>${opportunity}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            } else if (analysisType === 'Certification Added') {
+                const certification = result.certification;
+                content += `
+                    <div class="result-card">
+                        <h3>🏆 Certification Added Successfully</h3>
+                        <div class="result-item">
+                            <h4>Certificate Details</h4>
+                            <p><strong>ID:</strong> ${certification.certificateId}</p>
+                            <p><strong>Issuer:</strong> ${certification.issuer}</p>
+                            <p><strong>Issue Date:</strong> ${new Date(certification.issueDate).toLocaleDateString()}</p>
+                            <p><strong>Skills:</strong> ${certification.skillsCovered.join(', ')}</p>
+                            <p><strong>Status:</strong> ${certification.status}</p>
+                        </div>
+                    </div>
+                `;
+            } else if (analysisType === 'Certification Verification') {
+                const verification = result.verification;
+                content += `
+                    <div class="result-card">
+                        <h3>✅ Certification Verification</h3>
+                        <div class="result-item">
+                            <h4>Verification Results</h4>
+                            <p><strong>Status:</strong> ${verification.status}</p>
+                            <p><strong>Certificate ID:</strong> ${verification.certificateId}</p>
+                            <p><strong>Issuer:</strong> ${verification.issuer}</p>
+                            <p><strong>Verification Date:</strong> ${new Date(verification.verificationDate).toLocaleDateString()}</p>
+                            <p><strong>Skills:</strong> ${verification.skills.join(', ')}</p>
+                        </div>
+                    </div>
+                `;
+            }
+
+            document.getElementById('resultsContent').innerHTML = content;
+        }
+    </script>
+</body>
+</html>

@@ -53,6 +53,8 @@ const teacherHomeRoutes = require("./routes/teacherhome.js");
 
 const Cert = require('./routes/cert_validator.js')
 const interview = require('./routes/Ai_Interview.js')
+const integrations = require('./routes/integrations.js')
+const careerTrendsPredictor = require('./routes/career_trends_predictor.js')
 
 
 let app = express();
@@ -72,6 +74,7 @@ mongoose.connect(process.env.MONGODB_URI)
 
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(require("express-session")({
     secret: "Rusty is a dog",
     resave: false,
@@ -129,6 +132,8 @@ app.use(carrer_bank)
 
 app.use(Cert)
 app.use(interview)
+app.use(integrations)
+app.use(careerTrendsPredictor)
 app.use(teacherHomeRoutes); // Use teacher home routes
 
 
