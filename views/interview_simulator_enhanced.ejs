@@ -430,6 +430,79 @@
             transform: translateY(-50%) rotate(360deg);
         }
 
+        /* Questions Header and Counter */
+        .questions-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .question-counter {
+            background: linear-gradient(135deg, #60a5fa, #8b5cf6);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 15px rgba(96, 165, 250, 0.3);
+            animation: counterPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes counterPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .question-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 15px;
+            border-left: 4px solid #60a5fa;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .question-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.05) 0%, rgba(236, 72, 153, 0.05) 100%);
+            opacity: 0;
+            transition: all 0.3s ease;
+            transform: scale(0.8);
+        }
+
+        .question-item:hover::before {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .question-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .question-number {
+            color: #fbbf24;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+        }
+
+        .question-text {
+            color: #e2e8f0;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
         /* Enhanced Camera Section */
         .camera-section {
             text-align: center;
@@ -541,6 +614,29 @@
 
         /* Responsive Design */
         @media (max-width: 768px) {
+            .navbar {
+                padding: 10px 0;
+            }
+
+            .nav-container {
+                padding: 0 15px;
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                gap: 20px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .nav-link {
+                font-size: 0.9rem;
+            }
+
+            .header {
+                margin-top: 120px;
+            }
             .main-content {
                 grid-template-columns: 1fr;
                 gap: 25px;
@@ -562,6 +658,73 @@
                 padding: 15px 25px;
                 font-size: 1rem;
             }
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            padding: 15px 0;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #60a5fa;
+        }
+
+        .nav-logo i {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #60a5fa, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-link {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link:hover {
+            color: #60a5fa;
+            transform: translateY(-2px);
+        }
+
+        .nav-link i {
+            font-size: 1.1rem;
+        }
+
+        /* Adjust header margin for navbar */
+        .header {
+            margin-top: 80px;
         }
 
         /* Interactive Cursor */
@@ -640,6 +803,22 @@
         <span>Great response! Keep going...</span>
     </div>
 
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-graduation-cap"></i>
+                <span>EduNavigator</span>
+            </div>
+            <div class="nav-links">
+                <a href="/" class="nav-link"><i class="fas fa-home"></i> Home</a>
+                <a href="/career-bank" class="nav-link"><i class="fas fa-briefcase"></i> Career Bank</a>
+                <a href="/resources" class="nav-link"><i class="fas fa-book"></i> Resources</a>
+                <a href="/contact" class="nav-link"><i class="fas fa-envelope"></i> Contact</a>
+            </div>
+        </div>
+    </nav>
+
     <div class="container">
         <div class="header fade-in">
             <h1><i class="fas fa-microphone-alt"></i> AI Interview Simulator</h1>
@@ -673,9 +852,14 @@
                 </form>
 
                 <div id="questionsContainer" style="display: none;">
-                    <h3 style="color: #fbbf24; margin: 25px 0 20px 0;">
-                        <i class="fas fa-list-ul"></i> Interview Questions
-                    </h3>
+                    <div class="questions-header">
+                        <h3 style="color: #fbbf24; margin: 0 0 20px 0;">
+                            <i class="fas fa-list-ul"></i> Interview Questions
+                        </h3>
+                        <div class="question-counter">
+                            <span id="currentQuestion">0</span> / <span id="totalQuestions">15</span>
+                        </div>
+                    </div>
                     <div id="questionsList"></div>
                     
                     <div class="form-group" style="margin-top: 30px;">
@@ -689,6 +873,9 @@
                         </button>
                         <button type="button" class="btn" id="stopRecordBtn" style="display: none;">
                             <i class="fas fa-stop"></i> Stop Recording
+                        </button>
+                        <button type="button" class="btn" id="nextQuestionBtn" style="display: none;">
+                            <i class="fas fa-arrow-right"></i> Next Question
                         </button>
                         <button type="button" class="btn" id="analyzeBtn">
                             <i class="fas fa-search"></i> Analyze Response
@@ -835,6 +1022,7 @@
         document.getElementById('generateQuestionsBtn').addEventListener('click', generateQuestions);
         document.getElementById('recordBtn').addEventListener('click', startRecording);
         document.getElementById('stopRecordBtn').addEventListener('click', stopRecording);
+        document.getElementById('nextQuestionBtn').addEventListener('click', nextQuestion);
         document.getElementById('analyzeBtn').addEventListener('click', analyzeResponse);
         document.getElementById('startCameraBtn').addEventListener('click', startCamera);
         document.getElementById('stopCameraBtn').addEventListener('click', stopCamera);
@@ -888,10 +1076,23 @@
             const questionsList = document.getElementById('questionsList');
             questionsList.innerHTML = '';
             
-            questions.forEach((question, index) => {
+            // Limit to 15 questions maximum
+            const maxQuestions = Math.min(questions.length, 15);
+            const questionsToShow = questions.slice(0, maxQuestions);
+            
+            // Update question counter
+            document.getElementById('totalQuestions').textContent = maxQuestions;
+            document.getElementById('currentQuestion').textContent = '0';
+            
+            questionsToShow.forEach((question, index) => {
                 const questionDiv = document.createElement('div');
-                questionDiv.style.cssText = 'background: rgba(255, 255, 255, 0.1); padding: 18px; margin: 12px 0; border-radius: 10px; border-left: 4px solid #60a5fa; transform: translateX(-20px); opacity: 0; transition: all 0.5s ease;';
-                questionDiv.innerHTML = `<strong>Q${index + 1}:</strong> ${question}`;
+                questionDiv.className = 'question-item';
+                questionDiv.style.transform = 'translateX(-20px)';
+                questionDiv.style.opacity = '0';
+                questionDiv.innerHTML = `
+                    <div class="question-number">Question ${index + 1}</div>
+                    <div class="question-text">${question}</div>
+                `;
                 questionsList.appendChild(questionDiv);
                 
                 // Staggered animation
@@ -900,6 +1101,49 @@
                     questionDiv.style.opacity = '1';
                 }, index * 200);
             });
+            
+            // Show success message with question count
+            showRealTimeFeedback(`Generated ${maxQuestions} interview questions!`, 'success');
+        }
+
+        // Track current question being answered
+        function updateCurrentQuestion() {
+            const currentQuestionElement = document.getElementById('currentQuestion');
+            const currentValue = parseInt(currentQuestionElement.textContent);
+            const totalQuestions = parseInt(document.getElementById('totalQuestions').textContent);
+            
+            if (currentValue < totalQuestions) {
+                currentQuestionElement.textContent = currentValue + 1;
+                showRealTimeFeedback(`Now answering question ${currentValue + 1}`, 'info');
+            }
+        }
+
+        // Navigate to next question
+        function nextQuestion() {
+            const currentQuestionElement = document.getElementById('currentQuestion');
+            const totalQuestions = parseInt(document.getElementById('totalQuestions').textContent);
+            const currentValue = parseInt(currentQuestionElement.textContent);
+            
+            if (currentValue < totalQuestions) {
+                // Clear previous response
+                document.getElementById('transcript').value = '';
+                
+                // Update question counter
+                currentQuestionElement.textContent = currentValue + 1;
+                
+                // Show next question message
+                showRealTimeFeedback(`Now answering question ${currentValue + 1}`, 'info');
+                
+                // Hide next question button if it's the last question
+                if (currentValue + 1 >= totalQuestions) {
+                    document.getElementById('nextQuestionBtn').style.display = 'none';
+                    showRealTimeFeedback('This is the final question!', 'success');
+                }
+                
+                // Reset recording buttons
+                document.getElementById('recordBtn').style.display = 'inline-block';
+                document.getElementById('stopRecordBtn').style.display = 'none';
+            }
         }
 
         // Enhanced recording functions
@@ -908,6 +1152,9 @@
                 showRealTimeFeedback('Speech recognition is not supported in your browser.', 'error');
                 return;
             }
+
+            // Update current question counter
+            updateCurrentQuestion();
 
             recognition.start();
             isRecording = true;
@@ -924,7 +1171,16 @@
             isRecording = false;
             document.getElementById('recordBtn').style.display = 'inline-block';
             document.getElementById('stopRecordBtn').style.display = 'none';
-            showRealTimeFeedback('Recording stopped. Ready to analyze!', 'success');
+            
+            // Show Next Question button if not on the last question
+            const currentQuestion = parseInt(document.getElementById('currentQuestion').textContent);
+            const totalQuestions = parseInt(document.getElementById('totalQuestions').textContent);
+            
+            if (currentQuestion < totalQuestions) {
+                document.getElementById('nextQuestionBtn').style.display = 'inline-block';
+            }
+            
+            showRealTimeFeedback('Recording stopped. Ready for next question or analysis!', 'success');
             updateProgress(75);
         }
 
