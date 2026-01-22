@@ -1,87 +1,101 @@
-# EduNavigator  (AI Powered Career and College Recommendation Website)
+# 🎓 EduNavigator
+### AI-Powered Career & College Recommendation Platform
 
-This is an AI-powered career and college recommendation website that leverages machine learning to provide personalized career and college suggestions to users based on their responses to various questions. The website also includes features such as quiz performance analysis, scholarship finder, hands-on learning, and a dashboard to track user progress.
-
-## Features
-
-- **Career Recommendations:** Based on the user's answers to a series of questions, the AI will analyze and recommend potential career paths.
-  
-- **Quiz with Performance Insights:** Users can take a quiz of 60 marks, and based on their answers, AI provides insights into their performance, including which category they are weak at (e.g., Quantitative).
-  
-- **Leaderboard:** A leaderboard displays the top-performing users in the quiz.
-  
-- **User Dashboard:** Users can track their quiz attempts, see performance trends with AI-driven insights, and visualize their progress over time.
-  
-- **Project-Based Learning (PBL) Mechanism:** Users can experience hands-on learning through various project-based activities.
-  
-- **College Recommendations:** Based on users' CET/JEE scores and selected preferences, the website suggests colleges that match their criteria.
-  
-- **Scholarship Finder:** The website helps users find potential scholarships based on their profile and performance.
-
-## Tech Stack
-
-- **Backend:** Node.js, Express
-- **Database:** MongoDB
-- **Frontend:** EJS Templating Engine
-- **AI:** Gemini API for career and performance insights
-
-## Setup Instructions
-
-1. **Clone the Repository:**
-   ```bash
-   git clone https://github.com/Arbaaz-Khan-Tech/EduNavigator.git
-   ```
-
-2. **Create `.env` File:**  
-   In the root directory, create a `.env` file and add your **Gemini API key**.
-
-   Example:
-   ```
-   API_KEY=your-api-key-here
-   ```
-
-3. **Install Dependencies:**
-   In the project directory, run the following command to install the necessary dependencies:
-   ```bash
-   npm install
-   ```
-
-4. **Start the Application:**
-   After the dependencies are installed, start the server:
-   ```bash
-   npm start
-   ```
-
-   The application will be live on `http://localhost:4000`.
-
-## Folder Structure
-
-```
-/EduNavigator
-|
-|-- /models            # Mongoose models for MongoDB database
-|-- /public            # Static assets (CSS, JavaScript, Images)
-|-- /routes            # API routes and view routes
-|-- /views             # EJS templates for rendering HTML pages
-|-- .env               # Store sensitive environment variables
-|-- app.js             # Main application file
-|-- package.json       # Project dependencies and scripts
-```
-
-
-
-
-## Acknowledgements
-
-- **Gemini API** for providing AI-driven insights and analysis.
-- **MongoDB** for handling database management.
-- **Express.js** and **Node.js** for the backend.
-- **EJS** for rendering dynamic HTML templates.
-
-## Contact
-
-For any issues or questions, feel free to open an issue on the GitHub repository or reach out to the project maintainers.
+![License](https://img.shields.io/badge/license-MIT-blue.svg) ![Node](https://img.shields.io/badge/node-%3E%3D%2014.0.0-brightgreen) ![Express](https://img.shields.io/badge/express-4.x-lightgrey) ![MongoDB](https://img.shields.io/badge/mongodb-database-green)
 
 ---
 
-Enjoy using the EduNavigator!
+## 🚀 Overview
+**EduNavigator** is a cutting-edge, AI-driven platform designed to guide students through their educational and career journeys. By leveraging machine learning and the Gemini API, it provides personalized career path suggestions, college recommendations based on entrance exam scores, and comprehensive performance insights.
+
+Whether you're confused about your career path or looking for the perfect college, EduNavigator is your smart companion.
+
+---
+
+## ✨ Key Features
+
+- **🤖 AI Career Recommendations**: Intelligent algorithms analyze user responses to suggest the most suitable career paths.
+- **📊 Smart Quiz & Insights**: A 60-mark assessment that provides detailed performance breakdowns, identifying strengths and areas for improvement (e.g., Quantitative, Verbal).
+- **🏆 Leaderboard**: Compete with peers and see top performers on the global leaderboard.
+- **📈 Interactive Dashboard**: Track quiz attempts, visualize progress trends, and monitor your growth with AI-driven analytics.
+- **🏫 College Recommender**: Input your CET/JEE scores and preferences to get a tailored list of college recommendations.
+- **🛠️ Project-Based Learning (PBL)**: Engage in hands-on projects to build real-world skills.
+- **💰 Scholarship Finder**: Discover scholarship opportunities matched to your profile and academic achievements.
+
+---
+
+## 💻 Tech Stack
+
+| Component | Technology |
+|-----------|------------|
+| **Backend** | Node.js, Express.js |
+| **Database** | MongoDB |
+| **Frontend** | EJS (Embedded JavaScript), CSS |
+| **AI Engine** | Gemini API |
+
+---
+
+## 📸 Screenshots
+
+*(Add screenshots of your dashboard, quiz interface, and recommendation results here)*
+
+---
+
+## 🛠️ Installation & Setup
+
+Follow these steps to get the project running locally.
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/rane05/Edu_Tech.git
+cd Edu_Tech
+```
+
+### 2. Configure Environment Variables
+Create a `.env` file in the root directory and add your keys:
+```env
+API_KEY=your_gemini_api_key_here
+MONGO_URI=your_mongodb_connection_string
+PORT=4000
+```
+
+### 3. Install Dependencies
+```bash
+npm install
+```
+
+### 4. Run the Application
+Start the development server:
+```bash
+npm start
+```
+The app will be available at `http://localhost:4000`.
+
+---
+
+## 📂 Folder Structure
+
+```
+Edu_Tech/
+├── models/           # Mongoose schemas & models
+├── public/           # Static assets (CSS, JS, Images)
+├── routes/           # Express routes & API endpoints
+├── views/            # EJS templates (Frontend)
+├── .env              # Environment variables
+├── app.js            # Main application entry point
+└── package.json      # Dependencies and scripts
+```
+
+---
+
+## 🤝 Contributing & Support
+
+Contributions are welcome! If you have suggestions or find bugs, please open an issue or submit a pull request.
+
+For questions, feel free to reach out via the [GitHub Repository](https://github.com/rane05/Edu_Tech).
+
+---
+
+<p align="center">
+  Made with ❤️ for Students
+</p>
