@@ -1,520 +1,682 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Career Trend Predictor - EduNavigator</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<%- include('layouts/header'); %>
+    <%- include('layouts/navbar'); %>
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-            color: white;
-        }
-
-        .header h1 {
-            font-size: 3rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .header p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
-
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 40px;
-        }
-
-        .form-section {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            backdrop-filter: blur(10px);
-        }
-
-        .form-section h2 {
-            color: #667eea;
-            margin-bottom: 25px;
-            font-size: 1.8rem;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #555;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e1e5e9;
-            border-radius: 10px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .skills-input {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .skill-tag {
-            background: #667eea;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-        }
-
-        .skill-tag button {
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-            font-size: 16px;
-            padding: 0;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .add-skill {
-            display: flex;
-            gap: 10px;
-        }
-
-        .add-skill input {
-            flex: 1;
-        }
-
-        .add-skill button {
-            background: #27ae60;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .add-skill button:hover {
-            background: #219a52;
-            transform: translateY(-2px);
-        }
-
-        .analyze-btn {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 25px;
-            font-size: 18px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            transition: all 0.3s ease;
-            margin-top: 20px;
-        }
-
-        .analyze-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
-        }
-
-        .analyze-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .results-section {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            backdrop-filter: blur(10px);
-            display: none;
-        }
-
-        .results-section.show {
-            display: block;
-            animation: slideIn 0.5s ease-out;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
+        <style>
+            :root {
+                --color-primary: #FFB800;
+                --color-secondary: #00A8FF;
+                --color-dark: #1A1A2E;
+                --color-text: #2D3748;
+                --color-text-light: #718096;
+                --color-bg: #FFFFFF;
+                --color-bg-light: #F7FAFC;
             }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
             }
-        }
 
-        .trend-card {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
-
-        .trend-card h3 {
-            margin-bottom: 15px;
-            font-size: 1.4rem;
-        }
-
-        .career-item {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            backdrop-filter: blur(5px);
-        }
-
-        .career-item h4 {
-            color: #fff;
-            margin-bottom: 8px;
-        }
-
-        .career-stats {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin-top: 10px;
-        }
-
-        .stat {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 14px;
-        }
-
-        .recommendations {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-        }
-
-        .recommendation-item {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-        }
-
-        .priority-high {
-            border-left: 4px solid #ff6b6b;
-        }
-
-        .priority-medium {
-            border-left: 4px solid #feca57;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #667eea;
-        }
-
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .market-insights {
-            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
-            color: #333;
-            padding: 20px;
-            border-radius: 15px;
-        }
-
-        .insight-item {
-            background: rgba(255, 255, 255, 0.3);
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-        }
-
-        .insight-item h4 {
-            color: #667eea;
-            margin-bottom: 8px;
-        }
-
-        @media (max-width: 768px) {
-            .main-content {
-                grid-template-columns: 1fr;
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+                color: var(--color-text);
+                background: var(--color-bg-light);
             }
-            
-            .header h1 {
+
+            .page-wrapper {
+                padding: 100px 20px 60px;
+                min-height: 100vh;
+            }
+
+            .container {
+                max-width: 1400px;
+                margin: 0 auto;
+            }
+
+            /* Header */
+            .page-header {
+                text-align: center;
+                margin-bottom: 60px;
+            }
+
+            .page-header h1 {
+                font-size: clamp(2.5rem, 5vw, 3.5rem);
+                font-weight: 700;
+                color: var(--color-dark);
+                margin-bottom: 15px;
+            }
+
+            .page-header p {
+                font-size: 1.25rem;
+                color: var(--color-text-light);
+                max-width: 700px;
+                margin: 0 auto;
+            }
+
+            /* Main Grid */
+            .main-grid {
+                display: grid;
+                grid-template-columns: 450px 1fr;
+                gap: 40px;
+                align-items: start;
+            }
+
+            /* Form Section */
+            .form-card {
+                background: white;
+                padding: 40px;
+                border-radius: 20px;
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+                position: sticky;
+                top: 100px;
+            }
+
+            .form-card h2 {
+                font-size: 1.75rem;
+                font-weight: 700;
+                color: var(--color-dark);
+                margin-bottom: 30px;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .form-group {
+                margin-bottom: 24px;
+            }
+
+            .form-group label {
+                display: block;
+                font-weight: 600;
+                color: var(--color-text);
+                margin-bottom: 8px;
+                font-size: 0.95rem;
+            }
+
+            .form-group select,
+            .form-group input[type="text"] {
+                width: 100%;
+                padding: 14px 18px;
+                border: 2px solid #E2E8F0;
+                border-radius: 12px;
+                font-size: 1rem;
+                transition: all 0.3s;
+                background: white;
+                color: var(--color-text);
+            }
+
+            .form-group select:focus,
+            .form-group input[type="text"]:focus {
+                outline: none;
+                border-color: var(--color-secondary);
+                box-shadow: 0 0 0 3px rgba(0, 168, 255, 0.1);
+            }
+
+            /* Skills Section */
+            .skills-display {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-bottom: 12px;
+                min-height: 40px;
+            }
+
+            .skill-tag {
+                background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+                color: white;
+                padding: 8px 16px;
+                border-radius: 20px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 0.9rem;
+                font-weight: 500;
+                animation: slideIn 0.3s ease;
+            }
+
+            @keyframes slideIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .skill-tag button {
+                background: rgba(255, 255, 255, 0.2);
+                border: none;
+                color: white;
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 14px;
+                transition: all 0.2s;
+            }
+
+            .skill-tag button:hover {
+                background: rgba(255, 255, 255, 0.3);
+            }
+
+            .skill-input-group {
+                display: flex;
+                gap: 10px;
+            }
+
+            .skill-input-group input {
+                flex: 1;
+            }
+
+            .add-skill-btn {
+                background: var(--color-primary);
+                color: white;
+                border: none;
+                padding: 14px 24px;
+                border-radius: 12px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s;
+                font-size: 1.1rem;
+            }
+
+            .add-skill-btn:hover {
+                background: #E5A700;
+                transform: translateY(-2px);
+            }
+
+            /* Analyze Button */
+            .analyze-btn {
+                width: 100%;
+                background: linear-gradient(135deg, var(--color-secondary), #0095E8);
+                color: white;
+                border: none;
+                padding: 16px;
+                border-radius: 12px;
+                font-size: 1.1rem;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s;
+                margin-top: 30px;
+            }
+
+            .analyze-btn:hover:not(:disabled) {
+                transform: translateY(-3px);
+                box-shadow: 0 10px 30px rgba(0, 168, 255, 0.3);
+            }
+
+            .analyze-btn:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+            }
+
+            /* Results Section */
+            .results-wrapper {
+                display: none;
+            }
+
+            .results-wrapper.show {
+                display: block;
+                animation: fadeIn 0.5s ease;
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            /* Loading State */
+            .loading-state {
+                background: white;
+                padding: 60px;
+                border-radius: 20px;
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+                text-align: center;
+            }
+
+            .spinner {
+                width: 50px;
+                height: 50px;
+                border: 4px solid #E2E8F0;
+                border-top-color: var(--color-secondary);
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+                margin: 0 auto 20px;
+            }
+
+            @keyframes spin {
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+
+            .loading-state h3 {
+                font-size: 1.5rem;
+                color: var(--color-dark);
+                margin-bottom: 8px;
+            }
+
+            .loading-state p {
+                color: var(--color-text-light);
+            }
+
+            /* Results Content */
+            .results-content {
+                display: none;
+            }
+
+            .results-content.show {
+                display: block;
+            }
+
+            .section-title {
                 font-size: 2rem;
+                font-weight: 700;
+                color: var(--color-dark);
+                margin-bottom: 30px;
             }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>🔮 AI Career Trend Predictor</h1>
-            <p>Discover the future of work with AI-powered career insights and predictions</p>
-        </div>
 
-        <div class="main-content">
-            <!-- Input Form Section -->
-            <div class="form-section">
-                <h2>📊 Your Career Profile</h2>
-                <form id="careerForm">
-                    <div class="form-group">
-                        <label for="interests">What interests you most?</label>
-                        <select id="interests" name="interests" required>
-                            <option value="">Select your primary interest</option>
-                            <option value="technology">Technology & Innovation</option>
-                            <option value="healthcare">Healthcare & Medicine</option>
-                            <option value="business">Business & Management</option>
-                            <option value="arts">Arts & Creative</option>
-                            <option value="science">Science & Research</option>
-                            <option value="education">Education & Training</option>
-                        </select>
-                    </div>
+            .results-grid {
+                display: grid;
+                gap: 30px;
+            }
 
-                    <div class="form-group">
-                        <label for="skills">Your Skills & Strengths</label>
-                        <div class="skills-input" id="skillsContainer">
-                            <!-- Skills will be added here dynamically -->
-                        </div>
-                        <div class="add-skill">
-                            <input type="text" id="skillInput" placeholder="Add a skill (e.g., Python, Leadership)">
-                            <button type="button" onclick="addSkill()">+</button>
-                        </div>
-                    </div>
+            /* Career Cards */
+            .career-card {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                padding: 35px;
+                border-radius: 20px;
+                box-shadow: 0 15px 40px rgba(102, 126, 234, 0.3);
+                color: white;
+            }
 
-                    <div class="form-group">
-                        <label for="location">Preferred Location</label>
-                        <input type="text" id="location" name="location" placeholder="City, State, or Country">
-                    </div>
+            .career-card h3 {
+                font-size: 1.75rem;
+                margin-bottom: 25px;
+            }
 
-                    <div class="form-group">
-                        <label for="educationLevel">Education Level</label>
-                        <select id="educationLevel" name="educationLevel" required>
-                            <option value="">Select your education level</option>
-                            <option value="high-school">High School</option>
-                            <option value="bachelors">Bachelor's Degree</option>
-                            <option value="masters">Master's Degree</option>
-                            <option value="phd">PhD/Doctorate</option>
-                            <option value="certification">Professional Certification</option>
-                        </select>
-                    </div>
+            .career-item {
+                background: rgba(255, 255, 255, 0.15);
+                backdrop-filter: blur(10px);
+                padding: 20px;
+                border-radius: 15px;
+                margin-bottom: 15px;
+            }
 
-                    <div class="form-group">
-                        <label for="timeHorizon">Career Planning Timeframe</label>
-                        <select id="timeHorizon" name="timeHorizon" required>
-                            <option value="">Select timeframe</option>
-                            <option value="1-3 years">1-3 years</option>
-                            <option value="3-5 years">3-5 years</option>
-                            <option value="5-10 years">5-10 years</option>
-                            <option value="10+ years">10+ years</option>
-                        </select>
-                    </div>
+            .career-item h4 {
+                font-size: 1.25rem;
+                margin-bottom: 10px;
+            }
 
-                    <button type="submit" class="analyze-btn" id="analyzeBtn">
-                        🔮 Analyze Career Trends
-                    </button>
-                </form>
-            </div>
+            .career-item p {
+                opacity: 0.9;
+                margin-bottom: 12px;
+            }
 
-            <!-- Results Section -->
-            <div class="results-section" id="resultsSection">
-                <div class="loading" id="loadingSection">
-                    <div class="spinner"></div>
-                    <h3>AI is analyzing your career profile...</h3>
-                    <p>This may take a few moments</p>
+            .career-stats {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin-top: 12px;
+            }
+
+            .stat-badge {
+                background: rgba(255, 255, 255, 0.2);
+                padding: 8px 16px;
+                border-radius: 20px;
+                font-size: 0.9rem;
+                font-weight: 500;
+            }
+
+            /* Chart Card */
+            .chart-card {
+                background: white;
+                padding: 35px;
+                border-radius: 20px;
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            }
+
+            .chart-card h3 {
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: var(--color-dark);
+                margin-bottom: 25px;
+            }
+
+            .chart-container {
+                position: relative;
+                height: 350px;
+            }
+
+            /* Recommendations */
+            .recommendations-card {
+                background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+                padding: 35px;
+                border-radius: 20px;
+                box-shadow: 0 15px 40px rgba(79, 172, 254, 0.3);
+                color: white;
+            }
+
+            .recommendations-card h3 {
+                font-size: 1.75rem;
+                margin-bottom: 25px;
+            }
+
+            .recommendation-item {
+                background: rgba(255, 255, 255, 0.15);
+                backdrop-filter: blur(10px);
+                padding: 20px;
+                border-radius: 15px;
+                margin-bottom: 15px;
+                border-left: 4px solid rgba(255, 255, 255, 0.5);
+            }
+
+            .recommendation-item.priority-high {
+                border-left-color: #FFB800;
+            }
+
+            .recommendation-item h4 {
+                font-size: 1.2rem;
+                margin-bottom: 8px;
+            }
+
+            .recommendation-item strong {
+                opacity: 0.9;
+            }
+
+            /* Market Insights */
+            .insights-card {
+                background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+                padding: 35px;
+                border-radius: 20px;
+                box-shadow: 0 15px 40px rgba(168, 237, 234, 0.3);
+            }
+
+            .insights-card h3 {
+                font-size: 1.75rem;
+                color: var(--color-dark);
+                margin-bottom: 25px;
+            }
+
+            .insight-item {
+                background: rgba(255, 255, 255, 0.5);
+                backdrop-filter: blur(10px);
+                padding: 20px;
+                border-radius: 15px;
+                margin-bottom: 15px;
+            }
+
+            .insight-item h4 {
+                font-size: 1.2rem;
+                color: var(--color-dark);
+                margin-bottom: 8px;
+            }
+
+            .insight-item p {
+                color: var(--color-text);
+            }
+
+            /* Responsive */
+            @media (max-width: 1200px) {
+                .main-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .form-card {
+                    position: relative;
+                    top: 0;
+                }
+
+                .chart-container {
+                    height: 300px;
+                }
+            }
+
+            @media (max-width: 768px) {
+                .page-wrapper {
+                    padding: 90px 15px 40px;
+                }
+
+                .page-header h1 {
+                    font-size: 2rem;
+                }
+
+                .form-card {
+                    padding: 25px;
+                }
+
+                .career-card,
+                .chart-card,
+                .recommendations-card,
+                .insights-card {
+                    padding: 25px;
+                }
+            }
+        </style>
+
+        <div class="page-wrapper">
+            <div class="container">
+                <!-- Header -->
+                <div class="page-header">
+                    <h1>🔮 AI Career Trends Predictor</h1>
+                    <p>Discover emerging opportunities and plan your future with AI-powered insights</p>
                 </div>
 
-                <div id="resultsContent" style="display: none;">
-                    <!-- Results will be populated here -->
+                <!-- Main Content -->
+                <div class="main-grid">
+                    <!-- Input Form -->
+                    <div class="form-card">
+                        <h2>📊 Your Profile</h2>
+                        <form id="careerForm">
+                            <div class="form-group">
+                                <label for="interests">Primary Interest</label>
+                                <select id="interests" name="interests" required>
+                                    <option value="">Select your interest</option>
+                                    <option value="technology">Technology & Innovation</option>
+                                    <option value="healthcare">Healthcare & Medicine</option>
+                                    <option value="business">Business & Management</option>
+                                    <option value="arts">Arts & Creative</option>
+                                    <option value="science">Science & Research</option>
+                                    <option value="education">Education & Training</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Your Skills</label>
+                                <div class="skills-display" id="skillsDisplay"></div>
+                                <div class="skill-input-group">
+                                    <input type="text" id="skillInput" placeholder="Add a skill...">
+                                    <button type="button" class="add-skill-btn" onclick="addSkill()">+</button>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="location">Preferred Location</label>
+                                <input type="text" id="location" name="location" placeholder="City, State, or Country">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="educationLevel">Education Level</label>
+                                <select id="educationLevel" name="educationLevel" required>
+                                    <option value="">Select level</option>
+                                    <option value="high-school">High School</option>
+                                    <option value="bachelors">Bachelor's Degree</option>
+                                    <option value="masters">Master's Degree</option>
+                                    <option value="phd">PhD/Doctorate</option>
+                                    <option value="certification">Professional Certification</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="timeHorizon">Planning Timeframe</label>
+                                <select id="timeHorizon" name="timeHorizon" required>
+                                    <option value="">Select timeframe</option>
+                                    <option value="1-3 years">1-3 years</option>
+                                    <option value="3-5 years">3-5 years</option>
+                                    <option value="5-10 years">5-10 years</option>
+                                    <option value="10+ years">10+ years</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="analyze-btn" id="analyzeBtn">
+                                🔮 Analyze Career Trends
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Results Section -->
+                    <div class="results-wrapper" id="resultsWrapper">
+                        <!-- Loading State -->
+                        <div class="loading-state" id="loadingState">
+                            <div class="spinner"></div>
+                            <h3>AI is analyzing trends...</h3>
+                            <p>Processing your career profile</p>
+                        </div>
+
+                        <!-- Results Content -->
+                        <div class="results-content" id="resultsContent">
+                            <!-- Results populated by JavaScript -->
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <script>
-        let userSkills = [];
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+        <script>
+            let userSkills = [];
+            let growthChart = null;
+            let demandChart = null;
 
-        function addSkill() {
-            const skillInput = document.getElementById('skillInput');
-            const skill = skillInput.value.trim();
-            
-            if (skill && !userSkills.includes(skill)) {
-                userSkills.push(skill);
-                skillInput.value = '';
+            function addSkill() {
+                const input = document.getElementById('skillInput');
+                const skill = input.value.trim();
+
+                if (skill && !userSkills.includes(skill)) {
+                    userSkills.push(skill);
+                    input.value = '';
+                    renderSkills();
+                }
+            }
+
+            function removeSkill(skill) {
+                userSkills = userSkills.filter(s => s !== skill);
                 renderSkills();
             }
-        }
 
-        function removeSkill(skill) {
-            userSkills = userSkills.filter(s => s !== skill);
-            renderSkills();
-        }
-
-        function renderSkills() {
-            const container = document.getElementById('skillsContainer');
-            container.innerHTML = userSkills.map(skill => `
-                <div class="skill-tag">
-                    ${skill}
-                    <button onclick="removeSkill('${skill}')">&times;</button>
-                </div>
-            `).join('');
-        }
-
-        document.getElementById('careerForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const formData = new FormData(e.target);
-            const data = {
-                interests: formData.get('interests'),
-                skills: userSkills,
-                location: formData.get('location'),
-                educationLevel: formData.get('educationLevel'),
-                timeHorizon: formData.get('timeHorizon')
-            };
-
-            // Show loading
-            document.getElementById('resultsSection').classList.add('show');
-            document.getElementById('loadingSection').style.display = 'block';
-            document.getElementById('resultsContent').style.display = 'none';
-            document.getElementById('analyzeBtn').disabled = true;
-
-            try {
-                const response = await fetch('/api/career-trends/analyze', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                });
-
-                const result = await response.json();
-                
-                if (result.success) {
-                    displayResults(result);
-                } else {
-                    throw new Error(result.error);
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                document.getElementById('resultsContent').innerHTML = `
-                    <div style="color: #e74c3c; text-align: center; padding: 20px;">
-                        <h3>❌ Analysis Failed</h3>
-                        <p>${error.message || 'Something went wrong. Please try again.'}</p>
-                    </div>
-                `;
-            } finally {
-                document.getElementById('loadingSection').style.display = 'none';
-                document.getElementById('resultsContent').style.display = 'block';
-                document.getElementById('analyzeBtn').disabled = false;
+            function renderSkills() {
+                const container = document.getElementById('skillsDisplay');
+                container.innerHTML = userSkills.map(skill => `
+            <div class="skill-tag">
+                ${skill}
+                <button onclick="removeSkill('${skill}')">&times;</button>
+            </div>
+        `).join('');
             }
-        });
 
-        function displayResults(result) {
-            const { trends, recommendations, marketInsights } = result;
-            
-            document.getElementById('resultsContent').innerHTML = `
-                <h2 style="color: #667eea; margin-bottom: 25px;">🎯 Your AI Career Analysis</h2>
-                
+            document.getElementById('careerForm').addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                const formData = new FormData(e.target);
+                const data = {
+                    interests: formData.get('interests'),
+                    skills: userSkills,
+                    location: formData.get('location'),
+                    educationLevel: formData.get('educationLevel'),
+                    timeHorizon: formData.get('timeHorizon')
+                };
+
+                // Show loading
+                document.getElementById('resultsWrapper').classList.add('show');
+                document.getElementById('loadingState').style.display = 'block';
+                document.getElementById('resultsContent').classList.remove('show');
+                document.getElementById('analyzeBtn').disabled = true;
+
+                try {
+                    const response = await fetch('/api/career-trends/analyze', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data)
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        displayResults(result);
+                    } else {
+                        throw new Error(result.error);
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    document.getElementById('resultsContent').innerHTML = `
+                <div style="background: white; padding: 40px; border-radius: 20px; text-align: center;">
+                    <h3 style="color: #e74c3c; margin-bottom: 10px;">❌ Analysis Failed</h3>
+                    <p style="color: #718096;">${error.message || 'Please try again later.'}</p>
+                </div>
+            `;
+                } finally {
+                    document.getElementById('loadingState').style.display = 'none';
+                    document.getElementById('resultsContent').classList.add('show');
+                    document.getElementById('analyzeBtn').disabled = false;
+                }
+            });
+
+            function displayResults(result) {
+                const { trends, recommendations, marketInsights } = result;
+
+                document.getElementById('resultsContent').innerHTML = `
+            <h2 class="section-title">🎯 Your Career Analysis</h2>
+            <div class="results-grid">
                 <!-- Emerging Careers -->
-                <div class="trend-card">
+                <div class="career-card">
                     <h3>🚀 Emerging Career Opportunities</h3>
                     ${trends.emergingCareers.map(career => `
                         <div class="career-item">
                             <h4>${career.title}</h4>
-                            <p>${career.skills.join(', ')}</p>
+                            <p>Key Skills: ${career.skills.join(', ')}</p>
                             <div class="career-stats">
-                                <span class="stat">📈 ${career.growthRate}% Growth</span>
-                                <span class="stat">💰 ${career.salaryRange}</span>
-                                <span class="stat">🔥 ${career.demand} Demand</span>
+                                <span class="stat-badge">📈 ${career.growthRate}% Growth</span>
+                                <span class="stat-badge">💰 ${career.salaryRange}</span>
+                                <span class="stat-badge">🔥 ${career.demand} Demand</span>
                             </div>
                         </div>
                     `).join('')}
                 </div>
 
-                <!-- Skill Demand -->
-                <div class="trend-card">
-                    <h3>📚 High-Demand Skills</h3>
-                    ${trends.skillDemand.map(skill => `
-                        <div class="career-item">
-                            <h4>${skill.skill}</h4>
-                            <div class="career-stats">
-                                <span class="stat">🔥 ${skill.demand}</span>
-                                <span class="stat">📈 ${skill.growth}</span>
-                            </div>
-                        </div>
-                    `).join('')}
+                <!-- Growth Chart -->
+                <div class="chart-card">
+                    <h3>📊 Career Growth Projection</h3>
+                    <div class="chart-container">
+                        <canvas id="growthChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Skills Demand Chart -->
+                <div class="chart-card">
+                    <h3>🎯 Skills Demand Analysis</h3>
+                    <div class="chart-container">
+                        <canvas id="demandChart"></canvas>
+                    </div>
                 </div>
 
                 <!-- Recommendations -->
-                <div class="recommendations">
+                <div class="recommendations-card">
                     <h3>💡 AI Recommendations</h3>
                     ${recommendations.map(rec => `
                         <div class="recommendation-item priority-${rec.priority.toLowerCase()}">
@@ -526,7 +688,7 @@
                 </div>
 
                 <!-- Market Insights -->
-                <div class="market-insights">
+                <div class="insights-card">
                     <h3>🌍 Market Insights</h3>
                     <div class="insight-item">
                         <h4>Local Market</h4>
@@ -536,16 +698,123 @@
                         <h4>Regional Trends</h4>
                         <p>${marketInsights.regionalTrends}</p>
                     </div>
-                    <div class="insight-item">
-                        <h4>Future Prediction</h4>
-                        <p>${marketInsights.futurePrediction}</p>
-                    </div>
+                    ${marketInsights.futurePrediction ? `
+                        <div class="insight-item">
+                            <h4>Future Prediction</h4>
+                            <p>${marketInsights.futurePrediction}</p>
+                        </div>
+                    ` : ''}
                 </div>
-            `;
-        }
+            </div>
+        `;
 
-        // Initialize skills display
-        renderSkills();
-    </script>
-</body>
-</html>
+                // Create charts after DOM is updated
+                setTimeout(() => {
+                    createGrowthChart(trends.emergingCareers);
+                    createDemandChart(trends.skillDemand);
+                }, 100);
+            }
+
+            function createGrowthChart(careers) {
+                const ctx = document.getElementById('growthChart');
+                if (!ctx) return;
+
+                if (growthChart) {
+                    growthChart.destroy();
+                }
+
+                growthChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: careers.map(c => c.title),
+                        datasets: [{
+                            label: 'Growth Rate (%)',
+                            data: careers.map(c => c.growthRate),
+                            backgroundColor: 'rgba(0, 168, 255, 0.7)',
+                            borderColor: 'rgba(0, 168, 255, 1)',
+                            borderWidth: 2,
+                            borderRadius: 8
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Growth Rate (%)'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            function createDemandChart(skills) {
+                const ctx = document.getElementById('demandChart');
+                if (!ctx) return;
+
+                if (demandChart) {
+                    demandChart.destroy();
+                }
+
+                demandChart = new Chart(ctx, {
+                    type: 'radar',
+                    data: {
+                        labels: skills.map(s => s.skill),
+                        datasets: [{
+                            label: 'Demand Level',
+                            data: skills.map(s => {
+                                const demand = s.demand.toLowerCase();
+                                if (demand.includes('very high')) return 5;
+                                if (demand.includes('high')) return 4;
+                                if (demand.includes('medium')) return 3;
+                                if (demand.includes('low')) return 2;
+                                return 1;
+                            }),
+                            backgroundColor: 'rgba(255, 184, 0, 0.2)',
+                            borderColor: 'rgba(255, 184, 0, 1)',
+                            borderWidth: 2,
+                            pointBackgroundColor: 'rgba(255, 184, 0, 1)'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            r: {
+                                beginAtZero: true,
+                                max: 5,
+                                ticks: {
+                                    stepSize: 1
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Allow Enter key to add skills
+            document.getElementById('skillInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addSkill();
+                }
+            });
+
+            renderSkills();
+        </script>
+
+        <%- include('layouts/footer'); %>

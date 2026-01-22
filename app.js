@@ -17,7 +17,10 @@ const nodemailer = require('nodemailer');
 
 const axios = require('axios');
 // API Key has been revoked
-require('dotenv').config();  
+require('dotenv').config();
+// console.log("Loaded MONGODB_URI:", process.env.MONGODB_URI);
+
+
 
 
 
@@ -32,7 +35,7 @@ const cet_add_clg = require('./routes/cet_add_clg.js')
 const apti = require('./routes/apti.js')
 const apti_res = require('./routes/stu_res.js')
 const ai_carrer = require('./routes/ai_cat.js')
-const chatbotRoute = require('./routes/chatbot');
+// const chatbotRoute = require('./routes/chatbot');
 const Carrer_Trends = require('./routes/Carrer_Trends.js')
 const jobs = require('./routes/job.js')
 const resources = require('./routes/resources.js')
@@ -42,11 +45,13 @@ const Mentor = require('./routes/mentor.js')
 const PBL = require('./routes/pbl.js')
 const project = require('./routes/project.js')
 const Carrer_Test = require('./routes/Carrer_Test_Que.js')
+const searchRoute = require('./routes/search');
+
 
 const profileRoutes = require('./routes/profileRoute.js');
 const teacherRoutes = require('./routes/teacherpRoute');
 const studentlistRoutes = require('./routes/studentlistRoutes');
-const parentProfileRoutes = require("./routes/parentProfileRoutes.js"); 
+const parentProfileRoutes = require("./routes/parentProfileRoutes.js");
 const carrer_bank = require('./routes/carrer_bank.js')
 const teacherHomeRoutes = require("./routes/teacherhome.js");
 
@@ -66,8 +71,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('MongoDB connected successfully'))
-  .catch(err => console.error('Error connecting to MongoDB:', err));
+    .then(() => console.log('MongoDB connected successfully'))
+    .catch(err => console.error('Error connecting to MongoDB:', err));
 
 
 
@@ -92,12 +97,12 @@ passport.deserializeUser(User.deserializeUser());
 app.use((req, res, next) => {
     res.locals.userId = req.session.userId || null;  // `userId` will be available in all templates
     next();
-  });
+});
 // Middleware to check if the user is logged in
 function checkLogin(req, res, next) {
     res.locals.isLoggedIn = !!req.session.userId;  // Pass the logged-in status to views
     next();  // Call the next middleware or route handler
-  }
+}
 
 //=====================
 //=====================
@@ -106,13 +111,14 @@ app.get('/favicon.ico', (req, res) => res.status(204));
 app.use(homeRoutes);
 app.use(authRoutes);
 app.use(carrerRecRoute);
+app.use(searchRoute);
 app.use(blogRoutes);
 app.use(collegeRoutes);
 app.use(exam_choice)
 app.use(cet_add_clg)
 app.use(apti)
 app.use(ai_carrer)
-app.use(chatbotRoute)
+// app.use(chatbotRoute)
 app.use(apti_res)
 app.use(PBL)
 app.use(project)
@@ -178,7 +184,7 @@ app.get('/resume', (req, res) => {
     res.render('resume')
 });
 
-app.get('/verify',(req,res)=>{
+app.get('/verify', (req, res) => {
     res.render('blockchain')
 
 });
@@ -200,7 +206,7 @@ app.get('/teacher_home', (req, res) => {
 
 
 
-app.get('/carrer_resources',(req,res)=>{
+app.get('/carrer_resources', (req, res) => {
     res.render('career_resources')
 })
 

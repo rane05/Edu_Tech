@@ -1,263 +1,401 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduNavigator Dashboard</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
+<!-- Modern Glassmorphism Navbar -->
+<style>
+    :root {
+        --nav-primary: #FFB800;
+        --nav-secondary: #00A8FF;
+        --nav-dark: #1A1A2E;
+        --nav-text: #2D3748;
+        --nav-glass-bg: rgba(255, 255, 255, 0.85);
+        --nav-glass-border: rgba(255, 255, 255, 0.5);
+        --nav-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+    }
 
-        nav {
-            background: #ffffff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    /* Navbar Container */
+    .glass-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 70px;
+        background: var(--nav-glass-bg);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--nav-glass-border);
+        box-shadow: var(--nav-shadow);
+        z-index: 1000;
+        transition: all 0.3s ease;
+    }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
+    .nav-content {
+        max-width: 1280px;
+        margin: 0 auto;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 24px;
+    }
 
-        .logo span:first-child {
-            color: #27ae60; /* Green for Edu */
-        }
+    /* Logo */
+    .nav-logo {
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        z-index: 1002;
+    }
 
-        .logo span:last-child {
-            color: #2980b9; /* Blue for Navigator */
-        }
+    .nav-logo-text {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--nav-dark);
+        letter-spacing: -0.5px;
+    }
 
-        .nav-links {
-            display: flex;
-            gap: 1.5rem;
-            align-items: center;
-        }
+    .nav-logo-text span {
+        color: var(--nav-secondary);
+    }
 
-        .nav-links a {
-            text-decoration: none;
-            color: #34495e;
-            position: relative;
-            transition: all 0.3s ease;
-        }
+    /* Desktop Navigation */
+    .nav-desktop {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+    }
 
-        .nav-links a:hover {
-            color: #27ae60;
-            transform: translateY(-3px);
-        }
+    .nav-item {
+        position: relative;
+        padding: 10px 0;
+    }
 
-        .dropdown {
-            position: relative;
-        }
+    .nav-link {
+        color: var(--nav-text);
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.95rem;
+        transition: color 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
 
-        .dropdown-content {
+    .nav-link i {
+        font-size: 0.75rem;
+        opacity: 0.6;
+        transition: transform 0.2s;
+    }
+
+    .nav-link:hover {
+        color: var(--nav-secondary);
+    }
+
+    .nav-link:hover i {
+        transform: rotate(180deg);
+        color: var(--nav-secondary);
+    }
+
+    /* Dropdowns */
+    .nav-dropdown {
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%) translateY(10px);
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        padding: 8px;
+        min-width: 220px;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.2s ease;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .nav-item:hover .nav-dropdown {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(0);
+    }
+
+    .dropdown-link {
+        display: block;
+        padding: 10px 16px;
+        color: var(--nav-text);
+        text-decoration: none;
+        font-size: 0.9rem;
+        border-radius: 8px;
+        transition: all 0.2s;
+        font-weight: 500;
+    }
+
+    .dropdown-link:hover {
+        background: rgba(0, 168, 255, 0.08);
+        color: var(--nav-secondary);
+        transform: translateX(4px);
+    }
+
+    /* Auth Buttons */
+    .nav-auth {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .btn-login {
+        color: var(--nav-text);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: color 0.2s;
+    }
+
+    .btn-login:hover {
+        color: var(--nav-secondary);
+    }
+
+    .btn-signup {
+        background: var(--nav-primary);
+        color: var(--nav-dark);
+        padding: 10px 24px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(255, 184, 0, 0.2);
+    }
+
+    .btn-signup:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(255, 184, 0, 0.3);
+        background: #FFC024;
+    }
+
+    /* Mobile Toggle */
+    .mobile-toggle {
+        display: none;
+        flex-direction: column;
+        gap: 6px;
+        cursor: pointer;
+        z-index: 1002;
+    }
+
+    .bar {
+        width: 26px;
+        height: 2px;
+        background: var(--nav-dark);
+        transition: all 0.3s ease;
+        border-radius: 2px;
+    }
+
+    /* Mobile Menu */
+    .mobile-menu {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 300px;
+        height: 100vh;
+        background: white;
+        padding: 90px 24px 24px;
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1001;
+        overflow-y: auto;
+    }
+
+    .mobile-menu.active {
+        right: 0;
+    }
+
+    .mobile-link-group {
+        margin-bottom: 24px;
+    }
+
+    .mobile-group-title {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #A0AEC0;
+        margin-bottom: 12px;
+        font-weight: 700;
+    }
+
+    .mobile-link {
+        display: block;
+        padding: 12px 0;
+        color: var(--nav-dark);
+        text-decoration: none;
+        font-weight: 500;
+        border-bottom: 1px solid #F7FAFC;
+    }
+
+    /* Overlay */
+    .nav-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.3);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s;
+        z-index: 1000;
+        backdrop-filter: blur(4px);
+    }
+
+    .nav-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* Active States for Hamburger */
+    .mobile-toggle.active .bar:nth-child(1) {
+        transform: translateY(8px) rotate(45deg);
+    }
+
+    .mobile-toggle.active .bar:nth-child(2) {
+        opacity: 0;
+    }
+
+    .mobile-toggle.active .bar:nth-child(3) {
+        transform: translateY(-8px) rotate(-45deg);
+    }
+
+    @media (max-width: 1024px) {
+
+        .nav-desktop,
+        .nav-auth {
             display: none;
-            position: absolute;
-            background: #fff;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-            min-width: 200px;
-            top: 100%;
-            left: 0;
-            z-index: 1;
-            border-radius: 5px;
         }
 
-        .dropdown:hover .dropdown-content {
-            display: block;
+        .mobile-toggle {
+            display: flex;
         }
+    }
+</style>
 
-        .dropdown-content a {
-            padding: 12px 16px;
-            display: block;
-            color: #2c3e50;
-            transition: all 0.3s ease;
-        }
+<nav class="glass-nav">
+    <div class="nav-content">
+        <!-- Logo -->
+        <a href="/" class="nav-logo">
+            <span class="nav-logo-text">Edu<span>Navigator</span></span>
+        </a>
 
-        .dropdown-content a:hover {
-            background: #f8f9fa;
-            transform: translateX(5px);
-            color: #27ae60;
-        }
+        <!-- Desktop Menu -->
+        <div class="nav-desktop">
+            <a href="/" class="nav-link">Home</a>
 
-        .login-btn {
-            background: #e74c3c;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-        }
+            <!-- Features Dropdown -->
+            <div class="nav-item">
+                <a href="#" class="nav-link">Features <i class="fas fa-chevron-down"></i></a>
+                <div class="nav-dropdown">
+                    <a href="/career-bank" class="dropdown-link">Career Bank</a>
+                    <a href="/career-counseling" class="dropdown-link">Skills & Interests</a>
+                    <a href="/career-trends-predictor" class="dropdown-link">AI Career Trends</a>
+                </div>
+            </div>
 
-        .login-btn:hover {
-            background: #27ae60;
-            transform: translateY(-3px);
-            box-shadow: 0 4px 8px rgba(88, 182, 11, 0.3);
-        }
+            <!-- Tools Dropdown -->
+            <div class="nav-item">
+                <a href="#" class="nav-link">Tools <i class="fas fa-chevron-down"></i></a>
+                <div class="nav-dropdown">
+                    <a href="/resume" class="dropdown-link">Resume Builder</a>
+                    <a href="/Certificate_Validator" class="dropdown-link">Certificate Validator</a>
+                    <a href="/integrations" class="dropdown-link">Profile Analyzer</a>
+                </div>
+            </div>
 
-        .hamburger {
-            display: none;
-            cursor: pointer;
-        }
-
-        .hamburger .line {
-            width: 25px;
-            height: 3px;
-            background: #2c3e50;
-            margin: 5px 0;
-            transition: 0.3s;
-        }
-
-        @media (max-width: 768px) {
-            .hamburger {
-                display: block;
-            }
-
-            .nav-links {
-                position: fixed;
-                top: 70px;
-                left: -100%;
-                width: 100%;
-                height: calc(100vh - 70px);
-                background: #fff;
-                flex-direction: column;
-                gap: 0;
-                transition: 0.3s;
-                padding: 1rem 0;
-            }
-
-            .nav-links.active {
-                left: 0;
-            }
-
-            .nav-links a {
-                padding: 1rem 2rem;
-                width: 100%;
-            }
-
-            .dropdown-content {
-                position: static;
-                box-shadow: none;
-                display: none;
-                background: #f8f9fa;
-            }
-
-            .dropdown:hover .dropdown-content {
-                display: none;
-            }
-
-            .dropdown.active .dropdown-content {
-                display: block;
-            }
-
-            .login-btn {
-                margin: 1rem;
-                text-align: center;
-            }
-        }
-    </style>
-</head>
-<body>
-    <nav>
-        <div class="logo">
-            <span>Edu</span><span>Navigator</span>
+            <!-- Resources Dropdown -->
+            <div class="nav-item">
+                <a href="#" class="nav-link">Resources <i class="fas fa-chevron-down"></i></a>
+                <div class="nav-dropdown">
+                    <a href="/webinars" class="dropdown-link">Webinars</a>
+                    <a href="/resources" class="dropdown-link">Career Resources</a>
+                    <a href="/carrer_resources" class="dropdown-link">Career Roadmap</a>
+                    <a href="/exam_choice" class="dropdown-link">College Finder</a>
+                    <a href="/scholarship" class="dropdown-link">Scholarships</a>
+                    <a href="/mentor" class="dropdown-link">Mentorship</a>
+                </div>
+            </div>
         </div>
-        <div class="hamburger">
-            <div class="line"></div>
-            <div class="line"></div>
-            <div class="line"></div>
+
+        <!-- Auth Buttons (Desktop) -->
+        <div class="nav-auth">
+            <% if (typeof userId !=='undefined' && userId) { %>
+                <a href="/apti" class="nav-link">Aptitude</a>
+                <a href="/profile" class="nav-link">Profile</a>
+                <a href="/logout" class="btn-signup" style="background:var(--nav-dark); color:white;">Log Out</a>
+                <% } else { %>
+                    <a href="/login" class="btn-login">Log In</a>
+                    <a href="/login" class="btn-signup">Get Started</a>
+                    <% } %>
         </div>
-        <div class="nav-links">
-          <a  href="/">Home</a>
-          <a  href="/webinars">webinars</a>
-          
-      
-            
-            <div class="dropdown">
-                <a href="#">Resources ▼</a>
-                <div class="dropdown-content">
-                 
-                  <a href="/resources">Resources</a>
-                  <a href="/carrer_resources">Roadmap</a>
-                </div>
-            </div>
-            
-            <div class="dropdown">
-                <a href="#">Career ▼</a>
-                <div class="dropdown-content">
-                  <a href="/career-counseling">Skills & Interest</a>
-                  <a href="/ai">AI Based</a></li>
-                  <a href="/Carrer_Trends">Trending Carrers</a>
-                  <a href="/career-bank">career Bank</a>
-                </div>
-            </div>
 
-            <a href="/exam_choice">College</a>
-            <a href="/scholarship">Scholarship</a>
-            <a href="/Certificate_Validator">Certificate</a>
-            <a href="/resume">Resume</a>
-            <a href="/profile">Profile</a>
-            <a href="/mentor">Mentor</a>
-            
-            <div class="dropdown">
-                <a href="#">Tools ▼</a>
-                <div class="dropdown-content">
-                    <a href="/interview-simulator">Interview Simulator</a>
-                    <a href="/integrations">Analyzer</a>
-                    <a href="/career-trends-predictor">AI Career Trends</a>
-                </div>
-            </div>
+        <!-- Mobile Toggle -->
+        <div class="mobile-toggle" onclick="toggleMobileMenu()">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+    </div>
+</nav>
 
-            <% if (userId) { %>
-              <a href="/apti">Aptitude</a>
-            <a href="/logout" class="login-btn">Log Out</a>
+<!-- Mobile Menu Overlay -->
+<div class="nav-overlay" onclick="toggleMobileMenu()"></div>
+
+<!-- Mobile Menu Drawer -->
+<div class="mobile-menu">
+    <div class="mobile-link-group">
+        <div class="mobile-group-title">Menu</div>
+        <a href="/" class="mobile-link">Home</a>
+    </div>
+
+    <div class="mobile-link-group">
+        <div class="mobile-group-title">Features</div>
+        <a href="/career-bank" class="mobile-link">Career Bank</a>
+        <a href="/career-counseling" class="mobile-link">Skills & Interests</a>
+        <a href="/career-trends-predictor" class="mobile-link">AI Career Trends</a>
+    </div>
+
+    <div class="mobile-link-group">
+        <div class="mobile-group-title">Tools</div>
+        <a href="/resume" class="mobile-link">Resume Builder</a>
+        <a href="/Certificate_Validator" class="mobile-link">Certificate Validator</a>
+        <a href="/integrations" class="mobile-link">Profile Analyzer</a>
+    </div>
+
+    <div class="mobile-link-group">
+        <div class="mobile-group-title">Resources</div>
+        <a href="/webinars" class="mobile-link">Webinars</a>
+        <a href="/resources" class="mobile-link">Career Resources</a>
+        <a href="/carrer_resources" class="mobile-link">Career Roadmap</a>
+        <a href="/exam_choice" class="mobile-link">College Finder</a>
+        <a href="/scholarship" class="mobile-link">Scholarships</a>
+        <a href="/mentor" class="mobile-link">Mentorship</a>
+    </div>
+
+    <div class="mobile-link-group">
+        <div class="mobile-group-title">Account</div>
+        <% if (typeof userId !=='undefined' && userId) { %>
+            <a href="/apti" class="mobile-link">Aptitude Test</a>
+            <a href="/profile" class="mobile-link">My Profile</a>
+            <a href="/logout" class="mobile-link" style="color: #E53E3E;">Log Out</a>
             <% } else { %>
-            
-                <a class="nav-link" href="/login">Login</a>
-             
-        
-            <% }  %>
-        </div>
-    </nav>
+                <a href="/login" class="mobile-link">Log In</a>
+                <a href="/login" class="mobile-link" style="color: var(--nav-secondary);">Get Started</a>
+                <% } %>
+    </div>
+</div>
 
-    <script>
-        const hamburger = document.querySelector('.hamburger');
-        const navLinks = document.querySelector('.nav-links');
-        const dropdowns = document.querySelectorAll('.dropdown');
+<script>
+    function toggleMobileMenu() {
+        const menu = document.querySelector('.mobile-menu');
+        const overlay = document.querySelector('.nav-overlay');
+        const toggle = document.querySelector('.mobile-toggle');
 
-        hamburger.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-            hamburger.classList.toggle('active');
-        });
-
-        dropdowns.forEach(dropdown => {
-            const link = dropdown.querySelector('a');
-            link.addEventListener('click', (e) => {
-                if (window.innerWidth <= 768) {
-                    e.preventDefault();
-                    dropdown.classList.toggle('active');
-                }
-            });
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!navLinks.contains(e.target) && !hamburger.contains(e.target)) {
-                navLinks.classList.remove('active');
-                dropdowns.forEach(dropdown => dropdown.classList.remove('active'));
-            }
-        });
-
-        window.addEventListener('resize', () => {
-            if (window.innerWidth > 768) {
-                navLinks.classList.remove('active');
-                dropdowns.forEach(dropdown => dropdown.classList.remove('active'));
-            }
-        });
-    </script>
-</body>
-</html>
-
+        menu.classList.toggle('active');
+        overlay.classList.toggle('active');
+        toggle.classList.toggle('active');
+    }
+</script>

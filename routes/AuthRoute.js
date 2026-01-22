@@ -3,7 +3,7 @@ const router = express.Router();
 const User = require('../model/User'); // Assuming you have a User model
 const passport = require('passport');
 require('dotenv').config();
-require('../passport'); // Ensure you have passport strategies configured
+// require('../passport'); // Ensure you have passport strategies configured
 
 // Environment variables
 const sessionSecret = process.env.SESSION_SECRET;
@@ -17,20 +17,20 @@ router.get('/register', (req, res) => {
 
 //router post ka jaha tole dega 
 router.post('/register', async (req, res) => {
-  try {
-      const { username, password, role } = req.body;
+    try {
+        const { username, password, role } = req.body;
 
-      const user = new User({ username, role });
+        const user = new User({ username, role });
 
-      await User.register(user, password); // Use `await` instead of callback
+        await User.register(user, password); // Use `await` instead of callback
 
-      // After successful registration, redirect to login page
-      return res.redirect('/login');
+        // After successful registration, redirect to login page
+        return res.redirect('/login');
 
-  } catch (err) {
-      console.error("Registration error:", err);
-      res.status(500).send("Error registering user.");
-  }
+    } catch (err) {
+        console.error("Registration error:", err);
+        res.status(500).send("Error registering user.");
+    }
 });
 
 
@@ -42,52 +42,54 @@ router.get('/login', (req, res) => {
 
 // Login POST request
 router.post('/login', async (req, res) => {
-  try {
-      const { username, password, role } = req.body;
+    try {
+        const { username, password, role } = req.body;
 
-      const user = await User.findOne({ username, role });
-      if (!user) {
-          return res.status(401).send('User not found');
-      }
+        const user = await User.findOne({ username, role });
+        if (!user) {
+            return res.status(401).send('User not found');
+        }
 
-      const authenticated = await user.authenticate(password);
-      if (!authenticated) {
-          return res.status(401).send('Invalid credentials');
-      }
+        const authenticated = await user.authenticate(password);
+        if (!authenticated) {
+            return res.status(401).send('Invalid credentials');
+        }
 
-      req.session.userId = user._id;
-      req.session.role = user.role;
+        req.session.userId = user._id;
+        req.session.role = user.role;
 
-      // Redirect based on role
-      if (role === 'student') {
-          return res.redirect('/');
-      } else if (role === 'parent') {
-          return res.redirect('/parent_home');
-      } else if (role === 'teacher') {
-          return res.redirect('/teacher_home');
-      }
+        // Redirect based on role
+        if (role === 'student') {
+            return res.redirect('/');
+        } else if (role === 'parent') {
+            return res.redirect('/parent_home');
+        } else if (role === 'teacher') {
+            return res.redirect('/teacher_home');
+        }
 
-  } catch (err) {
-      console.error("Login error:", err);
-      res.status(500).send("Error during login.");
-  }
+    } catch (err) {
+        console.error("Login error:", err);
+        res.status(500).send("Error during login.");
+    }
 });
 
 
 // Logout route
 router.get('/logout', (req, res) => {
     req.session.destroy((err) => {
-      if (err) {
-        return res.status(500).send('Error logging out');
-      }
-      res.redirect('/login');
+        if (err) {
+            return res.status(500).send('Error logging out');
+        }
+        res.redirect('/login');
     });
-  });
-  
+});
+
 // Google Auth Routes
 
 
 
+// Google authentication route
+/*
 // Google authentication route
 router.get('/auth/google', passport.authenticate('google', { 
     scope: [ 'email', 'profile' ] 
@@ -98,19 +100,20 @@ router.get('/auth/google/callback', passport.authenticate('google', {
     successRedirect: '/success', 
     failureRedirect: '/failure'
 }));
+*/
 
 // Success route
-router.get('/success', (req, res) => { 
+router.get('/success', (req, res) => {
     if (!req.user) {
         return res.redirect('/failure');
     }
     console.log(req.user);
-    res.send("Welcome " + req.user.email); 
+    res.send("Welcome " + req.user.email);
 });
 
 // Failure route
-router.get('/failure', (req, res) => { 
-    res.send("Error during authentication"); 
+router.get('/failure', (req, res) => {
+    res.send("Error during authentication");
 });
 
 module.exports = router;

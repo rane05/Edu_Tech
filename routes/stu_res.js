@@ -19,7 +19,7 @@ router.use(express.urlencoded({ extended: true }));
 router.post('/responses/submit', async (req, res) => {
   try {
     const userId = req.session.userId;
-    if (!userId) return res.status(401).render('notlogged'); 
+    if (!userId) return res.status(401).render('notlogged');
 
     // Fetch the user
     const user = await User.findById(userId);
@@ -69,10 +69,10 @@ router.post('/responses/submit', async (req, res) => {
 // Route to display the student's test results (PRG Pattern)
 router.get('/student_results', async (req, res) => {
   const userId = req.session.userId;
-  if (!userId) return res.status(401).render('notlogged'); 
+  if (!userId) return res.status(401).render('notlogged');
 
   // Ensure the test was submitted before displaying results
-  
+
 
   // Reset the session flag to prevent multiple submissions
   req.session.testSubmitted = false;
@@ -118,7 +118,7 @@ router.get('/student_results', async (req, res) => {
         
         Please provide recommendations on how to improve and potential areas of interest.
       `;
-      
+
       const result = await model.generateContent(prompt);
       const response = await result.response;
       const insights = await response.text();
@@ -137,7 +137,7 @@ router.get('/student_results', async (req, res) => {
   const insights = await generateContent();
   let now = new Date();
   let hours = now.getHours();
-let minutes = now.getMinutes();
+  let minutes = now.getMinutes();
 
   // Render the results page with section scores, total tests, leaderboard, and AI insights
   res.render('student_res', {
@@ -152,8 +152,8 @@ let minutes = now.getMinutes();
     hours,
     minutes
   });
-  
-  
+
+
 });
 
 // Route to view full AI insights
@@ -169,16 +169,23 @@ router.get('/get_graph', async (req, res) => {
 
   // Fetch all tests for the current user
   const studentTests = await StudentResponse.find({ user: userId });
-  
+
   // Prepare data for the graph
   const testNumbers = studentTests.map((_, index) => `Test ${index + 1}`);
   const totalScores = studentTests.map((test) => test.totalScore);
 
   // Render the graph view with total tests and scores
+  const user = await User.findById(userId);
   res.render('student_res', {
     totalTests: studentTests.length,
     testNumbers,
-    totalScores
+    totalScores,
+    username: user ? user.username : 'User',
+    sectionScores: studentTests.length > 0 ? studentTests[studentTests.length - 1].sectionScores : 'NA',
+    topScores: [], // Pass empty or fetch if needed
+    insights: '', // Pass empty or fetch if needed
+    hours: new Date().getHours(),
+    minutes: new Date().getMinutes()
   });
 });
 
@@ -211,7 +218,21 @@ router.get('/leaderboard', async (req, res) => {
     ]);
 
     // Render the leaderboard with top scores
-    res.render('student_res', { topScores });
+    // Render the leaderboard with top scores
+    const userId = req.session.userId;
+    const user = userId ? await User.findById(userId) : null;
+
+    res.render('student_res', {
+      topScores,
+      username: user ? user.username : 'User',
+      sectionScores: 'NA',
+      totalTests: 0,
+      testNumbers: [],
+      totalScores: [],
+      insights: '',
+      hours: new Date().getHours(),
+      minutes: new Date().getMinutes()
+    });
   } catch (error) {
     console.error('Error fetching leaderboard:', error);
     res.status(500).send('Server Error');

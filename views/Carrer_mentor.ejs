@@ -1,262 +1,421 @@
-<%- include('layouts/header'); -%>
+<%- include('layouts/header'); %>
+    <%- include('layouts/navbar'); %>
 
-    <%- include('layouts/navbar'); -%>
+        <style>
+            :root {
+                --color-primary: #FFB800;
+                --color-secondary: #00A8FF;
+                --color-dark: #1A1A2E;
+                --color-text: #2D3748;
+                --color-bg-light: #F7FAFC;
+            }
 
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
 
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+                background: var(--color-bg-light);
+            }
 
+            /* Hero Section */
+            .mentor-hero {
+                padding: 120px 20px 60px;
+                text-align: center;
+                background: white;
+            }
 
-    <div class="container" style="padding: 70px;">
-        <div class="row">
-            <div class="col">
-                <div class="card" style="width: 18rem;">
-                    <img src="/img/ava1.jpg" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">Maya</h5>
-                        <p class="card-text">Stress coach specializing in mindfulness and meditation techniques to help individuals manage anxiety and improve overall well-being.</p>
+            .mentor-hero h1 {
+                font-size: clamp(2.5rem, 5vw, 3.5rem);
+                font-weight: 800;
+                color: var(--color-dark);
+                margin-bottom: 15px;
+            }
+
+            .mentor-hero p {
+                font-size: 1.125rem;
+                color: #718096;
+                margin-bottom: 40px;
+            }
+
+            /* Filter Bar */
+            .filter-bar {
+                display: flex;
+                justify-content: center;
+                gap: 12px;
+                flex-wrap: wrap;
+                margin-bottom: 20px;
+            }
+
+            .filter-tag {
+                padding: 10px 20px;
+                background: white;
+                border: 2px solid #E2E8F0;
+                border-radius: 25px;
+                font-size: 0.9rem;
+                font-weight: 600;
+                color: var(--color-text);
+                cursor: pointer;
+                transition: all 0.3s;
+            }
+
+            .filter-tag:hover,
+            .filter-tag.active {
+                background: var(--color-secondary);
+                color: white;
+                border-color: var(--color-secondary);
+            }
+
+            /* Mentor Grid */
+            .mentor-container {
+                max-width: 1200px;
+                margin: 60px auto;
+                padding: 0 20px;
+            }
+
+            .mentor-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+                gap: 40px;
+            }
+
+            .mentor-card {
+                background: white;
+                border-radius: 20px;
+                padding: 40px 30px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+                text-align: center;
+                transition: all 0.3s;
+                border: 1px solid rgba(0, 0, 0, 0.05);
+            }
+
+            .mentor-card:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+            }
+
+            .mentor-avatar {
+                width: 120px;
+                height: 120px;
+                border-radius: 50%;
+                margin: 0 auto 20px;
+                border: 4px solid transparent;
+                background: linear-gradient(white, white) padding-box,
+                    linear-gradient(135deg, var(--color-primary), var(--color-secondary)) border-box;
+                overflow: hidden;
+            }
+
+            .mentor-avatar img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .mentor-name {
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: var(--color-dark);
+                margin-bottom: 8px;
+            }
+
+            .mentor-title {
+                font-size: 0.9rem;
+                color: #718096;
+                margin-bottom: 15px;
+            }
+
+            .mentor-rating {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                margin-bottom: 20px;
+            }
+
+            .stars {
+                color: var(--color-primary);
+                font-size: 0.9rem;
+            }
+
+            .rating-text {
+                font-weight: 600;
+                color: var(--color-text);
+                font-size: 0.95rem;
+            }
+
+            .mentor-description {
+                color: #718096;
+                font-size: 0.9rem;
+                line-height: 1.6;
+                margin-bottom: 20px;
+            }
+
+            .expertise-tags {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                justify-content: center;
+                margin-bottom: 25px;
+            }
+
+            .expertise-tag {
+                padding: 6px 14px;
+                background: rgba(0, 168, 255, 0.1);
+                color: var(--color-secondary);
+                border-radius: 20px;
+                font-size: 0.8rem;
+                font-weight: 600;
+            }
+
+            .mentor-footer {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding-top: 20px;
+                border-top: 1px solid #E2E8F0;
+            }
+
+            .mentor-price {
+                font-size: 1.25rem;
+                font-weight: 700;
+                color: var(--color-dark);
+            }
+
+            .mentor-price span {
+                font-size: 0.85rem;
+                color: #718096;
+                font-weight: 500;
+            }
+
+            .btn-book {
+                padding: 12px 28px;
+                background: var(--color-primary);
+                color: var(--color-dark);
+                border: none;
+                border-radius: 25px;
+                font-weight: 700;
+                cursor: pointer;
+                transition: all 0.3s;
+                box-shadow: 0 4px 12px rgba(255, 184, 0, 0.25);
+            }
+
+            .btn-book:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 6px 16px rgba(255, 184, 0, 0.35);
+                background: #FFC024;
+            }
+
+            /* Modal Styling */
+            .modal-content {
+                border-radius: 20px;
+                border: none;
+            }
+
+            .modal-header {
+                border-bottom: 1px solid #E2E8F0;
+                padding: 25px 30px;
+            }
+
+            .modal-title {
+                font-weight: 700;
+                color: var(--color-dark);
+            }
+
+            .modal-body {
+                padding: 30px;
+            }
+
+            .form-label {
+                font-weight: 600;
+                color: var(--color-dark);
+                margin-bottom: 8px;
+            }
+
+            .form-control,
+            .form-select {
+                border: 2px solid #E2E8F0;
+                border-radius: 10px;
+                padding: 12px 16px;
+                transition: all 0.3s;
+            }
+
+            .form-control:focus,
+            .form-select:focus {
+                border-color: var(--color-secondary);
+                box-shadow: 0 0 0 3px rgba(0, 168, 255, 0.1);
+            }
+
+            @media (max-width: 768px) {
+                .mentor-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .filter-bar {
+                    padding: 0 10px;
+                }
+            }
+        </style>
+
+        <!-- Hero Section -->
+        <section class="mentor-hero">
+            <h1>Connect with Expert Mentors</h1>
+            <p>Get personalized guidance from experienced professionals</p>
+
+            <div class="filter-bar">
+                <div class="filter-tag active">All Mentors</div>
+                <div class="filter-tag">Mindfulness</div>
+                <div class="filter-tag">CBT</div>
+                <div class="filter-tag">Nutrition</div>
+                <div class="filter-tag">Life Coaching</div>
+            </div>
+        </section>
+
+        <!-- Mentor Grid -->
+        <div class="mentor-container">
+            <div class="mentor-grid">
+
+                <!-- Mentor 1: Maya -->
+                <div class="mentor-card">
+                    <div class="mentor-avatar">
+                        <img src="/img/ava1.jpg" alt="Maya">
                     </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Expertise</li>
-                        <li class="list-group-item">Mindfulness</li>
-                        <li class="list-group-item">Meditation</li>
-                        <li class="list-group-item">Breathing Techniques</li>
-                    </ul>
-                    <div class="card-body">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            Open Form
-                        </button> 
+                    <h3 class="mentor-name">Maya Sharma</h3>
+                    <p class="mentor-title">Mindfulness & Meditation Expert</p>
+                    <div class="mentor-rating">
+                        <span class="stars">★★★★★</span>
+                        <span class="rating-text">4.9 (127 reviews)</span>
+                    </div>
+                    <p class="mentor-description">Specializing in mindfulness and meditation techniques to help
+                        individuals manage anxiety and improve overall well-being.</p>
+                    <div class="expertise-tags">
+                        <span class="expertise-tag">Mindfulness</span>
+                        <span class="expertise-tag">Meditation</span>
+                        <span class="expertise-tag">Breathing</span>
+                    </div>
+                    <div class="mentor-footer">
+                        <div class="mentor-price">₹500<span>/session</span></div>
+                        <button class="btn-book" data-bs-toggle="modal" data-bs-target="#bookingModal">Book
+                            Session</button>
                     </div>
                 </div>
-            </div>
-            <div class="col">
-                <div class="card" style="width: 18rem;">
-                    <img src="/img/ava2.jpg" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">Liam</h5>
-                        <p class="card-text">A stress management expert focused on cognitive-behavioral techniques to help clients overcome stressors and build resilience.</p>
+
+                <!-- Mentor 2: Liam -->
+                <div class="mentor-card">
+                    <div class="mentor-avatar">
+                        <img src="/img/ava2.jpg" alt="Liam">
                     </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Expertise</li>
-                        <li class="list-group-item">Cognitive-Behavioral Therapy</li>
-                        <li class="list-group-item">Stress Reduction Strategies</li>
-                        <li class="list-group-item">Life Coaching</li>
-                    </ul>
-                    <div class="card-body">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            Open Form
-                        </button> 
+                    <h3 class="mentor-name">Liam Patel</h3>
+                    <p class="mentor-title">Cognitive Behavioral Therapist</p>
+                    <div class="mentor-rating">
+                        <span class="stars">★★★★★</span>
+                        <span class="rating-text">4.8 (94 reviews)</span>
+                    </div>
+                    <p class="mentor-description">Stress management expert focused on cognitive-behavioral techniques to
+                        help clients overcome stressors and build resilience.</p>
+                    <div class="expertise-tags">
+                        <span class="expertise-tag">CBT</span>
+                        <span class="expertise-tag">Stress Reduction</span>
+                        <span class="expertise-tag">Life Coaching</span>
+                    </div>
+                    <div class="mentor-footer">
+                        <div class="mentor-price">₹600<span>/session</span></div>
+                        <button class="btn-book" data-bs-toggle="modal" data-bs-target="#bookingModal">Book
+                            Session</button>
                     </div>
                 </div>
-            </div>
-            <div class="col">
-                <div class="card" style="width: 18rem;">
-                    <img src="/img/ava1.jpg" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">Sofia</h5>
-                        <p class="card-text">Stress coach with a focus on holistic wellness, incorporating nutrition and lifestyle changes to alleviate stress.</p>
+
+                <!-- Mentor 3: Sofia -->
+                <div class="mentor-card">
+                    <div class="mentor-avatar">
+                        <img src="/img/ava1.jpg" alt="Sofia">
                     </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Expertise</li>
-                        <li class="list-group-item">Holistic Wellness</li>
-                        <li class="list-group-item">Nutrition</li>
-                        <li class="list-group-item">Stress Management</li>
-                    </ul>
-                    <div class="card-body">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            Open Form
-                        </button> 
+                    <h3 class="mentor-name">Sofia Desai</h3>
+                    <p class="mentor-title">Holistic Wellness Coach</p>
+                    <div class="mentor-rating">
+                        <span class="stars">★★★★★</span>
+                        <span class="rating-text">4.9 (156 reviews)</span>
+                    </div>
+                    <p class="mentor-description">Stress coach with a focus on holistic wellness, incorporating
+                        nutrition and lifestyle changes to alleviate stress.</p>
+                    <div class="expertise-tags">
+                        <span class="expertise-tag">Holistic Wellness</span>
+                        <span class="expertise-tag">Nutrition</span>
+                        <span class="expertise-tag">Stress Management</span>
+                    </div>
+                    <div class="mentor-footer">
+                        <div class="mentor-price">₹550<span>/session</span></div>
+                        <button class="btn-book" data-bs-toggle="modal" data-bs-target="#bookingModal">Book
+                            Session</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Booking Modal -->
+        <div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="bookingModalLabel">Schedule a Mentorship Session</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form class="row g-3" action="/send-email" method="POST">
+                            <div class="col-md-6">
+                                <label for="inputName" class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="inputName" name="name"
+                                    placeholder="Enter your name" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="inputEmail4" class="form-label">Email Address</label>
+                                <input type="email" class="form-control" id="inputEmail4" name="email"
+                                    placeholder="your@email.com" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="Mobile_Number" class="form-label">Mobile Number</label>
+                                <input type="tel" class="form-control" id="Mobile_Number" name="mobile"
+                                    placeholder="+91 XXXXX XXXXX" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="Current_Education_Level" class="form-label">Current Education Level</label>
+                                <input type="text" class="form-control" id="Current_Education_Level" name="education"
+                                    placeholder="e.g., 12th Grade" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="Language" class="form-label">Preferred Language</label>
+                                <select id="Language" class="form-select" name="language">
+                                    <option selected>English</option>
+                                    <option>Hindi</option>
+                                    <option>Marathi</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="Career_Interests_Goals" class="form-label">Career Interests/Goals</label>
+                                <input type="text" class="form-control" id="Career_Interests_Goals" name="careerGoals"
+                                    placeholder="e.g., Engineering" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="appointment-date" class="form-label">Preferred Date</label>
+                                <input type="date" id="appointment-date" class="form-control" name="date" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="appointment-time" class="form-label">Preferred Time</label>
+                                <input type="time" id="appointment-time" class="form-control" name="time" required>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="btn-book" style="width: 100%;">Confirm Booking</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-    
-        <div class="row">
-            <div class="col">
-                <div class="card" style="width: 18rem;">
-                    <img src="/img/ava1.jpg" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">Maya</h5>
-                        <p class="card-text">Stress coach specializing in mindfulness and meditation techniques to help individuals manage anxiety and improve overall well-being.</p>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Expertise</li>
-                        <li class="list-group-item">Mindfulness</li>
-                        <li class="list-group-item">Meditation</li>
-                        <li class="list-group-item">Breathing Techniques</li>
-                    </ul>
-                    <div class="card-body">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            Open Form
-                        </button> 
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card" style="width: 18rem;">
-                    <img src="/img/ava2.jpg" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">Liam</h5>
-                        <p class="card-text">A stress management expert focused on cognitive-behavioral techniques to help clients overcome stressors and build resilience.</p>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Expertise</li>
-                        <li class="list-group-item">Cognitive-Behavioral Therapy</li>
-                        <li class="list-group-item">Stress Reduction Strategies</li>
-                        <li class="list-group-item">Life Coaching</li>
-                    </ul>
-                    <div class="card-body">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            Open Form
-                        </button> 
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card" style="width: 18rem;">
-                    <img src="/img/ava1.jpg" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">Sofia</h5>
-                        <p class="card-text">Stress coach with a focus on holistic wellness, incorporating nutrition and lifestyle changes to alleviate stress.</p>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Expertise</li>
-                        <li class="list-group-item">Holistic Wellness</li>
-                        <li class="list-group-item">Nutrition</li>
-                        <li class="list-group-item">Stress Management</li>
-                    </ul>
-                    <div class="card-body">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            Open Form
-                        </button> 
-                    </div>
-                </div>
-            </div>
-        </div>
-    
-        <div class="row">
-            <div class="col">
-                <div class="card" style="width: 18rem;">
-                    <img src="/img/ava1.jpg" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">Maya</h5>
-                        <p class="card-text">Stress coach specializing in mindfulness and meditation techniques to help individuals manage anxiety and improve overall well-being.</p>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Expertise</li>
-                        <li class="list-group-item">Mindfulness</li>
-                        <li class="list-group-item">Meditation</li>
-                        <li class="list-group-item">Breathing Techniques</li>
-                    </ul>
-                    <div class="card-body">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            Open Form
-                        </button> 
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card" style="width: 18rem;">
-                    <img src="/img/ava2.jpg" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">Liam</h5>
-                        <p class="card-text">A stress management expert focused on cognitive-behavioral techniques to help clients overcome stressors and build resilience.</p>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Expertise</li>
-                        <li class="list-group-item">Cognitive-Behavioral Therapy</li>
-                        <li class="list-group-item">Stress Reduction Strategies</li>
-                        <li class="list-group-item">Life Coaching</li>
-                    </ul>
-                    <div class="card-body">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            Open Form
-                        </button> 
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card" style="width: 18rem;">
-                    <img src="/img/ava1.jpg" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title">Sofia</h5>
-                        <p class="card-text">Stress coach with a focus on holistic wellness, incorporating nutrition and lifestyle changes to alleviate stress.</p>
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Expertise</li>
-                        <li class="list-group-item">Holistic Wellness</li>
-                        <li class="list-group-item">Nutrition</li>
-                        <li class="list-group-item">Stress Management</li>
-                    </ul>
-                    <div class="card-body">
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                            Open Form
-                        </button> 
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
 
+        <%- include('layouts/footer'); %>
+            </body>
 
-
-
-
-
-    
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Schedule a Demo</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form class="row g-3" action="/send-email" method="POST">
-                        <div class="col-md-6">
-                            <label for="inputName" class="form-label">Name</label>
-                            <input type="text" class="form-control" id="inputName" name="name" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="inputEmail4" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="inputEmail4" name="email" required>
-                        </div>
-                        <div class="col-6">
-                            <label for="Mobile_Number" class="form-label">Mobile Number</label>
-                            <input type="number" class="form-control" id="Mobile_Number" name="mobile" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="Current_Education_Level" class="form-label">Current Education Level</label>
-                            <input type="text" class="form-control" id="Current_Education_Level" name="education" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="Language" class="form-label">Language</label>
-                            <select id="Language" class="form-select" name="language">
-                                <option selected>English</option>
-                                <option>Hindi</option>
-                                <option>Marathi</option>
-                            </select>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="Career_Interests_Goals" class="form-label">Career Interests/Goals</label>
-                            <input type="text" class="form-control" id="Career_Interests_Goals" name="careerGoals" required>
-                        </div>
-                        <div class="col-6">
-                            <label for="appointment-date" class="form-label">Select a Date:</label>
-                            <input type="date" id="appointment-date" class="form-control" name="date" required>
-                        </div>
-                        <div class="col-6">
-                            <label for="appointment-time" class="form-label">Select a Time:</label>
-                            <input type="time" id="appointment-time" class="form-control" name="time" required>
-                        </div>
-                        <div class="col-md-4">
-                            <button type="submit" class="btn btn-primary">Schedule a Demo</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-    <%- include('layouts/footer'); -%>
+            </html>

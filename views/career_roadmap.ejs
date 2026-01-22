@@ -1,87 +1,86 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Career Roadmap: <%= role %></title>
+    <title>Career Roadmap: <%= role %>
+    </title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary: #4f46e5;
-            --secondary: #ec4899;
-            --success: #22c55e;
-            --background: #0f172a;
-            --card-bg: rgba(255, 255, 255, 0.05);
-            --text-primary: #fff;
-            --text-secondary: #94a3b8;
+            --color-primary: #FFB800;
+            --color-secondary: #00A8FF;
+            --color-accent: #6C63FF;
+            --color-dark: #1A1A2E;
+            --color-text: #2D3748;
+            --color-text-light: #718096;
+            --color-bg: #FFFFFF;
+            --color-bg-light: #F7FAFC;
+            --color-bg-dark: #16213E;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, var(--background), #1e1b4b);
-            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', sans-serif;
+            background: var(--color-bg-light);
+            color: var(--color-text);
             line-height: 1.6;
             min-height: 100vh;
         }
 
         .roadmap-container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 60px 20px;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 4rem;
-            position: relative;
-        }
-
-        .header::after {
-            content: '';
-            position: absolute;
-            bottom: -20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100px;
-            height: 4px;
-            background: linear-gradient(to right, var(--primary), var(--secondary));
-            border-radius: 2px;
+            margin-bottom: 60px;
         }
 
         .title {
-            font-size: 3rem;
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
             font-weight: 800;
-            margin-bottom: 1rem;
-            background: linear-gradient(to right, #fff, #94a3b8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--color-dark);
+            margin-bottom: 15px;
         }
 
         .subtitle {
-            color: var(--text-secondary);
-            font-size: 1.2rem;
-            margin-bottom: 2rem;
+            color: var(--color-text-light);
+            font-size: 1.25rem;
         }
 
         .overview-card {
-            background: var(--card-bg);
+            background: white;
             border-radius: 20px;
-            padding: 2rem;
-            margin-bottom: 3rem;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            animation: fadeIn 0.5s ease-out;
+            padding: 40px;
+            margin-bottom: 60px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .overview-card h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--color-dark);
+            margin-bottom: 30px;
         }
 
         .overview-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
+            gap: 30px;
         }
 
         .overview-item {
-            padding: 1.5rem;
-            background: rgba(255, 255, 255, 0.03);
+            padding: 25px;
+            background: var(--color-bg-light);
             border-radius: 15px;
             transition: transform 0.3s ease;
         }
@@ -91,16 +90,26 @@
         }
 
         .overview-icon {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--color-primary);
+        }
+
+        .overview-item h3 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--color-dark);
+            margin-bottom: 10px;
+        }
+
+        .overview-item p {
+            color: var(--color-text-light);
+            font-size: 0.9375rem;
         }
 
         .timeline {
             position: relative;
-            margin-top: 4rem;
+            margin-top: 60px;
         }
 
         .timeline::before {
@@ -110,76 +119,79 @@
             transform: translateX(-50%);
             width: 4px;
             height: 100%;
-            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+            background: linear-gradient(to bottom, var(--color-primary), var(--color-secondary));
             border-radius: 2px;
         }
 
         .week-card {
-            width: calc(50% - 30px);
-            margin: 2rem 0;
+            width: calc(50% - 40px);
+            margin: 40px 0;
             position: relative;
-            animation: slideIn 0.5s ease-out;
         }
 
         .week-card:nth-child(odd) {
             margin-left: auto;
-            padding-left: 3rem;
+            padding-left: 60px;
         }
 
         .week-card:nth-child(even) {
-            padding-right: 3rem;
+            padding-right: 60px;
         }
 
         .week-card::before {
             content: '';
             position: absolute;
-            width: 20px;
-            height: 20px;
-            background: var(--primary);
+            width: 24px;
+            height: 24px;
+            background: var(--color-primary);
+            border: 4px solid white;
             border-radius: 50%;
-            top: 20px;
+            top: 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
         .week-card:nth-child(odd)::before {
-            left: -10px;
+            left: -12px;
         }
 
         .week-card:nth-child(even)::before {
-            right: -10px;
+            right: -12px;
         }
 
         .week-content {
-            background: var(--card-bg);
+            background: white;
             border-radius: 20px;
-            padding: 2rem;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: transform 0.3s ease;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
         }
 
         .week-content:hover {
             transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
 
         .week-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--color-bg-light);
         }
 
         .week-number {
             font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--secondary);
+            font-weight: 800;
+            color: var(--color-primary);
         }
 
         .week-focus {
-            font-size: 1.2rem;
-            color: var(--text-primary);
-            margin-bottom: 1rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--color-dark);
+            margin-bottom: 20px;
         }
 
         .topic-list {
@@ -189,43 +201,106 @@
         }
 
         .topic-item {
-            margin-bottom: 0.5rem;
-            padding-left: 1.5rem;
+            margin-bottom: 12px;
+            padding-left: 25px;
             position: relative;
-            color: var(--text-secondary);
+            color: var(--color-text);
+            font-size: 0.9375rem;
         }
 
         .topic-item::before {
             content: '→';
             position: absolute;
             left: 0;
-            color: var(--secondary);
+            color: var(--color-secondary);
+            font-weight: bold;
         }
 
         .resources-section {
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 2px solid var(--color-bg-light);
         }
 
-        .resource-link {
-            color: var(--primary);
+        .resources-section h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--color-dark);
+            margin-bottom: 15px;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--color-bg-dark);
+            color: white;
+            padding: 60px 20px 30px;
+            margin-top: 80px;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-top {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.125rem;
+            margin-bottom: 20px;
+        }
+
+        .footer-column ul {
+            list-style: none;
+        }
+
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-column a {
+            color: rgba(255, 255, 255, 0.7);
             text-decoration: none;
-            transition: color 0.3s ease;
+            transition: color 0.3s;
         }
 
-        .resource-link:hover {
-            color: var(--secondary);
+        .footer-column a:hover {
+            color: white;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .newsletter-form {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
         }
 
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(50px); }
-            to { opacity: 1; transform: translateX(0); }
+        .newsletter-form input {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 25px;
+            outline: none;
+        }
+
+        .newsletter-form button {
+            padding: 12px 30px;
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .footer-bottom {
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
         }
 
         @media (max-width: 768px) {
@@ -235,21 +310,32 @@
 
             .week-card {
                 width: 100%;
-                padding-left: 2rem !important;
+                padding-left: 40px !important;
                 padding-right: 0 !important;
             }
 
             .week-card::before {
-                left: -10px !important;
+                left: -12px !important;
+            }
+
+            .overview-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-top {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
+
 <body>
     <div class="roadmap-container">
         <div class="header">
-            <h1 class="title">Career Roadmap: <%= role %></h1>
-            <p class="subtitle">Your 12-week journey to becoming a <%= role %></p>
+            <h1 class="title">Career Roadmap: <%= role %>
+            </h1>
+            <p class="subtitle">Your 12-week journey to becoming a <%= role %>
+            </p>
         </div>
 
         <div class="overview-card">
@@ -258,51 +344,121 @@
                 <div class="overview-item">
                     <i class="fas fa-briefcase overview-icon"></i>
                     <h3>Role Description</h3>
-                    <p><%= overview.roleDescription %></p>
+                    <p>
+                        <%= overview.roleDescription %>
+                    </p>
                 </div>
                 <div class="overview-item">
                     <i class="fas fa-code overview-icon"></i>
                     <h3>Required Skills</h3>
-                    <p><%= overview.requiredSkills %></p>
+                    <p>
+                        <%= overview.requiredSkills %>
+                    </p>
                 </div>
                 <div class="overview-item">
                     <i class="fas fa-chart-line overview-icon"></i>
                     <h3>Career Growth</h3>
-                    <p><%= overview.careerGrowth %></p>
+                    <p>
+                        <%= overview.careerGrowth %>
+                    </p>
                 </div>
                 <div class="overview-item">
                     <i class="fas fa-money-bill-wave overview-icon"></i>
                     <h3>Salary Range</h3>
-                    <p><%= overview.salaryRange %></p>
+                    <p>
+                        <%= overview.salaryRange %>
+                    </p>
                 </div>
             </div>
         </div>
 
         <div class="timeline">
-            <% weeks.forEach((week, index) => { %>
+            <% weeks.forEach((week, index)=> { %>
                 <div class="week-card">
                     <div class="week-content">
                         <div class="week-header">
                             <span class="week-number">Week <%= index + 1 %></span>
                         </div>
-                        <div class="week-focus"><%= week.focus %></div>
+                        <div class="week-focus">
+                            <%= week.focus %>
+                        </div>
                         <ul class="topic-list">
-                            <% week.topics.forEach(topic => { %>
-                                <li class="topic-item"><%= topic %></li>
-                            <% }); %>
+                            <% week.topics.forEach(topic=> { %>
+                                <li class="topic-item">
+                                    <%= topic %>
+                                </li>
+                                <% }); %>
                         </ul>
                         <div class="resources-section">
                             <h4>Resources & Tools</h4>
                             <ul class="topic-list">
-                                <% week.resources.forEach(resource => { %>
-                                    <li class="topic-item"><%= resource %></li>
-                                <% }); %>
+                                <% week.resources.forEach(resource=> { %>
+                                    <li class="topic-item">
+                                        <%= resource %>
+                                    </li>
+                                    <% }); %>
                             </ul>
                         </div>
                     </div>
                 </div>
-            <% }); %>
+                <% }); %>
         </div>
     </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-top">
+                <div class="footer-column">
+                    <h3>EduNavigator</h3>
+                    <p style="color: rgba(255,255,255,0.7); margin-top: 20px;">Your AI-powered guide to career success
+                        and college admissions.</p>
+                    <div class="newsletter-form">
+                        <input type="email" placeholder="Enter your email">
+                        <button>Subscribe</button>
+                    </div>
+                </div>
+                <div class="footer-column">
+                    <h3>Product</h3>
+                    <ul>
+                        <li><a href="#">Career Counseling</a></li>
+                        <li><a href="#">College Finder</a></li>
+                        <li><a href="#">Scholarships</a></li>
+                        <li><a href="#">Projects</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Company</h3>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">FAQs</a></li>
+                        <li><a href="#">Guides</a></li>
+                        <li><a href="#">Webinars</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Legal</h3>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 EduNavigator. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
 </body>
+
 </html>
