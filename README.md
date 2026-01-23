@@ -14,13 +14,17 @@ Whether you're confused about your career path or looking for the perfect colleg
 
 ## ✨ Key Features
 
-- **🤖 AI Career Recommendations**: Intelligent algorithms analyze user responses to suggest the most suitable career paths.
+- **🤖 AI Chatbot (Ollama + Llama3)**:
+    - **Resume Analysis**: Upload your PDF resume for instant scoring and feedback.
+    - **Visual Roadmaps**: Ask for a career path and get a generated Mermaid.js flowchart.
+    - **Chat Sessions**: ChatGPT-style sidebar history with auto-generated titles.
+- **📈 AI Career Trend Predictor**: Real-time job market predictions (Salary, Growth, Risk) using local AI.
 - **📊 Smart Quiz & Insights**: A 60-mark assessment that provides detailed performance breakdowns, identifying strengths and areas for improvement (e.g., Quantitative, Verbal).
 - **🏆 Leaderboard**: Compete with peers and see top performers on the global leaderboard.
-- **📈 Interactive Dashboard**: Track quiz attempts, visualize progress trends, and monitor your growth with AI-driven analytics.
+- **📈 Interactive Dashboard**: Track quiz attempts, visualize progress trends, and monitor your growth.
 - **🏫 College Recommender**: Input your CET/JEE scores and preferences to get a tailored list of college recommendations.
 - **🛠️ Project-Based Learning (PBL)**: Engage in hands-on projects to build real-world skills.
-- **💰 Scholarship Finder**: Discover scholarship opportunities matched to your profile and academic achievements.
+- **💰 Scholarship Finder**: Discover scholarship opportunities matched to your profile.
 
 ---
 
@@ -30,8 +34,9 @@ Whether you're confused about your career path or looking for the perfect colleg
 |-----------|------------|
 | **Backend** | Node.js, Express.js |
 | **Database** | MongoDB |
-| **Frontend** | EJS (Embedded JavaScript), CSS |
-| **AI Engine** | Gemini API |
+| **Frontend** | EJS (Embedded JavaScript), CSS, Mermaid.js |
+| **AI Engine** | **Ollama (Llama 3)** |
+| **PDF Processing** | pdf-parse |
 
 ---
 
@@ -45,16 +50,20 @@ Whether you're confused about your career path or looking for the perfect colleg
 
 Follow these steps to get the project running locally.
 
-### 1. Clone the Repository
+### 1. Install Prerequisites
+- [Node.js](https://nodejs.org/)
+- [MongoDB](https://www.mongodb.com/)
+- [Ollama](https://ollama.ai/) -> Run `ollama run llama3`
+
+### 2. Clone the Repository
 ```bash
 git clone https://github.com/rane05/Edu_Tech.git
 cd Edu_Tech
 ```
 
-### 2. Configure Environment Variables
+### 3. Configure Environment Variables
 Create a `.env` file in the root directory and add your keys:
 ```env
-API_KEY=your_gemini_api_key_here
 MONGO_URI=your_mongodb_connection_string
 PORT=4000
 ```

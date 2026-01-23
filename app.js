@@ -60,6 +60,7 @@ const Cert = require('./routes/cert_validator.js')
 const interview = require('./routes/Ai_Interview.js')
 const integrations = require('./routes/integrations.js')
 const careerTrendsPredictor = require('./routes/career_trends_predictor.js')
+const ollamaChat = require('./routes/ollamaChat.js');
 
 
 let app = express();
@@ -140,6 +141,7 @@ app.use(Cert)
 app.use(interview)
 app.use(integrations)
 app.use(careerTrendsPredictor)
+app.use(ollamaChat);
 app.use(teacherHomeRoutes); // Use teacher home routes
 
 
