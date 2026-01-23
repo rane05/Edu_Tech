@@ -1,5 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+
+// Initialize Gemini API
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 // AI Interview Simulator - Main page
 router.get('/interview-simulator', (req, res) => {
@@ -9,19 +13,45 @@ router.get('/interview-simulator', (req, res) => {
 // Generate AI interview questions
 router.post('/interview/questions', async (req, res) => {
     try {
-        const { role, seniority } = req.body;
-        
-        // Mock AI question generation - in production, this would use real AI
-        const questions = generateInterviewQuestions(role, seniority);
-        
+        const { role, seniority, name, background, interests } = req.body;
+
+        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+
+        const prompt = `
+        Act as an expert Technical Interviewer and Career Coach.
+        Generate 5 relevant interview questions for a candidate with the following profile:
+        - Name: ${name}
+        - Target Role: ${role}
+        - Seniority Level: ${seniority}
+        - Background/Current Details: ${background}
+        - Interests: ${interests}
+
+        The questions should assess their suitability for the ${role} role, considering their background and interests.
+        Make the questions a mix of technical, behavioral, and situational questions.
+        Return ONLY a JSON array of strings, for example: ["Question 1", "Question 2", ...]. Do not include markdown formatting like \`\`\`json.
+        `;
+
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text().replace(/```json/g, '').replace(/```/g, '').trim();
+
+        let questions;
+        try {
+            questions = JSON.parse(text);
+        } catch (e) {
+            // Fallback if parsing fails (simple split)
+            questions = text.split('\n').filter(q => q.trim().length > 0).slice(0, 5);
+        }
+
         res.json({
             success: true,
             questions: questions
         });
     } catch (error) {
-        res.status(500).json({ 
-            success: false, 
-            error: 'Failed to generate questions' 
+        console.error("Gemini API Error:", error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to generate questions. Please try again.'
         });
     }
 });
@@ -29,99 +59,62 @@ router.post('/interview/questions', async (req, res) => {
 // Analyze interview answers with AI
 router.post('/interview/analyze', async (req, res) => {
     try {
-        const { role, seniority, transcript } = req.body;
+        const { role, seniority, transcript, question } = req.body;
+
+        const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+
+        const prompt = `
+        Act as an expert Interview Coach.
+        Analyze the following interview response:
         
-        // Mock AI analysis - in production, this would use real AI
-        const analysis = await analyzeInterviewResponse(role, seniority, transcript);
-        
+        Role: ${role} (${seniority})
+        Question: ${question || "General Interview Context"}
+        Candidate's Response: "${transcript}"
+
+        Provide a structured evaluation in JSON format with the following keys:
+        - sentiment: 'positive', 'neutral', or 'negative'
+        - confidence: number (0-100) based on the tone and clarity
+        - summary: A brief 1-2 sentence summary of their answer
+        - strengths: Array of strings (3-4 points)
+        - gaps: Array of strings (areas for improvement)
+        - recommendations: Array of strings (actionable advice)
+        - followUpQuestion: A specific technical or behavioral follow-up question based on their answer.
+
+        Return ONLY the raw JSON object. Do not include markdown formatting.
+        `;
+
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = response.text().replace(/```json/g, '').replace(/```/g, '').trim();
+
+        let analysis;
+        try {
+            analysis = JSON.parse(text);
+        } catch (e) {
+            console.error("JSON Parse Error:", e);
+            // Return a safe fallback
+            analysis = {
+                sentiment: 'neutral',
+                confidence: 50,
+                summary: 'Analysis could not be parsed correctly, but response was recorded.',
+                strengths: ['Response recorded'],
+                gaps: [],
+                recommendations: ['Please try again for detailed analysis'],
+                followUpQuestion: 'Could you elaborate further?'
+            }
+        }
+
         res.json({
             success: true,
             analysis: analysis
         });
     } catch (error) {
-        res.status(500).json({ 
-            success: false, 
-            error: 'Failed to analyze response' 
+        console.error("Gemini Analysis Error:", error);
+        res.status(500).json({
+            success: false,
+            error: 'Failed to analyze response'
         });
     }
 });
-
-// Generate interview questions based on role and seniority
-function generateInterviewQuestions(role, seniority) {
-    const questions = [];
-    
-    // Common questions for all roles
-    questions.push("Tell me about yourself and your background.");
-    questions.push("Why are you interested in this role?");
-    questions.push("What are your greatest strengths and weaknesses?");
-    
-    // Role-specific questions
-    if (role.toLowerCase().includes('developer') || role.toLowerCase().includes('engineer')) {
-        questions.push("Describe a challenging technical problem you solved.");
-        questions.push("How do you stay updated with the latest technologies?");
-        questions.push("Walk me through your development process.");
-    } else if (role.toLowerCase().includes('manager') || role.toLowerCase().includes('lead')) {
-        questions.push("Describe a time when you had to lead a difficult team.");
-        questions.push("How do you handle conflicts within your team?");
-        questions.push("What's your approach to project planning?");
-    } else if (role.toLowerCase().includes('designer')) {
-        questions.push("Walk me through your design process.");
-        questions.push("How do you gather user requirements?");
-        questions.push("Describe a design challenge you overcame.");
-    }
-    
-    // Seniority-specific questions
-    if (seniority === 'entry') {
-        questions.push("What are you looking to learn in this role?");
-        questions.push("How do you handle feedback and criticism?");
-    } else if (seniority === 'mid') {
-        questions.push("Describe a project where you took ownership.");
-        questions.push("How do you mentor junior team members?");
-    } else if (seniority === 'senior') {
-        questions.push("How do you influence technical decisions?");
-        questions.push("Describe a time when you had to push back on requirements.");
-    }
-    
-    return questions.slice(0, 5); // Return 5 questions
-}
-
-// Analyze interview response with AI
-async function analyzeInterviewResponse(role, seniority, transcript) {
-    // Simulate AI processing delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Mock AI analysis - in production, this would use real AI models
-    const analysis = {
-        sentiment: 'positive',
-        confidence: 75,
-        summary: 'The candidate provided a comprehensive and well-structured response that demonstrates strong communication skills and relevant experience.',
-        strengths: [
-            'Clear communication and articulation',
-            'Relevant examples and experiences',
-            'Good technical knowledge',
-            'Professional demeanor'
-        ],
-        gaps: [
-            'Could provide more specific metrics',
-            'Limited discussion of challenges faced',
-            'Could elaborate on learning outcomes'
-        ],
-        recommendations: [
-            'Include specific numbers and achievements',
-            'Prepare more detailed examples of problem-solving',
-            'Practice discussing failures and lessons learned'
-        ],
-        followUpQuestion: 'Can you give me a specific example of when you had to learn a new technology quickly?'
-    };
-    
-    // Adjust analysis based on role and seniority
-    if (seniority === 'entry') {
-        analysis.recommendations.push('Focus on demonstrating learning potential and adaptability');
-    } else if (seniority === 'senior') {
-        analysis.recommendations.push('Emphasize leadership and strategic thinking examples');
-    }
-    
-    return analysis;
-}
 
 module.exports = router;

@@ -150,10 +150,6 @@ app.use(teacherHomeRoutes); // Use teacher home routes
 
 
 
-app.listen(4000, () => {
-    console.log('Listening on 4000');
-});
-
 const server = http.createServer(app);
 const wss = new WebSocket.Server({ server });
 
@@ -165,6 +161,10 @@ wss.on('connection', ws => {
             }
         });
     });
+});
+
+server.listen(4000, () => {
+    console.log('Listening on 4000');
 });
 app.get('/vid', (req, res) => {
     res.render('vid')

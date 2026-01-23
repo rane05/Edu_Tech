@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -38,14 +39,47 @@
             animation: float 20s ease-in-out infinite;
         }
 
-        .bg-element:nth-child(1) { width: 300px; height: 300px; top: -150px; left: -150px; animation-delay: 0s; }
-        .bg-element:nth-child(2) { width: 200px; height: 200px; top: 50%; right: -100px; animation-delay: 5s; }
-        .bg-element:nth-child(3) { width: 250px; height: 250px; bottom: -125px; left: 50%; animation-delay: 10s; }
+        .bg-element:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: -150px;
+            left: -150px;
+            animation-delay: 0s;
+        }
+
+        .bg-element:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            top: 50%;
+            right: -100px;
+            animation-delay: 5s;
+        }
+
+        .bg-element:nth-child(3) {
+            width: 250px;
+            height: 250px;
+            bottom: -125px;
+            left: 50%;
+            animation-delay: 10s;
+        }
 
         @keyframes float {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: 0.1; }
-            33% { transform: translate(50px, 50px) rotate(120deg); opacity: 0.2; }
-            66% { transform: translate(-30px, 80px) rotate(240deg); opacity: 0.15; }
+
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 0.1;
+            }
+
+            33% {
+                transform: translate(50px, 50px) rotate(120deg);
+                opacity: 0.2;
+            }
+
+            66% {
+                transform: translate(-30px, 80px) rotate(240deg);
+                opacity: 0.15;
+            }
         }
 
         /* Enhanced Header */
@@ -71,8 +105,13 @@
         }
 
         @keyframes glow {
-            from { text-shadow: 0 0 20px rgba(96, 165, 250, 0.5); }
-            to { text-shadow: 0 0 30px rgba(236, 72, 153, 0.8), 0 0 40px rgba(96, 165, 250, 0.6); }
+            from {
+                text-shadow: 0 0 20px rgba(96, 165, 250, 0.5);
+            }
+
+            to {
+                text-shadow: 0 0 30px rgba(236, 72, 153, 0.8), 0 0 40px rgba(96, 165, 250, 0.6);
+            }
         }
 
         .header p {
@@ -94,7 +133,8 @@
             perspective: 1000px;
         }
 
-        .form-section, .results-section {
+        .form-section,
+        .results-section {
             background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(25px);
             border-radius: 25px;
@@ -106,7 +146,8 @@
             overflow: hidden;
         }
 
-        .form-section::before, .results-section::before {
+        .form-section::before,
+        .results-section::before {
             content: '';
             position: absolute;
             top: 0;
@@ -120,29 +161,34 @@
             z-index: -1;
         }
 
-        .form-section:hover::before, .results-section:hover::before {
+        .form-section:hover::before,
+        .results-section:hover::before {
             opacity: 1;
             transform: scale(1);
         }
 
-        .form-section:hover, .results-section:hover {
+        .form-section:hover,
+        .results-section:hover {
             transform: translateY(-10px) translateZ(20px) rotateX(5deg);
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
             border-color: rgba(79, 70, 229, 0.3);
         }
 
-        .form-section h2, .results-section h2 {
+        .form-section h2,
+        .results-section h2 {
             font-size: 2rem;
             margin-bottom: 30px;
             color: #fbbf24;
             text-align: center;
             background: linear-gradient(135deg, #fbbf24, #f59e0b);
             -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
             position: relative;
         }
 
-        .form-section h2::after, .results-section h2::after {
+        .form-section h2::after,
+        .results-section h2::after {
             content: '';
             position: absolute;
             bottom: -8px;
@@ -169,7 +215,9 @@
             transition: all 0.3s ease;
         }
 
-        .form-group input, .form-group select, .form-group textarea {
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
             width: 100%;
             padding: 18px;
             border: 2px solid rgba(255, 255, 255, 0.2);
@@ -181,7 +229,9 @@
             backdrop-filter: blur(10px);
         }
 
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
             outline: none;
             border-color: #60a5fa;
             box-shadow: 0 0 25px rgba(96, 165, 250, 0.4);
@@ -277,8 +327,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         /* Enhanced Feedback Container */
@@ -311,8 +366,15 @@
         }
 
         @keyframes badgePulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
         }
 
         .sentiment-positive {
@@ -365,8 +427,13 @@
         }
 
         @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
         }
 
         /* Enhanced Feedback Sections */
@@ -503,6 +570,7 @@
                 opacity: 0;
                 transform: translateY(40px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -518,6 +586,7 @@
                 opacity: 0;
                 transform: translateX(-40px);
             }
+
             to {
                 opacity: 1;
                 transform: translateX(0);
@@ -533,6 +602,7 @@
                 opacity: 0;
                 transform: translateX(40px);
             }
+
             to {
                 opacity: 1;
                 transform: translateX(0);
@@ -554,7 +624,8 @@
                 padding: 15px;
             }
 
-            .form-section, .results-section {
+            .form-section,
+            .results-section {
                 padding: 25px;
             }
 
@@ -579,6 +650,109 @@
 
         .interactive-cursor.hover {
             transform: scale(2);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.95);
+            margin: auto;
+            padding: 40px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            animation: modalSlideIn 0.4s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        .modal p {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        .modal-btn {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: 600;
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3);
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            z-index: 2000;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .loading-spinner-large {
+            width: 80px;
+            height: 80px;
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #fbbf24;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-in;
         }
 
         /* Progress Indicator */
@@ -613,11 +787,17 @@
         }
 
         @keyframes progressShimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
         }
     </style>
 </head>
+
 <body>
     <!-- Interactive Background -->
     <div class="interactive-bg">
@@ -643,7 +823,8 @@
     <div class="container">
         <div class="header fade-in">
             <h1><i class="fas fa-microphone-alt"></i> AI Interview Simulator</h1>
-            <p>Master your interview skills with AI-powered questions, real-time feedback, and personalized coaching. Experience the future of interview preparation.</p>
+            <p>Master your interview skills with AI-powered questions, real-time feedback, and personalized coaching.
+                Experience the future of interview preparation.</p>
         </div>
 
         <div class="main-content">
@@ -651,10 +832,29 @@
                 <h2><i class="fas fa-cog"></i> Interview Setup</h2>
                 <form id="interviewForm">
                     <div class="form-group">
-                        <label for="role"><i class="fas fa-briefcase"></i> Job Role:</label>
-                        <input type="text" id="role" name="role" placeholder="e.g., Software Developer, Product Manager" required>
+                        <label for="name"><i class="fas fa-user"></i> Full Name:</label>
+                        <input type="text" id="name" name="name" placeholder="Enter your full name" required>
                     </div>
-                    
+
+                    <div class="form-group">
+                        <label for="background"><i class="fas fa-history"></i> Current Status / Background:</label>
+                        <textarea id="background" name="background"
+                            placeholder="e.g., Final year CS student, Freelance Web Developer" style="min-height: 80px;"
+                            required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="interests"><i class="fas fa-heart"></i> Key Interests:</label>
+                        <input type="text" id="interests" name="interests"
+                            placeholder="e.g., AI, Cloud Computing, Cyber Security" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="role"><i class="fas fa-briefcase"></i> Job Role:</label>
+                        <input type="text" id="role" name="role" placeholder="e.g., Software Developer, Product Manager"
+                            required>
+                    </div>
+
                     <div class="form-group">
                         <label for="seniority"><i class="fas fa-chart-line"></i> Seniority Level:</label>
                         <select id="seniority" name="seniority" required>
@@ -677,10 +877,11 @@
                         <i class="fas fa-list-ul"></i> Interview Questions
                     </h3>
                     <div id="questionsList"></div>
-                    
+
                     <div class="form-group" style="margin-top: 30px;">
                         <label for="transcript"><i class="fas fa-comments"></i> Your Response:</label>
-                        <textarea id="transcript" name="transcript" placeholder="Type or speak your interview response here..."></textarea>
+                        <textarea id="transcript" name="transcript"
+                            placeholder="Type or speak your interview response here..."></textarea>
                     </div>
 
                     <div class="btn-group">
@@ -703,11 +904,11 @@
                     <div class="spinner"></div>
                     <p>Analyzing your response with AI...</p>
                 </div>
-                
+
                 <div id="feedbackContainer" style="display: none;">
                     <div class="feedback-container">
                         <div id="sentimentBadge" class="sentiment-badge"></div>
-                        
+
                         <div class="feedback-section">
                             <h3><i class="fas fa-tachometer-alt"></i> Confidence Level</h3>
                             <div class="confidence-bar">
@@ -738,7 +939,9 @@
 
                         <div class="feedback-section">
                             <h3><i class="fas fa-question-circle"></i> Follow-up Question</h3>
-                            <p id="followUpQuestion" style="background: rgba(255, 255, 255, 0.1); padding: 18px; border-radius: 10px; border-left: 4px solid #fbbf24;"></p>
+                            <p id="followUpQuestion"
+                                style="background: rgba(255, 255, 255, 0.1); padding: 18px; border-radius: 10px; border-left: 4px solid #fbbf24;">
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -757,6 +960,28 @@
                 </button>
             </div>
         </div>
+    </div>
+
+    <!-- Start Interview Modal -->
+    <div id="startInterviewModal" class="modal">
+        <div class="modal-content">
+            <i class="fas fa-check-circle" style="font-size: 5rem; color: #10b981; margin-bottom: 20px;"></i>
+            <h2>Questions Ready!</h2>
+            <p>Your personalized interview session is prepared. <br>Are you ready to begin?</p>
+            <button class="modal-btn" onclick="startInterviewSession()">
+                <i class="fas fa-play"></i> Start Interview
+            </button>
+        </div>
+    </div>
+
+    <!-- Full Screen Loading Overlay -->
+    <div id="fullScreenLoader" class="loading-overlay">
+        <div class="loading-content">
+            <div class="loading-spinner-large"></div>
+            <h2 style="color: #333;">Generating Layout...</h2>
+            <p style="color: #666;">Crafting your interview experience</p>
+        </div>
+    </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
@@ -794,7 +1019,7 @@
             feedback.querySelector('span').textContent = message;
             feedback.className = `real-time-feedback ${type}`;
             feedback.classList.add('show');
-            
+
             setTimeout(() => {
                 feedback.classList.remove('show');
             }, 3000);
@@ -805,8 +1030,8 @@
             recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
             recognition.continuous = true;
             recognition.interimResults = true;
-            
-            recognition.onresult = function(event) {
+
+            recognition.onresult = function (event) {
                 let finalTranscript = '';
                 for (let i = event.resultIndex; i < event.results.length; i++) {
                     if (event.results[i].isFinal) {
@@ -816,17 +1041,17 @@
                 if (finalTranscript) {
                     const transcript = document.getElementById('transcript');
                     transcript.value += finalTranscript + ' ';
-                    
+
                     // Show real-time feedback
                     showRealTimeFeedback('Great! Keep speaking...', 'success');
-                    
+
                     // Update progress
                     interviewProgress += 10;
                     updateProgress(Math.min(interviewProgress, 100));
                 }
             };
 
-            recognition.onerror = function(event) {
+            recognition.onerror = function (event) {
                 showRealTimeFeedback('Speech recognition error. Please try again.', 'error');
             };
         }
@@ -839,21 +1064,23 @@
         document.getElementById('startCameraBtn').addEventListener('click', startCamera);
         document.getElementById('stopCameraBtn').addEventListener('click', stopCamera);
 
-        // Enhanced question generation
+        // Enhanced question display with animations and TTS
+        let currentQuestions = []; // Store questions globally
+
         async function generateQuestions() {
             const role = document.getElementById('role').value;
             const seniority = document.getElementById('seniority').value;
-            
-            if (!role || !seniority) {
-                showRealTimeFeedback('Please fill in both role and seniority level.', 'error');
+            const name = document.getElementById('name').value;
+            const background = document.getElementById('background').value;
+            const interests = document.getElementById('interests').value;
+
+            if (!role || !seniority || !name || !background || !interests) {
+                showRealTimeFeedback('Please fill in all fields.', 'error');
                 return;
             }
 
-            // Show loading state
-            const btn = document.getElementById('generateQuestionsBtn');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
-            btn.disabled = true;
+            // Show full screen loader
+            document.getElementById('fullScreenLoader').style.display = 'flex';
 
             try {
                 const response = await fetch('/interview/questions', {
@@ -861,45 +1088,84 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ role, seniority })
+                    body: JSON.stringify({ role, seniority, name, background, interests })
                 });
 
                 const data = await response.json();
-                
+
                 if (data.success) {
-                    displayQuestions(data.questions);
-                    document.getElementById('questionsContainer').style.display = 'block';
-                    showRealTimeFeedback('Questions generated successfully!', 'success');
-                    updateProgress(25);
+                    currentQuestions = data.questions;
+                    // Hide loader and show modal
+                    document.getElementById('fullScreenLoader').style.display = 'none';
+                    document.getElementById('startInterviewModal').style.display = 'flex';
                 } else {
+                    document.getElementById('fullScreenLoader').style.display = 'none';
                     showRealTimeFeedback('Failed to generate questions: ' + data.error, 'error');
                 }
             } catch (error) {
                 console.error('Error:', error);
+                document.getElementById('fullScreenLoader').style.display = 'none';
                 showRealTimeFeedback('Failed to generate questions. Please try again.', 'error');
-            } finally {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
             }
         }
 
-        // Enhanced question display with animations
+        function startInterviewSession() {
+            document.getElementById('startInterviewModal').style.display = 'none';
+            document.getElementById('questionsContainer').style.display = 'block';
+            displayQuestions(currentQuestions);
+
+            // Scroll to questions
+            document.getElementById('questionsContainer').scrollIntoView({ behavior: 'smooth' });
+        }
+
         function displayQuestions(questions) {
             const questionsList = document.getElementById('questionsList');
             questionsList.innerHTML = '';
-            
+
             questions.forEach((question, index) => {
                 const questionDiv = document.createElement('div');
-                questionDiv.style.cssText = 'background: rgba(255, 255, 255, 0.1); padding: 18px; margin: 12px 0; border-radius: 10px; border-left: 4px solid #60a5fa; transform: translateX(-20px); opacity: 0; transition: all 0.5s ease;';
-                questionDiv.innerHTML = `<strong>Q${index + 1}:</strong> ${question}`;
+                questionDiv.style.cssText = 'background: rgba(255, 255, 255, 0.1); padding: 18px; margin: 12px 0; border-radius: 10px; border-left: 4px solid #60a5fa; transform: translateX(-20px); opacity: 0; transition: all 0.5s ease; display: flex; align-items: start; justify-content: space-between; gap: 10px;';
+
+                const questionText = document.createElement('div');
+                questionText.innerHTML = `<strong>Q${index + 1}:</strong> ${question}`;
+
+                const speakBtn = document.createElement('button');
+                speakBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+                speakBtn.className = 'btn';
+                speakBtn.style.padding = '8px 12px';
+                speakBtn.style.margin = '0';
+                speakBtn.style.fontSize = '0.9rem';
+                speakBtn.onclick = () => speakText(question);
+
+                questionDiv.appendChild(questionText);
+                questionDiv.appendChild(speakBtn);
                 questionsList.appendChild(questionDiv);
-                
+
                 // Staggered animation
                 setTimeout(() => {
                     questionDiv.style.transform = 'translateX(0)';
                     questionDiv.style.opacity = '1';
                 }, index * 200);
             });
+
+            // Auto-speak the first question
+            if (questions.length > 0) {
+                setTimeout(() => speakText("Your interview is starting. Question 1. " + questions[0]), 1500);
+            }
+        }
+
+        // Text-to-Speech Function
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); // Stop any current speech
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 1;
+                utterance.pitch = 1;
+                utterance.volume = 1;
+                window.speechSynthesis.speak(utterance);
+            } else {
+                showRealTimeFeedback('Text-to-speech not supported in this browser.', 'error');
+            }
         }
 
         // Enhanced recording functions
@@ -933,7 +1199,7 @@
             const role = document.getElementById('role').value;
             const seniority = document.getElementById('seniority').value;
             const transcript = document.getElementById('transcript').value;
-            
+
             if (!transcript.trim()) {
                 showRealTimeFeedback('Please provide a response to analyze.', 'error');
                 return;
@@ -941,7 +1207,7 @@
 
             showAnalyzing();
             updateProgress(90);
-            
+
             try {
                 const response = await fetch('/interview/analyze', {
                     method: 'POST',
@@ -952,7 +1218,7 @@
                 });
 
                 const data = await response.json();
-                
+
                 if (data.success) {
                     renderFeedback(data.analysis);
                     updateProgress(100);
@@ -997,7 +1263,7 @@
                         element.style.opacity = '0';
                         element.style.transform = 'translateY(20px)';
                         element.style.transition = 'all 0.5s ease';
-                        
+
                         setTimeout(() => {
                             if (sectionId === 'summaryText') {
                                 element.textContent = analysis.summary;
@@ -1006,7 +1272,7 @@
                             } else {
                                 setList(sectionId, analysis[sectionId.replace('List', '')]);
                             }
-                            
+
                             element.style.opacity = '1';
                             element.style.transform = 'translateY(0)';
                         }, 100);
@@ -1019,12 +1285,12 @@
         function setConfidence(confidence) {
             const confidenceFill = document.getElementById('confidenceFill');
             const confidenceText = document.getElementById('confidenceText');
-            
+
             // Animate confidence bar
             setTimeout(() => {
                 confidenceFill.style.width = confidence + '%';
             }, 500);
-            
+
             confidenceText.textContent = `${confidence}% - ${getConfidenceLabel(confidence)}`;
         }
 
@@ -1040,14 +1306,14 @@
         function setList(listId, items) {
             const list = document.getElementById(listId);
             list.innerHTML = '';
-            
+
             items.forEach((item, index) => {
                 const li = document.createElement('li');
                 li.textContent = item;
                 li.style.opacity = '0';
                 li.style.transform = 'translateX(-20px)';
                 list.appendChild(li);
-                
+
                 // Staggered animation
                 setTimeout(() => {
                     li.style.transition = 'all 0.5s ease';
@@ -1092,10 +1358,10 @@
         }
 
         // Enhanced initialization
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             loadFaceApiModels();
             updateProgress(0);
-            
+
             // Add entrance animations
             const elements = document.querySelectorAll('.form-section, .results-section, .camera-section');
             elements.forEach((el, index) => {
@@ -1103,7 +1369,7 @@
                     el.style.opacity = '0';
                     el.style.transform = 'translateY(30px)';
                     el.style.transition = 'all 0.8s ease';
-                    
+
                     setTimeout(() => {
                         el.style.opacity = '1';
                         el.style.transform = 'translateY(0)';
@@ -1116,7 +1382,7 @@
         window.addEventListener('scroll', () => {
             const scrolled = window.pageYOffset;
             const parallaxElements = document.querySelectorAll('.bg-element');
-            
+
             parallaxElements.forEach((el, index) => {
                 const speed = (index + 1) * 0.5;
                 el.style.transform = `translateY(${scrolled * speed}px) rotate(${scrolled * 0.1}deg)`;
@@ -1124,4 +1390,5 @@
         });
     </script>
 </body>
+
 </html>
