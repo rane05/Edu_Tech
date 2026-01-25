@@ -811,583 +811,387 @@
         <div class="progress-bar" id="progressBar"></div>
     </div>
 
-    <!-- Interactive Cursor -->
-    <div class="interactive-cursor" id="interactiveCursor"></div>
-
-    <!-- Real-time Feedback -->
-    <div class="real-time-feedback" id="realTimeFeedback">
-        <i class="fas fa-check-circle"></i>
-        <span>Great response! Keep going...</span>
+    <!-- Status Overlay (Thinking/Listening) -->
+    <div id="statusOverlay"
+        style="display:none; position:fixed; top:20px; left:50%; transform:translateX(-50%); z-index:2000; background:rgba(0,0,0,0.7); padding:10px 20px; border-radius:30px; border: 1px solid rgba(255,255,255,0.2); backdrop-filter:blur(10px);">
+        <div style="display:flex; align-items:center; gap:10px; color:white;">
+            <div id="statusIcon" class="spinner" style="width:20px; height:20px; margin:0; border-width:2px;"></div>
+            <span id="statusText">AI is thinking...</span>
+        </div>
     </div>
 
     <div class="container">
         <div class="header fade-in">
-            <h1><i class="fas fa-microphone-alt"></i> AI Interview Simulator</h1>
-            <p>Master your interview skills with AI-powered questions, real-time feedback, and personalized coaching.
-                Experience the future of interview preparation.</p>
+            <h1><i class="fas fa-microphone-alt"></i> Voice Interview AI</h1>
+            <p>Experience a realistic interview. Spoken questions, real-time analysis, adaptive difficulty.</p>
         </div>
 
         <div class="main-content">
-            <div class="form-section slide-in-left">
+            <!-- SETUP SECTION -->
+            <div class="form-section slide-in-left" id="setupSection">
                 <h2><i class="fas fa-cog"></i> Interview Setup</h2>
                 <form id="interviewForm">
                     <div class="form-group">
-                        <label for="name"><i class="fas fa-user"></i> Full Name:</label>
-                        <input type="text" id="name" name="name" placeholder="Enter your full name" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="background"><i class="fas fa-history"></i> Current Status / Background:</label>
-                        <textarea id="background" name="background"
-                            placeholder="e.g., Final year CS student, Freelance Web Developer" style="min-height: 80px;"
-                            required></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="interests"><i class="fas fa-heart"></i> Key Interests:</label>
-                        <input type="text" id="interests" name="interests"
-                            placeholder="e.g., AI, Cloud Computing, Cyber Security" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="role"><i class="fas fa-briefcase"></i> Job Role:</label>
-                        <input type="text" id="role" name="role" placeholder="e.g., Software Developer, Product Manager"
+                        <label>Full Name</label>
+                        <input type="text" id="name" value="<%= user.name || '' %>" placeholder="Enter your full name"
                             required>
                     </div>
 
-                    <div class="form-group">
-                        <label for="seniority"><i class="fas fa-chart-line"></i> Seniority Level:</label>
-                        <select id="seniority" name="seniority" required>
-                            <option value="">Select level</option>
-                            <option value="entry">Entry Level</option>
-                            <option value="mid">Mid Level</option>
-                            <option value="senior">Senior Level</option>
-                        </select>
-                    </div>
-
                     <div class="btn-group">
-                        <button type="button" class="btn" id="generateQuestionsBtn">
-                            <i class="fas fa-magic"></i> Generate Questions
+                        <button type="button" class="btn" id="startBtn">
+                            <i class="fas fa-play"></i> Start Voice Interview
                         </button>
                     </div>
                 </form>
+            </div>
 
-                <div id="questionsContainer" style="display: none;">
-                    <h3 style="color: #fbbf24; margin: 25px 0 20px 0;">
-                        <i class="fas fa-list-ul"></i> Interview Questions
-                    </h3>
-                    <div id="questionsList"></div>
+            <!-- INTERVIEW INTERFACE (Hidden initially) -->
+            <div class="form-section fade-in" id="interviewInterface"
+                style="display: none; width: 100%; max-width: 800px; margin: 0 auto; text-align: center;">
 
-                    <div class="form-group" style="margin-top: 30px;">
-                        <label for="transcript"><i class="fas fa-comments"></i> Your Response:</label>
-                        <textarea id="transcript" name="transcript"
-                            placeholder="Type or speak your interview response here..."></textarea>
+                <!-- AI Avatar / Visualizer -->
+                <div
+                    style="margin: 30px auto; width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, #60a5fa, #ec4899); display: flex; align-items: center; justify-content: center; position: relative;">
+                    <i class="fas fa-robot" style="font-size: 3rem; color: white;"></i>
+                    <div id="speakingRing"
+                        style="position: absolute; top: -5px; left: -5px; right: -5px; bottom: -5px; border: 3px solid #60a5fa; border-radius: 50%; opacity: 0;">
+                    </div>
+                </div>
+
+                <!-- Live Transcript Area -->
+                <div
+                    style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; margin-bottom: 30px; min-height: 150px; text-align: left;">
+                    <p
+                        style="color: #fbbf24; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">
+                        <i class="fas fa-comment-dots"></i> Current Question:
+                    </p>
+                    <h3 id="currentQuestionText" style="color: white; margin-bottom: 20px;">Waiting to start...</h3>
+
+                    <hr style="border-color: rgba(255,255,255,0.1); margin: 15px 0;">
+
+                    <p
+                        style="color: #34d399; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">
+                        <i class="fas fa-microphone"></i> Your Answer:
+                    </p>
+                    <p id="liveTranscript" style="color: #cbd5e1; font-style: italic; min-height: 40px;">...</p>
+                </div>
+
+                <!-- Controls -->
+                <div class="btn-group">
+                    <button id="micBtn" class="btn"
+                        style="border-radius: 50%; width: 70px; height: 70px; padding: 0; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; background: #ef4444;"
+                        disabled>
+                        <i class="fas fa-microphone-slash"></i>
+                    </button>
+                </div>
+                <p id="micStatus" style="margin-top: 15px; color: #94a3b8;">Initialize interview to enable microphone
+                </p>
+
+                <button class="btn" id="finishAnswerBtn"
+                    style="margin-top: 20px; display: none; background: linear-gradient(135deg, #10b981, #059669);">
+                    <i class="fas fa-check"></i> Submit Answer
+                </button>
+            </div>
+
+            <!-- FINAL REPORT SECTION (Hidden initially) -->
+            <div class="results-section slide-in-right" id="reportSection" style="display: none;">
+                <h2><i class="fas fa-clipboard-check"></i> Interview Report</h2>
+                <div class="feedback-container">
+                    <div class="sentiment-badge" id="finalScoreBadge">Score: 0/100</div>
+
+                    <div class="feedback-section">
+                        <h3>Summary</h3>
+                        <p id="finalSummary">...</p>
+                    </div>
+
+                    <div class="feedback-section">
+                        <h3>Strengths</h3>
+                        <ul id="finalStrengths" class="feedback-list"></ul>
+                    </div>
+
+                    <div class="feedback-section">
+                        <h3>Areas for Improvement</h3>
+                        <ul id="finalWeaknesses" class="feedback-list"></ul>
+                    </div>
+
+                    <div class="feedback-section">
+                        <h3>Recommendation</h3>
+                        <p id="finalRecommendation" style="font-size: 1.2rem; font-weight: bold; color: #fbbf24;">...
+                        </p>
                     </div>
 
                     <div class="btn-group">
-                        <button type="button" class="btn" id="recordBtn">
-                            <i class="fas fa-microphone"></i> Start Recording
-                        </button>
-                        <button type="button" class="btn" id="stopRecordBtn" style="display: none;">
-                            <i class="fas fa-stop"></i> Stop Recording
-                        </button>
-                        <button type="button" class="btn" id="analyzeBtn">
-                            <i class="fas fa-search"></i> Analyze Response
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="results-section slide-in-right">
-                <h2><i class="fas fa-chart-bar"></i> AI Analysis</h2>
-                <div id="loadingSection" class="loading" style="display: none;">
-                    <div class="spinner"></div>
-                    <p>Analyzing your response with AI...</p>
-                </div>
-
-                <div id="feedbackContainer" style="display: none;">
-                    <div class="feedback-container">
-                        <div id="sentimentBadge" class="sentiment-badge"></div>
-
-                        <div class="feedback-section">
-                            <h3><i class="fas fa-tachometer-alt"></i> Confidence Level</h3>
-                            <div class="confidence-bar">
-                                <div id="confidenceFill" class="confidence-fill" style="width: 0%"></div>
-                            </div>
-                            <p id="confidenceText"></p>
-                        </div>
-
-                        <div class="feedback-section">
-                            <h3><i class="fas fa-file-alt"></i> Summary</h3>
-                            <p id="summaryText"></p>
-                        </div>
-
-                        <div class="feedback-section">
-                            <h3><i class="fas fa-star"></i> Strengths</h3>
-                            <ul id="strengthsList" class="feedback-list"></ul>
-                        </div>
-
-                        <div class="feedback-section">
-                            <h3><i class="fas fa-lightbulb"></i> Areas for Improvement</h3>
-                            <ul id="gapsList" class="feedback-list"></ul>
-                        </div>
-
-                        <div class="feedback-section">
-                            <h3><i class="fas fa-rocket"></i> Recommendations</h3>
-                            <ul id="recommendationsList" class="feedback-list"></ul>
-                        </div>
-
-                        <div class="feedback-section">
-                            <h3><i class="fas fa-question-circle"></i> Follow-up Question</h3>
-                            <p id="followUpQuestion"
-                                style="background: rgba(255, 255, 255, 0.1); padding: 18px; border-radius: 10px; border-left: 4px solid #fbbf24;">
-                            </p>
-                        </div>
+                        <button class="btn" onclick="window.location.reload()">Start New Interview</button>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div class="camera-section fade-in">
-            <h3><i class="fas fa-camera"></i> Facial Confidence Detection</h3>
-            <video id="video" autoplay muted></video>
-            <div class="camera-controls">
-                <button class="btn" id="startCameraBtn">
-                    <i class="fas fa-play"></i> Start Camera
-                </button>
-                <button class="btn" id="stopCameraBtn" style="display: none;">
-                    <i class="fas fa-stop"></i> Stop Camera
-                </button>
-            </div>
-        </div>
     </div>
 
-    <!-- Start Interview Modal -->
-    <div id="startInterviewModal" class="modal">
-        <div class="modal-content">
-            <i class="fas fa-check-circle" style="font-size: 5rem; color: #10b981; margin-bottom: 20px;"></i>
-            <h2>Questions Ready!</h2>
-            <p>Your personalized interview session is prepared. <br>Are you ready to begin?</p>
-            <button class="modal-btn" onclick="startInterviewSession()">
-                <i class="fas fa-play"></i> Start Interview
-            </button>
-        </div>
-    </div>
-
-    <!-- Full Screen Loading Overlay -->
-    <div id="fullScreenLoader" class="loading-overlay">
-        <div class="loading-content">
-            <div class="loading-spinner-large"></div>
-            <h2 style="color: #333;">Generating Layout...</h2>
-            <p style="color: #666;">Crafting your interview experience</p>
-        </div>
-    </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+    <!-- Scripts -->
     <script>
-        // Enhanced Interactive Features
-        let recognition;
-        let isRecording = false;
-        let stream = null;
-        let currentQuestionIndex = 0;
-        let interviewProgress = 0;
+        // --- CONFIGURATION ---
+        const synth = window.speechSynthesis;
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition = new SpeechRecognition();
 
-        // Initialize interactive cursor
-        const cursor = document.getElementById('interactiveCursor');
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-        });
+        // --- STATE ---
+        let interviewId = null;
+        let isListening = false;
+        let isSpeaking = false;
+        let fullTranscript = '';
 
-        // Add hover effects to interactive elements
-        const interactiveElements = document.querySelectorAll('.btn, .form-section, .results-section, .camera-section');
-        interactiveElements.forEach(el => {
-            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
-            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
-        });
+        // --- DOM ELEMENTS ---
+        const setupSection = document.getElementById('setupSection');
+        const interviewInterface = document.getElementById('interviewInterface');
+        const reportSection = document.getElementById('reportSection');
+        const micBtn = document.getElementById('micBtn');
+        const liveTranscript = document.getElementById('liveTranscript');
+        const currentQuestionText = document.getElementById('currentQuestionText');
+        const statusOverlay = document.getElementById('statusOverlay');
+        const statusText = document.getElementById('statusText');
+        const finishAnswerBtn = document.getElementById('finishAnswerBtn');
+        const progressBar = document.getElementById('progressBar');
+        const speakingRing = document.getElementById('speakingRing');
 
-        // Progress bar animation
-        function updateProgress(progress) {
-            const progressBar = document.getElementById('progressBar');
-            progressBar.style.width = progress + '%';
-        }
+        // --- INITIALIZATION ---
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.lang = 'en-US';
 
-        // Real-time feedback system
-        function showRealTimeFeedback(message, type = 'success') {
-            const feedback = document.getElementById('realTimeFeedback');
-            feedback.querySelector('span').textContent = message;
-            feedback.className = `real-time-feedback ${type}`;
-            feedback.classList.add('show');
+        // --- EVENT LISTENERS ---
+        document.getElementById('startBtn').addEventListener('click', startInterview);
+        finishAnswerBtn.addEventListener('click', submitAnswer);
 
-            setTimeout(() => {
-                feedback.classList.remove('show');
-            }, 3000);
-        }
+        // --- SPEECH RECOGNITION HANDLERS ---
+        recognition.onstart = () => {
+            isListening = true;
+            micBtn.style.background = '#10b981'; // Green
+            micBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+            micBtn.classList.add('pulse-animation');
+            document.getElementById('micStatus').innerText = "Listening... Speak clearly.";
+            finishAnswerBtn.style.display = 'inline-block';
+        };
 
-        // Enhanced speech recognition
-        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-            recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-            recognition.continuous = true;
-            recognition.interimResults = true;
+        recognition.onend = () => {
+            if (isListening) recognition.start(); // Auto-restart if we supplied logic to keep it on
+            else {
+                micBtn.style.background = '#ef4444'; // Red
+                micBtn.innerHTML = '<i class="fas fa-microphone-slash"></i>';
+                micBtn.classList.remove('pulse-animation');
+                document.getElementById('micStatus').innerText = "Microphone off.";
+            }
+        };
 
-            recognition.onresult = function (event) {
-                let finalTranscript = '';
-                for (let i = event.resultIndex; i < event.results.length; i++) {
-                    if (event.results[i].isFinal) {
-                        finalTranscript += event.results[i].transcript;
-                    }
+        recognition.onresult = (event) => {
+            let interimTranscript = '';
+            for (let i = event.resultIndex; i < event.results.length; ++i) {
+                if (event.results[i].isFinal) {
+                    fullTranscript += event.results[i][0].transcript;
+                } else {
+                    interimTranscript += event.results[i][0].transcript;
                 }
-                if (finalTranscript) {
-                    const transcript = document.getElementById('transcript');
-                    transcript.value += finalTranscript + ' ';
+            }
+            liveTranscript.innerText = fullTranscript + ' ' + interimTranscript;
+        };
 
-                    // Show real-time feedback
-                    showRealTimeFeedback('Great! Keep speaking...', 'success');
+        // --- CORE FUNCTIONS ---
 
-                    // Update progress
-                    interviewProgress += 10;
-                    updateProgress(Math.min(interviewProgress, 100));
-                }
-            };
-
-            recognition.onerror = function (event) {
-                showRealTimeFeedback('Speech recognition error. Please try again.', 'error');
-            };
-        }
-
-        // Event Listeners with enhanced interactions
-        document.getElementById('generateQuestionsBtn').addEventListener('click', generateQuestions);
-        document.getElementById('recordBtn').addEventListener('click', startRecording);
-        document.getElementById('stopRecordBtn').addEventListener('click', stopRecording);
-        document.getElementById('analyzeBtn').addEventListener('click', analyzeResponse);
-        document.getElementById('startCameraBtn').addEventListener('click', startCamera);
-        document.getElementById('stopCameraBtn').addEventListener('click', stopCamera);
-
-        // Enhanced question display with animations and TTS
-        let currentQuestions = []; // Store questions globally
-
-        async function generateQuestions() {
-            const role = document.getElementById('role').value;
-            const seniority = document.getElementById('seniority').value;
+        async function startInterview() {
             const name = document.getElementById('name').value;
-            const background = document.getElementById('background').value;
-            const interests = document.getElementById('interests').value;
+            // Defaults for conversational flow
+            const role = "Unspecified";
+            const seniority = "Unspecified";
+            const background = "Unspecified";
 
-            if (!role || !seniority || !name || !background || !interests) {
-                showRealTimeFeedback('Please fill in all fields.', 'error');
-                return;
-            }
+            if (!name) return alert("Please enter your name");
 
-            // Show full screen loader
-            document.getElementById('fullScreenLoader').style.display = 'flex';
+            showLoading("Initializing Interview...");
 
             try {
-                const response = await fetch('/interview/questions', {
+                const res = await fetch('/interview/start', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ role, seniority, name, background, interests })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ role, seniority, name, background })
                 });
-
-                const data = await response.json();
+                const data = await res.json();
 
                 if (data.success) {
-                    currentQuestions = data.questions;
-                    // Hide loader and show modal
-                    document.getElementById('fullScreenLoader').style.display = 'none';
-                    document.getElementById('startInterviewModal').style.display = 'flex';
+                    interviewId = data.interviewId;
+                    hideLoading();
+
+                    // Switch UI
+                    setupSection.style.display = 'none';
+                    interviewInterface.style.display = 'block';
+
+                    // Update State
+                    currentQuestionText.innerText = data.firstQuestion;
+                    updateProgress(0, data.totalQuestions);
+
+                    // AI Speaks Greeting first, then Question
+                    await speakText(data.greeting);
+                    await speakText(data.firstQuestion);
+
+                    // Auto-start Mic
+                    startListening();
                 } else {
-                    document.getElementById('fullScreenLoader').style.display = 'none';
-                    showRealTimeFeedback('Failed to generate questions: ' + data.error, 'error');
+                    alert(data.error);
+                    hideLoading();
                 }
-            } catch (error) {
-                console.error('Error:', error);
-                document.getElementById('fullScreenLoader').style.display = 'none';
-                showRealTimeFeedback('Failed to generate questions. Please try again.', 'error');
+            } catch (e) {
+                console.error(e);
+                alert("Failed to start");
+                hideLoading();
             }
         }
 
-        function startInterviewSession() {
-            document.getElementById('startInterviewModal').style.display = 'none';
-            document.getElementById('questionsContainer').style.display = 'block';
-            displayQuestions(currentQuestions);
+        async function submitAnswer() {
+            stopListening();
+            showLoading("Analyzing Response...");
 
-            // Scroll to questions
-            document.getElementById('questionsContainer').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function displayQuestions(questions) {
-            const questionsList = document.getElementById('questionsList');
-            questionsList.innerHTML = '';
-
-            questions.forEach((question, index) => {
-                const questionDiv = document.createElement('div');
-                questionDiv.style.cssText = 'background: rgba(255, 255, 255, 0.1); padding: 18px; margin: 12px 0; border-radius: 10px; border-left: 4px solid #60a5fa; transform: translateX(-20px); opacity: 0; transition: all 0.5s ease; display: flex; align-items: start; justify-content: space-between; gap: 10px;';
-
-                const questionText = document.createElement('div');
-                questionText.innerHTML = `<strong>Q${index + 1}:</strong> ${question}`;
-
-                const speakBtn = document.createElement('button');
-                speakBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
-                speakBtn.className = 'btn';
-                speakBtn.style.padding = '8px 12px';
-                speakBtn.style.margin = '0';
-                speakBtn.style.fontSize = '0.9rem';
-                speakBtn.onclick = () => speakText(question);
-
-                questionDiv.appendChild(questionText);
-                questionDiv.appendChild(speakBtn);
-                questionsList.appendChild(questionDiv);
-
-                // Staggered animation
-                setTimeout(() => {
-                    questionDiv.style.transform = 'translateX(0)';
-                    questionDiv.style.opacity = '1';
-                }, index * 200);
-            });
-
-            // Auto-speak the first question
-            if (questions.length > 0) {
-                setTimeout(() => speakText("Your interview is starting. Question 1. " + questions[0]), 1500);
-            }
-        }
-
-        // Text-to-Speech Function
-        function speakText(text) {
-            if ('speechSynthesis' in window) {
-                window.speechSynthesis.cancel(); // Stop any current speech
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.rate = 1;
-                utterance.pitch = 1;
-                utterance.volume = 1;
-                window.speechSynthesis.speak(utterance);
-            } else {
-                showRealTimeFeedback('Text-to-speech not supported in this browser.', 'error');
-            }
-        }
-
-        // Enhanced recording functions
-        function startRecording() {
-            if (!recognition) {
-                showRealTimeFeedback('Speech recognition is not supported in your browser.', 'error');
-                return;
-            }
-
-            recognition.start();
-            isRecording = true;
-            document.getElementById('recordBtn').style.display = 'none';
-            document.getElementById('stopRecordBtn').style.display = 'inline-block';
-            showRealTimeFeedback('Recording started! Speak clearly...', 'success');
-            updateProgress(50);
-        }
-
-        function stopRecording() {
-            if (recognition) {
-                recognition.stop();
-            }
-            isRecording = false;
-            document.getElementById('recordBtn').style.display = 'inline-block';
-            document.getElementById('stopRecordBtn').style.display = 'none';
-            showRealTimeFeedback('Recording stopped. Ready to analyze!', 'success');
-            updateProgress(75);
-        }
-
-        // Enhanced analysis with progress tracking
-        async function analyzeResponse() {
-            const role = document.getElementById('role').value;
-            const seniority = document.getElementById('seniority').value;
-            const transcript = document.getElementById('transcript').value;
-
-            if (!transcript.trim()) {
-                showRealTimeFeedback('Please provide a response to analyze.', 'error');
-                return;
-            }
-
-            showAnalyzing();
-            updateProgress(90);
+            const transcriptToSend = liveTranscript.innerText; // Get what's currently visible
+            // fullTranscript has final parts, but innerText has everything including interim if any left.
 
             try {
-                const response = await fetch('/interview/analyze', {
+                const res = await fetch('/interview/submit', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ role, seniority, transcript })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        interviewId,
+                        transcript: transcriptToSend
+                    })
                 });
-
-                const data = await response.json();
+                const data = await res.json();
 
                 if (data.success) {
-                    renderFeedback(data.analysis);
-                    updateProgress(100);
-                    showRealTimeFeedback('Analysis complete! Check your results.', 'success');
-                } else {
-                    showRealTimeFeedback('Failed to analyze response: ' + data.error, 'error');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                showRealTimeFeedback('Failed to analyze response. Please try again.', 'error');
-            }
-        }
+                    // Reset transcript for next turn
+                    fullTranscript = '';
+                    liveTranscript.innerText = '...';
+                    finishAnswerBtn.style.display = 'none';
 
-        // Enhanced loading state
-        function showAnalyzing() {
-            document.getElementById('loadingSection').style.display = 'block';
-            document.getElementById('feedbackContainer').style.display = 'none';
-        }
-
-        // Enhanced feedback rendering with animations
-        function renderFeedback(analysis) {
-            document.getElementById('loadingSection').style.display = 'none';
-            document.getElementById('feedbackContainer').style.display = 'block';
-
-            // Animate sentiment badge
-            const sentimentBadge = document.getElementById('sentimentBadge');
-            sentimentBadge.textContent = analysis.sentiment.charAt(0).toUpperCase() + analysis.sentiment.slice(1);
-            sentimentBadge.className = `sentiment-badge sentiment-${analysis.sentiment}`;
-            sentimentBadge.style.animation = 'none';
-            sentimentBadge.offsetHeight; // Trigger reflow
-            sentimentBadge.style.animation = 'badgePulse 2s ease-in-out infinite';
-
-            // Animate confidence bar
-            setConfidence(analysis.confidence);
-
-            // Animate content sections
-            const sections = ['summaryText', 'strengthsList', 'gapsList', 'recommendationsList', 'followUpQuestion'];
-            sections.forEach((sectionId, index) => {
-                setTimeout(() => {
-                    const element = document.getElementById(sectionId);
-                    if (element) {
-                        element.style.opacity = '0';
-                        element.style.transform = 'translateY(20px)';
-                        element.style.transition = 'all 0.5s ease';
-
-                        setTimeout(() => {
-                            if (sectionId === 'summaryText') {
-                                element.textContent = analysis.summary;
-                            } else if (sectionId === 'followUpQuestion') {
-                                element.textContent = analysis.followUpQuestion;
-                            } else {
-                                setList(sectionId, analysis[sectionId.replace('List', '')]);
-                            }
-
-                            element.style.opacity = '1';
-                            element.style.transform = 'translateY(0)';
-                        }, 100);
+                    // 1. Speak Feedback
+                    if (data.feedback) {
+                        updateStatus("AI is giving feedback...");
+                        await speakText(data.feedback);
                     }
-                }, index * 200);
-            });
+
+                    if (data.isCompleted) {
+                        // End Interview
+                        hideLoading();
+                        showReport(data.finalReport);
+                    } else {
+                        // Next Question
+                        hideLoading();
+                        currentQuestionText.innerText = data.nextQuestion;
+                        updateProgress(data.currentQuestionIndex, 5); // Assuming 5 is max
+
+                        updateStatus("AI is asking next question...");
+                        await speakText(data.nextQuestion);
+
+                        startListening();
+                    }
+                }
+            } catch (e) {
+                console.error(e);
+                alert("Error submitting answer");
+                hideLoading();
+            }
         }
 
-        // Enhanced confidence visualization
-        function setConfidence(confidence) {
-            const confidenceFill = document.getElementById('confidenceFill');
-            const confidenceText = document.getElementById('confidenceText');
+        // --- UTILS ---
 
-            // Animate confidence bar
-            setTimeout(() => {
-                confidenceFill.style.width = confidence + '%';
-            }, 500);
-
-            confidenceText.textContent = `${confidence}% - ${getConfidenceLabel(confidence)}`;
-        }
-
-        function getConfidenceLabel(confidence) {
-            if (confidence >= 80) return 'Very High';
-            if (confidence >= 60) return 'High';
-            if (confidence >= 40) return 'Medium';
-            if (confidence >= 20) return 'Low';
-            return 'Very Low';
-        }
-
-        // Enhanced list rendering with animations
-        function setList(listId, items) {
-            const list = document.getElementById(listId);
-            list.innerHTML = '';
-
-            items.forEach((item, index) => {
-                const li = document.createElement('li');
-                li.textContent = item;
-                li.style.opacity = '0';
-                li.style.transform = 'translateX(-20px)';
-                list.appendChild(li);
-
-                // Staggered animation
-                setTimeout(() => {
-                    li.style.transition = 'all 0.5s ease';
-                    li.style.opacity = '1';
-                    li.style.transform = 'translateX(0)';
-                }, index * 150);
-            });
-        }
-
-        // Enhanced camera functions
-        async function startCamera() {
+        function startListening() {
+            if (isListening) return;
             try {
-                stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                document.getElementById('video').srcObject = stream;
-                document.getElementById('startCameraBtn').style.display = 'none';
-                document.getElementById('stopCameraBtn').style.display = 'inline-block';
-                showRealTimeFeedback('Camera started! Facial analysis active.', 'success');
-            } catch (error) {
-                console.error('Error accessing camera:', error);
-                showRealTimeFeedback('Unable to access camera. Please check permissions.', 'error');
-            }
+                fullTranscript = '';
+                liveTranscript.innerText = '';
+                recognition.start();
+                isListening = true;
+            } catch (e) { console.log("Mic already active"); }
         }
 
-        function stopCamera() {
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
-                document.getElementById('video').srcObject = null;
-                document.getElementById('startCameraBtn').style.display = 'inline-block';
-                document.getElementById('stopCameraBtn').style.display = 'none';
-                showRealTimeFeedback('Camera stopped.', 'info');
-            }
+        function stopListening() {
+            isListening = false;
+            recognition.stop();
         }
 
-        // Initialize face-api models
-        async function loadFaceApiModels() {
-            try {
-                await faceapi.nets.tinyFaceDetector.loadFromUri('/models');
-                await faceapi.nets.faceExpressionNet.loadFromUri('/models');
-            } catch (error) {
-                console.log('Face-api models not available, facial analysis disabled');
-            }
-        }
+        function speakText(text) {
+            return new Promise((resolve) => {
+                if (!text) return resolve();
 
-        // Enhanced initialization
-        document.addEventListener('DOMContentLoaded', function () {
-            loadFaceApiModels();
-            updateProgress(0);
+                // Visuals
+                speakingRing.style.opacity = '1';
+                speakingRing.style.animation = 'pulse 1.5s infinite';
 
-            // Add entrance animations
-            const elements = document.querySelectorAll('.form-section, .results-section, .camera-section');
-            elements.forEach((el, index) => {
-                setTimeout(() => {
-                    el.style.opacity = '0';
-                    el.style.transform = 'translateY(30px)';
-                    el.style.transition = 'all 0.8s ease';
+                // Cancel current speech
+                synth.cancel();
 
-                    setTimeout(() => {
-                        el.style.opacity = '1';
-                        el.style.transform = 'translateY(0)';
-                    }, 100);
-                }, index * 200);
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 1.0;
+                utterance.pitch = 1.0;
+
+                // Try to find a good voice
+                const voices = synth.getVoices();
+                const preferredVoice = voices.find(v => v.name.includes('Google US English') || v.name.includes('Female')) || voices[0];
+                if (preferredVoice) utterance.voice = preferredVoice;
+
+                utterance.onend = () => {
+                    speakingRing.style.opacity = '0';
+                    speakingRing.style.animation = 'none';
+                    resolve();
+                };
+
+                synth.speak(utterance);
             });
-        });
+        }
 
-        // Enhanced scroll effects
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            const parallaxElements = document.querySelectorAll('.bg-element');
+        function showReport(report) {
+            interviewInterface.style.display = 'none';
+            reportSection.style.display = 'block';
 
-            parallaxElements.forEach((el, index) => {
-                const speed = (index + 1) * 0.5;
-                el.style.transform = `translateY(${scrolled * speed}px) rotate(${scrolled * 0.1}deg)`;
-            });
-        });
+            document.getElementById('finalScoreBadge').innerText = `Score: ${report.score}/100`;
+            document.getElementById('finalSummary').innerText = report.summary;
+            document.getElementById('finalRecommendation').innerText = report.recommendation;
+
+            const sList = document.getElementById('finalStrengths');
+            sList.innerHTML = report.strengths.map(s => `<li>${s}</li>`).join('');
+
+            const wList = document.getElementById('finalWeaknesses');
+            wList.innerHTML = report.weaknesses.map(w => `<li>${w}</li>`).join('');
+        }
+
+        function showLoading(msg) {
+            statusOverlay.style.display = 'block';
+            statusText.innerText = msg;
+        }
+
+        function hideLoading() {
+            statusOverlay.style.display = 'none';
+        }
+
+        function updateStatus(msg) {
+            statusOverlay.style.display = 'block';
+            statusText.innerText = msg;
+        }
+
+        function updateProgress(current, total) {
+            const pct = (current / total) * 100;
+            progressBar.style.width = pct + '%';
+        }
+
+        // Styles injection for pulse animation if missing
+        const style = document.createElement('style');
+        style.innerHTML = `
+            .pulse-animation {
+                animation: pulse-red 2s infinite;
+            }
+            @keyframes pulse-red {
+                0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+                70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+                100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 
