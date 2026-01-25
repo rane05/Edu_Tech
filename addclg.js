@@ -84,7 +84,7 @@
 
 
 
-  
+
 // // const insertData = async () => {
 // //     try {
 // //         await College.insertMany(colleges);
@@ -129,7 +129,7 @@
 
 
 // // // const mongoose = require('mongoose');
-// // // const SkillsAndInterests = require('./model/carrer'); // Adjust path as needed
+// // // const SkillsAndInterests = require('./model/career'); // Adjust path as needed
 
 // // // mongoose.connect('mongodb://localhost:27017/collegeDB', { useNewUrlParser: true, useUnifiedTopology: true });
 
@@ -257,13 +257,13 @@
 const mongoose = require('mongoose');
 const CetCollege = require('./model/cetCollege'); // Assuming the model file is named cetCollege.js
 
-require('dotenv').config(); 
+require('dotenv').config();
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
-  
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
 
 async function insertDummyData() {
   const colleges = [
