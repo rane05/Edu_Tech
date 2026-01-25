@@ -27,16 +27,16 @@ require('dotenv').config();
 
 const homeRoutes = require('./routes/homeRoute.js');
 const authRoutes = require('./routes/AuthRoute.js');
-const carrerRecRoute = require('./routes/carrerRecRoute.js');
+const careerRecRoute = require('./routes/careerRecRoute.js');
 const blogRoutes = require('./routes/blogRoute.js');
 const collegeRoutes = require('./routes/collegeRoutes.js')
 const exam_choice = require('./routes/exam_choice.js')
 const cet_add_clg = require('./routes/cet_add_clg.js')
 const apti = require('./routes/apti.js')
 const apti_res = require('./routes/stu_res.js')
-const ai_carrer = require('./routes/ai_cat.js')
+const ai_career = require('./routes/ai_cat.js')
 // const chatbotRoute = require('./routes/chatbot');
-const Carrer_Trends = require('./routes/Carrer_Trends.js')
+const Career_Trends = require('./routes/Career_Trends.js')
 const jobs = require('./routes/job.js')
 const resources = require('./routes/resources.js')
 const contactRoutes = require('./routes/contact');
@@ -44,7 +44,7 @@ const scholarshipRoutes = require('./routes/scholarship');
 const Mentor = require('./routes/mentor.js')
 const PBL = require('./routes/pbl.js')
 const project = require('./routes/project.js')
-const Carrer_Test = require('./routes/Carrer_Test_Que.js')
+const Career_Test = require('./routes/Career_Test_Que.js')
 const searchRoute = require('./routes/search');
 
 
@@ -52,7 +52,7 @@ const profileRoutes = require('./routes/profileRoute.js');
 const teacherRoutes = require('./routes/teacherpRoute');
 const studentlistRoutes = require('./routes/studentlistRoutes');
 const parentProfileRoutes = require("./routes/parentProfileRoutes.js");
-const carrer_bank = require('./routes/carrer_bank.js')
+const career_bank = require('./routes/career_bank.js')
 const teacherHomeRoutes = require("./routes/teacherhome.js");
 
 
@@ -61,6 +61,10 @@ const interview = require('./routes/Ai_Interview.js')
 const integrations = require('./routes/integrations.js')
 const careerTrendsPredictor = require('./routes/career_trends_predictor.js')
 const ollamaChat = require('./routes/ollamaChat.js');
+const smartQuiz = require('./routes/smart_quiz.js');
+const leaderboard = require('./routes/leaderboard.js');
+const userDashboard = require('./routes/user_dashboard.js');
+const resumeBuilder = require('./routes/resume_builder.js');
 
 
 let app = express();
@@ -111,37 +115,43 @@ app.get('/favicon.ico', (req, res) => res.status(204));
 // Showing home page
 app.use(homeRoutes);
 app.use(authRoutes);
-app.use(carrerRecRoute);
+app.use(careerRecRoute);
 app.use(searchRoute);
 app.use(blogRoutes);
 app.use(collegeRoutes);
 app.use(exam_choice)
 app.use(cet_add_clg)
 app.use(apti)
-app.use(ai_carrer)
+app.use(ai_career)
 // app.use(chatbotRoute)
 app.use(apti_res)
 app.use(PBL)
 app.use(project)
 app.use(jobs)
-app.use(Carrer_Trends)
+app.use(Career_Trends)
 app.use(resources)
 app.use(contactRoutes);
 app.use(scholarshipRoutes);
 app.use(Mentor);
-app.use(Carrer_Test)
+app.use(Career_Test)
 
 app.use(profileRoutes);
 app.use(teacherRoutes);
 app.use(studentlistRoutes);
 app.use(parentProfileRoutes);
-app.use(carrer_bank)
+app.use(career_bank)
 
 app.use(Cert)
 app.use(interview)
 app.use(integrations)
 app.use(careerTrendsPredictor)
 app.use(ollamaChat);
+app.use(smartQuiz);
+app.use(leaderboard);
+app.use(userDashboard);
+app.use(resumeBuilder);
+app.use(require('./routes/cet_search.js')); // Register CET Search
+app.use(require('./routes/jee_search.js')); // Register JEE Search
 app.use(teacherHomeRoutes); // Use teacher home routes
 
 
@@ -182,9 +192,8 @@ app.get('/an', (req, res) => {
 });
 
 
-app.get('/resume', (req, res) => {
-    res.render('resume')
-});
+const ai_resume = require('./routes/ai_resume.js');
+app.use(ai_resume);
 
 app.get('/verify', (req, res) => {
     res.render('blockchain')
@@ -208,7 +217,7 @@ app.get('/teacher_home', (req, res) => {
 
 
 
-app.get('/carrer_resources', (req, res) => {
+app.get('/career_resources', (req, res) => {
     res.render('career_resources')
 })
 
