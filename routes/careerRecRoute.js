@@ -10,7 +10,7 @@ router.get('/career-counseling', (req, res) => {
     const skills = ['Python', 'JavaScript', 'Java', 'C++'];
     const interests = ['Data Science', 'Web Development', 'Machine Learning', 'Cybersecurity'];
 
-    res.render('Career_Rec', { skills, interests });
+    res.render('Carrer_Rec', { skills, interests });
 });
 
 router.post('/career-recommendations', (req, res) => {

@@ -1,0 +1,164 @@
+<%- include('layouts/header'); %>
+
+    <style>
+        body {
+            background: #f8f9fa;
+        }
+
+        .quiz-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .question-card {
+            display: none;
+            margin-bottom: 20px;
+        }
+
+        .question-card.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        .options label {
+            display: block;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .options label:hover {
+            background: #e0e7ff;
+            border-color: #6366f1;
+        }
+
+        .options input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .btn-next {
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            float: right;
+        }
+
+        .timer {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ef4444;
+            float: right;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+
+    <%- include('layouts/navbar'); %>
+
+        <div class="container">
+            <div class="quiz-container">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h2>📝 Smart Assessment</h2>
+                    <div class="timer" id="timer">15:00</div>
+                </div>
+
+                <form id="quizForm">
+                    <% questions.forEach((q, index)=> { %>
+                        <div class="question-card <%= index === 0 ? 'active' : '' %>" data-index="<%= index %>">
+                            <h4>Q<%= index + 1 %>: <%= q.questionText %>
+                            </h4>
+                            <div class="options">
+                                <% Object.keys(q.options).forEach(key=> { %>
+                                    <label>
+                                        <input type="radio" name="<%= q._id %>" value="<%= key %>">
+                                        <%= key %>) <%= q.options[key] %>
+                                    </label>
+                                    <% }); %>
+                            </div>
+                        </div>
+                        <% }); %>
+
+                            <div style="margin-top: 20px; text-align: right;">
+                                <button type="button" class="btn-next" id="nextBtn">Next ➜</button>
+                                <button type="button" class="btn-next" id="submitBtn"
+                                    style="display: none; background: #10b981;">Submit ✅</button>
+                            </div>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            let currentStep = 0;
+            const cards = document.querySelectorAll('.question-card');
+            const total = cards.length;
+            const nextBtn = document.getElementById('nextBtn');
+            const submitBtn = document.getElementById('submitBtn');
+
+            // Timer Logic
+            let time = 15 * 60;
+            const timerEl = document.getElementById('timer');
+            const timerInterval = setInterval(() => {
+                time--;
+                let m = Math.floor(time / 60);
+                let s = time % 60;
+                timerEl.textContent = `${m}:${s < 10 ? '0' + s : s}`;
+                if (time <= 0) submitQuiz();
+            }, 1000);
+
+            nextBtn.addEventListener('click', () => {
+                cards[currentStep].classList.remove('active');
+                currentStep++;
+                if (currentStep < total) {
+                    cards[currentStep].classList.add('active');
+                    if (currentStep === total - 1) {
+                        nextBtn.style.display = 'none';
+                        submitBtn.style.display = 'inline-block';
+                    }
+                }
+            });
+
+            submitBtn.addEventListener('click', submitQuiz);
+
+            async function submitQuiz() {
+                clearInterval(timerInterval);
+                const form = document.getElementById('quizForm');
+                const formData = new FormData(form);
+                const answers = {};
+                for (let [key, value] of formData.entries()) {
+                    answers[key] = value;
+                }
+
+                try {
+                    const res = await fetch('/api/quiz/submit', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ answers })
+                    });
+                    const data = await res.json();
+                    if (data.success) {
+                        alert(`Quiz Submitted! You scored: ${data.score}`);
+                        window.location.href = '/dashboard';
+                    }
+                } catch (e) { console.error(e); alert('Error submitting quiz'); }
+            }
+        </script>

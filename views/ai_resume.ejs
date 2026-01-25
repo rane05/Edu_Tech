@@ -1,0 +1,749 @@
+<%- include('layouts/header'); %>
+    <%- include('layouts/navbar'); %>
+
+        <style>
+            :root {
+                --primary: #4F46E5;
+                --secondary: #10B981;
+                --bg: #F3F4F6;
+                --text: #1F2937;
+                --sidebar-w: 350px;
+            }
+
+            body {
+                background-color: var(--bg);
+                color: var(--text);
+                font-family: 'Inter', sans-serif;
+                overflow: hidden;
+                /* App-like feel */
+            }
+
+            /* Layout */
+            .app-container {
+                display: flex;
+                height: calc(100vh - 80px);
+                /* Adjust for navbar */
+                margin-top: 80px;
+            }
+
+            /* 1. Left Panel: Editor */
+            .editor-panel {
+                width: var(--sidebar-w);
+                background: white;
+                border-right: 1px solid #E5E7EB;
+                display: flex;
+                flex-direction: column;
+                z-index: 10;
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            }
+
+            .editor-header {
+                padding: 20px;
+                border-bottom: 1px solid #E5E7EB;
+                background: #FFFFFF;
+            }
+
+            .editor-scroll {
+                flex-grow: 1;
+                overflow-y: auto;
+                padding: 20px;
+            }
+
+            .form-group {
+                margin-bottom: 20px;
+            }
+
+            .form-label {
+                font-weight: 600;
+                font-size: 0.85rem;
+                margin-bottom: 6px;
+                display: block;
+                color: #374151;
+            }
+
+            .form-control {
+                width: 100%;
+                padding: 8px 10px;
+                border: 1px solid #D1D5DB;
+                border-radius: 6px;
+                font-size: 0.9rem;
+            }
+
+            textarea.form-control {
+                resize: vertical;
+                min-height: 70px;
+            }
+
+            .btn-generate {
+                background: var(--primary);
+                color: white;
+                width: 100%;
+                padding: 10px;
+                border: none;
+                border-radius: 6px;
+                font-weight: 600;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+            }
+
+            .btn-generate:hover {
+                background: #4338CA;
+            }
+
+            /* 2. Middle Panel: LaTeX Code */
+            .code-panel {
+                width: 400px;
+                background: #1E1E1E;
+                color: #D4D4D4;
+                display: flex;
+                flex-direction: column;
+                border-right: 1px solid #333;
+            }
+
+            .code-header {
+                padding: 15px 20px;
+                background: #252526;
+                border-bottom: 1px solid #333;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .code-editor {
+                flex-grow: 1;
+                padding: 20px;
+                font-family: 'Consolas', 'Monaco', monospace;
+                font-size: 0.85rem;
+                background: transparent;
+                border: none;
+                color: #D4D4D4;
+                resize: none;
+                outline: none;
+                line-height: 1.5;
+                white-space: pre;
+                overflow: auto;
+            }
+
+            /* 3. Right Panel: Preview */
+            .preview-panel {
+                flex-grow: 1;
+                background: #525659;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 30px;
+                overflow-y: auto;
+            }
+
+            .preview-toolbar {
+                background: white;
+                padding: 10px 20px;
+                border-radius: 8px;
+                margin-bottom: 20px;
+                display: flex;
+                gap: 15px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            }
+
+            .template-select {
+                padding: 6px;
+                border-radius: 4px;
+                border: 1px solid #D1D5DB;
+            }
+
+            /* HTML Preview Paper mimicking LaTeX */
+            .preview-paper {
+                background: white;
+                width: 210mm;
+                min-height: 297mm;
+                padding: 20mm;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+                font-family: 'Times New Roman', serif;
+                /* Classic LaTeX default */
+                color: black;
+                line-height: 1.2;
+            }
+
+            /* Helpers */
+            .hidden {
+                display: none;
+            }
+
+            .loader {
+                border: 2px solid rgba(255, 255, 255, 0.3);
+                border-radius: 50%;
+                border-top: 2px solid white;
+                width: 16px;
+                height: 16px;
+                animation: spin 1s linear infinite;
+            }
+
+            @keyframes spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+        </style>
+
+        <div class="app-container">
+            <!-- 1. EDITOR -->
+            <aside class="editor-panel">
+                <div class="editor-header">
+                    <h4 class="m-0 font-weight-bold">📝 Manual Builder</h4>
+                </div>
+                <div class="editor-scroll">
+                    <form id="resumeForm" onsubmit="updateManualData(event)">
+                        <div class="form-group">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" name="name" class="form-control"
+                                value="<%= user.name !== 'Guest' ? user.name : '' %>" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Target Role</label>
+                            <input type="text" name="role" class="form-control" placeholder="Software Engineer"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email & Phone</label>
+                            <input type="text" name="contact" class="form-control"
+                                placeholder="email@example.com | (+91) 9876543210" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Education (University, Degree, Year, GPA)</label>
+                            <textarea name="education" class="form-control"
+                                placeholder="e.g. Pune University, B.E. Computer, 2024, 9.0 CGPA" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Experience (Company, Role, Duration)</label>
+                            <textarea name="experience" class="form-control"
+                                placeholder="e.g. Infosys, Intern, 6 Months" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Projects</label>
+                            <textarea name="projects" class="form-control"
+                                placeholder="e.g. E-Commerce App (MERN Stack)" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Technical Skills</label>
+                            <textarea name="skills" class="form-control" placeholder="Java, Python, React, SQL"
+                                required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Certifications / Awards</label>
+                            <textarea name="awards" class="form-control"
+                                placeholder="e.g. AWS Certified Practitioner, Hackathon Winner"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn-generate" id="genBtn" style="background: #2563EB;">
+                            <i class="fas fa-sync-alt"></i>
+                            <span>Update Preview</span>
+                        </button>
+                    </form>
+                </div>
+            </aside>
+
+            <!-- 2. LATEX CODE -->
+            <div class="code-panel">
+                <div class="code-header">
+                    <span><i class="fas fa-code"></i> LaTeX Code</span>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-sm btn-warning" onclick="updatePreviewFromLatex()">Render
+                            Preview</button>
+                        <button class="btn btn-sm btn-outline-info" onclick="downloadTex()">Download .tex</button>
+                        <button class="btn btn-sm btn-outline-light" onclick="copyLatex()">Copy</button>
+                    </div>
+                </div>
+                <div style="padding: 5px 20px; font-size: 0.8rem; background: #333; color: #aaa;">
+                    <i class="fas fa-info-circle"></i> You can edit this code before copying. (Preview won't update)
+                </div>
+                <textarea id="latexOutput" class="code-editor">
+% Generate content to see LaTeX code here...
+\documentclass{article}
+\begin{document}
+  Waiting for input...
+\end{document}
+        </textarea>
+            </div>
+
+            <!-- 3. PREVIEW -->
+            <div class="preview-panel">
+                <div class="preview-toolbar">
+                    <label>Template:</label>
+                    <select id="templateSelect" class="template-select" onchange="updateView()">
+                        <option value="modern">Modern (Jake's Resume)</option>
+                        <option value="classic">Classic Academic</option>
+                    </select>
+                    <button class="btn btn-sm btn-success"
+                        onclick="alert('Copy the LaTeX code and paste it on Overleaf.com for a perfect PDF!')">
+                        <i class="fas fa-file-pdf"></i> Guide to PDF
+                    </button>
+                </div>
+
+                <div id="htmlPreview" class="preview-paper">
+                    <!-- Content will be injected here -->
+                    <div style="text-align: center; margin-top: 100px; color: #666;">
+                        Fill details and click "Generate" to see preview.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            let resumeData = {}; // Store current data
+
+            let resumeData = {}; // Store current data
+
+            // Initialize with default values or empty strings to prevent null errors
+            window.onload = function () {
+                updateManualData();
+            };
+
+            function updateManualData(e) {
+                if (e) e.preventDefault();
+
+                const form = document.getElementById('resumeForm');
+                const formData = new FormData(form);
+                const input = Object.fromEntries(formData.entries());
+
+                // Split textareas into arrays for the template logic
+                // Experience Points
+                input.experiencePoints = input.experience ? input.experience.split('\n').filter(line => line.trim().startsWith('-')).map(l => l.replace('-', '').trim()) : [];
+                if (input.experiencePoints.length === 0 && input.experience) {
+                    // Fallback if user didn't use hyphens, just split by newline
+                    input.experiencePoints = input.experience.split('\n').filter(l => l.trim().length > 0);
+                }
+
+                // Projects
+                input.projectDescriptions = input.projects ? input.projects.split('\n').filter(l => l.trim().length > 0) : [];
+
+                // Awards/Certs
+                input.certificationPoints = input.awards ? input.awards.split('\n').filter(l => l.trim().length > 0) : [];
+
+                resumeData = {
+                    ...input
+                };
+
+                updateView();
+
+                // If triggered by button, show feedback
+                if (e && e.type === 'submit') {
+                    const btn = document.getElementById('genBtn');
+                    const originalText = btn.innerHTML;
+                    btn.innerHTML = '<i class="fas fa-check"></i> Updated!';
+                    btn.style.background = '#10B981';
+                    setTimeout(() => {
+                        btn.innerHTML = originalText;
+                        btn.style.background = '';
+                    }, 1000);
+                }
+            }
+
+            function updateView() {
+                const template = document.getElementById('templateSelect').value;
+                const latex = generateLatexCode(resumeData, template);
+                const html = generateHtmlPreview(resumeData, template);
+
+                document.getElementById('latexOutput').value = latex;
+                document.getElementById('htmlPreview').innerHTML = html;
+            }
+
+            // --- LATEX GENERATORS ---
+            function generateLatexCode(data, template) {
+                if (!data.name) return "";
+
+                // Common escaping for LaTeX
+                const esc = (str) => (str || "").replace(/&/g, "\\&").replace(/%/g, "\\%").replace(/\$/g, "\\$").replace(/#/g, "\\#");
+
+                if (template === 'modern') {
+                    return `
+\\documentclass[a4paper,11pt]{article}
+\\usepackage{latexsym}
+\\usepackage[empty]{fullpage}
+\\usepackage{titlesec}
+\\usepackage{marvosym}
+\\usepackage[usenames,dvipsnames]{color}
+\\usepackage{enumitem}
+\\usepackage[hidelinks]{hyperref}
+
+\\pagestyle{fancy}
+\\fancyhf{}
+\\renewcommand{\\headrulewidth}{0pt}
+\\renewcommand{\\footrulewidth}{0pt}
+\\urlstyle{same}
+
+\\addtolength{\\oddsidemargin}{-0.5in}
+\\addtolength{\\evensidemargin}{-0.5in}
+\\addtolength{\\textwidth}{1in}
+\\addtolength{\\topmargin}{-.5in}
+\\addtolength{\\textheight}{1.0in}
+
+% Custom commands
+\\newcommand{\\resumeItem}[1]{
+  \\item\\small{
+    {#1 \\vspace{-2pt}}
+  }
+}
+
+\\newcommand{\\resumeSubheading}[4]{
+  \\vspace{-2pt}\\item
+    \\begin{tabular*}{0.97\\textwidth}[t]{l@{\\extracolsep{\\fill}}r}
+      \\textbf{#1} & #2 \\\\
+      \\textit{\\small#3} & \\textit{\\small #4} \\\\
+    \\end{tabular*}\\vspace{-7pt}
+}
+
+\\newcommand{\\resumeProjectHeading}[2]{
+    \\item
+    \\begin{tabular*}{0.97\\textwidth}{l@{\\extracolsep{\\fill}}r}
+      \\small#1 & #2 \\\\
+    \\end{tabular*}\\vspace{-7pt}
+}
+
+\\newcommand{\\resumeSubHeadingListStart}{\\begin{itemize}[leftmargin=0.15in, label={}]}
+\\newcommand{\\resumeSubHeadingListEnd}{\\end{itemize}}
+\\newcommand{\\resumeItemListStart}{\\begin{itemize}}
+\\newcommand{\\resumeItemListEnd}{\\end{itemize}\\vspace{-5pt}}
+
+\\begin{document}
+
+\\begin{center}
+    {\\Huge \\textbf{${esc(data.name)}}} \\\\
+    \\vspace{1pt}
+    ${esc(data.contact)} \\\\
+    \\href{mailto:email@example.com}{Link to Portfolio/LinkedIn}
+\\end{center}
+
+%-----------EDUCATION-----------
+\\section{Education}
+  \\resumeSubHeadingListStart
+    \\resumeSubheading
+      {${esc(data.education)}}{Pune, India}
+      {Bachelor of Engineering}{2024}
+  \\resumeSubHeadingListEnd
+
+%-----------EXPERIENCE-----------
+\\section{Experience}
+  \\resumeSubHeadingListStart
+    \\resumeSubheading
+      {${esc(data.experience)}}{Location}
+      {${esc(data.role)}}{Duration}
+      \\resumeItemListStart
+        ${(data.experiencePoints || []).map(p => `\\resumeItem{${esc(p)}}`).join('\n        ')}
+      \\resumeItemListEnd
+  \\resumeSubHeadingListEnd
+
+%-----------PROJECTS-----------
+\\section{Projects}
+    \\resumeSubHeadingListStart
+      \\resumeProjectHeading
+          {\\textbf{${esc(data.projects)}} $|$ \\emph{${esc(data.skills)}}}{}
+          \\resumeItemListStart
+            ${(data.projectDescriptions || []).map(p => `\\resumeItem{${esc(p)}}`).join('\n            ')}
+          \\resumeItemListEnd
+    \\resumeSubHeadingListEnd
+
+%-----------SKILLS-----------
+\\section{Technical Skills}
+ \\begin{itemize}[leftmargin=0.15in, label={}]
+    \\small{\\item{
+     \\textbf{Languages}{: ${esc(data.skills)}} \\\\
+     \\textbf{Certifications}{: ${esc(data.awards)}}
+    }}
+ \\end{itemize}
+
+\\end{document}
+            `;
+                } else {
+                    // Classic Template
+                    return `
+\\documentclass[11pt,a4paper]{article}
+\\usepackage[utf8]{inputenc}
+\\usepackage{geometry}
+\\geometry{a4paper, margin=1in}
+
+\\begin{document}
+
+\\begin{center}
+    \\huge \\textbf{${esc(data.name)}} \\\\[0.2cm]
+    \\large ${esc(data.contact)}
+\\end{center}
+\\hrule
+\\vspace{0.5cm}
+
+\\section*{Profile Summary}
+${esc(data.summary)}
+
+\\section*{Education}
+${esc(data.education)}
+
+\\section*{Experience}
+\\textbf{${esc(data.experience)}} \\\\
+\\textit{${esc(data.role)}}
+\\begin{itemize}
+    ${(data.experiencePoints || []).map(p => `\\item ${esc(p)}`).join('\n    ')}
+\\end{itemize}
+
+\\section*{Technical Skills}
+${esc(data.skills)}
+
+\\section*{Projects}
+\\textbf{${esc(data.projects)}}
+\\begin{itemize}
+    ${(data.projectDescriptions || []).map(p => `\\item ${esc(p)}`).join('\n    ')}
+\\end{itemize}
+
+\\end{document}
+            `;
+                }
+            }
+
+            // --- HTML PREVIEW ---
+            function generateHtmlPreview(data, template) {
+                if (!data || !data.name) return '<div class="text-center mt-5 text-muted">Fill details & click Generate</div>';
+
+                // Helpers
+                const listify = (items) => (items || []).map(i => `<li style="margin-bottom: 2px;">${i}</li>`).join('');
+                const safeSplit = (str, index) => (str || '').split(',')[index] || '';
+
+                if (template === 'modern') {
+                    // JAKE'S RESUME REPLICA
+                    return `
+                <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+                <style>
+                    .jake-resume { font-family: 'Lato', sans-serif; color: #333; line-height: 1.5; font-size: 11pt; text-align: left; }
+                    .jake-header { text-align: center; margin-bottom: 15px; }
+                    .jake-name { font-size: 24pt; font-weight: 400; margin: 0; text-transform: uppercase; color: #000; letter-spacing: 0.5px; }
+                    .jake-contact { font-size: 10pt; margin-top: 4px; }
+                    .jake-section { 
+                        text-transform: uppercase; font-size: 12pt; font-weight: 700; color: #000; letter-spacing: 0.5px;
+                        border-bottom: 1px solid #000; margin: 12px 0 8px 0; padding-bottom: 2px;
+                    }
+                    .jake-subheading { display: flex; justify-content: space-between; font-size: 11pt; font-weight: 700; margin-bottom: 1px; color: #000; }
+                    .jake-subheading-subtitle { display: flex; justify-content: space-between; font-size: 10pt; font-style: italic; margin-bottom: 4px; }
+                    .jake-list { margin: 0; padding-left: 18px; font-size: 10.5pt; }
+                </style>
+
+                <div class="jake-resume">
+                    <!-- Header -->
+                    <div class="jake-header">
+                        <h1 class="jake-name">${data.name}</h1>
+                        <div class="jake-contact">${data.contact}</div>
+                    </div>
+
+                    <!-- Education -->
+                    <div class="jake-section">Education</div>
+                    <div class="jake-subheading">
+                        <span>${safeSplit(data.education, 0).trim() || 'University'}</span>
+                        <span>${safeSplit(data.education, 1).trim() || 'Location'}</span>
+                    </div>
+                    <div class="jake-subheading-subtitle">
+                        <span>${safeSplit(data.education, 2).trim() || 'Degree'}</span>
+                        <span>${safeSplit(data.education, 3).trim() || 'Year'}</span>
+                    </div>
+
+                    <!-- Experience -->
+                    <div class="jake-section">Experience</div>
+                    <div class="jake-subheading">
+                        <span>${safeSplit(data.experience, 0).trim() || 'Company'}</span>
+                        <span>${safeSplit(data.experience, 2).trim() || 'Duration'}</span>
+                    </div>
+                    <div class="jake-subheading-subtitle">
+                        <span>${data.role}</span>
+                        <span>${safeSplit(data.experience, 1).trim() || 'Location'}</span>
+                    </div>
+                    <ul class="jake-list">
+                        ${listify(data.experiencePoints)}
+                    </ul>
+
+                    <!-- Projects -->
+                    <div class="jake-section">Projects</div>
+                    <div style="margin-bottom: 2px;">
+                        <span style="font-weight: 700; font-size: 11pt; color: #000;">${data.projects}</span> 
+                        <span style="margin: 0 4px;">|</span>
+                        <span style="font-style: italic; font-size: 10.5pt;">${data.skills}</span>
+                    </div>
+                    <ul class="jake-list">
+                        ${listify(data.projectDescriptions)}
+                    </ul>
+
+                    <!-- Technical Skills -->
+                    <div class="jake-section">Technical Skills</div>
+                    <div style="font-size: 10.5pt;">
+                        <span style="font-weight: 700;">Languages:</span> ${data.skills} <br>
+                        <span style="font-weight: 700;">Categories:</span> ${data.awards}
+                    </div>
+
+                </div>
+            `;
+                } else {
+                    // Classic Clean
+                    return `
+                <div style="font-family: 'Times New Roman', serif; color: #000; line-height: 1.4; text-align: left;">
+                    <center style="margin-bottom: 20px;">
+                        <h1 style="margin: 0; font-size: 26pt; font-variant: small-caps;">${data.name}</h1>
+                        <p style="margin: 5px 0; font-size: 11pt;">${data.contact}</p>
+                    </center>
+                    <hr style="height: 1px; background: #000; border: none; margin: 15px 0;" />
+                    
+                    <h3 style="font-size: 14pt; margin: 15px 0 8px 0; text-transform: uppercase; letter-spacing: 1px; color: #111;">Profile</h3>
+                    <p style="font-size: 11pt; margin: 0; text-align: justify;">${data.summary}</p>
+
+                    <h3 style="font-size: 14pt; margin: 15px 0 8px 0; text-transform: uppercase; letter-spacing: 1px; color: #111;">Education</h3>
+                    <p style="font-size: 11pt; margin: 0; font-weight: bold;">${data.education}</p>
+
+                    <h3 style="font-size: 14pt; margin: 15px 0 8px 0; text-transform: uppercase; letter-spacing: 1px; color: #111;">Experience</h3>
+                    <div style="font-size: 11pt; margin-bottom: 5px;">
+                        <strong>${data.experience}</strong> &mdash; <em>${data.role}</em>
+                    </div>
+                    <ul style="margin: 0; padding-left: 20px; font-size: 11pt;">
+                         ${listify(data.experiencePoints)}
+                    </ul>
+
+                    <h3 style="font-size: 14pt; margin: 15px 0 8px 0; text-transform: uppercase; letter-spacing: 1px; color: #111;">Technical Skills</h3>
+                    <p style="font-size: 11pt; margin: 0;">${data.skills}</p>
+                </div>
+            `;
+                }
+            }
+
+            function copyLatex() {
+                const copyText = document.getElementById("latexOutput");
+                copyText.select();
+                document.execCommand("copy");
+            }
+
+            function downloadTex() {
+                const latexContent = document.getElementById("latexOutput").value;
+                const blob = new Blob([latexContent], { type: "text/plain;charset=utf-8" });
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = "resume.tex";
+                link.click();
+            }
+
+            // --- REVERSE PARSER FOR PREVIEW ---
+            function updatePreviewFromLatex() {
+                try {
+                    const code = document.getElementById("latexOutput").value;
+                    const template = document.getElementById("templateSelect").value;
+
+                    if (!code) return;
+
+                    // 1. Extract Name (Bold text in Header)
+                    const nameMatch = code.match(/\\textbf{([^}]+)}/);
+                    if (nameMatch) resumeData.name = nameMatch[1];
+
+                    // 2. Extract Contact (Email/Phone usually after name)
+                    // We look for the line after name or the center block
+                    const contactMatch = code.match(/\\textbf{[^}]+}}[\s\S]*?\\\\([\s\S]*?)\\\\/);
+                    if (contactMatch) resumeData.contact = contactMatch[1].replace(/\\href{[^}]+}{|}/g, '').trim();
+
+                    // Helper to get section content
+                    const getSectionContent = (sectionName) => {
+                        // Match \section{Name} ... until next \section or \end{document}
+                        const regex = new RegExp(`\\\\section{${sectionName}}([\\s\\S]*?)(?=\\\\section|\\\\end{document})`, 'i');
+                        const match = code.match(regex);
+                        return match ? match[1].trim() : "";
+                    };
+
+                    // Helper to extract items from a block
+                    const extractItems = (text) => {
+                        // Split by \item or \resumeItem
+                        return text.split(/\\resumeItem{|\\item\s/).slice(1).map(s => {
+                            return s.split('}')[0].replace(/}/g, '').trim(); // simplistic cleanup
+                        });
+                    };
+
+                    // 3. Javascript "Best Guess" Parsing for Sections
+
+                    // Education
+                    const eduBlock = getSectionContent("Education");
+                    if (eduBlock) {
+                        // Try to find the 4 key pieces: Uni, Loc, Deg, Year
+                        // They are usually in \resumeSubheading{1}{2}{3}{4}
+                        const subMatch = eduBlock.match(/\\resumeSubheading\s*{([^}]+)}\s*{([^}]+)}\s*{([^}]+)}\s*{([^}]+)}/);
+                        if (subMatch) {
+                            resumeData.education = `${subMatch[1]}, ${subMatch[2]}, ${subMatch[3]}, ${subMatch[4]}`;
+                        } else {
+                            // Fallback: Just basic text cleanup
+                            resumeData.education = eduBlock.replace(/\\textbf{|}|\\textit{/g, '').replace(/\s+/g, ' ');
+                        }
+                    }
+
+                    // Experience
+                    const expBlock = getSectionContent("Experience");
+                    if (expBlock) {
+                        // Extract Role/Company if possible
+                        const subMatch = expBlock.match(/\\resumeSubheading\s*{([^}]+)}\s*{([^}]+)}\s*{([^}]+)}\s*{([^}]+)}/);
+                        if (subMatch) {
+                            resumeData.experience = `${subMatch[1]}, ${subMatch[2]}, ${subMatch[4]}`; // Company, Loc, Date
+                            resumeData.role = subMatch[3]; // Role
+                        }
+                        // Extract Bullets
+                        resumeData.experiencePoints = extractItems(expBlock);
+                    }
+
+                    // Projects
+                    const projBlock = getSectionContent("Projects");
+                    if (projBlock) {
+                        // \resumeProjectHeading{\textbf{Title} $|$ \emph{Stack}}{Date}
+                        const titleMatch = projBlock.match(/\\resumeProjectHeading\s*{\\textbf{([^}]+)}/);
+                        if (titleMatch) resumeData.projects = titleMatch[1];
+
+                        resumeData.projectDescriptions = extractItems(projBlock);
+                    }
+
+                    // Skills
+                    const skillBlock = getSectionContent("Technical Skills");
+                    if (skillBlock) {
+                        // Remove LaTeX commands to get raw text
+                        resumeData.skills = skillBlock.replace(/\\textbf{Languages}{:?|\\item|\\begin{itemize}|\\end{itemize}|}/g, '').replace(/\s+/g, ' ').trim();
+                    }
+
+                    // Trigger Update
+                    updateView();
+
+                    // Visual Feedback
+                    const btn = document.querySelector('button[onclick="updatePreviewFromLatex()"]');
+                    const originalText = btn.innerHTML;
+                    btn.innerHTML = '<i class="fas fa-check"></i> Updated!';
+                    btn.classList.remove('btn-warning');
+                    btn.classList.add('btn-success');
+                    setTimeout(() => {
+                        btn.innerHTML = originalText;
+                        btn.classList.add('btn-warning');
+                        btn.classList.remove('btn-success');
+                    }, 2000);
+
+                } catch (e) {
+                    console.error(e);
+                    alert("Parsed with errors. Check console. Some format changes may not be visible.");
+                }
+            }
+
+            // 2. Sections
+            // We assume the user keeps the \section{} naming
+            // This is a "Best Effort" parser
+
+            // Summary (Classic Only usually)
+            const summary = extract(/\\section\*{Profile Summary}\s*([\s\S]*?)\s*\\section/);
+            if (summary) resumeData.summary = summary;
+
+            // Education (Text block update for quick preview)
+            // We'll just grab the text block roughly
+
+            // Trigger HTML rebuild
+            const html = generateHtmlPreview(resumeData, template);
+            document.getElementById('htmlPreview').innerHTML = html;
+
+                // Alert limitation
+                // alert("Preview updated based on text Extraction. Complex layout changes may not reflect here.");
+            }
+        </script>

@@ -144,7 +144,57 @@
 
 
 
-      /* Search Bar */
+      /* Hero Actions (Replaces Search Bar) */
+      .hero-actions {
+        display: flex;
+        gap: 20px;
+        margin-top: 30px;
+      }
+
+      .btn-hero-primary {
+        padding: 16px 32px;
+        background: var(--color-primary);
+        color: white;
+        border-radius: 50px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all 0.3s;
+        box-shadow: 0 10px 20px rgba(255, 184, 0, 0.3);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .btn-hero-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(255, 184, 0, 0.4);
+        background: #E5A700;
+        color: white;
+      }
+
+      .btn-hero-secondary {
+        padding: 16px 32px;
+        background: white;
+        color: var(--color-dark);
+        border: 2px solid white;
+        border-radius: 50px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all 0.3s;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .btn-hero-secondary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        background: #f8f9fa;
+        color: var(--color-primary);
+      }
+
+      /* Search Bar (Legacy - Keeping just in case, or removing entirely) */
       .search-bar {
         background: white;
         padding: 15px;
@@ -790,28 +840,25 @@
           <p>Discover personalized career paths, find the perfect college, and build skills that matter—all powered by
             AI.</p>
 
-          <form class="search-bar" action="/search" method="GET">
-            <input type="text" name="q" placeholder="Search colleges, careers, scholarships..." style="flex: 2;">
-            <select name="category">
-              <option value="">All Categories</option>
-              <option value="engineering">Engineering</option>
-              <option value="medical">Medical</option>
-              <option value="commerce">Commerce</option>
-              <option value="arts">Arts</option>
-            </select>
-            <button type="submit">Search</button>
-          </form>
+          <div class="hero-actions">
+            <a href="/cet-predictor" class="btn-hero-primary">
+              <i class="fas fa-magic"></i> Predict College
+            </a>
+            <a href="/smart-quiz" class="btn-hero-secondary">
+              <i class="fas fa-brain"></i> Take Career Quiz
+            </a>
+          </div>
         </div>
         <!-- Spacer for grid layout -->
         <div class="hero-spacer" style="min-height: 400px;"></div>
       </div>
     </section>
 
-    <!-- Why Career Counseling Section -->
+    <!-- Why Career Counseling Section (Redesigned) -->
     <style>
       .why-section {
-        padding: 100px 20px;
-        background: white;
+        padding: 120px 20px;
+        background: linear-gradient(180deg, #FFFFFF 0%, #FAFAFA 100%);
         position: relative;
         overflow: hidden;
       }
@@ -820,177 +867,204 @@
         max-width: 1200px;
         margin: 0 auto;
         display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 80px;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 100px;
         align-items: center;
-      }
-
-      .why-content h2 {
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: var(--color-dark);
-        margin-bottom: 25px;
-        position: relative;
-      }
-
-      .why-content h2::after {
-        content: '';
-        display: block;
-        width: 80px;
-        height: 4px;
-        background: var(--color-primary);
-        margin-top: 15px;
-        border-radius: 2px;
-      }
-
-      .why-content p {
-        font-size: 1.1rem;
-        color: var(--color-text-light);
-        margin-bottom: 20px;
-        line-height: 1.8;
-      }
-
-      .benefits-list {
-        list-style: none;
-        margin-top: 30px;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 20px;
-      }
-
-      .benefit-item {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-      }
-
-      .benefit-icon {
-        width: 40px;
-        height: 40px;
-        min-width: 40px;
-        background: rgba(255, 184, 0, 0.15);
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--color-primary);
-      }
-
-      .benefit-text {
-        font-weight: 600;
-        color: var(--color-dark);
-        font-size: 0.95rem;
       }
 
       .why-visual {
         position: relative;
+        text-align: center;
+      }
+
+      .blob-shape {
+        position: absolute;
+        width: 500px;
+        height: 500px;
+        background: linear-gradient(135deg, rgba(255, 184, 0, 0.15), rgba(255, 107, 107, 0.1));
+        border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+        animation: morph 8s ease-in-out infinite;
+      }
+
+      @keyframes morph {
+        0% {
+          border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+        }
+
+        50% {
+          border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+        }
+
+        100% {
+          border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+        }
       }
 
       .why-image-card {
-        background: var(--color-bg-light);
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        background: rgba(255, 255, 255, 0.8);
+        -webkit-backdrop-filter: blur(20px);
+        backdrop-filter: blur(20px);
+        border-radius: 30px;
+        padding: 20px;
+        box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.1);
         position: relative;
         z-index: 2;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        transform: rotate(-2deg);
+        transition: transform 0.5s ease;
+      }
+
+      .why-image-card:hover {
+        transform: rotate(0deg) scale(1.02);
       }
 
       .why-image-card img {
         width: 100%;
-        height: auto;
+        border-radius: 20px;
         display: block;
       }
 
-      .decoration-circle {
-        position: absolute;
-        width: 300px;
-        height: 300px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, rgba(255, 184, 0, 0.1), rgba(108, 99, 255, 0.1));
-        top: -40px;
-        right: -40px;
-        z-index: 1;
+      .why-content {
+        position: relative;
+        z-index: 3;
       }
 
-      @media (max-width: 900px) {
+      .why-label {
+        color: var(--color-primary);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-size: 0.85rem;
+        margin-bottom: 15px;
+        display: block;
+      }
+
+      .why-content h2 {
+        font-size: 3rem;
+        font-weight: 800;
+        color: var(--color-dark);
+        margin-bottom: 25px;
+        line-height: 1.2;
+      }
+
+      .why-content p {
+        font-size: 1.15rem;
+        color: #64748b;
+        margin-bottom: 30px;
+        line-height: 1.8;
+      }
+
+      .benefits-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-top: 40px;
+      }
+
+      .benefit-card {
+        background: white;
+        padding: 20px;
+        border-radius: 16px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        border: 1px solid #f1f5f9;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        transition: all 0.3s ease;
+      }
+
+      .benefit-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        border-color: var(--color-primary);
+      }
+
+      .benefit-icon {
+        width: 48px;
+        height: 48px;
+        background: #FEF3C7;
+        color: #D97706;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .benefit-text {
+        font-weight: 700;
+        color: var(--color-dark);
+        font-size: 1rem;
+      }
+
+      @media (max-width: 968px) {
         .why-container {
           grid-template-columns: 1fr;
-          gap: 50px;
+          gap: 60px;
         }
 
-        .benefits-list {
-          grid-template-columns: 1fr;
+        .why-content h2 {
+          font-size: 2.2rem;
         }
       }
     </style>
 
     <section class="why-section">
       <div class="why-container">
+        <!-- Visual Side -->
         <div class="why-visual">
-          <div class="decoration-circle"></div>
+          <div class="blob-shape"></div>
           <div class="why-image-card">
-            <!-- Using one of the uploaded images that fits this context well -->
-            <img src="/img/hero_parallax/hero-2.png" alt="Counseling Session Illustration">
+            <img src="/img/hero_parallax/hero-2.png" alt="Personalized Counseling">
           </div>
         </div>
+
+        <!-- Content Side -->
         <div class="why-content">
-          <h2>What is Online Career Counselling?</h2>
+          <span class="why-label">For Students & Parents</span>
+          <h2>Why Choose Online Career Counseling?</h2>
           <p>
-            Online career counselling is a modern, technology-driven approach to helping students make informed
-            decisions about their future. It connects you with expert guidance and AI-powered insights right from the
-            comfort of your home.
+            The world is changing fast. Traditional career choices aren't the only way forward.
+            <strong>Online counseling</strong> bridges the gap between your passion and market reality.
           </p>
           <p>
-            Instead of relying on guesswork, we use scientific assessments, personality analysis, and real-time market
-            trends to map out the best career path for you. It's not just about finding a job—it's about building a life
-            you love.
+            We combine human empathy with AI precision to map out a future that fits <em>you</em>.
+            No more guesswork—just a clear, data-driven path to success.
           </p>
 
-          <ul class="benefits-list">
-            <li class="benefit-item">
+          <div class="benefits-grid">
+            <div class="benefit-card">
               <div class="benefit-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                </svg>
+                <i class="fas fa-flask"></i>
               </div>
               <span class="benefit-text">Scientifically Proven</span>
-            </li>
-            <li class="benefit-item">
+            </div>
+
+            <div class="benefit-card">
               <div class="benefit-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <line x1="2" y1="12" x2="22" y2="12"></line>
-                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z">
-                  </path>
-                </svg>
+                <i class="fas fa-globe"></i>
               </div>
               <span class="benefit-text">Accessible Anywhere</span>
-            </li>
-            <li class="benefit-item">
+            </div>
+
+            <div class="benefit-card">
               <div class="benefit-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M12 2v20"></path>
-                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                </svg>
+                <i class="fas fa-wallet"></i>
               </div>
               <span class="benefit-text">Cost Effective</span>
-            </li>
-            <li class="benefit-item">
+            </div>
+
+            <div class="benefit-card">
               <div class="benefit-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path
-                    d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3">
-                  </path>
-                </svg>
+                <i class="fas fa-fingerprint"></i>
               </div>
-              <span class="benefit-text">Personalized Plans</span>
-            </li>
-          </ul>
+              <span class="benefit-text">100% Personalized</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>

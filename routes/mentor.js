@@ -9,7 +9,7 @@ router.get('/AI_ML', (req, res) => {
 });
 
 router.get('/CC', (req, res) => {
-    res.render('Carrer_mentor');
+    res.render('Career_mentor');
 });
 
 
@@ -18,7 +18,7 @@ router.get('/CC', (req, res) => {
 //     const { name, email, mobile, education, language, careerGoals, date, time } = req.body;
 
 //     // Set up Nodemailer
- 
+
 //     let transporter = nodemailer.createTransport({
 //         host: 'smtp.mail.yahoo.com',
 //         port: 465, // For SSL

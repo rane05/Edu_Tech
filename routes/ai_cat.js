@@ -3,43 +3,43 @@ const router = express.Router();
 const dotenv = require("dotenv").config();
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const genAI = new GoogleGenerativeAI(process.env.API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash"});
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 
 
 
 
-router.get('/ai',(req,res)=>{
-    res.render('ai_carrer')
+router.get('/ai', (req, res) => {
+  res.render('ai_career')
 })
 
 // Define Gprompt outside the route handler to be accessible to generateContent
 let Gprompt = '';
 
 router.post('/Ai_Insights', (req, res) => {
-    // Access form data
-    const formData = {
-        education: req.body.Education,
-        workExperience: req.body.WorkExperience,
-        skills: req.body.Skills,
-        subjects: req.body.Subjects,
-        workPreference: req.body.WorkPreference,
-        hobbies: req.body.Hobbies,
-        learningInterests: req.body.LearningInterests,
-        careerGoals: req.body.CareerGoals,
-        workEnvironment: req.body.WorkEnvironment,
-        jobPreferences: req.body.JobPreferences,
-        workImpact: req.body.WorkImpact,
-        workSchedule: req.body.WorkSchedule,
-        salaryImportance: req.body.SalaryImportance,
-        stressManagement: req.body.StressManagement,
-        workStyle: req.body.WorkStyle,
-        feedback: req.body.Feedback,
-        futureLearning: req.body.FutureLearning
-    };
+  // Access form data
+  const formData = {
+    education: req.body.Education,
+    workExperience: req.body.WorkExperience,
+    skills: req.body.Skills,
+    subjects: req.body.Subjects,
+    workPreference: req.body.WorkPreference,
+    hobbies: req.body.Hobbies,
+    learningInterests: req.body.LearningInterests,
+    careerGoals: req.body.CareerGoals,
+    workEnvironment: req.body.WorkEnvironment,
+    jobPreferences: req.body.JobPreferences,
+    workImpact: req.body.WorkImpact,
+    workSchedule: req.body.WorkSchedule,
+    salaryImportance: req.body.SalaryImportance,
+    stressManagement: req.body.StressManagement,
+    workStyle: req.body.WorkStyle,
+    feedback: req.body.Feedback,
+    futureLearning: req.body.FutureLearning
+  };
 
-    // Create prompt using template literals
-    Gprompt = `
+  // Create prompt using template literals
+  Gprompt = `
     You are an expert career counselor. Based on the following information, provide concise career recommendations and insights tailored to the individual. 
     
     **IMPORTANT:** Start directly with the career recommendations, and do not include any introductory sentences or explanations. List them clearly with points for each recommendation.
@@ -70,64 +70,64 @@ router.post('/Ai_Insights', (req, res) => {
     - **Skills:** Skills needed
     - **Alignment:** Work preferences
     `;
-    
-    // For demonstration, log the prompt
-    console.log(Gprompt);
 
-    // Send response to confirm receipt of the form and prompt creation
-    generateContent(req, res);
+  // For demonstration, log the prompt
+  console.log(Gprompt);
+
+  // Send response to confirm receipt of the form and prompt creation
+  generateContent(req, res);
 
 
-    
+
 });
 const generateContent = async (req, res) => {
-    try {
-      // Ensure Gprompt is set before calling generateContent
-      if (!Gprompt) {
-        return res.send("No prompt available. Please submit the form first.");
-      }
-  
-      // Use the AI model to generate content based on the prompt
-      const result = await model.generateContent(Gprompt);
-      const response = await result.response;
-      const text = await response.text();
-  
-      // Remove unwanted introductory lines and split the text into different career recommendations
-      const cleanedText = text.replace(/## Career Recommendations for.*?\n\n?/g, ''); // Remove unwanted intro line
-      const recommendations = cleanedText.split(/(?=\d+\.\s)/); // Splits based on "1. ", "2. ", etc.
-  
-      // Generate formatted cards for each recommendation
-      const formattedRecommendations = recommendations.map((rec, index) => {
-        // Ignore the first card
-        if (index === 0) return '';
-    
-        // Extract title (first line of each section)
-        const titleMatch = rec.match(/^\d+\.\s(.*?)(?=\n|$)/);
-        const title = titleMatch ? titleMatch[1].trim() : "Career Recommendation";
-    
-        // Replace markdown-like formatting in the description
-        const description = rec
-            .replace(/^\d+\.\s.*?(\n|$)/, '') // Remove the title line
-            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')  // Convert **bold** to <strong>
-            .replace(/\n\n/g, '</p><p>')  // Convert double line breaks to new paragraphs
-            .replace(/\n/g, '<br>');  // Convert single line breaks to <br>
-    
-        // Define a color scheme for each card
-        const colors = [
-            'gradient-gold',    // Gold gradient
-            'gradient-pink',    // Pink gradient
-            'gradient-purple',   // Purple gradient
-        ];
-        
-        // Choose a random gradient class
-        const cardClass = colors[Math.floor(Math.random() * colors.length)];
-        
-        // Set title color based on the selected gradient class
-        const titleClass = cardClass === 'gradient-gold' ? 'text-dark' : 'text-light';
-        // Choose a random background color
+  try {
+    // Ensure Gprompt is set before calling generateContent
+    if (!Gprompt) {
+      return res.send("No prompt available. Please submit the form first.");
+    }
+
+    // Use the AI model to generate content based on the prompt
+    const result = await model.generateContent(Gprompt);
+    const response = await result.response;
+    const text = await response.text();
+
+    // Remove unwanted introductory lines and split the text into different career recommendations
+    const cleanedText = text.replace(/## Career Recommendations for.*?\n\n?/g, ''); // Remove unwanted intro line
+    const recommendations = cleanedText.split(/(?=\d+\.\s)/); // Splits based on "1. ", "2. ", etc.
+
+    // Generate formatted cards for each recommendation
+    const formattedRecommendations = recommendations.map((rec, index) => {
+      // Ignore the first card
+      if (index === 0) return '';
+
+      // Extract title (first line of each section)
+      const titleMatch = rec.match(/^\d+\.\s(.*?)(?=\n|$)/);
+      const title = titleMatch ? titleMatch[1].trim() : "Career Recommendation";
+
+      // Replace markdown-like formatting in the description
+      const description = rec
+        .replace(/^\d+\.\s.*?(\n|$)/, '') // Remove the title line
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')  // Convert **bold** to <strong>
+        .replace(/\n\n/g, '</p><p>')  // Convert double line breaks to new paragraphs
+        .replace(/\n/g, '<br>');  // Convert single line breaks to <br>
+
+      // Define a color scheme for each card
+      const colors = [
+        'gradient-gold',    // Gold gradient
+        'gradient-pink',    // Pink gradient
+        'gradient-purple',   // Purple gradient
+      ];
+
+      // Choose a random gradient class
+      const cardClass = colors[Math.floor(Math.random() * colors.length)];
+
+      // Set title color based on the selected gradient class
+      const titleClass = cardClass === 'gradient-gold' ? 'text-dark' : 'text-light';
+      // Choose a random background color
       // Randomly assign a color class
-    
-        return `
+
+      return `
           <div class="col-md-4 mb-4">
             <div class="card ${cardClass} h-100 career-card">
               <div class="card-body">
@@ -158,8 +158,8 @@ const generateContent = async (req, res) => {
           </div>
         `;
     }).filter(Boolean).join(''); // Filter out any empty strings from ignored cards
-      // Render the HTML response
-      res.send(`
+    // Render the HTML response
+    res.send(`
         <html>
         <head>
           <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -376,27 +376,27 @@ const generateContent = async (req, res) => {
         </body>
         </html>
       `);
-    } catch (error) {
-      console.error("Error generating content:", error);
-      res.status(500).send("An error occurred while generating content.");
-    }
-  };
-  
-  
-    
+  } catch (error) {
+    console.error("Error generating content:", error);
+    res.status(500).send("An error occurred while generating content.");
+  }
+};
 
 
- 
 
-  // Update the roadmap route
-  router.get('/career-roadmap/:role', async (req, res) => {
-    try {
-        const role = decodeURIComponent(req.params.role);
-        // Use the same model as the one defined at the top of the file
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-        // Updated prompt with better structure
-        const prompt = `As a career counselor, create a detailed 12-week roadmap for becoming a ${role}.
+
+
+
+// Update the roadmap route
+router.get('/career-roadmap/:role', async (req, res) => {
+  try {
+    const role = decodeURIComponent(req.params.role);
+    // Use the same model as the one defined at the top of the file
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+    // Updated prompt with better structure
+    const prompt = `As a career counselor, create a detailed 12-week roadmap for becoming a ${role}.
 
 Format your response as a JSON object with exactly this structure:
 {
@@ -434,113 +434,113 @@ Important guidelines:
 
 Remember to maintain valid JSON structure with proper quotes and commas.`;
 
-        const result = await model.generateContent(prompt);
-        const response = await result.response;
-        let roadmapData;
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    let roadmapData;
 
-        try {
-            const responseText = response.text();
-            // Extract JSON from the response if it's wrapped in other text
-            const jsonMatch = responseText.match(/\{[\s\S]*\}/);
-            const jsonStr = jsonMatch ? jsonMatch[0] : responseText;
-            roadmapData = JSON.parse(jsonStr);
+    try {
+      const responseText = response.text();
+      // Extract JSON from the response if it's wrapped in other text
+      const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+      const jsonStr = jsonMatch ? jsonMatch[0] : responseText;
+      roadmapData = JSON.parse(jsonStr);
 
-            // Ensure we have exactly 12 weeks
-            if (!roadmapData.weeks || roadmapData.weeks.length < 12) {
-                const weekTemplate = {
-                    focus: "Continue building practical skills",
-                    topics: [
-                        "Advanced concepts",
-                        "Industry best practices",
-                        "Professional development"
-                    ],
-                    resources: [
-                        "Online courses and tutorials",
-                        "Industry documentation",
-                        "Practice projects"
-                    ]
-                };
-                roadmapData.weeks = Array(12).fill(null).map((_, index) => 
-                    roadmapData.weeks && roadmapData.weeks[index] 
-                        ? roadmapData.weeks[index] 
-                        : weekTemplate
-                );
-            }
-
-            // Validate overview structure
-            if (!roadmapData.overview) {
-                roadmapData.overview = {
-                    roleDescription: `Detailed description of ${role} role and responsibilities`,
-                    requiredSkills: "Key technical and soft skills required for this role",
-                    careerGrowth: "Career advancement opportunities and growth paths",
-                    salaryRange: "Typical salary range for this position"
-                };
-            }
-        } catch (parseError) {
-            console.error('Error parsing JSON response:', parseError);
-            console.log('Raw response:', response.text());
-            
-            // Structured fallback data
-            roadmapData = {
-                overview: {
-                    roleDescription: `A ${role} is a professional who specializes in designing, developing, and implementing solutions in their field.`,
-                    requiredSkills: "Technical expertise, problem-solving, communication, teamwork, and continuous learning ability",
-                    careerGrowth: "Career paths include senior roles, team leadership, technical architecture, and specialized consulting",
-                    salaryRange: "Entry-level to senior positions typically range from $50,000 to $150,000+ depending on experience and location"
-                },
-                weeks: Array(12).fill(null).map((_, i) => ({
-                    focus: `Week ${i + 1}: Core ${role} Skills and Knowledge`,
-                    topics: [
-                        "Fundamental concepts and principles",
-                        "Industry-standard tools and practices",
-                        "Professional development skills"
-                    ],
-                    resources: [
-                        "Online learning platforms (Coursera, Udemy)",
-                        "Professional documentation and guides",
-                        "Hands-on projects and exercises"
-                    ]
-                }))
-            };
-        }
-
-        res.render('career_roadmap', {
-            role: role,
-            overview: roadmapData.overview,
-            weeks: roadmapData.weeks
-        });
-    } catch (error) {
-        console.error('Error generating roadmap:', error);
-        
-        // More specific fallback data
-        const fallbackData = {
-            overview: {
-                roleDescription: `We're currently preparing a detailed description of the ${role} position. This role typically involves specialized work in the field.`,
-                requiredSkills: "Core technical skills, problem-solving abilities, and professional competencies specific to the role",
-                careerGrowth: "Various advancement opportunities including senior positions, leadership roles, and specialized paths",
-                salaryRange: "Competitive compensation based on experience and location"
-            },
-            weeks: Array(12).fill(null).map((_, i) => ({
-                focus: `Week ${i + 1}: Essential Skills Development`,
-                topics: [
-                    "Core concepts and fundamentals",
-                    "Professional tools and technologies",
-                    "Industry best practices"
-                ],
-                resources: [
-                    "Industry-leading online courses",
-                    "Professional documentation",
-                    "Practical exercises and projects"
-                ]
-            }))
+      // Ensure we have exactly 12 weeks
+      if (!roadmapData.weeks || roadmapData.weeks.length < 12) {
+        const weekTemplate = {
+          focus: "Continue building practical skills",
+          topics: [
+            "Advanced concepts",
+            "Industry best practices",
+            "Professional development"
+          ],
+          resources: [
+            "Online courses and tutorials",
+            "Industry documentation",
+            "Practice projects"
+          ]
         };
+        roadmapData.weeks = Array(12).fill(null).map((_, index) =>
+          roadmapData.weeks && roadmapData.weeks[index]
+            ? roadmapData.weeks[index]
+            : weekTemplate
+        );
+      }
 
-        res.render('career_roadmap', {
-            role: role,
-            overview: fallbackData.overview,
-            weeks: fallbackData.weeks
-        });
+      // Validate overview structure
+      if (!roadmapData.overview) {
+        roadmapData.overview = {
+          roleDescription: `Detailed description of ${role} role and responsibilities`,
+          requiredSkills: "Key technical and soft skills required for this role",
+          careerGrowth: "Career advancement opportunities and growth paths",
+          salaryRange: "Typical salary range for this position"
+        };
+      }
+    } catch (parseError) {
+      console.error('Error parsing JSON response:', parseError);
+      console.log('Raw response:', response.text());
+
+      // Structured fallback data
+      roadmapData = {
+        overview: {
+          roleDescription: `A ${role} is a professional who specializes in designing, developing, and implementing solutions in their field.`,
+          requiredSkills: "Technical expertise, problem-solving, communication, teamwork, and continuous learning ability",
+          careerGrowth: "Career paths include senior roles, team leadership, technical architecture, and specialized consulting",
+          salaryRange: "Entry-level to senior positions typically range from $50,000 to $150,000+ depending on experience and location"
+        },
+        weeks: Array(12).fill(null).map((_, i) => ({
+          focus: `Week ${i + 1}: Core ${role} Skills and Knowledge`,
+          topics: [
+            "Fundamental concepts and principles",
+            "Industry-standard tools and practices",
+            "Professional development skills"
+          ],
+          resources: [
+            "Online learning platforms (Coursera, Udemy)",
+            "Professional documentation and guides",
+            "Hands-on projects and exercises"
+          ]
+        }))
+      };
     }
+
+    res.render('career_roadmap', {
+      role: role,
+      overview: roadmapData.overview,
+      weeks: roadmapData.weeks
+    });
+  } catch (error) {
+    console.error('Error generating roadmap:', error);
+
+    // More specific fallback data
+    const fallbackData = {
+      overview: {
+        roleDescription: `We're currently preparing a detailed description of the ${role} position. This role typically involves specialized work in the field.`,
+        requiredSkills: "Core technical skills, problem-solving abilities, and professional competencies specific to the role",
+        careerGrowth: "Various advancement opportunities including senior positions, leadership roles, and specialized paths",
+        salaryRange: "Competitive compensation based on experience and location"
+      },
+      weeks: Array(12).fill(null).map((_, i) => ({
+        focus: `Week ${i + 1}: Essential Skills Development`,
+        topics: [
+          "Core concepts and fundamentals",
+          "Professional tools and technologies",
+          "Industry best practices"
+        ],
+        resources: [
+          "Industry-leading online courses",
+          "Professional documentation",
+          "Practical exercises and projects"
+        ]
+      }))
+    };
+
+    res.render('career_roadmap', {
+      role: role,
+      overview: fallbackData.overview,
+      weeks: fallbackData.weeks
+    });
+  }
 });
 
 module.exports = router;

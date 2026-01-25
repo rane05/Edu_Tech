@@ -1,20 +1,20 @@
 const express = require('express');
 const router = express.Router();
-const Question = require('../model/Carrer_Que'); // Adjust the path as necessary
+const Question = require('../model/Career_Que'); // Adjust the path as necessary
 
 const dotenv = require("dotenv").config();
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const text = require('body-parser/lib/types/text');
 
 const genAI = new GoogleGenerativeAI(process.env.API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash"});
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 
 // Route to display questions
-router.get('/Carrer_Test', async (req, res) => {
+router.get('/Career_Test', async (req, res) => {
     try {
         const questions = await Question.find();
-        res.render('Carrer_Test_Que', { questions });
+        res.render('Career_Test_Que', { questions });
     } catch (error) {
         res.status(500).send('Error fetching questions');
     }
@@ -26,7 +26,7 @@ let Gprompt = '';
 
 // Route to handle submitted responses
 // Route to handle submitted responses
-router.post('/submit_answers_carrer', (req, res) => {
+router.post('/submit_answers_career', (req, res) => {
     const answers = req.body;
     const score = {
         Technical: 0,
@@ -65,33 +65,33 @@ router.post('/submit_answers_carrer', (req, res) => {
     - [Next Step]
     - [Next Step]
     `;
-    
 
-    generateContent(req, res, Gprompt,score); // Pass Gprompt to generateContent
+
+    generateContent(req, res, Gprompt, score); // Pass Gprompt to generateContent
 });
 
 // Update the generateContent function to send the response
-const generateContent = async (req, res, prompt,score) => {
+const generateContent = async (req, res, prompt, score) => {
     try {
-      // Ensure prompt is set before calling generateContent
-      if (!prompt) {
-        return res.send("No prompt available. Please submit the form first.");
-      }
-  
-      // Use the AI model to generate content based on the prompt
-      const result = await model.generateContent(prompt); // Use the passed prompt
-      const response = await result.response;
-      const text = await response.text();
-    //   console.log("Raw Response Text:", text);
+        // Ensure prompt is set before calling generateContent
+        if (!prompt) {
+            return res.send("No prompt available. Please submit the form first.");
+        }
 
-      // After generating the content and parsing the response
-const { careerSuggestions, nextSteps } = formatCareerSuggestions(text);
-res.render('Carrer_Test_Ai', { careerSuggestions, nextSteps });
+        // Use the AI model to generate content based on the prompt
+        const result = await model.generateContent(prompt); // Use the passed prompt
+        const response = await result.response;
+        const text = await response.text();
+        //   console.log("Raw Response Text:", text);
 
-      
+        // After generating the content and parsing the response
+        const { careerSuggestions, nextSteps } = formatCareerSuggestions(text);
+        res.render('Career_Test_Ai', { careerSuggestions, nextSteps });
 
-      // Render the EJS template with score and formatted suggestions
-    //   res.render('Carrer_Test_Ai', { score, careerSuggestions });
+
+
+        // Render the EJS template with score and formatted suggestions
+        //   res.render('Carrer_Test_Ai', { score, careerSuggestions });
     } catch (error) {
         console.error("Error generating content:", error);
         res.status(500).send("An error occurred while generating content.");

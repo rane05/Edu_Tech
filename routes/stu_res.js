@@ -112,6 +112,9 @@ router.get('/student_results', async (req, res) => {
   // Generate AI insights based on the student's performance
   const generateContent = async () => {
     try {
+      if (!studentTests || studentTests.length === 0) {
+          return "No test data available for insights.";
+      }
       const prompt = `
         Based on the performance in the following sections:
         ${Object.keys(studentTests[studentTests.length - 1].sectionScores).map(section => `${section}: ${studentTests[studentTests.length - 1].sectionScores[section].correct}/${studentTests[studentTests.length - 1].sectionScores[section].total}`).join('\n')}
@@ -145,8 +148,8 @@ router.get('/student_results', async (req, res) => {
     username: (await User.findById(userId)).username,
     totalTests: studentTests.length || 1,  // Default to 1 if no tests are available (to avoid breaking calculations)
     testNumbers,   // X-axis: Test numbers
-    totalScores: totalScores || 1,  // Default to 1 if totalScores is unavailable (to avoid breaking calculations)
-    totalScore: totalScores, // Pass totalScore (or a calculated value) here
+    totalScores: totalScores || [],  // Default to empty array
+    totalScore: totalScores.length > 0 ? totalScores[totalScores.length - 1] : 0, // Fix: Pass the latest test score
     topScores,     // Pass top scores for the leaderboard
     insights,      // AI insights
     hours,
@@ -180,6 +183,7 @@ router.get('/get_graph', async (req, res) => {
     totalTests: studentTests.length,
     testNumbers,
     totalScores,
+    totalScore: studentTests.length > 0 ? studentTests[studentTests.length - 1].totalScore : 0,
     username: user ? user.username : 'User',
     sectionScores: studentTests.length > 0 ? studentTests[studentTests.length - 1].sectionScores : 'NA',
     topScores: [], // Pass empty or fetch if needed
@@ -222,16 +226,10 @@ router.get('/leaderboard', async (req, res) => {
     const userId = req.session.userId;
     const user = userId ? await User.findById(userId) : null;
 
-    res.render('student_res', {
+    res.render('leaderboard', {
       topScores,
       username: user ? user.username : 'User',
-      sectionScores: 'NA',
-      totalTests: 0,
-      testNumbers: [],
-      totalScores: [],
-      insights: '',
-      hours: new Date().getHours(),
-      minutes: new Date().getMinutes()
+      // Other data not needed for dedicated leaderboard view
     });
   } catch (error) {
     console.error('Error fetching leaderboard:', error);

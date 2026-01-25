@@ -1,0 +1,93 @@
+<%- include('layouts/header'); %>
+    <%- include('layouts/navbar'); %>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <div class="container" style="margin-top: 40px;">
+            <h2>📊 My Performance Dashboard</h2>
+
+            <!-- Stats Cards -->
+            <div class="row mb-4">
+                <div class="col-md-4">
+                    <div class="card bg-primary text-white p-3">
+                        <h3>
+                            <%= stats.bestScore %> / 60
+                        </h3>
+                        <p>All-Time Best Score</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-success text-white p-3">
+                        <h3>
+                            <%= stats.avgScore %>
+                        </h3>
+                        <p>Average Score</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card bg-info text-white p-3">
+                        <h3>
+                            <%= stats.totalAttempts %>
+                        </h3>
+                        <p>Total Quizzes Taken</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card p-3">
+                        <h5>📈 Progress Trend</h5>
+                        <canvas id="scoreChart"></canvas>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card p-3">
+                        <h5>🎯 Recent History</h5>
+                        <ul class="list-group list-group-flush">
+                            <% results.slice(-5).reverse().forEach(r=> { %>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span>
+                                        <%= new Date(r.date).toLocaleDateString() %>
+                                    </span>
+                                    <span class="badge bg-primary rounded-pill">
+                                        <%= r.score %>
+                                    </span>
+                                </li>
+                                <% }); %>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="/smart-quiz" class="btn btn-lg btn-outline-primary">➜ Take New Quiz</a>
+            </div>
+
+        </div>
+
+        <script>
+            const ctx = document.getElementById('scoreChart').getContext('2d');
+            const dataPoints = <% - JSON.stringify(results.map(r => r.score)) %>;
+            const labels = <% - JSON.stringify(results.map((r, i) => `Attempt ${i + 1}`)) %>;
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Quiz Score',
+                        data: dataPoints,
+                        borderColor: '#6366f1',
+                        tension: 0.3,
+                        fill: true,
+                        backgroundColor: 'rgba(99, 102, 241, 0.1)'
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: { beginAtZero: true, max: 60 }
+                    }
+                }
+            });
+        </script>

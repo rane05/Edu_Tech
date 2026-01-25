@@ -47,7 +47,8 @@
         margin: -40px auto 80px;
         padding: 0 20px;
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+        grid-template-columns: 1fr;
+        max-width: 600px;
         gap: 40px;
       }
 
@@ -204,6 +205,9 @@
       @media (max-width: 968px) {
         .college-cards {
           grid-template-columns: 1fr;
+          max-width: 600px;
+          margin-left: auto;
+          margin-right: auto;
           gap: 30px;
         }
 
@@ -233,22 +237,22 @@
           <li>Detailed admission insights</li>
           <li>Start your journey to success</li>
         </ul>
-        <a href="/cetCollege" class="card-btn">Explore CET Colleges</a>
+        <a href="/cet-predictor" class="card-btn">Explore CET Colleges</a>
       </div>
 
       <!-- JEE Card -->
       <div class="college-card jee">
         <div class="card-icon">
-          <i class="fas fa-rocket"></i>
+          <i class="fas fa-atom"></i>
         </div>
         <h2>JEE Path</h2>
         <ul class="features-list">
-          <li>Tailored college recommendations</li>
-          <li>Top engineering institutes for JEE</li>
-          <li>Comprehensive placement data</li>
-          <li>Achieve your dream career</li>
+          <li>All India Quota admissions</li>
+          <li>Top engineering institutes</li>
+          <li>National level opportunities</li>
+          <li>Expand your horizons</li>
         </ul>
-        <a href="/cetCollege" class="card-btn">Explore JEE Colleges</a>
+        <a href="/jee-predictor" class="card-btn">Explore JEE Colleges</a>
       </div>
     </div>
 

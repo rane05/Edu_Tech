@@ -5,20 +5,20 @@ const dotenv = require("dotenv").config();
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const genAI = new GoogleGenerativeAI(process.env.API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash"});
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 
 
 
 
-router.get('/Carrer_Trends',(req,res)=>{
-    res.render('Carrer_Trends')
+router.get('/Career_Trends', (req, res) => {
+    res.render('Career_Trends')
 })
 
 // Define Gprompt outside the route handler to be accessible to generateContent
 let Gprompt = '';
 
-router.post('/Carrer_Trends', (req, res) => {
+router.post('/Career_Trends', (req, res) => {
     // Access form data
     const formData = {
         subjects: req.body.subjects,
@@ -83,31 +83,31 @@ Career Development Tips: Provide strategies for career growth, networking, and b
     generateContent(req, res);
 
 
-    
+
 });
 
 
 
 const generateContent = async (req, res) => {
     try {
-      // Ensure Gprompt is set before calling generateContent
-      if (!Gprompt) {
-        return res.send("No prompt available. Please submit the form first.");
-      }
-  
-      // Use the AI model to generate content based on the prompt
-      const result = await model.generateContent(Gprompt);
-      const response = await result.response;
-      const text = await response.text();
+        // Ensure Gprompt is set before calling generateContent
+        if (!Gprompt) {
+            return res.send("No prompt available. Please submit the form first.");
+        }
+
+        // Use the AI model to generate content based on the prompt
+        const result = await model.generateContent(Gprompt);
+        const response = await result.response;
+        const text = await response.text();
 
 
-      const formattedText = text
-      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')  // Convert **bold** to <strong>
-      .replace(/\n\n/g, '</p><p>')  // Convert double line breaks to new paragraphs
-      .replace(/\n/g, '<br>');      // Convert single line breaks to <br>
+        const formattedText = text
+            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')  // Convert **bold** to <strong>
+            .replace(/\n\n/g, '</p><p>')  // Convert double line breaks to new paragraphs
+            .replace(/\n/g, '<br>');      // Convert single line breaks to <br>
 
-  // Render HTML response with CSS
-  res.send(`
+        // Render HTML response with CSS
+        res.send(`
       <html>
       <head>
           <style>
@@ -144,13 +144,13 @@ const generateContent = async (req, res) => {
       </body>
       </html>
   `);
-    
+
     } catch (err) {
-      console.error(err);
-      res.send("Unexpected Error!!!");
+        console.error(err);
+        res.send("Unexpected Error!!!");
     }
-  };
+};
 
- 
 
-  module.exports = router;
+
+module.exports = router;

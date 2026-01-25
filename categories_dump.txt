@@ -1,0 +1,402 @@
+[
+  {
+    "_id": "Status:",
+    "count": 19098
+  },
+  {
+    "_id": "Home",
+    "count": 15945
+  },
+  {
+    "_id": "University",
+    "count": 15831
+  },
+  {
+    "_id": "Un-Aided",
+    "count": 13307
+  },
+  {
+    "_id": "Stage",
+    "count": 11508
+  },
+  {
+    "_id": "Seats",
+    "count": 6609
+  },
+  {
+    "_id": "Allotted",
+    "count": 6168
+  },
+  {
+    "_id": "to",
+    "count": 5849
+  },
+  {
+    "_id": "I",
+    "count": 5123
+  },
+  {
+    "_id": "Candidates",
+    "count": 4910
+  },
+  {
+    "_id": "Autonomous",
+    "count": 4445
+  },
+  {
+    "_id": "General Home",
+    "count": 4405
+  },
+  {
+    "_id": "GSCH",
+    "count": 3365
+  },
+  {
+    "_id": "GOBCH",
+    "count": 3275
+  },
+  {
+    "_id": "General Other",
+    "count": 3256
+  },
+  {
+    "_id": "State",
+    "count": 3168
+  },
+  {
+    "_id": "Ladies Other",
+    "count": 3023
+  },
+  {
+    "_id": "Ladies Home",
+    "count": 3005
+  },
+  {
+    "_id": "Level",
+    "count": 2974
+  },
+  {
+    "_id": "GOPENS",
+    "count": 2706
+  },
+  {
+    "_id": "GSCS",
+    "count": 2384
+  },
+  {
+    "_id": "GNT2H",
+    "count": 2285
+  },
+  {
+    "_id": "Linguistic",
+    "count": 2131
+  },
+  {
+    "_id": "GSTH",
+    "count": 2097
+  },
+  {
+    "_id": "GOBCS",
+    "count": 2011
+  },
+  {
+    "_id": "GNT1H",
+    "count": 1989
+  },
+  {
+    "_id": "Minority",
+    "count": 1913
+  },
+  {
+    "_id": "GVJH",
+    "count": 1884
+  },
+  {
+    "_id": "LSCH",
+    "count": 1878
+  },
+  {
+    "_id": "GNT3H",
+    "count": 1875
+  },
+  {
+    "_id": "GSTS",
+    "count": 1813
+  },
+  {
+    "_id": "LOBCH",
+    "count": 1712
+  },
+  {
+    "_id": "GNT2S",
+    "count": 1707
+  },
+  {
+    "_id": "LOPENS",
+    "count": 1635
+  },
+  {
+    "_id": "GVJS",
+    "count": 1627
+  },
+  {
+    "_id": ":",
+    "count": 1593
+  },
+  {
+    "_id": "GNT1S",
+    "count": 1529
+  },
+  {
+    "_id": "-",
+    "count": 1452
+  },
+  {
+    "_id": "LOBCO",
+    "count": 1446
+  },
+  {
+    "_id": "GNT3S",
+    "count": 1375
+  },
+  {
+    "_id": "GOBCO",
+    "count": 1330
+  },
+  {
+    "_id": "LSCS",
+    "count": 1228
+  },
+  {
+    "_id": "TFWS",
+    "count": 1186
+  },
+  {
+    "_id": "GSCO",
+    "count": 1098
+  },
+  {
+    "_id": "LSCO",
+    "count": 1078
+  },
+  {
+    "_id": "LSTH",
+    "count": 1026
+  },
+  {
+    "_id": "Government",
+    "count": 849
+  },
+  {
+    "_id": "Religious",
+    "count": 817
+  },
+  {
+    "_id": "LSTS",
+    "count": 815
+  },
+  {
+    "_id": "LNT2H",
+    "count": 732
+  },
+  {
+    "_id": "GNT2O",
+    "count": 690
+  },
+  {
+    "_id": "LVJS",
+    "count": 640
+  },
+  {
+    "_id": "GSTO",
+    "count": 624
+  },
+  {
+    "_id": "Savitribai",
+    "count": 607
+  },
+  {
+    "_id": "Phule",
+    "count": 567
+  },
+  {
+    "_id": "PWDOPENH",
+    "count": 565
+  },
+  {
+    "_id": "LNT1S",
+    "count": 554
+  },
+  {
+    "_id": "GSEBCH",
+    "count": 538
+  },
+  {
+    "_id": "Pune",
+    "count": 526
+  },
+  {
+    "_id": "EWS",
+    "count": 518
+  },
+  {
+    "_id": "LNT2S",
+    "count": 516
+  },
+  {
+    "_id": "LOBCS",
+    "count": 460
+  },
+  {
+    "_id": "Government-Aided",
+    "count": 448
+  },
+  {
+    "_id": "LVJH",
+    "count": 392
+  },
+  {
+    "_id": "GVJO",
+    "count": 372
+  },
+  {
+    "_id": "GSEBCS",
+    "count": 371
+  },
+  {
+    "_id": "Hindi",
+    "count": 362
+  },
+  {
+    "_id": "LNT1H",
+    "count": 350
+  },
+  {
+    "_id": "GNT1O",
+    "count": 336
+  },
+  {
+    "_id": "LNT3S",
+    "count": 310
+  },
+  {
+    "_id": "Department",
+    "count": 289
+  },
+  {
+    "_id": "GNT3O",
+    "count": 271
+  },
+  {
+    "_id": "PWDOPEN",
+    "count": 254
+  },
+  {
+    "_id": "Dr.",
+    "count": 249
+  },
+  {
+    "_id": "LSEBCO",
+    "count": 242
+  },
+  {
+    "_id": "LNT3H",
+    "count": 223
+  },
+  {
+    "_id": "Babasaheb",
+    "count": 218
+  },
+  {
+    "_id": "GSEBCO",
+    "count": 207
+  },
+  {
+    "_id": "MI",
+    "count": 204
+  },
+  {
+    "_id": "General",
+    "count": 193
+  },
+  {
+    "_id": "AI",
+    "count": 193
+  },
+  {
+    "_id": "Ladies General",
+    "count": 193
+  },
+  {
+    "_id": "LSTO",
+    "count": 190
+  },
+  {
+    "_id": "Ambedkar",
+    "count": 188
+  },
+  {
+    "_id": "Christian",
+    "count": 177
+  },
+  {
+    "_id": "PWDOBCH",
+    "count": 173
+  },
+  {
+    "_id": "Defence General",
+    "count": 172
+  },
+  {
+    "_id": "LSEBCH",
+    "count": 171
+  },
+  {
+    "_id": "H",
+    "count": 164
+  },
+  {
+    "_id": "OBC",
+    "count": 156
+  },
+  {
+    "_id": "SC",
+    "count": 156
+  },
+  {
+    "_id": "SEBC",
+    "count": 155
+  },
+  {
+    "_id": "Ladies OBC",
+    "count": 153
+  },
+  {
+    "_id": "Ladies SC",
+    "count": 149
+  },
+  {
+    "_id": "Managed",
+    "count": 148
+  },
+  {
+    "_id": "Shivaji",
+    "count": 148
+  },
+  {
+    "_id": "Ladies SEBC",
+    "count": 146
+  },
+  {
+    "_id": "NT2",
+    "count": 145
+  },
+  {
+    "_id": "Marathwada",
+    "count": 139
+  },
+  {
+    "_id": "VJ",
+    "count": 134
+  }
+]

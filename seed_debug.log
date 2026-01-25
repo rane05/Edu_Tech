@@ -1,0 +1,8 @@
+[2026-01-24T17:07:52.820Z] Starting seed script...
+[2026-01-24T17:07:52.850Z] Connected to MongoDB
+[2026-01-24T17:07:52.866Z] Cleared existing data.
+[2026-01-24T17:07:52.869Z] Raw lines: 1891
+[2026-01-24T17:07:52.882Z] Map size: 345
+[2026-01-24T17:07:52.883Z] Colleges with branches: 0
+[2026-01-24T17:07:52.883Z] No valid colleges found to seed.
+[2026-01-24T17:07:52.891Z] Done.
