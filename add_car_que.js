@@ -1,21 +1,21 @@
 const mongoose = require('mongoose');
-const Question = require('./model/Carrer_Que'); // Adjust the path according to your folder structure
-require('dotenv').config(); 
+const Question = require('./model/Career_Que'); // Adjust the path according to your folder structure
+require('dotenv').config();
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
-  
-
-  // This loads the .env variables
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
 
-  
+// This loads the .env variables
+
+
+
 // Function to add 15 questions
 const addQuestions = async () => {
   const questions = [
-    { 
+    {
       questionText: "Which activity do you enjoy most?",
       category: "Technical",
       options: [
