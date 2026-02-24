@@ -1,0 +1,444 @@
+<%- include('layouts/header'); %>
+<%- include('layouts/navbar'); %>
+
+<style>
+    .career-counseling-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: var(--space-8) var(--space-4);
+        min-height: 100vh;
+    }
+
+    .page-header {
+        text-align: center;
+        margin-bottom: var(--space-12);
+        animation: fadeInDown 0.8s ease-out;
+    }
+
+    .page-header h1 {
+        font-size: var(--text-5xl);
+        font-weight: var(--font-bold);
+        color: var(--color-dark);
+        margin-bottom: var(--space-4);
+        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .page-header p {
+        font-size: var(--text-lg);
+        color: var(--color-text-light);
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .counseling-form {
+        background: var(--color-bg);
+        border-radius: var(--radius-2xl);
+        box-shadow: var(--shadow-xl);
+        padding: var(--space-8);
+        margin-bottom: var(--space-8);
+        animation: fadeInUp 0.8s ease-out 0.2s both;
+    }
+
+    .form-section {
+        margin-bottom: var(--space-8);
+    }
+
+    .form-section-title {
+        font-size: var(--text-2xl);
+        font-weight: var(--font-bold);
+        color: var(--color-dark);
+        margin-bottom: var(--space-4);
+        display: flex;
+        align-items: center;
+        gap: var(--space-3);
+    }
+
+    .form-section-title i {
+        color: var(--color-primary);
+        font-size: var(--text-xl);
+    }
+
+    .search-input {
+        width: 100%;
+        padding: var(--space-4) var(--space-5);
+        border: 2px solid var(--gray-200);
+        border-radius: var(--radius-lg);
+        font-size: var(--text-base);
+        transition: all var(--transition-normal);
+        background: var(--color-bg);
+        margin-bottom: var(--space-4);
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 3px rgba(255, 184, 0, 0.1);
+    }
+
+    .checkbox-container {
+        max-height: 300px;
+        overflow-y: auto;
+        padding: var(--space-4);
+        background: var(--color-bg-light);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--gray-200);
+    }
+
+    .checkbox-item {
+        display: flex;
+        align-items: center;
+        padding: var(--space-3);
+        margin-bottom: var(--space-2);
+        border-radius: var(--radius-md);
+        transition: all var(--transition-normal);
+        cursor: pointer;
+    }
+
+    .checkbox-item:hover {
+        background: rgba(255, 184, 0, 0.05);
+        transform: translateX(4px);
+    }
+
+    .checkbox-item input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        margin-right: var(--space-3);
+        accent-color: var(--color-primary);
+        cursor: pointer;
+    }
+
+    .checkbox-item label {
+        flex: 1;
+        font-size: var(--text-base);
+        color: var(--color-text);
+        cursor: pointer;
+        margin: 0;
+        user-select: none;
+    }
+
+    .btn-get-recommendations {
+        background: var(--color-primary);
+        color: var(--color-dark);
+        padding: var(--space-4) var(--space-8);
+        border: none;
+        border-radius: var(--radius-full);
+        font-size: var(--text-lg);
+        font-weight: var(--font-bold);
+        cursor: pointer;
+        transition: all var(--transition-normal);
+        box-shadow: 0 4px 12px rgba(255, 184, 0, 0.2);
+        display: flex;
+        align-items: center;
+        gap: var(--space-2);
+        margin: var(--space-8) auto 0;
+    }
+
+    .btn-get-recommendations:hover {
+        background: var(--primary-600);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(255, 184, 0, 0.3);
+    }
+
+    .recommendations-section {
+        background: var(--color-bg);
+        border-radius: var(--radius-2xl);
+        box-shadow: var(--shadow-xl);
+        padding: var(--space-8);
+        animation: fadeInUp 0.8s ease-out;
+    }
+
+    .recommendations-header {
+        font-size: var(--text-3xl);
+        font-weight: var(--font-bold);
+        color: var(--color-dark);
+        margin-bottom: var(--space-6);
+        text-align: center;
+        background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-accent) 100%);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .career-list {
+        list-style: none;
+        padding: 0;
+        margin-bottom: var(--space-8);
+    }
+
+    .career-item {
+        background: linear-gradient(135deg, var(--color-bg-light) 0%, var(--color-bg) 100%);
+        border: 1px solid var(--gray-200);
+        border-radius: var(--radius-lg);
+        padding: var(--space-4) var(--space-5);
+        margin-bottom: var(--space-3);
+        font-size: var(--text-lg);
+        color: var(--color-text);
+        transition: all var(--transition-normal);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .career-item::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        background: linear-gradient(180deg, var(--color-primary), var(--color-secondary));
+        transform: scaleY(0);
+        transition: transform var(--transition-normal);
+    }
+
+    .career-item:hover {
+        transform: translateX(8px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--color-primary);
+    }
+
+    .career-item:hover::before {
+        transform: scaleY(1);
+    }
+
+    .salary-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: var(--space-6);
+        background: var(--color-bg);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+        box-shadow: var(--shadow-md);
+    }
+
+    .salary-table th {
+        background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+        color: var(--color-dark);
+        padding: var(--space-4);
+        text-align: left;
+        font-weight: var(--font-bold);
+        font-size: var(--text-base);
+    }
+
+    .salary-table td {
+        padding: var(--space-4);
+        border-bottom: 1px solid var(--gray-200);
+        color: var(--color-text);
+    }
+
+    .salary-table tr:hover {
+        background: var(--color-bg-light);
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    @media (max-width: 768px) {
+        .career-counseling-container {
+            padding: var(--space-6) var(--space-4);
+        }
+
+        .page-header h1 {
+            font-size: var(--text-4xl);
+        }
+
+        .counseling-form {
+            padding: var(--space-6);
+        }
+
+        .checkbox-container {
+            max-height: 250px;
+        }
+
+        .salary-table {
+            font-size: var(--text-sm);
+        }
+
+        .salary-table th,
+        .salary-table td {
+            padding: var(--space-3);
+        }
+    }
+</style>
+
+<div class="career-counseling-container">
+    <div class="page-header">
+        <h1>Skills & Interests Assessment</h1>
+        <p>Discover your perfect career path by selecting your skills and interests</p>
+    </div>
+
+    <form class="counseling-form" id="counselingForm">
+        <div class="form-section">
+            <h2 class="form-section-title">
+                <i class="fas fa-code"></i>
+                Select Your Skills
+            </h2>
+            <input type="text" class="search-input" id="searchSkills" placeholder="Search skills..." onkeyup="search('searchSkills', 'skills')">
+            <div class="checkbox-container" id="skillsContainer">
+                <% skills.forEach(skill => { %>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="skills" value="<%= skill %>" id="skill-<%= skill.replace(/\s+/g, '-') %>">
+                        <label for="skill-<%= skill.replace(/\s+/g, '-') %>"><%= skill %></label>
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h2 class="form-section-title">
+                <i class="fas fa-heart"></i>
+                Select Your Interests
+            </h2>
+            <input type="text" class="search-input" id="searchInterests" placeholder="Search interests..." onkeyup="search('searchInterests', 'interests')">
+            <div class="checkbox-container" id="interestsContainer">
+                <% interests.forEach(interest => { %>
+                    <div class="checkbox-item">
+                        <input type="checkbox" name="interests" value="<%= interest %>" id="interest-<%= interest.replace(/\s+/g, '-') %>">
+                        <label for="interest-<%= interest.replace(/\s+/g, '-') %>"><%= interest %></label>
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+
+        <button type="button" class="btn-get-recommendations" onclick="getRecommendations()">
+            <i class="fas fa-magic"></i>
+            Get Career Recommendations
+        </button>
+    </form>
+
+    <div id="recommendations" class="recommendations-section hidden">
+        <h2 class="recommendations-header">Your Career Recommendations</h2>
+        <ul class="career-list" id="recommendationList"></ul>
+
+        <h3 class="recommendations-header">Average Salary Information</h3>
+        <table class="salary-table" id="salaryTable">
+            <thead>
+                <tr>
+                    <th>Career Path</th>
+                    <th>Average Salary (USD)</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    const recommendations = {
+        "Python": {
+            careers: ["Data Scientist", "Machine Learning Engineer", "Backend Developer"],
+            salaries: [120000, 130000, 110000]
+        },
+        "JavaScript": {
+            careers: ["Frontend Developer", "Full Stack Developer", "Web Developer"],
+            salaries: [100000, 110000, 95000]
+        },
+        "Data Science": {
+            careers: ["Data Analyst", "Data Scientist", "AI Researcher"],
+            salaries: [95000, 120000, 140000]
+        },
+        "AI/ML": {
+            careers: ["AI Engineer", "Machine Learning Engineer", "Data Scientist"],
+            salaries: [150000, 140000, 120000]
+        },
+        "Cybersecurity": {
+            careers: ["Security Analyst", "Penetration Tester", "Cybersecurity Consultant"],
+            salaries: [105000, 115000, 125000]
+        },
+        "Cloud Computing": {
+            careers: ["Cloud Engineer", "Cloud Architect", "DevOps Engineer"],
+            salaries: [130000, 145000, 125000]
+        },
+        "Blockchain Development": {
+            careers: ["Blockchain Developer", "Smart Contract Developer", "Blockchain Architect"],
+            salaries: [125000, 135000, 150000]
+        },
+        "UI/UX Design": {
+            careers: ["UI Designer", "UX Researcher", "Product Designer"],
+            salaries: [85000, 90000, 95000]
+        },
+        "Game Development": {
+            careers: ["Game Developer", "Level Designer", "Game Artist"],
+            salaries: [95000, 100000, 85000]
+        },
+        "Automation": {
+            careers: ["Automation Engineer", "Test Automation Specialist", "Robotic Process Automation Engineer"],
+            salaries: [105000, 110000, 115000]
+        },
+        "Web Development": {
+            careers: ["Frontend Developer", "Backend Developer", "Full Stack Developer"],
+            salaries: [100000, 110000, 115000]
+        },
+        "Mobile App Development": {
+            careers: ["iOS Developer", "Android Developer", "Mobile UI Developer"],
+            salaries: [120000, 110000, 95000]
+        }
+    };
+
+    function search(inputId, type) {
+        const searchTerm = document.getElementById(inputId).value.toLowerCase();
+        const checkboxes = document.querySelectorAll(`input[name="${type}"]`);
+        
+        checkboxes.forEach(checkbox => {
+            const label = checkbox.nextElementSibling;
+            if (label && label.textContent.toLowerCase().includes(searchTerm)) {
+                checkbox.parentElement.style.display = "flex";
+            } else {
+                checkbox.parentElement.style.display = "none";
+            }
+        });
+    }
+
+    function getRecommendations() {
+        const selectedSkills = Array.from(document.querySelectorAll('input[name="skills"]:checked')).map(cb => cb.value);
+        const selectedInterests = Array.from(document.querySelectorAll('input[name="interests"]:checked')).map(cb => cb.value);
+        
+        const recommendationList = document.getElementById('recommendationList');
+        const salaryTableBody = document.querySelector('#salaryTable tbody');
+        
+        recommendationList.innerHTML = '';
+        salaryTableBody.innerHTML = '';
+        
+        const selected = [...selectedSkills, ...selectedInterests];
+        const addedCareers = new Set();
+
+        selected.forEach(selection => {
+            if (recommendations[selection]) {
+                recommendations[selection].careers.forEach((career, index) => {
+                    if (!addedCareers.has(career)) {
+                        addedCareers.add(career);
+                        
+                        // Add to recommendation list
+                        const li = document.createElement('li');
+                        li.className = 'career-item';
+                        li.textContent = career;
+                        recommendationList.appendChild(li);
+                        
+                        // Add to salary table
+                        const tr = document.createElement('tr');
+                        const tdCareer = document.createElement('td');
+                        const tdSalary = document.createElement('td');
+                        tdCareer.textContent = career;
+                        tdSalary.textContent = '$' + recommendations[selection].salaries[index].toLocaleString();
+                        tr.appendChild(tdCareer);
+                        tr.appendChild(tdSalary);
+                        salaryTableBody.appendChild(tr);
+                    }
+                });
+            }
+        });
+        
+        document.getElementById('recommendations').classList.remove('hidden');
+        
+        // Smooth scroll to recommendations
+        document.getElementById('recommendations').scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+        });
+    }
+</script>
+
+<%- include('layouts/footer'); %>

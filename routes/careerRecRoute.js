@@ -7,10 +7,10 @@ router.get('/Recommendation', (req, res) => {
 });
 
 router.get('/career-counseling', (req, res) => {
-    const skills = ['Python', 'JavaScript', 'Java', 'C++'];
-    const interests = ['Data Science', 'Web Development', 'Machine Learning', 'Cybersecurity'];
+    const skills = ['Python', 'JavaScript', 'Java', 'C++', 'React', 'Node.js', 'Angular', 'Vue.js', 'TypeScript', 'Docker', 'Kubernetes', 'AWS', 'Azure', 'SQL', 'MongoDB'];
+    const interests = ['Data Science', 'Web Development', 'Machine Learning', 'Cybersecurity', 'Cloud Computing', 'AI/ML', 'Blockchain Development', 'UI/UX Design', 'Mobile App Development', 'Game Development'];
 
-    res.render('Carrer_Rec', { skills, interests });
+    res.render('Career_Rec_Enhanced', { skills, interests });
 });
 
 router.post('/career-recommendations', (req, res) => {

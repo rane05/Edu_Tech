@@ -1,0 +1,377 @@
+/* EduNavigator Enhanced Responsive Design */
+
+/* Mobile First Approach - Base Styles */
+@media (max-width: 320px) {
+  /* Extra Small Devices */
+  .container {
+    padding: 0 var(--space-3);
+  }
+  
+  .hero-section {
+    padding: 100px var(--space-4) 60px;
+  }
+  
+  .hero-content h1 {
+    font-size: var(--text-3xl);
+  }
+  
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+  
+  .hero-actions {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  
+  .btn-hero-primary,
+  .btn-hero-secondary {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Small Devices */
+  .hero-container {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+    text-align: center;
+  }
+  
+  .hero-content h1 {
+    font-size: var(--text-4xl);
+  }
+  
+  .parallax-bg-layer {
+    display: none;
+  }
+  
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .process-steps {
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+  }
+  
+  .spotlight-container {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+  
+  .login-container {
+    flex-direction: column;
+  }
+  
+  .login-left {
+    min-height: 40vh;
+    padding: var(--space-12) var(--space-4);
+  }
+  
+  .login-right {
+    padding: var(--space-8) var(--space-4);
+  }
+  
+  .glass-nav {
+    height: 60px;
+  }
+  
+  .nav-content {
+    padding: 0 var(--space-4);
+  }
+  
+  .nav-logo-text {
+    font-size: var(--text-xl);
+  }
+}
+
+@media (max-width: 640px) {
+  /* Medium Small Devices */
+  .section-title {
+    font-size: var(--text-3xl);
+  }
+  
+  .section-subtitle {
+    font-size: var(--text-base);
+  }
+  
+  .feature-item {
+    padding: var(--space-6) var(--space-4);
+  }
+  
+  .feature-icon {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .feature-icon svg {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Tablets */
+  .hero-section {
+    padding: 140px var(--space-5) 80px;
+    min-height: auto;
+  }
+  
+  .hero-content h1 {
+    font-size: var(--text-4xl);
+  }
+  
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-5);
+  }
+  
+  .process-steps {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .spotlight-container {
+    grid-template-columns: 1fr;
+    gap: var(--space-12);
+  }
+  
+  .spotlight-container.reverse {
+    direction: ltr;
+  }
+  
+  .mobile-menu {
+    width: 280px;
+  }
+  
+  .login-welcome h1 {
+    font-size: var(--text-4xl);
+  }
+  
+  .login-form-container {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 1024px) {
+  /* Large Tablets */
+  .features-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .process-steps {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .hero-container {
+    gap: var(--space-12);
+  }
+  
+  .nav-desktop,
+  .nav-auth {
+    display: none;
+  }
+  
+  .mobile-toggle {
+    display: flex;
+  }
+}
+
+@media (min-width: 1025px) {
+  /* Desktop */
+  .mobile-toggle,
+  .mobile-menu,
+  .nav-overlay {
+    display: none !important;
+  }
+}
+
+@media (min-width: 1280px) {
+  /* Large Desktop */
+  .container {
+    max-width: 1280px;
+  }
+  
+  .hero-content h1 {
+    font-size: var(--text-6xl);
+  }
+  
+  .features-grid {
+    gap: var(--space-8);
+  }
+}
+
+@media (min-width: 1536px) {
+  /* Extra Large Desktop */
+  .container {
+    max-width: 1400px;
+  }
+  
+  .hero-section {
+    padding: 160px var(--space-6) 100px;
+  }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .hover-lift:hover,
+  .hover-scale:hover,
+  .hover-rotate:hover {
+    transform: none;
+  }
+  
+  .dropdown-link:hover {
+    transform: none;
+    background: rgba(0, 168, 255, 0.05);
+  }
+  
+  .nav-item:hover .nav-dropdown {
+    opacity: 0;
+    visibility: hidden;
+  }
+  
+  .nav-item:active .nav-dropdown {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+/* High DPI Displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .feature-icon svg {
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+  }
+  
+  .nav-logo-icon {
+    filter: drop-shadow(0 1px 2px rgba(255, 184, 0, 0.2));
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .login-right {
+    background: var(--dark-900);
+  }
+  
+  .form-input,
+  .form-select {
+    background: var(--dark-800);
+    border-color: var(--dark-600);
+    color: var(--gray-100);
+  }
+  
+  .form-label {
+    color: var(--gray-200);
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  .parallax-img {
+    transform: none !important;
+  }
+  
+  .animate-float,
+  .animate-pulse {
+    animation: none !important;
+  }
+  
+  .feature-item:hover {
+    transform: none;
+  }
+  
+  .nav-item:hover .nav-dropdown {
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* Print Styles */
+@media print {
+  .glass-nav,
+  .mobile-menu,
+  .nav-overlay,
+  .parallax-bg-layer {
+    display: none !important;
+  }
+  
+  .hero-section {
+    padding: 40px 0;
+    background: white !important;
+  }
+  
+  body {
+    font-size: 12pt;
+    line-height: 1.4;
+  }
+  
+  .hero-content h1 {
+    font-size: 24pt;
+    color: black !important;
+    background: none !important;
+    -webkit-text-fill-color: black !important;
+  }
+}
+
+/* Landscape Mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+  .hero-section {
+    padding: 80px var(--space-4) 40px;
+  }
+  
+  .login-left {
+    min-height: 50vh;
+  }
+  
+  .login-welcome h1 {
+    font-size: var(--text-3xl);
+  }
+}
+
+/* Custom Scrollbar for Webkit */
+@media screen and (min-width: 1025px) {
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: var(--gray-100);
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: var(--gray-400);
+    border-radius: 4px;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--gray-500);
+  }
+}
+
+/* Focus Management for Keyboard Navigation */
+@media (hover: none) {
+  .nav-link:focus,
+  .dropdown-link:focus,
+  .btn-primary:focus,
+  .btn-secondary:focus,
+  .btn-outline:focus {
+    outline: 2px solid var(--color-secondary);
+    outline-offset: 2px;
+  }
+}
+
+/* Loading States for Slow Connections */
+@media (prefers-reduced-data: reduce) {
+  .parallax-bg-layer {
+    display: none !important;
+  }
+  
+  .hero-section {
+    background: var(--color-bg-light) !important;
+  }
+  
+  .animations-css {
+    display: none !important;
+  }
+}

@@ -184,7 +184,7 @@ app.get('/resources', (req, res) => {
 });
 
 app.get('/mentor', (req, res) => {
-    res.sendFile(__dirname + '/views/Mentor.html');
+    res.render('mentor');
 });
 
 app.get('/an', (req, res) => {
@@ -226,3 +226,4 @@ app.get('/career_resources', (req, res) => {
 app.get('/webinars', (req, res) => {
     res.render('webinars');
 });
+

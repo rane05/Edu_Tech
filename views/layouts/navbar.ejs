@@ -1,13 +1,14 @@
 <!-- Modern Glassmorphism Navbar -->
 <style>
     :root {
-        --nav-primary: #FFB800;
-        --nav-secondary: #00A8FF;
-        --nav-dark: #1A1A2E;
-        --nav-text: #2D3748;
-        --nav-glass-bg: rgba(255, 255, 255, 0.85);
-        --nav-glass-border: rgba(255, 255, 255, 0.5);
-        --nav-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+        --nav-height: 70px;
+        --nav-primary: var(--color-primary);
+        --nav-secondary: var(--color-secondary);
+        --nav-dark: var(--color-dark);
+        --nav-text: var(--color-text);
+        --nav-glass-bg: var(--glass-bg);
+        --nav-glass-border: var(--glass-border);
+        --nav-shadow: var(--glass-shadow);
     }
 
     /* Navbar Container */
@@ -54,7 +55,7 @@
     .nav-logo-icon {
         font-size: 1.8rem;
         background: linear-gradient(135deg, #FFB800 0%, #FF9F00 100%);
-        -webkit-background-clip: text;
+        background-clip: text;
         -webkit-text-fill-color: transparent;
         transition: transform 0.5s ease;
         filter: drop-shadow(0 2px 4px rgba(255, 184, 0, 0.3));
@@ -74,6 +75,7 @@
 
     .nav-logo-text span {
         background: linear-gradient(120deg, #2563EB, #00A8FF);
+        background-clip: text;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         position: relative;
@@ -333,8 +335,6 @@
                     <a href="/career-bank" class="dropdown-link">Career Bank</a>
                     <a href="/career-counseling" class="dropdown-link">Skills & Interests</a>
                     <a href="/career-trends-predictor" class="dropdown-link">AI Career Trends</a>
-                    <a href="/exam_choice" class="dropdown-link" style="color:#d946ef; font-weight:600;">College
-                        Predictor ✨</a>
                 </div>
             </div>
 
@@ -355,6 +355,7 @@
             <div class="nav-item">
                 <a href="#" class="nav-link">Assessment <i class="fas fa-chevron-down"></i></a>
                 <div class="nav-dropdown">
+                    <a href="/apti" class="dropdown-link" style="color: #6C63FF; font-weight: 600;">Aptitude Test</a>
                     <a href="/smart-quiz" class="dropdown-link">Smart Quiz</a>
                     <a href="/leaderboard" class="dropdown-link">Leaderboard</a>
                     <a href="/dashboard" class="dropdown-link">My Dashboard</a>
@@ -378,7 +379,6 @@
         <!-- Auth Buttons (Desktop) -->
         <div class="nav-auth">
             <% if (typeof userId !=='undefined' && userId) { %>
-                <a href="/apti" class="nav-link">Aptitude</a>
                 <a href="/profile" class="nav-link">Profile</a>
                 <a href="/logout" class="btn-signup" style="background:var(--nav-dark); color:white;">Log Out</a>
                 <% } else { %>
@@ -434,9 +434,16 @@
     </div>
 
     <div class="mobile-link-group">
+        <div class="mobile-group-title">Assessments</div>
+        <a href="/apti" class="mobile-link" style="color: #6C63FF; font-weight: 600;">Aptitude Test</a>
+        <a href="/smart-quiz" class="mobile-link">Smart Quiz</a>
+        <a href="/leaderboard" class="mobile-link">Leaderboard</a>
+        <a href="/dashboard" class="mobile-link">My Dashboard</a>
+    </div>
+
+    <div class="mobile-link-group">
         <div class="mobile-group-title">Account</div>
         <% if (typeof userId !=='undefined' && userId) { %>
-            <a href="/apti" class="mobile-link">Aptitude Test</a>
             <a href="/profile" class="mobile-link">My Profile</a>
             <a href="/logout" class="mobile-link" style="color: #E53E3E;">Log Out</a>
             <% } else { %>

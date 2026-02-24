@@ -1,22 +1,26 @@
 const mongoose = require('mongoose');
-const College = require('./model/cetCollege');
 require('dotenv').config();
+const Question = require('./model/questions');
 
-async function checkDB() {
-    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/Edu_Tech');
+async function check() {
+    try {
+        await mongoose.connect(process.env.MONGODB_URI);
+        const count = await Question.countDocuments();
+        console.log(`Total questions: ${count}`);
 
-    const colleges = await College.find({}, { rating: 1 });
-    const ratings = colleges.map(c => c.rating);
-    const min = Math.min(...ratings);
-    const max = Math.max(...ratings);
-    const avg = ratings.reduce((a, b) => a + b, 0) / ratings.length;
+        const sections = await Question.distinct('section');
+        console.log('Sections found:', sections);
 
-    console.log(`Ratings Stats: Min=${min}, Max=${max}, Avg=${avg.toFixed(2)}`);
-    console.log(`Count < 7.0: ${ratings.filter(r => r < 7).length}`);
-    console.log(`Count >= 7.0 & < 8.0: ${ratings.filter(r => r >= 7 && r < 8).length}`);
-    console.log(`Count >= 8.0: ${ratings.filter(r => r >= 8).length}`);
+        for (const section of sections) {
+            const sCount = await Question.countDocuments({ section });
+            console.log(`Section "${section}": ${sCount}`);
+        }
 
-    process.exit();
+        process.exit(0);
+    } catch (err) {
+        console.error(err);
+        process.exit(1);
+    }
 }
 
-checkDB();
+check();

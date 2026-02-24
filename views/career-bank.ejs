@@ -6,19 +6,21 @@
     <%- include('layouts/navbar'); -%>
     
 
-    <div class="career-bank">
+    <div class="career-bank py-5">
         <div class="container">
-            <h1 class="text-center mb-4">Career Bank</h1>
-            <p class="text-center mb-4">Explore various professions and find your ideal career.</p>
+            <h1 class="text-center mb-4 text-gradient-primary">Career Bank</h1>
+            <p class="text-center mb-5 text-muted">Explore various professions and discover your path to success.</p>
 
             <!-- Search Bar -->
-            <div class="search-bar mb-4">
-                <input type="text" id="search" class="form-control" placeholder="Search for a profession...">
-                <button class="search-icon"><i class="fas fa-search"></i></button>
+            <div class="search-bar mb-5 mx-auto" style="max-width: 600px;">
+                <div class="input-group input-group-lg shadow-sm">
+                    <input type="text" id="search" class="form-control rounded-pill-start border-0 px-4" placeholder="Search for a profession...">
+                    <button class="btn btn-primary rounded-pill-end px-4 border-0"><i class="fas fa-search"></i></button>
+                </div>
             </div>
 
             <!-- Filters -->
-            <div class="filters mb-4">
+            <div class="filters mb-5 d-flex flex-wrap justify-content-center gap-2">
                 <button class="filter-btn active" data-filter="all">All</button>
                 <button class="filter-btn" data-filter="technology">Technology</button>
                 <button class="filter-btn" data-filter="healthcare">Healthcare</button>
@@ -38,7 +40,7 @@
             <!-- Profession List -->
             <div class="career-grid" id="profession-list">
                 <% professions.forEach(profession => { %>
-                    <div class="career-card" data-category="<%= profession.category.toLowerCase() %>">
+                    <div class="career-card premium-card" data-category="<%= profession.category.toLowerCase() %>">
                         <div class="card-icon">
                             <% if (profession.category.toLowerCase() === 'technology') { %>
                                 <i class="fas fa-laptop-code"></i>
