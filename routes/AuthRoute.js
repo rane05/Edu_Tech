@@ -25,11 +25,13 @@ router.post('/register', async (req, res) => {
         await User.register(user, password); // Use `await` instead of callback
 
         // After successful registration, redirect to login page
+        req.flash('success', 'Registration successful! Please log in.');
         return res.redirect('/login');
 
     } catch (err) {
         console.error("Registration error:", err);
-        res.status(500).send("Error registering user.");
+        req.flash('error', err.message || 'Error registering user.');
+        res.redirect('/register');
     }
 });
 
@@ -47,16 +49,20 @@ router.post('/login', async (req, res) => {
 
         const user = await User.findOne({ username, role });
         if (!user) {
-            return res.status(401).send('User not found');
+            req.flash('error', 'Invalid username, password, or role.');
+            return res.redirect('/login');
         }
 
-        const authenticated = await user.authenticate(password);
-        if (!authenticated) {
-            return res.status(401).send('Invalid credentials');
+        const { user: authedUser, error } = await user.authenticate(password);
+        if (error || !authedUser) {
+            req.flash('error', 'Invalid username, password, or role.');
+            return res.redirect('/login');
         }
 
         req.session.userId = user._id;
         req.session.role = user.role;
+
+        req.flash('success', 'Successfully logged in!');
 
         // Redirect based on role
         if (role === 'student') {
@@ -69,7 +75,8 @@ router.post('/login', async (req, res) => {
 
     } catch (err) {
         console.error("Login error:", err);
-        res.status(500).send("Error during login.");
+        req.flash('error', 'An unexpected error occurred during login.');
+        res.redirect('/login');
     }
 });
 
@@ -78,7 +85,8 @@ router.post('/login', async (req, res) => {
 router.get('/logout', (req, res) => {
     req.session.destroy((err) => {
         if (err) {
-            return res.status(500).send('Error logging out');
+            console.error("Logout Error:", err);
+            return res.redirect('/'); // Just redirect rather than crashing
         }
         res.redirect('/login');
     });

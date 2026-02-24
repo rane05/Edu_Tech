@@ -6,23 +6,44 @@
                 <!-- Search Form -->
                 <div class="col-md-4">
                     <div class="card p-4 shadow-sm" style="border-radius: 12px;">
-                        <h3 class="mb-4">⚛️ JEE College Predictor</h3>
+                        <h3 class="mb-4">⚛️ JOSAA College Predictor</h3>
                         <div class="alert alert-info">
-                            <small>Predicts colleges based on All India Quota seats in Maharashtra.</small>
+                            <small>Predicts IITs, NITs, and IIITs based on your All India Rank (CRL) or Category
+                                Rank.</small>
                         </div>
                         <form action="/api/jee/predict" method="POST">
                             <div class="mb-3">
-                                <label class="form-label">JEE Main Percentile</label>
-                                <input type="number" step="0.01" name="jeeScore" class="form-control" required
-                                    placeholder="e.g. 90.5" value="<%= locals.jeeScore || '' %>">
+                                <label class="form-label fw-bold">JEE Rank (CRL/Category)</label>
+                                <input type="number" name="jeeRank" class="form-control" required
+                                    placeholder="e.g. 15000" value="<%= locals.jeeRank || '' %>">
                             </div>
 
-                            <!-- State Locked to Maharashtra -->
-                            <input type="hidden" name="state" value="Maharashtra">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Category</label>
+                                <select name="category" class="form-select">
+                                    <option value="OPEN" <%=locals.category==='OPEN' ? 'selected' : '' %>>OPEN</option>
+                                    <option value="OBC-NCL" <%=locals.category==='OBC-NCL' ? 'selected' : '' %>>OBC-NCL
+                                    </option>
+                                    <option value="SC" <%=locals.category==='SC' ? 'selected' : '' %>>SC</option>
+                                    <option value="ST" <%=locals.category==='ST' ? 'selected' : '' %>>ST</option>
+                                </select>
+                            </div>
 
-                            <button type="submit" class="btn btn-primary w-100"
-                                style="background: linear-gradient(135deg, #00A8FF, #0BC5FF); border:none;">🔮 Predict
-                                Colleges (AI Quota)</button>
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Institute Type</label>
+                                <select name="type" class="form-select">
+                                    <option value="All" <%=locals.type==='All' ? 'selected' : '' %>>All Institutes
+                                    </option>
+                                    <option value="IIT" <%=locals.type==='IIT' ? 'selected' : '' %>>IITs</option>
+                                    <option value="NIT" <%=locals.type==='NIT' ? 'selected' : '' %>>NITs</option>
+                                    <option value="IIIT" <%=locals.type==='IIIT' ? 'selected' : '' %>>IIITs</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold"
+                                style="background: linear-gradient(135deg, #00A8FF, #0BC5FF); border:none; border-radius: 8px;">🔮
+                                Predict
+                                Colleges</button>
                         </form>
 
                         <% if(locals.error) { %>
@@ -36,55 +57,72 @@
                 <!-- Results Display -->
                 <div class="col-md-8">
                     <% if(locals.results && results.length> 0) { %>
-                        <h4 class="mb-3">🎯 Recommended Colleges (<%= results.length %>)</h4>
+                        <h4 class="mb-3">🎯 Recommended Institutes (<%= results.length %>)</h4>
                         <% results.forEach(college=> { %>
-                            <div class="card mb-3 shadow-sm border-0">
+                            <div class="card mb-4 shadow-sm border-0" style="border-radius: 12px; overflow: hidden;">
                                 <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-start">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
                                         <div>
-                                            <h5 class="card-title text-primary">
+                                            <h5 class="card-title text-primary fw-bold mb-1">
                                                 <%= college.name %>
                                             </h5>
-                                            <h6 class="card-subtitle mb-2 text-muted"><i
-                                                    class="fas fa-map-marker-alt"></i>
-                                                <%= college.location %>
+                                            <h6 class="card-subtitle text-muted"><i
+                                                    class="fas fa-map-marker-alt text-danger"></i>
+                                                <%= college.location %> &bull; <span class="badge bg-secondary">
+                                                        <%= college.type %>
+                                                    </span>
                                             </h6>
                                         </div>
-                                        <span class="badge bg-success">
+                                        <span class="badge bg-success py-2 px-3" style="font-size: 0.9rem;">
                                             <%= college.rating %> ★
                                         </span>
                                     </div>
 
-                                    <div class="row mt-2">
-                                        <div class="col-md-6"><small><strong>Fees:</strong> ₹<%= college.fees %></small>
+                                    <div class="row mt-3 mb-3 bg-light p-2 rounded">
+                                        <div class="col-md-6"><small><strong>Estimated Fees:</strong> ₹<%= college.fees
+                                                    %></small>
                                         </div>
-                                        <div class="col-md-6"><small><strong>Placement:</strong>
+                                        <div class="col-md-6"><small><strong>Placement Rating:</strong>
                                                 <%= college.placement %>/10
                                             </small></div>
                                     </div>
 
-                                    <hr>
-                                    <h6>Eligible Branches (AI Quota):</h6>
+                                    <h6 class="fw-bold text-dark mt-3 mb-2">Eligible Branches for <%= locals.jeeRank %>
+                                            Rank (<%= locals.category %>):</h6>
                                     <div class="d-flex flex-wrap gap-2">
                                         <% college.branches.forEach(branch=> { %>
-                                            <span class="badge bg-light text-dark border">
-                                                <%= branch.name %> (Cutoff: <%= branch.cutoff %>)
-                                            </span>
+                                            <div class="border rounded p-2 bg-white flex-fill" style="min-width: 45%;">
+                                                <div class="fw-bold text-primary mb-1" style="font-size: 0.9rem;">
+                                                    <%= branch.name %>
+                                                </div>
+                                                <div class="d-flex justify-content-between text-muted"
+                                                    style="font-size: 0.8rem;">
+                                                    <span>Quota: <%= branch.quota %></span>
+                                                    <span>Close: <strong>
+                                                            <%= branch.closingRank %>
+                                                        </strong></span>
+                                                </div>
+                                            </div>
                                             <% }); %>
                                     </div>
                                 </div>
                             </div>
                             <% }); %>
                                 <% } else if(locals.results) { %>
-                                    <div class="alert alert-warning">No colleges found matching your criteria. Try
-                                        lowering the cutoff. (Note: Ensure 'All India' quota data exists for these
-                                        colleges)</div>
+                                    <div class="alert alert-warning shadow-sm" style="border-radius: 12px;">
+                                        <i class="fas fa-exclamation-triangle me-2"></i> No institutes found matching
+                                        your rank in the selected category/type. Try relaxing the Institute Type filter.
+                                    </div>
                                     <% } else { %>
-                                        <div class="text-center text-muted mt-5">
-                                            <i class="fas fa-atom fa-3x mb-3"></i>
-                                            <h5>Enter your JEE score to see college predictions</h5>
+                                        <div class="text-center text-muted mt-5 pt-5">
+                                            <i class="fas fa-university fa-4x mb-4 text-primary opacity-50"></i>
+                                            <h4>Enter your JEE Rank to see JOSAA predictions</h4>
+                                            <p>Discover which IITs, NITs, and IIITs you can get into based on past year
+                                                cutoffs.</p>
                                         </div>
                                         <% } %>
                 </div>
             </div>
         </div>
+
+        <%- include('layouts/footer'); %>

@@ -3,27 +3,51 @@
     :root {
         --nav-primary: #FFB800;
         --nav-secondary: #00A8FF;
-        --nav-dark: #1A1A2E;
-        --nav-text: #2D3748;
-        --nav-glass-bg: rgba(255, 255, 255, 0.85);
-        --nav-glass-border: rgba(255, 255, 255, 0.5);
-        --nav-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+        --nav-dark: #0B1120;
+        /* Refined to match V4 deep navy */
+        --nav-text: #526075;
+        /* Match V4 slate */
     }
 
-    /* Navbar Container */
+    /* Navbar Container - V4 Glass System */
     .glass-nav {
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
-        height: 70px;
-        background: var(--nav-glass-bg);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border-bottom: 1px solid var(--nav-glass-border);
-        box-shadow: var(--nav-shadow);
+        height: 80px;
+        /* Slightly taller for breathability */
+        background: transparent;
+        border-bottom: 1px solid transparent;
         z-index: 1000;
-        transition: all 0.3s ease;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* The active scrolled state: Acrylic Glass */
+    .glass-nav.is-scrolled {
+        background: rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(16px) saturate(160%);
+        -webkit-backdrop-filter: blur(16px) saturate(160%);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+        box-shadow: 0 4px 24px rgba(11, 17, 32, 0.04);
+        height: 70px;
+        /* Shrinks slightly on scroll */
+    }
+
+    /* Faint noise overlay for acrylic realism on scroll */
+    .glass-nav::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='1'/%3E%3C/svg%3E");
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        z-index: -1;
+    }
+
+    .glass-nav.is-scrolled::before {
+        opacity: 0.02;
     }
 
     .nav-content {
@@ -33,7 +57,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 0 24px;
+        padding: 0 2rem;
     }
 
     /* Logo Styles */
@@ -45,54 +69,11 @@
         z-index: 1002;
         padding: 5px;
         transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        position: relative;
     }
 
     .nav-logo:hover {
-        transform: scale(1.05);
-    }
-
-    .nav-logo-icon {
-        font-size: 1.8rem;
-        background: linear-gradient(135deg, #FFB800 0%, #FF9F00 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        transition: transform 0.5s ease;
-        filter: drop-shadow(0 2px 4px rgba(255, 184, 0, 0.3));
-    }
-
-    .nav-logo:hover .nav-logo-icon {
-        transform: rotate(-15deg) scale(1.1);
-    }
-
-    .nav-logo-text {
-        font-size: 1.6rem;
-        font-weight: 800;
-        color: var(--nav-dark);
-        letter-spacing: -0.5px;
-        position: relative;
-    }
-
-    .nav-logo-text span {
-        background: linear-gradient(120deg, #2563EB, #00A8FF);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        position: relative;
-    }
-
-    .nav-logo-text::after {
-        content: '';
-        position: absolute;
-        bottom: -4px;
-        left: 0;
-        width: 0;
-        height: 2px;
-        background: linear-gradient(90deg, #FFB800, #00A8FF);
-        transition: width 0.3s ease;
-        border-radius: 2px;
-    }
-
-    .nav-logo:hover .nav-logo-text::after {
-        width: 100%;
+        transform: scale(1.02);
     }
 
     /* Desktop Navigation */
@@ -110,50 +91,52 @@
     .nav-link {
         color: var(--nav-text);
         text-decoration: none;
-        font-weight: 500;
+        font-weight: 600;
         font-size: 0.95rem;
         transition: color 0.2s ease;
         display: flex;
         align-items: center;
-        gap: 4px;
+        gap: 6px;
     }
 
     .nav-link i {
-        font-size: 0.75rem;
-        opacity: 0.6;
+        font-size: 0.70rem;
+        opacity: 0.5;
         transition: transform 0.2s;
     }
 
     .nav-link:hover {
-        color: var(--nav-secondary);
+        color: var(--nav-dark);
     }
 
     .nav-link:hover i {
         transform: rotate(180deg);
-        color: var(--nav-secondary);
+        color: var(--nav-dark);
     }
 
-    /* Dropdowns */
+    /* Dropdowns - Match V4 elevated cards */
     .nav-dropdown {
         position: absolute;
         top: 100%;
         left: 50%;
-        transform: translateX(-50%) translateY(10px);
-        background: white;
+        transform: translateX(-50%) translateY(10px) scale(0.98);
+        background: #FFFFFF;
         border-radius: 12px;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-        padding: 8px;
-        min-width: 220px;
+        box-shadow: 0 12px 32px rgba(11, 17, 32, 0.08);
+        /* V4 Shadow-float logic */
+        padding: 12px;
+        min-width: 240px;
         opacity: 0;
         visibility: hidden;
-        transition: all 0.2s ease;
-        border: 1px solid rgba(0, 0, 0, 0.05);
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        border: 1px solid rgba(11, 17, 32, 0.05);
+        transform-origin: top center;
     }
 
     .nav-item:hover .nav-dropdown {
         opacity: 1;
         visibility: visible;
-        transform: translateX(-50%) translateY(0);
+        transform: translateX(-50%) translateY(0) scale(1);
     }
 
     .dropdown-link {
@@ -161,19 +144,20 @@
         padding: 10px 16px;
         color: var(--nav-text);
         text-decoration: none;
-        font-size: 0.9rem;
+        font-size: 0.95rem;
         border-radius: 8px;
-        transition: all 0.2s;
+        transition: all 0.2s ease;
         font-weight: 500;
     }
 
     .dropdown-link:hover {
-        background: rgba(0, 168, 255, 0.08);
-        color: var(--nav-secondary);
+        background: #F9F9F8;
+        /* V4 cream-alt */
+        color: var(--nav-dark);
         transform: translateX(4px);
     }
 
-    /* Auth Buttons */
+    /* Auth Buttons - Update to match V4 button styles */
     .nav-auth {
         display: flex;
         align-items: center;
@@ -186,28 +170,37 @@
         font-weight: 600;
         font-size: 0.95rem;
         transition: color 0.2s;
+        border: 1px solid transparent;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
     }
 
     .btn-login:hover {
-        color: var(--nav-secondary);
+        color: var(--nav-dark);
+        background: rgba(11, 17, 32, 0.03);
     }
 
     .btn-signup {
-        background: var(--nav-primary);
-        color: var(--nav-dark);
-        padding: 10px 24px;
-        border-radius: 50px;
+        background: var(--nav-dark);
+        color: white;
+        padding: 0.6rem 1.25rem;
+        border-radius: 8px;
         text-decoration: none;
         font-weight: 600;
         font-size: 0.95rem;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 12px rgba(255, 184, 0, 0.2);
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        box-shadow: 0 2px 4px rgba(11, 17, 32, 0.05);
+        /* Match V4 shadow-micro */
     }
 
     .btn-signup:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(255, 184, 0, 0.3);
-        background: #FFC024;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(11, 17, 32, 0.1);
+        background: #1E293B;
+    }
+
+    .btn-signup:active {
+        transform: scale(0.98);
     }
 
     /* Mobile Toggle */
@@ -220,24 +213,25 @@
     }
 
     .bar {
-        width: 26px;
+        width: 24px;
         height: 2px;
         background: var(--nav-dark);
         transition: all 0.3s ease;
         border-radius: 2px;
     }
 
-    /* Mobile Menu */
+    /* Mobile Menu - Match V4 */
     .mobile-menu {
         position: fixed;
         top: 0;
         right: -100%;
-        width: 300px;
+        width: 100%;
+        max-width: 320px;
         height: 100vh;
-        background: white;
+        background: #FFFFFF;
         padding: 90px 24px 24px;
-        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.05);
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
         z-index: 1001;
         overflow-y: auto;
     }
@@ -251,10 +245,10 @@
     }
 
     .mobile-group-title {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
         text-transform: uppercase;
-        letter-spacing: 1px;
-        color: #A0AEC0;
+        letter-spacing: 0.08em;
+        color: #8A98AB;
         margin-bottom: 12px;
         font-weight: 700;
     }
@@ -265,7 +259,7 @@
         color: var(--nav-dark);
         text-decoration: none;
         font-weight: 500;
-        border-bottom: 1px solid #F7FAFC;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.03);
     }
 
     /* Overlay */
@@ -275,10 +269,10 @@
         left: 0;
         width: 100%;
         height: 100vh;
-        background: rgba(0, 0, 0, 0.3);
+        background: rgba(11, 17, 32, 0.2);
         opacity: 0;
         visibility: hidden;
-        transition: all 0.3s;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         z-index: 1000;
         backdrop-filter: blur(4px);
     }
@@ -314,12 +308,12 @@
     }
 </style>
 
-<nav class="glass-nav">
+<nav class="glass-nav" id="mainNav">
     <div class="nav-content">
         <!-- Logo -->
-        <a href="/" class="nav-logo">
-            <i class="fas fa-graduation-cap nav-logo-icon"></i>
-            <span class="nav-logo-text">Edu<span>Navigator</span></span>
+        <a href="/" class="nav-logo" style="padding: 0;">
+            <img src="/img/logo.jpg" alt="EduTech Logo"
+                style="height: 48px; width: auto; object-fit: contain; border-radius: 8px; transition: transform 0.3s ease;">
         </a>
 
         <!-- Desktop Menu -->
@@ -333,8 +327,8 @@
                     <a href="/career-bank" class="dropdown-link">Career Bank</a>
                     <a href="/career-counseling" class="dropdown-link">Skills & Interests</a>
                     <a href="/career-trends-predictor" class="dropdown-link">AI Career Trends</a>
-                    <a href="/exam_choice" class="dropdown-link" style="color:#d946ef; font-weight:600;">College
-                        Predictor ✨</a>
+                    <a href="/exam_choice" class="dropdown-link"
+                        style="color:var(--c-indigo, #4F46E5); font-weight:600;">College Predictor ✨</a>
                 </div>
             </div>
 
@@ -343,8 +337,7 @@
                 <a href="#" class="nav-link">Tools <i class="fas fa-chevron-down"></i></a>
                 <div class="nav-dropdown">
                     <a href="/resume-builder" class="dropdown-link">Resume Builder</a>
-                    <a href="/interview-simulator" class="dropdown-link" style="color: #0071e3; font-weight: 600;">AI
-                        Interview (New)</a>
+                    <a href="/interview-simulator" class="dropdown-link">AI Interview (New)</a>
                     <a href="/chat" class="dropdown-link">AI Chat</a>
                     <a href="/Certificate_Validator" class="dropdown-link">Certificate Validator</a>
                     <a href="/integrations" class="dropdown-link">Profile Analyzer</a>
@@ -368,7 +361,6 @@
                     <a href="/webinars" class="dropdown-link">Webinars</a>
                     <a href="/resources" class="dropdown-link">Career Resources</a>
                     <a href="/career_resources" class="dropdown-link">Career Roadmap</a>
-                    <a href="/exam_choice" class="dropdown-link">College Predictor</a>
                     <a href="/scholarship" class="dropdown-link">Scholarships</a>
                     <a href="/mentor" class="dropdown-link">Mentorship</a>
                 </div>
@@ -380,7 +372,7 @@
             <% if (typeof userId !=='undefined' && userId) { %>
                 <a href="/apti" class="nav-link">Aptitude</a>
                 <a href="/profile" class="nav-link">Profile</a>
-                <a href="/logout" class="btn-signup" style="background:var(--nav-dark); color:white;">Log Out</a>
+                <a href="/logout" class="btn-signup">Log Out</a>
                 <% } else { %>
                     <a href="/login" class="btn-login">Log In</a>
                     <a href="/login" class="btn-signup">Get Started</a>
@@ -411,14 +403,14 @@
         <a href="/career-bank" class="mobile-link">Career Bank</a>
         <a href="/career-counseling" class="mobile-link">Skills & Interests</a>
         <a href="/career-trends-predictor" class="mobile-link">AI Career Trends</a>
-        <a href="/exam_choice" class="mobile-link" style="color:#d946ef;">College Predictor ✨</a>
+        <a href="/exam_choice" class="mobile-link" style="color:var(--c-indigo, #4F46E5);">College Predictor ✨</a>
     </div>
 
     <div class="mobile-link-group">
         <div class="mobile-group-title">Tools</div>
         <a href="/resume-builder" class="mobile-link">Resume Builder</a>
         <a href="/interview-simulator" class="mobile-link">AI Interview (New)</a>
-        <a href="/chat" class="mobile-link" style="color: #0071e3; font-weight: 600;">AI Chat</a>
+        <a href="/chat" class="mobile-link">AI Chat</a>
         <a href="/Certificate_Validator" class="mobile-link">Certificate Validator</a>
         <a href="/integrations" class="mobile-link">Profile Analyzer</a>
     </div>
@@ -428,7 +420,6 @@
         <a href="/webinars" class="mobile-link">Webinars</a>
         <a href="/resources" class="mobile-link">Career Resources</a>
         <a href="/career_resources" class="mobile-link">Career Roadmap</a>
-        <a href="/exam_choice" class="mobile-link">College Predictor</a>
         <a href="/scholarship" class="mobile-link">Scholarships</a>
         <a href="/mentor" class="mobile-link">Mentorship</a>
     </div>
@@ -438,10 +429,10 @@
         <% if (typeof userId !=='undefined' && userId) { %>
             <a href="/apti" class="mobile-link">Aptitude Test</a>
             <a href="/profile" class="mobile-link">My Profile</a>
-            <a href="/logout" class="mobile-link" style="color: #E53E3E;">Log Out</a>
+            <a href="/logout" class="mobile-link" style="color: #E11D48;">Log Out</a>
             <% } else { %>
                 <a href="/login" class="mobile-link">Log In</a>
-                <a href="/login" class="mobile-link" style="color: var(--nav-secondary);">Get Started</a>
+                <a href="/login" class="mobile-link" style="color: var(--nav-dark);">Get Started</a>
                 <% } %>
     </div>
 </div>
@@ -456,4 +447,21 @@
         overlay.classList.toggle('active');
         toggle.classList.toggle('active');
     }
+
+    // V4 Scroll Intensity Logic for Glass Navbar
+    document.addEventListener('DOMContentLoaded', () => {
+        const nav = document.getElementById('mainNav');
+
+        const handleScroll = () => {
+            if (window.scrollY > 20) {
+                nav.classList.add('is-scrolled');
+            } else {
+                nav.classList.remove('is-scrolled');
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        // Initialization check
+        handleScroll();
+    });
 </script>

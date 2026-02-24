@@ -1,204 +1,715 @@
 <%- include('layouts/header'); -%>
 
-<head>
-
-    <style>
-        body {
-            margin: 0;
-            min-height: 100vh;
-            display: grid;
-            place-items: center;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .blob {
-            position: absolute;
-            filter: blur(40px);
-            opacity: 0.4;
-            z-index: 0;
-        }
-
-        .blob-1 {
-            width: 400px;
-            height: 400px;
-            background: #ff6b6b;
-            top: 20%;
-            left: 10%;
-            animation: float 20s infinite;
-        }
-
-        .blob-2 {
-            width: 300px;
-            height: 300px;
-            background: #4ecdc4;
-            bottom: 30%;
-            right: 10%;
-            animation: float 25s infinite;
-        }
-
-        .glass-container {
-            position: relative;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(12px);
-            border-radius: 20px;
-            padding: 2rem;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            width: 400px;
-            text-align: center;
-            z-index: 1;
-        }
-
-        .drop-zone {
-            border: 2px dashed rgba(255, 255, 255, 0.3);
-            border-radius: 15px;
-            padding: 2rem;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .drop-zone:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .browse-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            padding: 12px 30px;
-            color: white;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: all 0.3s;
-            margin-top: 1rem;
-        }
-
-        .browse-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .alert-box {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(20px);
-            padding: 2rem;
-            border-radius: 20px;
-            text-align: center;
-            display: none;
-            z-index: 2;
-        }
-
-        .alert-icon {
-            width: 80px;
-            height: 80px;
-            margin-bottom: 1rem;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0); }
-            25% { transform: translate(10px, 10px); }
-            50% { transform: translate(-10px, 20px); }
-            75% { transform: translate(-20px, -10px); }
-        }
-    </style>
-</head>
-<body>
-    <%- include('layouts/navbar'); -%>
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
-
-    <div class="glass-container">
-        <div class="drop-zone" ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
-            <h2 style="color: white; margin-bottom: 1rem;">Drag & Drop Files Here</h2>
-            <div style="color: rgba(255, 255, 255, 0.7); margin: 1rem 0;">OR</div>
-            <button class="browse-btn" onclick="document.getElementById('fileInput').click()">Browse Files</button>
-            <input type="file" id="fileInput" hidden accept=".pdf">
-        </div>
-    </div>
-
-    <div class="alert-box">
-        <svg class="alert-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <!-- Success Icon -->
-            <path id="success-icon" d="M22 11.08V12a10 10 0 1 1-5.93-9.14" style="display: none;"/>
-            <path id="success-check" d="M22 4 12 14.01l-3-3" style="display: none;"/>
-            
-            <!-- Error Icon -->
-            <path id="error-icon" d="M12 8v4m0 4h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z" style="display: none;"/>
-        </svg>
-        <h2 style="color: white; margin-bottom: 1rem;" id="alert-text"></h2>
-        <div style="color: rgba(255, 255, 255, 0.7); margin-bottom: 1rem;" id="cert-info"></div>
-        <button class="browse-btn" onclick="closeAlert()">Close</button>
-    </div>
-
-    <script>
-        const EXPECTED_HASH = '9ec315853a860942e233c627bd5a501f5fb4b781f038147ef2c273b63d3fa4c3';
-        const fileInput = document.getElementById('fileInput');
-        
-        function handleDragOver(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            e.dataTransfer.dropEffect = 'copy';
-        }
-
-        function handleDrop(e) {
-            e.preventDefault();
-            const files = e.dataTransfer.files;
-            if(files.length > 0) validateFile(files[0]);
-        }
-
-        fileInput.addEventListener('change', (e) => validateFile(e.target.files[0]));
-
-        function validateFile(file) {
-            if(!file) return;
-
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                window.crypto.subtle.digest('SHA-256', e.target.result)
-                    .then(hash => {
-                        const hexHash = Array.from(new Uint8Array(hash))
-                            .map(b => b.toString(16).padStart(2, '0'))
-                            .join('');
-
-                        showResult(hexHash === EXPECTED_HASH);
-                    });
-            };
-            reader.readAsArrayBuffer(file);
-        }
-
-        function showResult(isValid) {
-            const alertBox = document.querySelector('.alert-box');
-            const successIcon = document.getElementById('success-icon');
-            const successCheck = document.getElementById('success-check');
-            const errorIcon = document.getElementById('error-icon');
-
-            if(isValid) {
-                document.getElementById('alert-text').textContent = 'Certificate Valid!';
-                successIcon.style.display = 'block';
-                successCheck.style.display = 'block';
-                errorIcon.style.display = 'none';
-                document.getElementById('cert-info').innerHTML = `
-                    <div>Name: Arbaaz Khan</div>
-                    <div>Date: 12/12/12</div>
-                `;
-            } else {
-                document.getElementById('alert-text').textContent = 'Certificate Invalid!';
-                successIcon.style.display = 'none';
-                successCheck.style.display = 'none';
-                errorIcon.style.display = 'block';
-                document.getElementById('cert-info').innerHTML = '';
+    <head>
+        <title>Certificate Validator - EduNavigator</title>
+        <link rel="stylesheet" href="/vendors/fontawesome-free/css/all.min.css">
+        <style>
+            :root {
+                /* Project Theme Variables */
+                --color-primary: #FFB800;
+                --color-secondary: #00A8FF;
+                --color-accent: #6C63FF;
+                --color-dark: #1A1A2E;
+                --color-text: #2D3748;
+                --color-text-light: #718096;
+                --color-bg: #FFFFFF;
+                --color-bg-light: #F7FAFC;
+                --color-bg-dark: #16213E;
+                --color-success: #10b981;
+                --color-error: #ef4444;
             }
 
-            alertBox.style.display = 'block';
-        }
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+                margin: 0;
+                min-height: 100vh;
+                background: var(--color-bg-light);
+                color: var(--color-text);
+                overflow-x: hidden;
+                position: relative;
+            }
 
-        function closeAlert() {
-            document.querySelector('.alert-box').style.display = 'none';
-        }
-    </script>
-</body>
-</html>
+            /* Subtle Background Pattern */
+            body::before {
+                content: '';
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-image: radial-gradient(var(--color-primary) 1px, transparent 1px), radial-gradient(var(--color-secondary) 1px, transparent 1px);
+                background-size: 40px 40px;
+                background-position: 0 0, 20px 20px;
+                opacity: 0.05;
+                z-index: -1;
+            }
+
+            .main-container {
+                max-width: 1000px;
+                margin: 120px auto 60px;
+                /* Increased top margin for navbar clearance */
+                padding: 0 20px;
+                position: relative;
+                z-index: 1;
+            }
+
+            .header-section {
+                text-align: center;
+                margin-bottom: 50px;
+                animation: fadeInDown 0.8s ease-out;
+            }
+
+            .header-section h1 {
+                font-size: 3rem;
+                font-weight: 800;
+                margin-bottom: 15px;
+                color: var(--color-dark);
+            }
+
+            .header-section h1 span {
+                color: var(--color-secondary);
+            }
+
+            .header-section p {
+                font-size: 1.2rem;
+                color: var(--color-text-light);
+                max-width: 600px;
+                margin: 0 auto;
+            }
+
+            /* Validator Card */
+            .validator-card {
+                background: var(--color-bg);
+                border-radius: 20px;
+                padding: 40px;
+                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+                /* Soft shadow like home.ejs */
+                border: 1px solid rgba(0, 0, 0, 0.05);
+                animation: fadeInUp 0.8s ease-out 0.2s backwards;
+            }
+
+            /* Tabs */
+            .tabs {
+                display: flex;
+                justify-content: center;
+                gap: 15px;
+                margin-bottom: 40px;
+                padding: 5px;
+                background: var(--color-bg-light);
+                border-radius: 50px;
+                width: fit-content;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .tab-btn {
+                background: transparent;
+                border: none;
+                color: var(--color-text-light);
+                font-size: 1rem;
+                font-weight: 600;
+                padding: 12px 30px;
+                cursor: pointer;
+                border-radius: 50px;
+                transition: all 0.3s ease;
+            }
+
+            .tab-btn.active {
+                color: var(--color-dark);
+                background: white;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+                color: var(--color-secondary);
+            }
+
+            .tab-btn:hover:not(.active) {
+                color: var(--color-text);
+            }
+
+            .tab-content {
+                display: none;
+                animation: fadeIn 0.4s ease-out;
+            }
+
+            .tab-content.active {
+                display: block;
+            }
+
+            /* File Upload */
+            .drop-zone {
+                border: 2px dashed #E2E8F0;
+                border-radius: 20px;
+                padding: 60px 20px;
+                text-align: center;
+                transition: all 0.3s ease;
+                background: var(--color-bg-light);
+                cursor: pointer;
+            }
+
+            .drop-zone:hover,
+            .drop-zone.drag-over {
+                border-color: var(--color-secondary);
+                background: #EBF8FF;
+                /* Light blue tint */
+                transform: scale(1.01);
+            }
+
+            .drop-icon {
+                font-size: 4rem;
+                color: #CBD5E0;
+                /* Gray-400 */
+                margin-bottom: 20px;
+                transition: all 0.3s ease;
+            }
+
+            .drop-zone:hover .drop-icon {
+                color: var(--color-secondary);
+                transform: translateY(-10px);
+            }
+
+            .browse-btn {
+                background: var(--color-primary);
+                border: none;
+                padding: 12px 35px;
+                color: white;
+                border-radius: 50px;
+                cursor: pointer;
+                font-size: 1rem;
+                font-weight: 700;
+                margin-top: 20px;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 15px rgba(255, 184, 0, 0.3);
+            }
+
+            .browse-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 20px rgba(255, 184, 0, 0.4);
+                background: #E5A700;
+            }
+
+            .browse-btn.secondary {
+                background: var(--color-secondary);
+                box-shadow: 0 4px 15px rgba(0, 168, 255, 0.3);
+            }
+
+            .browse-btn.secondary:hover {
+                background: #0096E6;
+                box-shadow: 0 8px 20px rgba(0, 168, 255, 0.4);
+            }
+
+            /* ID Input Form */
+            .id-form {
+                max-width: 500px;
+                margin: 0 auto;
+            }
+
+            .input-group {
+                margin-bottom: 25px;
+                text-align: left;
+            }
+
+            .input-group label {
+                display: block;
+                margin-bottom: 8px;
+                color: var(--color-text);
+                font-weight: 600;
+                font-size: 0.95rem;
+            }
+
+            .input-group input {
+                width: 100%;
+                padding: 15px 20px;
+                background: white;
+                border: 2px solid #E2E8F0;
+                border-radius: 12px;
+                color: var(--color-text);
+                font-size: 1rem;
+                transition: all 0.3s ease;
+                box-sizing: border-box;
+                /* Ensure padding doesn't affect width */
+            }
+
+            .input-group input:focus {
+                outline: none;
+                border-color: var(--color-secondary);
+                box-shadow: 0 0 0 3px rgba(0, 168, 255, 0.1);
+            }
+
+            .input-group input::placeholder {
+                color: #A0AEC0;
+            }
+
+            /* Result Section */
+            .result-modal {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(26, 26, 46, 0.8);
+                /* Dark overlay for contrast */
+                backdrop-filter: blur(8px);
+                z-index: 2000;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                opacity: 0;
+                pointer-events: none;
+                transition: all 0.4s ease;
+            }
+
+            .result-modal.show {
+                opacity: 1;
+                pointer-events: all;
+            }
+
+            .result-content {
+                background: white;
+                border-radius: 25px;
+                padding: 50px;
+                max-width: 550px;
+                width: 90%;
+                text-align: center;
+                transform: translateY(30px);
+                transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+                position: relative;
+                overflow: hidden;
+                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+            }
+
+            .result-modal.show .result-content {
+                transform: translateY(0);
+            }
+
+            /* Close Button */
+            .close-btn {
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                background: #F7FAFC;
+                border: none;
+                color: var(--color-text-light);
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.3s;
+            }
+
+            .close-btn:hover {
+                background: #E2E8F0;
+                color: var(--color-text);
+                transform: rotate(90deg);
+            }
+
+            .trust-seal {
+                width: 120px;
+                height: 120px;
+                margin: 0 auto 25px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 3.5rem;
+                position: relative;
+                z-index: 2;
+            }
+
+            .trust-seal.success {
+                background: linear-gradient(135deg, #10b981, #059669);
+                /* Keep green for universal success */
+                box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+                color: white;
+                animation: pulseSuccess 2s infinite;
+            }
+
+            .trust-seal.error {
+                background: linear-gradient(135deg, #ef4444, #dc2626);
+                box-shadow: 0 10px 30px rgba(239, 68, 68, 0.3);
+                color: white;
+                animation: pulseError 2s infinite;
+            }
+
+            .trust-seal::after {
+                content: '';
+                position: absolute;
+                inset: -6px;
+                border-radius: 50%;
+                border: 2px dashed #E2E8F0;
+                animation: spin 10s linear infinite;
+            }
+
+            /* Typography fixes for light mode */
+            #resultTitle {
+                font-size: 1.8rem;
+                font-weight: 800;
+                margin-bottom: 10px;
+                color: var(--color-dark);
+            }
+
+            #resultDesc {
+                color: var(--color-text-light);
+                margin-bottom: 30px;
+                line-height: 1.6;
+            }
+
+            .result-steps {
+                text-align: left;
+                margin-top: 30px;
+                background: #F7FAFC;
+                padding: 20px;
+                border-radius: 15px;
+                border: 1px solid #E2E8F0;
+            }
+
+            .step-item {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                margin-bottom: 12px;
+                padding: 10px;
+                border-radius: 8px;
+                transition: all 0.3s;
+                font-weight: 500;
+                color: var(--color-text);
+            }
+
+            .step-item:last-child {
+                margin-bottom: 0;
+            }
+
+            .step-item:hover {
+                background: white;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+            }
+
+            .step-item i {
+                width: 24px;
+                text-align: center;
+            }
+
+            .step-item.success {
+                color: var(--color-success);
+            }
+
+            .step-item.success i {
+                color: var(--color-success);
+            }
+
+            .step-item.pending {
+                color: var(--color-text-light);
+            }
+
+            .step-item.pending i {
+                opacity: 0.5;
+            }
+
+            .step-item.error {
+                color: var(--color-error);
+            }
+
+            .step-item.error i {
+                color: var(--color-error);
+            }
+
+            @keyframes pulseSuccess {
+                0% {
+                    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4);
+                }
+
+                70% {
+                    box-shadow: 0 0 0 15px rgba(16, 185, 129, 0);
+                }
+
+                100% {
+                    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+                }
+            }
+
+            @keyframes pulseError {
+                0% {
+                    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+                }
+
+                70% {
+                    box-shadow: 0 0 0 15px rgba(239, 68, 68, 0);
+                }
+
+                100% {
+                    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+                }
+            }
+
+            @keyframes spin {
+                from {
+                    transform: rotate(0deg);
+                }
+
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+
+            @keyframes fadeInDown {
+                from {
+                    opacity: 0;
+                    transform: translateY(-20px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                }
+
+                to {
+                    opacity: 1;
+                }
+            }
+
+            .loading-spinner {
+                width: 50px;
+                height: 50px;
+                border: 4px solid #E2E8F0;
+                border-top: 4px solid var(--color-primary);
+                border-radius: 50%;
+                animation: spin 1s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+                margin: 20px auto;
+            }
+
+            /* Loading text color fix */
+            #loadingView h3 {
+                color: var(--color-dark);
+            }
+        </style>
+    </head>
+
+    <body>
+        <%- include('layouts/navbar'); -%>
+
+            <div class="main-container">
+                <div class="header-section">
+                    <h1>Certificate <span>Validator</span></h1>
+                    <p>Verify authenticity with blockchain-backed security and AI analysis</p>
+                </div>
+
+                <div class="validator-card">
+                    <div class="tabs">
+                        <button class="tab-btn active" onclick="switchTab('file')">
+                            <i class="fas fa-file-pdf"></i> Upload File
+                        </button>
+                        <button class="tab-btn" onclick="switchTab('id')">
+                            <i class="fas fa-id-card"></i> Check via ID
+                        </button>
+                    </div>
+
+                    <div id="file-tab" class="tab-content active">
+                        <div class="drop-zone" ondragover="handleDragOver(event)" ondrop="handleDrop(event)"
+                            onclick="document.getElementById('fileInput').click()">
+                            <div class="drop-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                            <h2 style="margin-bottom: 10px; color: var(--color-dark); font-size: 1.5rem;">Drag & Drop
+                                Certificate PDF</h2>
+                            <p style="color: var(--color-text-light); margin-bottom: 25px;">Maximum file size: 10MB</p>
+                            <button class="browse-btn">Browse Files</button>
+                            <input type="file" id="fileInput" hidden accept=".pdf">
+                        </div>
+                    </div>
+
+                    <div id="id-tab" class="tab-content">
+                        <div class="id-form">
+                            <div class="input-group">
+                                <label>Certificate ID</label>
+                                <input type="text" id="certIdInput" placeholder="e.g. CERT-2024-X9Y2">
+                            </div>
+                            <div class="input-group">
+                                <label>Issuing Organization</label>
+                                <input type="text" id="issuerInput" placeholder="e.g. Coursera, EduNavigator">
+                            </div>
+                            <button class="browse-btn secondary" style="width: 100%" onclick="verifyById()">
+                                <i class="fas fa-check-circle"></i> Verify Now
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Result Modal -->
+            <div class="result-modal" id="resultModal">
+                <div class="result-content">
+                    <button class="close-btn" onclick="closeModal()"><i class="fas fa-times"></i></button>
+
+                    <div id="loadingView" style="display: none;">
+                        <div class="loading-spinner"></div>
+                        <h3>Verifying Credentials...</h3>
+                        <p style="color: var(--color-text-light);">Connecting to blockchain node...</p>
+                    </div>
+
+                    <div id="resultView" style="display: none;">
+                        <div class="trust-seal" id="trustSeal">
+                            <i class="fas" id="sealIcon"></i>
+                        </div>
+                        <h2 id="resultTitle"></h2>
+                        <p id="resultDesc"></p>
+
+                        <div class="result-steps" id="resultSteps">
+                            <!-- Steps injected via JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                const EXPECTED_HASH = '9ec315853a860942e233c627bd5a501f5fb4b781f038147ef2c273b63d3fa4c3';
+
+                function switchTab(tab) {
+                    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+                    event.currentTarget.classList.add('active');
+                    document.getElementById(tab + '-tab').classList.add('active');
+                }
+
+                // File Validation Logic
+                const fileInput = document.getElementById('fileInput');
+
+                function handleDragOver(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.currentTarget.classList.add('drag-over');
+                    e.dataTransfer.dropEffect = 'copy';
+                }
+
+                function handleDrop(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.currentTarget.classList.remove('drag-over');
+                    const files = e.dataTransfer.files;
+                    if (files.length > 0) processFile(files[0]);
+                }
+
+                fileInput.addEventListener('change', (e) => {
+                    if (e.target.files.length > 0) processFile(e.target.files[0]);
+                });
+
+                function processFile(file) {
+                    showLoading();
+
+                    // Simulate processing steps
+                    setTimeout(() => {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            window.crypto.subtle.digest('SHA-256', e.target.result)
+                                .then(hash => {
+                                    const hexHash = Array.from(new Uint8Array(hash))
+                                        .map(b => b.toString(16).padStart(2, '0'))
+                                        .join('');
+
+                                    showResult(hexHash === EXPECTED_HASH, {
+                                        type: 'file',
+                                        name: 'Arbaaz Khan',
+                                        date: '12/12/2024',
+                                        id: 'FILE-SHA256-' + hexHash.substring(0, 8)
+                                    });
+                                });
+                        };
+                        reader.readAsArrayBuffer(file);
+                    }, 1500);
+                }
+
+                // ID Validation Logic
+                function verifyById() {
+                    const id = document.getElementById('certIdInput').value;
+                    const issuer = document.getElementById('issuerInput').value;
+
+                    if (!id || !issuer) return alert('Please fill in all fields');
+
+                    showLoading();
+
+                    // Mock API call simulation
+                    setTimeout(() => {
+                        // Mock success for demonstration
+                        showResult(true, {
+                            type: 'id',
+                            name: 'Verified Student',
+                            date: new Date().toLocaleDateString(),
+                            id: id,
+                            issuer: issuer
+                        });
+                    }, 2000);
+                }
+
+                // UI Helper Functions
+                const resultModal = document.getElementById('resultModal');
+                const loadingView = document.getElementById('loadingView');
+                const resultView = document.getElementById('resultView');
+
+                function showLoading() {
+                    resultModal.classList.add('show');
+                    loadingView.style.display = 'block';
+                    resultView.style.display = 'none';
+                }
+
+                function closeModal() {
+                    resultModal.classList.remove('show');
+                }
+
+                function showResult(isValid, data) {
+                    loadingView.style.display = 'none';
+                    resultView.style.display = 'block';
+
+                    const trustSeal = document.getElementById('trustSeal');
+                    const sealIcon = document.getElementById('sealIcon');
+                    const title = document.getElementById('resultTitle');
+                    const desc = document.getElementById('resultDesc');
+                    const stepsFn = document.getElementById('resultSteps');
+
+                    if (isValid) {
+                        trustSeal.className = 'trust-seal success';
+                        sealIcon.className = 'fas fa-check';
+                        title.textContent = 'Verified & Secured';
+                        title.style.color = '#34d399';
+                        desc.textContent = 'This certificate is authentic and cryptographically secured on the blockchain.';
+
+                        stepsFn.innerHTML = `
+                    <div class="step-item success"><i class="fas fa-check-circle"></i> <span>Issuer Identity: <strong>${data.issuer || 'EduNavigator'}</strong> Verified</span></div>
+                    <div class="step-item success"><i class="fas fa-fingerprint"></i> <span>Digital Fingerprint Match</span></div>
+                    <div class="step-item success"><i class="fas fa-link"></i> <span>Blockchain Anchor Validated</span></div>
+                    <div class="step-item success"><i class="fas fa-user-graduate"></i> <span>Recipient: <strong>${data.name}</strong></span></div>
+                `;
+                    } else {
+                        trustSeal.className = 'trust-seal error';
+                        sealIcon.className = 'fas fa-times';
+                        title.textContent = 'Verification Failed';
+                        title.style.color = '#f87171';
+                        desc.textContent = 'We could not verify the authenticity of this document.';
+
+                        stepsFn.innerHTML = `
+                    <div class="step-item error"><i class="fas fa-times-circle"></i> <span>Digital Signature Mismatch</span></div>
+                    <div class="step-item error"><i class="fas fa-exclamation-triangle"></i> <span>Hash not found in ledger</span></div>
+                    <div class="step-item pending"><i class="fas fa-question-circle"></i> <span>Issuer Status Unknown</span></div>
+                `;
+                    }
+                }
+            </script>
+    </body>
+
+    </html>

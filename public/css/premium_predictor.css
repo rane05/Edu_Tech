@@ -1,0 +1,159 @@
+/* premium_predictor.css */
+:root {
+    --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: 1px solid rgba(255, 255, 255, 0.3);
+    --neo-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --danger-color: #ef4444;
+}
+
+body {
+    background: linear-gradient(120deg, #f0f4ff 0%, #fdf4ff 100%);
+    font-family: 'Inter', sans-serif;
+    color: var(--text-main);
+}
+
+/* Glassmorphism Utilities */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: var(--glass-border);
+    border-radius: 16px;
+    box-shadow: var(--neo-shadow);
+}
+
+.glass-panel {
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(12px);
+    border-right: var(--glass-border);
+}
+
+/* Hero Section */
+.hero-section {
+    padding: 3rem 0;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-title {
+    font-weight: 800;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Smart Sidebar */
+.filter-sidebar {
+    position: sticky;
+    top: 20px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 1.5rem;
+}
+
+.form-range::-webkit-slider-thumb {
+    background: #6366f1;
+}
+
+/* Premium Result Card */
+.college-card {
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+}
+
+.college-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(99, 102, 241, 0.15);
+    border-color: #a855f7;
+}
+
+.fit-score-ring {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: conic-gradient(var(--success-color) var(--percentage, 0%), #e2e8f0 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: var(--text-main);
+    position: relative;
+}
+
+.fit-score-ring::before {
+    content: '';
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: white;
+    border-radius: 50%;
+}
+
+.fit-score-text {
+    position: relative;
+    z-index: 2;
+    font-size: 0.9rem;
+}
+
+/* Badges */
+.badge-soft {
+    padding: 0.4em 0.8em;
+    border-radius: 8px;
+    font-weight: 600;
+    background: #e0e7ff;
+    color: #4338ca;
+}
+
+.badge-success-soft {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.badge-warning-soft {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.badge-danger-soft {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* Analytics Panel */
+.analytics-panel {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: var(--neo-shadow);
+    margin-bottom: 1.5rem;
+}
+
+/* Compare Drawer */
+.comparison-drawer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+}
+
+.comparison-drawer.active {
+    transform: translateY(0);
+}

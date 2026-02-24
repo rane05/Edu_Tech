@@ -1,6 +1,21 @@
 const express = require('express');
 const router = express.Router();
-const College = require('../model/cetCollege');
+const fs = require('fs');
+const path = require('path');
+
+// Load JSON data into memory on startup
+const COLLEGES_DATA_PATH = path.join(__dirname, '../all_colleges_data.json');
+let allColleges = [];
+
+try {
+    const rawData = fs.readFileSync(COLLEGES_DATA_PATH, 'utf8');
+    const collegesObj = JSON.parse(rawData);
+    // Convert object { "2130": {...}, ... } to array [ {...}, ... ]
+    allColleges = Object.values(collegesObj);
+    console.log(`Loaded ${allColleges.length} colleges from JSON.`);
+} catch (err) {
+    console.error("Error loading college data JSON:", err);
+}
 
 // Render the Search Page
 router.get('/cet-predictor', (req, res) => {
@@ -10,87 +25,206 @@ router.get('/cet-predictor', (req, res) => {
 // API to Search Colleges
 router.post('/api/cet/predict', async (req, res) => {
     try {
-        const { score, category, state, location, branch } = req.body;
+        const { score, category, location, branch } = req.body;
         const userScore = parseFloat(score);
 
         if (!userScore || !category) {
-            return res.render('cet_predictor', { results: [], error: 'Please enter valid score and category.', score: score, category: category });
+            return res.render('cet_predictor', { results: [], error: 'Please enter valid score and category.', score, category });
         }
 
-        // Map 'OPEN' to 'General' to match database format
-        let searchCategory = category;
-        if (category === 'OPEN') {
-            searchCategory = 'General';
-        }
-
-        // Build Query
-        let query = {
-            "branches.cutoffs": {
-                $elemMatch: {
-                    category: searchCategory,
-                    cetScore: { $lte: userScore }
-                }
-            }
+        const categoryMap = {
+            'OPEN': ['OPEN', 'GOPENH', 'GOPENS', 'LOPENH', 'LOPENS', 'General'],
+            'SC': ['SC', 'GSCH', 'GSCS', 'LSCH', 'LSCS'],
+            'ST': ['ST', 'GSTH', 'GSTS', 'LSTH', 'LSTS'],
+            'VJ': ['VJ', 'GVJH', 'GVJS', 'LVJH', 'LVJS'],
+            'NT1': ['NT1', 'GNT1H', 'GNT1S', 'LNT1H', 'LNT1S'],
+            'NT2': ['NT2', 'GNT2H', 'GNT2S', 'LNT2H', 'LNT2S'],
+            'NT3': ['NT3', 'GNT3H', 'GNT3S', 'LNT3H', 'LNT3S'],
+            'OBC': ['OBC', 'GOBCH', 'GOBCS', 'LOBCH', 'LOBCS'],
+            'TFWS': ['TFWS'],
+            'EWS': ['EWS'],
+            'PWD': ['PWD', 'PWDOPENH', 'PWDOPENS'],
+            'DEF': ['DEF', 'DEFOPENH', 'DEFOPENS']
         };
 
-        // Enforce Maharashtra State Filter
-        query.$or = [
-            { location: { $regex: /Maharashtra|Mumbai|Pune|Nagpur|Nashik|Aurangabad/i } },
-            { location: "" },
-            { location: null }
-        ];
+        const searchCategories = categoryMap[category] || [category];
 
-        // Apply Location Filter if provided
-        if (location && location !== "") {
-            query.location = { $regex: new RegExp(location, 'i') };
+        // --- Filter from Memory ---
+        // 1. Filter by Location & Basic Eligibility
+        const candidateColleges = allColleges.filter(college => {
+            // Location Filter
+            let locMatch = true;
+            if (location && location.trim() !== "") {
+                const locRegex = new RegExp(location, 'i');
+                const cLoc = college.location || "";
+                const cName = college.name || "";
+                // Match location or name (similar to previous "OR" logic)
+                if (!locRegex.test(cLoc) && !locRegex.test(cName)) {
+                    return false;
+                }
+            } else {
+                // Default: restrict to Maharashtra-ish scope if needed, 
+                // but original logic had explicit "Maharashtra" or list of cities.
+                // If location is empty, we generally show all valid matches in previous logic
+                // assuming filtering by score will narrow it down.
+                // However, the original had:
+                // { $or: [ { location: regex... }, { location: "" }, ... ] }
+                // Let's keep it simple: if no location specified, allow all.
+            }
+
+            // Check if ANY branch has a cutoff <= userScore for the category
+            // We can do this lazily during mapping, but filtering here optimizes a bit.
+            // But strict filtering here might be expensive if branches are complex.
+            // Let's do the rigorous branch filtering in the map step.
+            return true;
+        });
+
+        // --- Process Results ---
+        const results = candidateColleges.map(college => {
+            // Convert branches object to array if it is not already
+            const branchesVal = Array.isArray(college.branches)
+                ? college.branches
+                : Object.values(college.branches);
+
+            const eligibleBranches = branchesVal.map(b => {
+                // Filter cutoffs
+                const qualifyingCutoffs = b.cutoffs.filter(c =>
+                    searchCategories.includes(c.category) && c.cetScore <= userScore
+                );
+                if (qualifyingCutoffs.length === 0) return null;
+
+                // Sort: Newest Year -> Latest Round -> Highest Score
+                qualifyingCutoffs.sort((a, b) => {
+                    if (b.year !== a.year) return b.year - a.year;
+                    return b.round - a.round;
+                });
+
+                // Branch Name Filter
+                if (branch && branch.trim() !== "") {
+                    const bName = b.name.toLowerCase();
+                    const filter = branch.toLowerCase();
+                    if (filter === 'cs' || filter === 'computer') {
+                        if (!bName.includes('computer') && !bName.includes('data science') && !bName.includes('artificial')) return null;
+                    } else if (filter === 'it') {
+                        if (!bName.includes('information') && !bName.includes('it')) return null;
+                    } else if (filter === 'entc' || filter === 'electronics') {
+                        if (!bName.includes('electronics') && !bName.includes('e&tc')) return null;
+                    } else if (!bName.includes(filter)) {
+                        return null;
+                    }
+                }
+
+                const bestMatch = qualifyingCutoffs[0];
+
+                // Trend Data
+                const yearlyData = {};
+                qualifyingCutoffs.forEach(c => {
+                    const key = `${c.year}-R${c.round}`;
+                    // Keep distinct year-round points
+                    if (!yearlyData[key]) yearlyData[key] = c.cetScore;
+                });
+
+                // Calculation logic
+                const gap = userScore - bestMatch.cetScore;
+                let fitScore, type, badgeClass;
+                if (gap > 5) {
+                    fitScore = Math.min(99, Math.round(85 + (gap / 2)));
+                    type = 'Safe';
+                    badgeClass = 'badge-success-soft';
+                } else if (gap >= 2) {
+                    fitScore = Math.round(70 + gap * 5);
+                    type = 'Moderate';
+                    badgeClass = 'badge-warning-soft';
+                } else {
+                    fitScore = Math.round(60 + gap * 10);
+                    type = 'Dream';
+                    badgeClass = 'badge-danger-soft';
+                }
+
+                return {
+                    name: b.name,
+                    cutoff: bestMatch.cetScore,
+                    year: bestMatch.year,
+                    round: bestMatch.round,
+                    trend: yearlyData,
+                    category: bestMatch.category, // helpful to know which cat matched
+                    fitScore, type, badgeClass
+                };
+            }).filter(Boolean);
+
+            if (eligibleBranches.length === 0) return null;
+
+            // College-level stats
+            const topBranches = eligibleBranches.sort((a, b) => b.fitScore - a.fitScore).slice(0, 3);
+            const avgFit = Math.round(topBranches.reduce((sum, b) => sum + b.fitScore, 0) / topBranches.length);
+            const bestType = topBranches[0].type;
+            const bestBadge = topBranches[0].badgeClass;
+
+            return {
+                name: college.name,
+                location: college.location || "Maharashtra",
+                branches: eligibleBranches,
+                fitScore: avgFit,
+                type: bestType,
+                badgeClass: bestBadge
+            };
+        }).filter(Boolean);
+
+        // Sort by Fit Score High -> Low
+        results.sort((a, b) => b.fitScore - a.fitScore);
+
+        // Limit results to top 100 to avoid rendering performance issues
+        const limitedResults = results.slice(0, 100);
+
+        // --- Similar Colleges Logic ---
+        // (Similar logic but accessing JSON)
+        let similarColleges = [];
+        if (limitedResults.length < 10) {
+            // Find colleges where lowest eligible cutoff is slightly > userScore
+            // Gap between 0 and 5
+
+            const slightlyAbove = allColleges.map(c => {
+                const branchesVal = Array.isArray(c.branches) ? c.branches : Object.values(c.branches);
+
+                // Check valid branches
+                const matchingBranch = branchesVal.find(b => {
+                    // Check for any cutoff just above user score
+                    return b.cutoffs.some(cu =>
+                        searchCategories.includes(cu.category) &&
+                        cu.cetScore > userScore &&
+                        cu.cetScore <= userScore + 5
+                    );
+                });
+
+                if (!matchingBranch) return null;
+
+                // Get specific cutoff detail
+                const relevantCutoffs = matchingBranch.cutoffs
+                    .filter(cu => searchCategories.includes(cu.category) && cu.cetScore > userScore && cu.cetScore <= userScore + 5)
+                    .sort((a, b) => a.cetScore - b.cetScore); // lowest of the high ones
+
+                if (relevantCutoffs.length === 0) return null;
+                const bestNearMiss = relevantCutoffs[0];
+
+                return {
+                    name: c.name,
+                    location: c.location || 'Maharashtra',
+                    branch: matchingBranch.name,
+                    cutoff: bestNearMiss.cetScore,
+                    gap: (bestNearMiss.cetScore - userScore).toFixed(2)
+                };
+            }).filter(Boolean);
+
+            similarColleges = slightlyAbove.slice(0, 5);
         }
 
-        console.log("CET Query:", JSON.stringify(query, null, 2));
-
-        const colleges = await College.find(query).limit(50);
-        console.log("Found Colleges (Before Branch Filter):", colleges.length);
-
-        // Filter and format the results to show ONLY eligible branches matching the requested Branch
-        const results = colleges.map(college => {
-            const eligibleBranches = college.branches.filter(b => {
-                // 1. Check Score Eligibility
-                const cutoff = b.cutoffs.find(c => c.category === searchCategory);
-                if (!cutoff || cutoff.cetScore > userScore) return false;
-
-                // 2. Check Branch Name Filter (if provided)
-                if (branch && branch !== "") {
-                    return b.name.toLowerCase().includes(branch.toLowerCase());
-                }
-                return true;
-            }).map(b => ({
-                name: b.name,
-                cutoff: b.cutoffs.find(c => c.category === searchCategory).cetScore
-            }));
-
-            if (eligibleBranches.length > 0) {
-                return {
-                    name: college.name,
-                    location: college.location,
-                    rating: college.rating,
-                    infrastructure: college.infrastructure,
-                    placement: college.placement,
-                    fees: college.fees.ug,
-                    university: college.university,
-                    branches: eligibleBranches
-                };
-            }
-            return null;
-        }).filter(item => item !== null);
-
-        // Sort by Rating (descending)
-        results.sort((a, b) => b.rating - a.rating);
-
         res.render('cet_predictor', {
-            results: results,
-            score: score,
-            category: category,
-            location: location,
-            branch: branch
+            results: limitedResults,
+            similarColleges,
+            score,
+            category,
+            location,
+            branch
         });
 
     } catch (err) {

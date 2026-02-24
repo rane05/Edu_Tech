@@ -1,8 +1,38 @@
-
+# Dependencies
 node_modules/
+
+# Environment variables
 .env
-*.exe
-*.o
-*.out
- desktop.ini
- *.mp4
+
+# System Files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+logs
+*.log
+
+# Editor Directories
+.idea/
+.vscode/
+
+# Build/Dist
+dist/
+build/
+
+# Temporary Data
+*.pdf
+*.txt
+temp/
+
+# Large Data Files
+*.csv
+all_colleges_data.json
+
+# Temporary backups
+old_*.ejs
