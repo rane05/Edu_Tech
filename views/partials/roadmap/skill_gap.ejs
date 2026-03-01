@@ -1,0 +1,189 @@
+<!-- views/partials/roadmap/skill_gap.ejs -->
+<% function getCategoryColor(category) { const colors={ "Programming Languages" : "blue" , "Frontend Development"
+    : "pink" , "Backend Development" : "emerald" , "Databases" : "yellow" , "DevOps & Cloud" : "purple" , "Security"
+    : "red" , "Core Computer Science" : "indigo" , "Testing & QA" : "orange" , "Performance Optimization" : "teal"
+    , "AI & Data" : "cyan" , "Mobile Development" : "emerald" , "Soft Technical Skills" : "slate"
+    , "Advanced Architecture" : "fuchsia" }; return colors[category] || "slate" ; } %>
+
+    <div
+        class="glass-card p-6 border-t-4 border-t-indigo-500 rounded-[20px] shadow-sm hover:shadow-md transition-shadow duration-300 bg-white">
+        <div class="mb-6 flex items-center justify-between">
+            <div>
+                <h3 class="text-xl font-bold text-slate-800 flex items-center">
+                    <i class="fas fa-chart-radar text-indigo-500 mr-2"></i> Skill Intelligence Analytics
+                </h3>
+                <p class="text-sm text-slate-500 mt-1">Deterministically mapping your profile against industry
+                    requirements.</p>
+            </div>
+        </div>
+
+        <div class="relative w-full aspect-square max-h-64 mx-auto md:max-h-80 box-border mb-8">
+            <canvas id="skillGapChart"></canvas>
+        </div>
+
+        <!-- Tags Listing -->
+        <div class="mt-8 space-y-6">
+            <% if(roadmap.skillGap && roadmap.skillGap.already_have && roadmap.skillGap.already_have.length> 0) { %>
+                <div>
+                    <span class="text-xs uppercase font-bold text-slate-400 block mb-3 pl-1">Strengths (Already
+                        Have)</span>
+                    <div class="flex flex-wrap gap-2">
+                        <% roadmap.skillGap.already_have.forEach(skill=> { %>
+                            <span
+                                class="bg-indigo-50 text-indigo-700 text-xs font-semibold px-3 py-1.5 rounded-full border border-indigo-100 flex items-center shadow-sm">
+                                <i class="fas fa-check-circle mr-1.5 text-indigo-500"></i>
+                                <%= skill %>
+                            </span>
+                            <% }); %>
+                    </div>
+                </div>
+                <% } %>
+
+                    <% const renderAdvancedSkillBadge=(skill)=> {
+                        const color = getCategoryColor(skill.category);
+                        const difficultyStars = Array(skill.difficulty).fill(`<i
+                            class="fas fa-star text-xs text-amber-400"></i>`).join('') +
+                        Array(5 - skill.difficulty).fill(`<i class="far fa-star text-xs text-slate-200"></i>`).join('');
+
+                        let heatColor = skill.demandScore >= 90 ? 'text-red-500' : skill.demandScore >= 80 ?
+                        'text-orange-500' : 'text-amber-500';
+
+                        return `
+                        <div
+                            class="group relative flex flex-col bg-white border border-slate-200 rounded-2xl p-4 shadow-sm hover:shadow-md hover:border-indigo-300 transition-all duration-300 cursor-default">
+                            <div class="flex justify-between items-start mb-3">
+                                <span
+                                    class="bg-${color}-50 text-${color}-700 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wide border border-${color}-100">
+                                    ${skill.category}
+                                </span>
+                                <span class="flex items-center space-x-0.5" title="Difficulty ${skill.difficulty}/5">
+                                    ${difficultyStars}
+                                </span>
+                            </div>
+                            <h4 class="font-bold text-slate-800 text-[15px] mb-1">${skill.name}</h4>
+                            <div class="flex items-center justify-between mt-auto pt-3 border-t border-slate-100">
+                                <div class="flex items-center whitespace-nowrap"
+                                    title="Demand Index: ${skill.demandScore}%">
+                                    <i class="fas fa-fire ${heatColor} mr-1.5 text-xs text-opacity-90"></i>
+                                    <span class="text-xs font-semibold text-slate-600">${skill.demandScore}</span>
+                                </div>
+                                <div class="flex items-center whitespace-nowrap"
+                                    title="Automation Risk: ${skill.automationRisk}%">
+                                    <i class="fas fa-robot text-slate-400 mr-1.5 text-xs text-opacity-90"></i>
+                                    <span class="text-xs font-semibold text-slate-600">${skill.automationRisk}%</span>
+                                </div>
+                                <div class="flex items-center whitespace-nowrap">
+                                    <span class="bg-slate-100 text-slate-600 text-[10px] font-bold px-2 py-0.5 rounded">
+                                        ${skill.priorityLabel}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        `;
+                        };
+                        %>
+
+                        <% if(roadmap.skillGap && roadmap.skillGap.missing_high_priority &&
+                            roadmap.skillGap.missing_high_priority.length> 0) { %>
+                            <div>
+                                <span class="text-xs uppercase font-bold text-slate-400 block mb-3 pl-1">Critical & High
+                                    Priority Targets</span>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                                    <% roadmap.skillGap.missing_high_priority.forEach((skill, index)=> { %>
+                                        <% if(index < 6) { %>
+                                            <%- renderAdvancedSkillBadge(skill) %>
+                                                <% } %>
+                                                    <% }); %>
+                                </div>
+                            </div>
+                            <% } %>
+
+                                <% if(roadmap.skillGap && roadmap.skillGap.missing_medium_priority &&
+                                    roadmap.skillGap.missing_medium_priority.length> 0) { %>
+                                    <div class="pt-2">
+                                        <span class="text-xs uppercase font-bold text-slate-400 block mb-3 pl-1">Medium
+                                            Priority</span>
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+                                            <% roadmap.skillGap.missing_medium_priority.forEach((skill, index)=> { %>
+                                                <% if(index < 6) { %>
+                                                    <%- renderAdvancedSkillBadge(skill) %>
+                                                        <% } %>
+                                                            <% }); %>
+                                        </div>
+                                    </div>
+                                    <% } %>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const ctx = document.getElementById('skillGapChart').getContext('2d');
+
+            new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['Programming', 'Architecture', 'Tooling', 'Soft Skills', 'Security'],
+                    datasets: [{
+                        label: 'Required Competency',
+                        data: [100, 100, 100, 100, 100],
+                        fill: false,
+                        backgroundColor: 'transparent',
+                        borderColor: 'rgba(99, 102, 241, 0.3)',
+                        borderDash: [5, 5],
+                        pointBackgroundColor: 'rgba(99, 102, 241, 0.5)',
+                        pointBorderColor: 'transparent',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(99, 102, 241, 1)'
+                    }, {
+                        label: 'Your Current Evaluation',
+                        data: [
+                            parseInt("<%= roadmap.overview ? roadmap.overview.suitabilityScore : 20 %>"),
+                            Math.max(10, parseInt("<%= roadmap.overview ? roadmap.overview.suitabilityScore : 20 %>") - 15),
+                            Math.min(100, parseInt("<%= roadmap.overview ? roadmap.overview.suitabilityScore : 20 %>") + 10),
+                            parseInt("<%= roadmap.overview ? roadmap.overview.suitabilityScore : 20 %>"),
+                            Math.max(0, parseInt("<%= roadmap.overview ? roadmap.overview.suitabilityScore : 20 %>") - 20)
+                        ],
+                        fill: true,
+                        backgroundColor: 'rgba(79, 70, 229, 0.15)',
+                        borderColor: 'rgba(79, 70, 229, 1)',
+                        pointBackgroundColor: 'rgba(79, 70, 229, 1)',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(79, 70, 229, 1)',
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: { color: 'rgba(0, 0, 0, 0.05)' },
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                            pointLabels: {
+                                font: { family: "'Inter', sans-serif", size: 11, weight: '600' },
+                                color: '#475569'
+                            },
+                            ticks: { display: false, max: 100, min: 0 }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { boxWidth: 12, padding: 20, font: { family: "'Inter', sans-serif", size: 12, weight: '500' }, color: '#334155' }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                            titleFont: { family: "'Inter', sans-serif", size: 13 },
+                            bodyFont: { family: "'Inter', sans-serif", size: 13 },
+                            padding: 12,
+                            cornerRadius: 10,
+                            displayColors: true
+                        }
+                    }
+                }
+            });
+        });
+    </script>

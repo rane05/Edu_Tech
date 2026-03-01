@@ -1,0 +1,60 @@
+<!-- views/partials/roadmap/dashboard.ejs -->
+<div class="glass-card p-6 relative overflow-hidden bg-gradient-to-br from-indigo-900 to-indigo-700 text-white">
+    <!-- Background overlay graph decoration -->
+    <div class="absolute inset-0 opacity-10"
+        style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 20px 20px;">
+    </div>
+
+    <div class="relative z-10">
+        <h2 class="text-lg font-bold mb-4 flex items-center tracking-wide text-indigo-100 uppercase text-xs">
+            <i class="fas fa-chart-line mr-2 text-teal-300"></i> Course Progress
+        </h2>
+
+        <div class="flex items-end justify-between mb-2">
+            <div>
+                <span class="text-4xl font-extrabold" id="dashboardPctText">0%</span>
+                <span class="text-indigo-200 text-sm ml-1">Completed</span>
+            </div>
+            <div class="text-right">
+                <div class="text-sm font-medium text-indigo-100" id="dashboardModulesText">0 / <%=
+                        roadmap.generated_phases.reduce((acc, p)=> acc + p.topics.length, 0) %> Topics</div>
+            </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-indigo-950/50 rounded-full h-3 mb-6 border border-indigo-500/30 overflow-hidden">
+            <div id="dashboardProgressBar"
+                class="bg-gradient-to-r from-teal-400 to-emerald-400 h-3 rounded-full progress-bar-fill shadow-[0_0_10px_rgba(20,184,166,0.6)]"
+                style="width: 0%"></div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3 mt-4">
+            <div class="bg-indigo-800/50 backdrop-blur rounded-lg p-3 border border-indigo-500/20 text-center">
+                <i class="fas fa-medal text-yellow-400 text-2xl mb-1"></i>
+                <div class="text-xs text-indigo-200 font-semibold">0 Badges Earned</div>
+            </div>
+            <div class="bg-indigo-800/50 backdrop-blur rounded-lg p-3 border border-indigo-500/20 text-center">
+                <i class="fas fa-fire text-orange-400 text-2xl mb-1"></i>
+                <div class="text-xs text-indigo-200 font-semibold">1 Day Streak</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Global tracking to update progress based on checkboxes in timeline
+    window.updateGlobalProgress = function () {
+        const checkboxes = document.querySelectorAll('input[type="checkbox"][data-task-id]');
+        const total = checkboxes.length;
+        if (total === 0) return;
+
+        let checked = 0;
+        checkboxes.forEach(cb => { if (cb.checked) checked++; });
+
+        const pct = Math.round((checked / total) * 100);
+
+        document.getElementById('dashboardPctText').innerText = pct + '%';
+        document.getElementById('dashboardProgressBar').style.width = pct + '%';
+        document.getElementById('dashboardModulesText').innerText = checked + ' / ' + total + ' Topics';
+    }
+</script>

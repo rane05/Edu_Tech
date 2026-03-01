@@ -1,464 +1,425 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Career Roadmap: <%= role %>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= role %> Roadmap | Edu_Tech
     </title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Tailwind CSS (Assuming project uses it based on previous files) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- Tagify CSS & JS for Advanced Selection UI -->
+    <script src="https://cdn.jsdelivr.net/npm/@yaireo/tagify"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css" />
+
     <style>
-        :root {
-            --color-primary: #FFB800;
-            --color-secondary: #00A8FF;
-            --color-accent: #6C63FF;
-            --color-dark: #1A1A2E;
-            --color-text: #2D3748;
-            --color-text-light: #718096;
-            --color-bg: #FFFFFF;
-            --color-bg-light: #F7FAFC;
-            --color-bg-dark: #16213E;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        /* Custom UI Style Rules */
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', sans-serif;
-            background: var(--color-bg-light);
-            color: var(--color-text);
-            line-height: 1.6;
-            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
         }
 
-        .roadmap-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 60px 20px;
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            border-radius: 1rem;
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 60px;
+        .vibrant-gradient text-transparent {
+            opacity: 1;
         }
 
-        .title {
-            font-size: clamp(2.5rem, 5vw, 3.5rem);
-            font-weight: 800;
-            color: var(--color-dark);
-            margin-bottom: 15px;
+        .bg-indigo-gradient {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
         }
 
-        .subtitle {
-            color: var(--color-text-light);
-            font-size: 1.25rem;
+        .bg-teal-gradient {
+            background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
         }
 
-        .overview-card {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            margin-bottom: 60px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-        }
-
-        .overview-card h2 {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--color-dark);
-            margin-bottom: 30px;
-        }
-
-        .overview-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-        }
-
-        .overview-item {
-            padding: 25px;
-            background: var(--color-bg-light);
-            border-radius: 15px;
-            transition: transform 0.3s ease;
-        }
-
-        .overview-item:hover {
-            transform: translateY(-5px);
-        }
-
-        .overview-icon {
-            font-size: 2.5rem;
-            margin-bottom: 15px;
-            color: var(--color-primary);
-        }
-
-        .overview-item h3 {
-            font-size: 1.125rem;
-            font-weight: 700;
-            color: var(--color-dark);
-            margin-bottom: 10px;
-        }
-
-        .overview-item p {
-            color: var(--color-text-light);
-            font-size: 0.9375rem;
-        }
-
-        .timeline {
+        .timeline-container {
             position: relative;
-            margin-top: 60px;
+            padding-left: 2rem;
+            border-left: 2px solid #e2e8f0;
         }
 
-        .timeline::before {
-            content: '';
+        .timeline-dot {
             position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 4px;
-            height: 100%;
-            background: linear-gradient(to bottom, var(--color-primary), var(--color-secondary));
-            border-radius: 2px;
-        }
-
-        .week-card {
-            width: calc(50% - 40px);
-            margin: 40px 0;
-            position: relative;
-        }
-
-        .week-card:nth-child(odd) {
-            margin-left: auto;
-            padding-left: 60px;
-        }
-
-        .week-card:nth-child(even) {
-            padding-right: 60px;
-        }
-
-        .week-card::before {
-            content: '';
-            position: absolute;
-            width: 24px;
-            height: 24px;
-            background: var(--color-primary);
-            border: 4px solid white;
+            left: -0.65rem;
+            width: 1.25rem;
+            height: 1.25rem;
             border-radius: 50%;
-            top: 30px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .week-card:nth-child(odd)::before {
-            left: -12px;
-        }
-
-        .week-card:nth-child(even)::before {
-            right: -12px;
-        }
-
-        .week-content {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            border: 1px solid rgba(0, 0, 0, 0.05);
+            background: #fff;
+            border: 3px solid #6366f1;
             transition: all 0.3s ease;
         }
 
-        .week-content:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        .phase-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
-        .week-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid var(--color-bg-light);
+        .phase-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
 
-        .week-number {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--color-primary);
+        .progress-bar-fill {
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .week-focus {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--color-dark);
-            margin-bottom: 20px;
+        .smooth-expand {
+            transition: max-height 0.3s ease-in-out;
+            overflow: hidden;
         }
 
-        .topic-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
+        /* Interactive Inputs */
+        input[type=range] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            background: transparent;
         }
 
-        .topic-item {
-            margin-bottom: 12px;
-            padding-left: 25px;
-            position: relative;
-            color: var(--color-text);
-            font-size: 0.9375rem;
-        }
-
-        .topic-item::before {
-            content: '→';
-            position: absolute;
-            left: 0;
-            color: var(--color-secondary);
-            font-weight: bold;
-        }
-
-        .resources-section {
-            margin-top: 25px;
-            padding-top: 25px;
-            border-top: 2px solid var(--color-bg-light);
-        }
-
-        .resources-section h4 {
-            font-size: 1rem;
-            font-weight: 700;
-            color: var(--color-dark);
-            margin-bottom: 15px;
-        }
-
-        /* Footer */
-        .footer {
-            background: var(--color-bg-dark);
-            color: white;
-            padding: 60px 20px 30px;
-            margin-top: 80px;
-        }
-
-        .footer-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .footer-top {
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-
-        .footer-column h3 {
-            font-size: 1.125rem;
-            margin-bottom: 20px;
-        }
-
-        .footer-column ul {
-            list-style: none;
-        }
-
-        .footer-column ul li {
-            margin-bottom: 10px;
-        }
-
-        .footer-column a {
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .footer-column a:hover {
-            color: white;
-        }
-
-        .newsletter-form {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .newsletter-form input {
-            flex: 1;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 25px;
-            outline: none;
-        }
-
-        .newsletter-form button {
-            padding: 12px 30px;
-            background: var(--color-primary);
-            color: white;
-            border: none;
-            border-radius: 25px;
-            font-weight: 600;
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 16px;
+            width: 16px;
+            border-radius: 50%;
+            background: #4f46e5;
             cursor: pointer;
+            margin-top: -6px;
         }
 
-        .footer-bottom {
-            padding-top: 30px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center;
-            color: rgba(255, 255, 255, 0.6);
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #e2e8f0;
+            border-radius: 2px;
         }
 
-        @media (max-width: 768px) {
-            .timeline::before {
-                left: 0;
+        /* From Uiverse.io by Donewenfu */
+        .loader {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .jimu-primary-loading:before,
+        .jimu-primary-loading:after {
+            position: absolute;
+            top: 0;
+            content: '';
+        }
+
+        .jimu-primary-loading:before {
+            left: -19.992px;
+        }
+
+        .jimu-primary-loading:after {
+            left: 19.992px;
+            -webkit-animation-delay: 0.32s !important;
+            animation-delay: 0.32s !important;
+        }
+
+        .jimu-primary-loading:before,
+        .jimu-primary-loading:after,
+        .jimu-primary-loading {
+            background: #4f46e5;
+            -webkit-animation: loading-keys-app-loading 0.8s infinite ease-in-out;
+            animation: loading-keys-app-loading 0.8s infinite ease-in-out;
+            width: 13.6px;
+            height: 32px;
+        }
+
+        .jimu-primary-loading {
+            text-indent: -9999em;
+            margin: auto;
+            position: absolute;
+            right: calc(50% - 6.8px);
+            top: calc(50% - 16px);
+            -webkit-animation-delay: 0.16s !important;
+            animation-delay: 0.16s !important;
+        }
+
+        @-webkit-keyframes loading-keys-app-loading {
+
+            0%,
+            80%,
+            100% {
+                opacity: .75;
+                box-shadow: 0 0 #4f46e5;
+                height: 32px;
             }
 
-            .week-card {
-                width: 100%;
-                padding-left: 40px !important;
-                padding-right: 0 !important;
+            40% {
+                opacity: 1;
+                box-shadow: 0 -8px #4f46e5;
+                height: 40px;
+            }
+        }
+
+        @keyframes loading-keys-app-loading {
+
+            0%,
+            80%,
+            100% {
+                opacity: .75;
+                box-shadow: 0 0 #4f46e5;
+                height: 32px;
             }
 
-            .week-card::before {
-                left: -12px !important;
-            }
-
-            .overview-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .footer-top {
-                grid-template-columns: 1fr;
+            40% {
+                opacity: 1;
+                box-shadow: 0 -8px #4f46e5;
+                height: 40px;
             }
         }
     </style>
 </head>
 
-<body>
-    <div class="roadmap-container">
-        <div class="header">
-            <h1 class="title">Career Roadmap: <%= role %>
-            </h1>
-            <p class="subtitle">Your 12-week journey to becoming a <%= role %>
-            </p>
-        </div>
+<body class="antialiased font-sans">
 
-        <div class="overview-card">
-            <h2>Role Overview</h2>
-            <div class="overview-grid">
-                <div class="overview-item">
-                    <i class="fas fa-briefcase overview-icon"></i>
-                    <h3>Role Description</h3>
-                    <p>
-                        <%= overview.roleDescription %>
-                    </p>
-                </div>
-                <div class="overview-item">
-                    <i class="fas fa-code overview-icon"></i>
-                    <h3>Required Skills</h3>
-                    <p>
-                        <%= overview.requiredSkills %>
-                    </p>
-                </div>
-                <div class="overview-item">
-                    <i class="fas fa-chart-line overview-icon"></i>
-                    <h3>Career Growth</h3>
-                    <p>
-                        <%= overview.careerGrowth %>
-                    </p>
-                </div>
-                <div class="overview-item">
-                    <i class="fas fa-money-bill-wave overview-icon"></i>
-                    <h3>Salary Range</h3>
-                    <p>
-                        <%= overview.salaryRange %>
-                    </p>
+    <!-- Global Fixed Navbar - Assuming it's rendered by layout or included -->
+    <%- include('layouts/navbar') %>
+
+        <main class="min-h-screen pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+
+            <!-- Generation Input Form (Visible directly or as a Modal via configWrapper) -->
+            <div id="configWrapper"
+                class="<%= needsGeneration ? 'block' : 'hidden fixed inset-0 z-[100] overflow-y-auto bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4' %>">
+                <div
+                    class="max-w-3xl mx-auto w-full bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100 relative">
+                    <% if (!needsGeneration) { %>
+                        <button type="button"
+                            onclick="document.getElementById('configWrapper').classList.remove('flex'); document.getElementById('configWrapper').classList.add('hidden');"
+                            class="absolute top-4 right-4 text-white hover:text-indigo-200 bg-white/20 p-2 rounded-full backdrop-blur-sm flex items-center justify-center w-8 h-8 transition-colors z-10">
+                            <i class="fas fa-times"></i>
+                        </button>
+                        <% } %>
+                            <div class="bg-gradient-to-r from-indigo-600 to-indigo-800 p-8 text-white text-center">
+                                <i class="fas fa-sliders-h text-4xl mb-4 text-indigo-200"></i>
+                                <h2 class="text-3xl font-extrabold tracking-tight">Configure Your Roadmap</h2>
+                                <p class="text-indigo-100 mt-2">Help the AI tailor the perfect path for becoming a
+                                    <strong>
+                                        <%= role %>
+                                    </strong>.
+                                </p>
+                            </div>
+
+                            <form id="roadmapForm" class="p-8 space-y-6">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <!-- Education -->
+                                    <div>
+                                        <label class="block text-sm font-bold text-slate-700 mb-2">Highest
+                                            Education</label>
+                                        <select id="education"
+                                            class="w-full rounded-xl border-slate-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 bg-slate-50">
+                                            <option value="High School">High School</option>
+                                            <option value="Bachelors Degree" selected>Bachelor's Degree</option>
+                                            <option value="Masters Degree">Master's Degree</option>
+                                            <option value="Self-Taught">Self-Taught / Bootcamp</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Available Hours -->
+                                    <div>
+                                        <label class="block text-sm font-bold text-slate-700 mb-2">Study Hours per
+                                            Week</label>
+                                        <div class="flex items-center space-x-4">
+                                            <input type="range" id="weekly_hours" min="5" max="40" value="15" step="1"
+                                                class="w-full accent-indigo-600"
+                                                oninput="document.getElementById('hoursOut').innerText = this.value + ' hrs'">
+                                            <span id="hoursOut" class="font-bold text-indigo-600 w-16 text-right">15
+                                                hrs</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Risk Level -->
+                                    <div>
+                                        <label class="block text-sm font-bold text-slate-700 mb-2">Career Risk
+                                            Tolerance</label>
+                                        <select id="risk_level"
+                                            class="w-full rounded-xl border-slate-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 bg-slate-50">
+                                            <option value="Low">Low (Safe, slower growth)</option>
+                                            <option value="Medium" selected>Medium (Balanced)</option>
+                                            <option value="High">High (Startups, fast growth)</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Location -->
+                                    <div>
+                                        <label class="block text-sm font-bold text-slate-700 mb-2">Current
+                                            Location</label>
+                                        <select id="location"
+                                            class="w-full rounded-xl border-slate-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-3 bg-slate-50">
+                                            <option value="Global">Global / Remote</option>
+                                            <option value="India" selected>India</option>
+                                            <option value="United States">United States</option>
+                                            <option value="Europe">Europe</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Skills -->
+                                <div>
+                                    <label class="block text-sm font-bold text-slate-700 mb-2">Current Skills (Type to
+                                        search)</label>
+                                    <input type="text" id="skills" placeholder="e.g. HTML, Machine Learning, UI Design"
+                                        class="w-full rounded-xl border-slate-200 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 bg-slate-50"
+                                        value="<%= user ? (user.skills || []).join(', ') : '' %>">
+                                </div>
+
+                                <!-- Submit Area -->
+                                <div class="pt-6 border-t border-slate-100 flex flex-col items-center">
+                                    <button type="submit" id="generateBtn"
+                                        class="w-full md:w-auto px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-lg shadow-lg shadow-indigo-200 transition-all flex items-center justify-center group">
+                                        <i class="fas fa-magic mr-2 group-hover:rotate-12 transition-transform"></i>
+                                        Generate My
+                                        Roadmap
+                                    </button>
+                                    <div id="genError" class="mt-4 text-red-500 font-semibold text-center hidden"></div>
+                                </div>
+                            </form>
                 </div>
             </div>
-        </div>
 
-        <div class="timeline">
-            <% weeks.forEach((week, index)=> { %>
-                <div class="week-card">
-                    <div class="week-content">
-                        <div class="week-header">
-                            <span class="week-number">Week <%= index + 1 %></span>
-                        </div>
-                        <div class="week-focus">
-                            <%= week.focus %>
-                        </div>
-                        <ul class="topic-list">
-                            <% week.topics.forEach(topic=> { %>
-                                <li class="topic-item">
-                                    <%= topic %>
-                                </li>
-                                <% }); %>
-                        </ul>
-                        <div class="resources-section">
-                            <h4>Resources & Tools</h4>
-                            <ul class="topic-list">
-                                <% week.resources.forEach(resource=> { %>
-                                    <li class="topic-item">
-                                        <%= resource %>
-                                    </li>
-                                    <% }); %>
-                            </ul>
-                        </div>
+            <!-- Hidden Spinner for when form is submitted -->
+            <div id="loadingOverlay"
+                class="fixed inset-0 z-[200] flex-col items-center justify-center bg-white/90 backdrop-blur-md hidden">
+                <div class="relative w-24 h-24 mb-10">
+                    <div class="loader">
+                        <div class="justify-content-center jimu-primary-loading"></div>
                     </div>
                 </div>
-                <% }); %>
-        </div>
-    </div>
+                <h2 class="text-3xl font-extrabold text-slate-800 tracking-tight">Algorithmic Engine Running</h2>
+                <p class="text-slate-500 mt-3 text-lg">Crunching your profile data to generate personalized
+                    phases...</p>
+            </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-container">
-            <div class="footer-top">
-                <div class="footer-column">
-                    <h3>EduNavigator</h3>
-                    <p style="color: rgba(255,255,255,0.7); margin-top: 20px;">Your AI-powered guide to career success
-                        and college admissions.</p>
-                    <div class="newsletter-form">
-                        <input type="email" placeholder="Enter your email">
-                        <button>Subscribe</button>
+            <script>
+                // Initialize Tagify for intelligent skill selection
+                document.addEventListener("DOMContentLoaded", function () {
+                    const skillsInput = document.getElementById('skills');
+                    if (skillsInput) {
+                        const skillsString = "<%= typeof allSkills !== 'undefined' ? allSkills.join(',') : '' %>";
+                        const availableSkills = skillsString ? skillsString.split(',') : [];
+
+                        new Tagify(skillsInput, {
+                            whitelist: availableSkills,
+                            maxTags: 30,
+                            dropdown: {
+                                maxItems: 30,
+                                classname: "tags-look",
+                                enabled: 0,
+                                closeOnSelect: false
+                            }
+                        });
+                    }
+
+                    const form = document.getElementById('roadmapForm');
+                    if (form) {
+                        form.addEventListener('submit', function (e) {
+                            e.preventDefault();
+
+                            // Show loader
+                            document.getElementById('configWrapper').classList.add('hidden');
+                            document.getElementById('configWrapper').classList.remove('flex');
+                            document.getElementById('loadingOverlay').classList.remove('hidden');
+                            document.getElementById('loadingOverlay').classList.add('flex');
+
+                            let skillsArray = [];
+                            try {
+                                // Tagify stores tags as a JSON parsed array of objects
+                                let parsed = JSON.parse(document.getElementById('skills').value);
+                                skillsArray = parsed.map(t => t.value);
+                            } catch (e) {
+                                // fallback to standard comma separated logic
+                                skillsArray = document.getElementById('skills').value.split(',').map(s => s.trim()).filter(Boolean);
+                            }
+
+                            const payload = {
+                                targetCareer: "<%= role %>",
+                                education: document.getElementById('education').value,
+                                skills: skillsArray,
+                                weekly_hours: document.getElementById('weekly_hours').value,
+                                risk_level: document.getElementById('risk_level').value,
+                                location: document.getElementById('location').value
+                            };
+
+                            fetch('/api/roadmap/generate', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(payload)
+                            })
+                                .then(res => res.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        window.location.reload();
+                                    } else {
+                                        throw new Error(data.error || "Failed to generate roadmap.");
+                                    }
+                                })
+                                .catch(err => {
+                                    // Hide loader, show form and error
+                                    document.getElementById('loadingOverlay').classList.add('hidden');
+                                    document.getElementById('loadingOverlay').classList.remove('flex');
+
+                                    // Return modal back
+                                    document.getElementById('configWrapper').classList.remove('hidden');
+                                    const isNeedsGen = ("<%= needsGeneration %>" === "true");
+                                    if (!isNeedsGen) {
+                                        document.getElementById('configWrapper').classList.add('flex');
+                                    }
+
+                                    const errDiv = document.getElementById('genError');
+                                    errDiv.innerHTML = "<i class='fas fa-exclamation-circle mr-2'></i>" + err.message;
+                                    errDiv.classList.remove('hidden');
+                                });
+                        });
+                    }
+                });
+            </script>
+
+            <% if (!needsGeneration && roadmap) { %>
+                <input type="hidden" id="roadmapId" value="<%= roadmap._id %>">
+
+                <!-- HEADER SECTION -->
+                <%- include('partials/roadmap/header', { roadmap: roadmap }) %>
+
+                    <!-- MAIN CONTENT GRID -->
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-8">
+
+                        <!-- LEFT COLUMN: Timeline (7 cols) -->
+                        <div class="lg:col-span-7 space-y-8">
+                            <%- include('partials/roadmap/estimator', { roadmap: roadmap }) %>
+                                <%- include('partials/roadmap/timeline', { roadmap: roadmap }) %>
+                        </div>
+
+                        <!-- RIGHT COLUMN: Analytics, Projects, Dashboard (5 cols) -->
+                        <div class="lg:col-span-5 space-y-8">
+                            <%- include('partials/roadmap/dashboard', { roadmap: roadmap }) %>
+                                <%- include('partials/roadmap/skill_gap', { roadmap: roadmap }) %>
+                                    <%- include('partials/roadmap/projects', { roadmap: roadmap }) %>
+                                        <%- include('partials/roadmap/salary_graph', { roadmap: roadmap }) %>
+                                            <%- include('partials/roadmap/pivot_suggestions', { roadmap: roadmap }) %>
+                        </div>
+
                     </div>
-                </div>
-                <div class="footer-column">
-                    <h3>Product</h3>
-                    <ul>
-                        <li><a href="#">Career Counseling</a></li>
-                        <li><a href="#">College Finder</a></li>
-                        <li><a href="#">Scholarships</a></li>
-                        <li><a href="#">Projects</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Company</h3>
-                    <ul>
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Careers</a></li>
-                        <li><a href="#">Blog</a></li>
-                        <li><a href="#">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Resources</h3>
-                    <ul>
-                        <li><a href="#">Help Center</a></li>
-                        <li><a href="#">FAQs</a></li>
-                        <li><a href="#">Guides</a></li>
-                        <li><a href="#">Webinars</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Legal</h3>
-                    <ul>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Terms of Service</a></li>
-                        <li><a href="#">Cookie Policy</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 EduNavigator. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+                    <% } %>
+
+        </main>
+
 </body>
 
 </html>

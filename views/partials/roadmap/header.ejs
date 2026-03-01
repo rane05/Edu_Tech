@@ -1,0 +1,78 @@
+<!-- views/partials/roadmap/header.ejs -->
+<div
+    class="glass-card p-6 md:p-8 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6">
+    <!-- Decorative background element -->
+    <div
+        class="absolute -right-20 -top-20 w-64 h-64 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-blob">
+    </div>
+
+    <div class="z-10 flex-1">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-slate-800 tracking-tight mb-2">
+            <%= roadmap.careerTitle %>
+        </h1>
+        <p class="text-lg text-slate-500 max-w-2xl mb-6 leading-relaxed">
+            Your personalized 12-week blueprint to mastering this field based on your current skills and education.
+        </p>
+
+        <div class="flex flex-wrap gap-4">
+            <div class="bg-indigo-50 border border-indigo-100 rounded-lg px-4 py-2 flex items-center shadow-sm">
+                <i class="fas fa-coins text-indigo-500 mr-2 text-lg"></i>
+                <div>
+                    <span class="block text-xs text-indigo-400 font-semibold uppercase tracking-wider">Starting
+                        Salary</span>
+                    <span class="text-slate-700 font-bold">$60k - $80k</span>
+                </div>
+            </div>
+
+            <div class="bg-teal-50 border border-teal-100 rounded-lg px-4 py-2 flex items-center shadow-sm">
+                <i class="fas fa-arrow-trend-up text-teal-500 mr-2 text-lg"></i>
+                <div>
+                    <span class="block text-xs text-teal-400 font-semibold uppercase tracking-wider">Growth Trend</span>
+                    <span class="text-slate-700 font-bold "><i class="fas fa-fire text-orange-400 text-sm mr-1"></i>
+                        Very High</span>
+                </div>
+            </div>
+
+            <div class="bg-slate-50 border border-slate-200 rounded-lg px-4 py-2 flex items-center shadow-sm">
+                <i class="fas fa-robot text-slate-400 mr-2 text-lg"></i>
+                <div>
+                    <span class="block text-xs text-slate-400 font-semibold uppercase tracking-wider">AI Automation
+                        Risk</span>
+                    <span class="text-slate-700 font-bold">Low (<span class="text-green-500">12%</span>)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div
+        class="z-10 shrink-0 text-center bg-white rounded-2xl p-6 shadow-[0px_10px_40px_-10px_rgba(0,0,0,0.1)] border border-slate-100">
+        <div class="relative w-32 h-32 flex items-center justify-center mx-auto mb-2">
+            <!-- Circular Progress SVG -->
+            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="45" fill="none" stroke="#f1f5f9" stroke-width="8"></circle>
+                <% const score=roadmap.overall_suitability_score || 0; const dashArray=2 * Math.PI * 45; const
+                    dashOffset=dashArray * ((100 - score) / 100); %>
+                    <circle cx="50" cy="50" r="45" fill="none" stroke="url(#gradient)" stroke-width="8"
+                        stroke-dasharray="<%= dashArray %>" stroke-dashoffset="<%= dashOffset %>" stroke-linecap="round"
+                        class="transition-all duration-1000 ease-out"></circle>
+                    <defs>
+                        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#6366f1" />
+                            <stop offset="100%" stop-color="#14b8a6" />
+                        </linearGradient>
+                    </defs>
+            </svg>
+            <div class="absolute inset-0 flex flex-col items-center justify-center">
+                <span class="text-3xl font-extrabold text-slate-800">
+                    <%= score %>%
+                </span>
+            </div>
+        </div>
+        <span class="text-sm font-semibold text-slate-500 tracking-wide uppercase">AI Suitability Match</span>
+        <button
+            onclick="document.getElementById('configWrapper').classList.remove('hidden'); document.getElementById('configWrapper').classList.add('flex');"
+            class="mt-4 px-4 py-2 w-full bg-indigo-50 hover:bg-indigo-100 text-indigo-600 border border-indigo-100 text-xs font-bold rounded-lg transition-colors flex items-center justify-center">
+            <i class="fas fa-sliders-h mr-2"></i> Reconfigure
+        </button>
+    </div>
+</div>
