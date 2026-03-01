@@ -186,6 +186,9 @@ app.use(resumeBuilder);
 app.use(require('./routes/cet_search.js')); // Register CET Search
 app.use(require('./routes/jee_search.js')); // Register JEE Search
 app.use(teacherHomeRoutes); // Use teacher home routes
+app.use('/api', require('./routes/api_webinars.js')); // Live webinars API
+app.use('/api/roadmap', require('./routes/api_roadmap.js')); // Real user progress tracking API
+
 
 
 

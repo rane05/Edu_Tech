@@ -35,6 +35,7 @@
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^8.0.0",
     "pdf-parse": "^1.1.1",
-    "ws": "^8.18.0"
+    "ws": "^8.18.0",
+    "yt-search": "^2.13.1"
   }
 }
