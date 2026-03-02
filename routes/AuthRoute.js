@@ -61,6 +61,7 @@ router.post('/login', async (req, res, next) => {
                 console.error("Passport login error:", err);
                 return next(err);
             }
+<<<<<<< Updated upstream
 
 <<<<<<< Updated upstream
         // Redirect based on role
@@ -76,6 +77,13 @@ router.post('/login', async (req, res, next) => {
             req.session.userId = user._id;
             req.session.role = user.role;
 
+=======
+
+            // Maintain manual session variables for legacy routes
+            req.session.userId = user._id;
+            req.session.role = user.role;
+
+>>>>>>> Stashed changes
             req.flash('success', 'Successfully logged in!');
 
             // Redirect based on role
@@ -87,6 +95,9 @@ router.post('/login', async (req, res, next) => {
                 return res.redirect('/teacher_home');
             }
         });
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
     } catch (err) {

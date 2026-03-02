@@ -41,10 +41,13 @@ router.post('/api/cet/predict', async (req, res) => {
         ];
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
         // Apply Location Filter if provided
         if (location && location !== "") {
             query.location = { $regex: new RegExp(location, 'i') };
 =======
+=======
+>>>>>>> Stashed changes
         // --- Fetch from MongoDB ---
         const query = {};
         if (location && location.trim() !== "") {
@@ -235,6 +238,9 @@ router.post('/api/cet/predict', async (req, res) => {
                     gap: (bestNearMiss.cetScore - userScore).toFixed(2)
                 };
             }).filter(Boolean).slice(0, 5);
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         }
 

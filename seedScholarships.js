@@ -2,7 +2,11 @@ const mongoose = require('mongoose');
 
 // Connect to MongoDB
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 mongoose.connect('mongodb+srv://sachinchaurasiya69:606280Sk@tesing.8vhz1.mongodb.net/education', {
+=======
+mongoose.connect('mongodb://127.0.0.1:27017/collegeDB/scholarships', {
+>>>>>>> Stashed changes
 =======
 mongoose.connect('mongodb://127.0.0.1:27017/collegeDB/scholarships', {
 >>>>>>> Stashed changes
