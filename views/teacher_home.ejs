@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 <%- include('layouts/header'); -%>
 <%- include('layouts/tnavbar'); -%>
 <!-- <body class="bg-gray-50 dark:bg-gray-900"> -->
@@ -18,9 +19,111 @@
                         <path class="hidden dark:block" d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
                     </svg>
                 </button>
+=======
+<%- include('layouts/header'); %>
+    <%- include('layouts/tnavbar'); %>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <!-- Premium UI styles for Teacher Dashboard -->
+        <style>
+            :root {
+                --primary: #6366f1;
+                --secondary: #4f46e5;
+                --success: #10b981;
+                --warning: #f59e0b;
+                --card-shadow: 0 4px 25px -5px rgba(0, 0, 0, 0.08);
+            }
+
+            body {
+                background-color: #f3f4f6;
+                color: #1f2937;
+                font-family: 'Inter', sans-serif;
+            }
+
+            .dashboard-card {
+                background: white;
+                border: none;
+                border-radius: 1.25rem;
+                box-shadow: var(--card-shadow);
+                transition: all 0.3s ease;
+            }
+
+            .dashboard-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.1);
+            }
+
+            .gradient-header {
+                background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%);
+                border-radius: 1.25rem;
+            }
+
+            .form-input {
+                background: #f9fafb;
+                border: 1px solid #e5e7eb;
+                border-radius: 0.75rem;
+                padding: 0.6rem 1rem;
+                font-size: 0.875rem;
+                transition: border-color 0.2s;
+            }
+
+            .form-input:focus {
+                border-color: var(--primary);
+                outline: none;
+                background: white;
+            }
+
+            .action-btn {
+                padding: 0.6rem 1.25rem;
+                border-radius: 0.75rem;
+                font-weight: 600;
+                transition: all 0.2s;
+            }
+
+            .student-row {
+                padding: 1rem;
+                border-bottom: 1px solid #f3f4f6;
+                transition: background 0.2s;
+            }
+
+            .student-row:hover {
+                background: #f9fafb;
+            }
+
+            .doubt-card {
+                border-left: 4px solid var(--primary);
+            }
+
+            .doubt-card.answered {
+                border-left-color: var(--success);
+            }
+        </style>
+
+        <div class="container py-5" style="margin-top: 60px; max-width: 1300px;">
+            <!-- Top Header Card -->
+            <div class="dashboard-card gradient-header p-5 text-white mb-5 position-relative overflow-hidden">
+                <div class="position-relative z-1">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <h1 class="display-6 fw-bold mb-1">Welcome, Prof. <%= username %>
+                            </h1>
+                            <p class="opacity-75 fs-5">Campus: <%= collegeName %> | <%= students.length %> Students
+                                        Linked</p>
+                        </div>
+                        <div class="d-none d-md-block">
+                            <button class="btn btn-light btn-sm rounded-pill px-4 fw-bold text-primary">View
+                                Reports</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Decorative Circle -->
+                <div class="position-absolute bg-white opacity-10 rounded-circle"
+                    style="width: 300px; height: 300px; top: -100px; right: -100px;"></div>
+>>>>>>> Stashed changes
             </div>
         </header>
 
+<<<<<<< Updated upstream
         <!-- Search and Filter Section -->
         <div class="bg-white dark:bg-white-200 rounded-lg shadow-lg p-6 mb-6">
             <div class="flex flex-col md:flex-row gap-4">
@@ -179,3 +282,257 @@
         });
     </script>
 <!-- </body> -->
+=======
+            <!-- Main Grid Region -->
+            <div class="row g-4 mb-5">
+                <!-- Class Engagement -->
+                <div class="col-lg-4">
+                    <div class="dashboard-card p-4 h-100">
+                        <h5 class="fw-bold mb-4">Syllabus Coverage</h5>
+                        <div class="text-center py-3">
+                            <canvas id="syllabusChart" width="200" height="200"></canvas>
+                            <div class="mt-4">
+                                <h2 class="fw-bold text-primary mb-0">75%</h2>
+                                <small class="text-muted">Current Term Progress</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Create & Manage Content -->
+                <div class="col-lg-8">
+                    <div class="row g-4">
+                        <!-- Resource Creator (New) -->
+                        <div class="col-md-4">
+                            <div class="dashboard-card p-4 h-100">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h5 class="fw-bold mb-0">📚 Add Resource</h5>
+                                    <i class="fas fa-book-open text-info opacity-50"></i>
+                                </div>
+                                <form action="/addResource" method="POST">
+                                    <div class="mb-3">
+                                        <label class="small fw-bold text-muted mb-1">Resource Title</label>
+                                        <input type="text" name="title" placeholder="e.g., Python Basics PDF"
+                                            class="form-input w-100" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="small fw-bold text-muted mb-1">Short Description/Link</label>
+                                        <textarea name="description" placeholder="Provide a drive link or key notes"
+                                            class="form-input w-100" rows="1"></textarea>
+                                    </div>
+                                    <button type="submit"
+                                        class="action-btn btn-info w-100 border-0 shadow-sm text-white"
+                                        style="background: #0ea5e9;">Share Resource</button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Task Creator -->
+                        <div class="col-md-4">
+                            <div class="dashboard-card p-4 h-100">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h5 class="fw-bold mb-0">📝 Assign Work</h5>
+                                    <i class="fas fa-edit text-primary opacity-50"></i>
+                                </div>
+                                <form action="/addTask" method="POST" class="space-y-3">
+                                    <div class="mb-3">
+                                        <label class="small fw-bold text-muted mb-1">Task Title</label>
+                                        <input type="text" name="title" placeholder="e.g., Math Assignment 1"
+                                            class="form-input w-100" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="small fw-bold text-muted mb-1">Due Date</label>
+                                        <input type="date" name="dueDate" class="form-input w-100" required>
+                                    </div>
+                                    <button type="submit" class="action-btn btn-primary w-100 border-0 shadow-sm"
+                                        style="background: var(--primary);">Post to Class</button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Announcement Creator -->
+                        <div class="col-md-4">
+                            <div class="dashboard-card p-4 h-100">
+                                <div class="d-flex justify-content-between align-items-center mb-4">
+                                    <h5 class="fw-bold mb-0">📢 News Blast</h5>
+                                    <i class="fas fa-bullhorn text-success opacity-50"></i>
+                                </div>
+                                <form action="/addAnnouncement" method="POST">
+                                    <div class="mb-3">
+                                        <label class="small fw-bold text-muted mb-1">Notice Title</label>
+                                        <input type="text" name="title" placeholder="e.g., Exam Postponed"
+                                            class="form-input w-100" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="small fw-bold text-muted mb-1">Post Date</label>
+                                        <input type="date" name="date" class="form-input w-100" required>
+                                    </div>
+                                    <button type="submit" class="action-btn btn-success w-100 border-0 shadow-sm"
+                                        style="background: var(--success);">Broadcast News</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <!-- Student Roster -->
+                <div class="col-lg-8">
+                    <div class="dashboard-card">
+                        <div class="p-4 border-bottom d-flex justify-content-between align-items-center">
+                            <h5 class="fw-bold mb-0">👨‍🎓 Student Roster (<%= collegeName %>)</h5>
+                            <div class="input-group input-group-sm w-auto">
+                                <input type="text" class="form-control rounded-pill px-3"
+                                    placeholder="Search students...">
+                            </div>
+                        </div>
+                        <div class="p-0 overflow-auto" style="max-height: 400px;">
+                            <% if(students.length> 0) { %>
+                                <% students.forEach(student=> { %>
+                                    <div class="student-row d-flex align-items-center justify-content-between">
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="bg-light p-2 rounded-circle"><i
+                                                    class="fas fa-user text-muted"></i></div>
+                                            <div>
+                                                <div class="fw-bold small text-dark">
+                                                    <%= student.fullName %>
+                                                </div>
+                                                <div class="text-muted" style="font-size: 0.7rem;">ID: <%=
+                                                        student.userId.toString().slice(-6) %>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="w-25">
+                                            <div class="d-flex justify-content-between x-small mb-1">
+                                                <span class="text-muted" style="font-size: 0.65rem;">Course
+                                                    Progress</span>
+                                                <span class="fw-bold" style="font-size: 0.65rem;">
+                                                    <%= student.progress %>%
+                                                </span>
+                                            </div>
+                                            <div class="progress-pill">
+                                                <div class="bg-primary h-100" style="width: <%= student.progress %>%">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <button class="btn btn-sm btn-outline-light text-muted border-0"><i
+                                                    class="fas fa-ellipsis-v"></i></button>
+                                        </div>
+                                    </div>
+                                    <% }) %>
+                                        <% } else { %>
+                                            <div class="text-center py-5 text-muted small">No students from your
+                                                institution have joined yet.</div>
+                                            <% } %>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Doubt Management (Replaces static stats) -->
+                <div class="col-lg-4">
+                    <div class="dashboard-card p-4 h-100">
+                        <h5 class="fw-bold mb-4">💬 Student Doubts</h5>
+                        <div class="overflow-auto px-1" style="max-height: 580px;">
+                            <% if(doubts && doubts.length> 0) { %>
+                                <% doubts.forEach(doubt=> { %>
+                                    <div
+                                        class="doubt-card mb-4 p-3 bg-light rounded-3 shadow-sm <%= doubt.status === 'answered' ? 'answered' : '' %>">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <div>
+                                                <span class="badge bg-indigo-soft text-primary x-small mb-1"
+                                                    style="background: #eef2ff;">By: <%= doubt.studentId?.username
+                                                        || 'Unknown' %></span>
+                                            </div>
+                                            <span class="text-muted" style="font-size: 0.65rem;">
+                                                <%= new Date(doubt.createdAt).toLocaleDateString() %>
+                                            </span>
+                                        </div>
+                                        <h6 class="fw-bold mb-1 text-dark small">
+                                            <%= doubt.title %>
+                                        </h6>
+                                        <p class="text-muted mb-3" style="font-size: 0.75rem;">
+                                            <%= doubt.description %>
+                                        </p>
+
+                                        <% if(doubt.status==='pending' ) { %>
+                                            <div class="mt-2 pt-2 border-top">
+                                                <form action="/replyDoubt" method="POST">
+                                                    <input type="hidden" name="doubtId" value="<%= doubt._id %>">
+                                                    <div class="input-group input-group-sm">
+                                                        <input type="text" name="reply"
+                                                            placeholder="Share your insight..."
+                                                            class="form-control form-input border-0 bg-white"
+                                                            style="font-size: 0.75rem;" required>
+                                                        <button type="submit"
+                                                            class="btn btn-primary d-flex align-items-center">
+                                                            <i class="fas fa-paper-plane"></i>
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <% } else { %>
+                                                <div
+                                                    class="bg-white p-2 border-start border-success border-4 rounded small shadow-sm">
+                                                    <div class="fw-bold text-success mb-1" style="font-size: 0.65rem;">
+                                                        My Reply:</div>
+                                                    <div class="text-dark" style="font-size: 0.7rem;">
+                                                        <%= doubt.teacherReply %>
+                                                    </div>
+                                                </div>
+                                                <% } %>
+                                    </div>
+                                    <% }) %>
+                                        <% } else { %>
+                                            <div class="text-center py-5 text-muted">
+                                                <i class="fas fa-comments fs-1 opacity-10 mb-3 d-block"></i>
+                                                <p class="small">No doubts yet! Students will see your expertise here
+                                                    when they ask questions.</p>
+                                            </div>
+                                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // Syllabus Doughnut Chart
+            new Chart(document.getElementById('syllabusChart'), {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [75, 25],
+                        backgroundColor: ['#6366f1', '#f3f4f6'],
+                        borderWidth: 0,
+                        cutout: '80%'
+                    }]
+                },
+                options: {
+                    responsive: false,
+                    plugins: { legend: { display: false }, tooltip: { enabled: false } }
+                }
+            });
+
+            // Performance Bar Chart
+            new Chart(document.getElementById('performanceChart'), {
+                type: 'bar',
+                data: {
+                    labels: ['Math', 'Sci', 'Eng', 'Art'],
+                    datasets: [{
+                        label: 'Avg Score',
+                        data: [42, 55, 38, 48],
+                        backgroundColor: 'rgba(99, 102, 241, 0.6)',
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } }
+                }
+            });
+        </script>
+
+        <%- include('layouts/footer'); -%>
+>>>>>>> Stashed changes

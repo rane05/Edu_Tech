@@ -26,15 +26,21 @@ router.get("/studentlist", async (req, res) => {
             return res.status(404).send("User not found");
         }
 
-        // Fetch the teacher's profile using fullName from TeacherProfile.js
-        const teacherProfile = await TeacherProfile.findOne({ fullName: user.username });
+        const teacherProfile = await TeacherProfile.findOne({ userId });
 
         if (!teacherProfile) {
-            return res.render("student_list", { students: [] });
+            console.log("Teacher profile missing for student list:", userId);
+            return res.render("student_list", {
+                students: [],
+                username: user.username,
+                collegeName: "Not Set"
+            });
         }
 
         // Fetch students from Profile.js who belong to the same college as the teacher
         const students = await StudentProfile.find({ collegeName: teacherProfile.collegeName });
+
+        console.log(`Found ${students.length} students for college: ${teacherProfile.collegeName}`);
 
         // Fetch student details
         const studentList = students.map((student, index) => ({
@@ -46,7 +52,11 @@ router.get("/studentlist", async (req, res) => {
             profileImage: student.profileImage || "/images/default-profile.png"
         }));
 
-        res.render("student_list", { students: studentList });
+        res.render("student_list", {
+            students: studentList,
+            username: user.username,
+            collegeName: teacherProfile.collegeName
+        });
     } catch (err) {
         console.error(err);
         res.redirect("/");

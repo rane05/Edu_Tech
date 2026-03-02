@@ -1,0 +1,49 @@
+================================================================================
+          EDU_TECH: TEACHER-STUDENT INSTITUTIONAL CONNECTION GUIDE
+================================================================================
+
+This guide explains how the newly implemented Teacher-Student connection works 
+within the Edu_Tech platform. Linking is handled automatically based on the 
+"College Name" provided in profiles.
+
+---
+STEP 1: ROLE-BASED LOGIN
+---
+- Navigate to the login page.
+- Use the new "Role Selector" to choose either 'Student' or 'Teacher'.
+- Log in with your credentials.
+
+---
+STEP 2: PROFILE SETUP (THE LINKING THREAD)
+---
+The connection is established using the "College Name" field:
+- TEACHERS: Must complete their profile at /teacher_profile and specify their 
+  College/School.
+- STUDENTS: Must complete their profile at /profile and specify the SAME 
+  College/School name.
+
+---
+STEP 3: TEACHER ACTIONS (POSTING WORK)
+---
+On the Teacher Dashboard (/teacher_home):
+1. Use the "Tasks" section to assign work (e.g., "Math Assignment 1").
+2. Use the "Announcements" section to post news (e.g., "Holiday on Monday").
+3. When saved, these are automatically broadcasted ONLY to students of the 
+   same college.
+
+---
+STEP 4: STUDENT VIEW (THE ECOSYSTEM)
+---
+On the Student Dashboard (/dashboard), a new section "My Campus Connection" 
+automatically displays:
+1. OUR TEACHERS: A directory of all teachers registered from the student's college.
+2. ASSIGNED WORK: A list of tasks posted by those teachers.
+3. ANNOUNCEMENTS: Real-time updates from their college faculty.
+
+---
+TECHNICAL OVERVIEW
+---
+- Database Model: 'TeacherWork' schema now tracks 'collegeName' and 'teacherId'.
+- Security: Redirections and data fetching are scoped by session roles and 
+  institutional identifiers to ensure privacy between different schools.
+================================================================================

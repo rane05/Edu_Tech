@@ -207,12 +207,7 @@ app.get('/parent_home', (req, res) => {
     res.render('parent_home');
 });
 
-app.get('/teacher_home', (req, res) => {
-    if (req.session.role !== 'teacher') {
-        return res.redirect('/login');
-    }
-    res.render('teacher_home');
-});
+// Redundant routes removed - now handled by specialized route controllers.
 
 
 

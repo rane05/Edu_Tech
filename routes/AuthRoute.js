@@ -41,7 +41,7 @@ router.get('/login', (req, res) => {
 });
 
 // Login POST request
-router.post('/login', async (req, res) => {
+router.post('/login', async (req, res, next) => {
     try {
         const { username, password, role } = req.body;
 
@@ -55,9 +55,14 @@ router.post('/login', async (req, res) => {
             return res.status(401).send('Invalid credentials');
         }
 
-        req.session.userId = user._id;
-        req.session.role = user.role;
+        // Use Passport's logIn method to establish a session
+        req.logIn(authedUser, (err) => {
+            if (err) {
+                console.error("Passport login error:", err);
+                return next(err);
+            }
 
+<<<<<<< Updated upstream
         // Redirect based on role
         if (role === 'student') {
             return res.redirect('/');
@@ -66,6 +71,23 @@ router.post('/login', async (req, res) => {
         } else if (role === 'teacher') {
             return res.redirect('/teacher_home');
         }
+=======
+            // Maintain manual session variables for legacy routes
+            req.session.userId = user._id;
+            req.session.role = user.role;
+
+            req.flash('success', 'Successfully logged in!');
+
+            // Redirect based on role
+            if (user.role === 'student') {
+                return res.redirect('/');
+            } else if (user.role === 'parent') {
+                return res.redirect('/parent_home');
+            } else if (user.role === 'teacher') {
+                return res.redirect('/teacher_home');
+            }
+        });
+>>>>>>> Stashed changes
 
     } catch (err) {
         console.error("Login error:", err);

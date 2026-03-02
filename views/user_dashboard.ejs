@@ -2,92 +2,389 @@
     <%- include('layouts/navbar'); %>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-        <div class="container" style="margin-top: 40px;">
-            <h2>📊 My Performance Dashboard</h2>
+        <!-- Premium UI styles -->
+        <style>
+            :root {
+                --primary: #4f46e5;
+                --primary-soft: #eef2ff;
+                --success: #10b981;
+                --warning: #f59e0b;
+                --danger: #ef4444;
+                --glass-bg: rgba(255, 255, 255, 0.9);
+                --card-shadow: 0 4px 20px -5px rgba(0, 0, 0, 0.08);
+                --resource: #0ea5e9;
+                --doubt: #8b5cf6;
+            }
 
-            <!-- Stats Cards -->
-            <div class="row mb-4">
-                <div class="col-md-4">
-                    <div class="card bg-primary text-white p-3">
-                        <h3>
-                            <%= stats.bestScore %> / 60
-                        </h3>
-                        <p>All-Time Best Score</p>
-                    </div>
+            body {
+                background-color: #f8fafc;
+                color: #1e293b;
+                font-family: 'Inter', sans-serif;
+            }
+
+            .dashboard-card {
+                background: white;
+                border: 1px solid rgba(0, 0, 0, 0.04);
+                border-radius: 1rem;
+                box-shadow: var(--card-shadow);
+                transition: transform 0.2s ease, box-shadow 0.2s ease;
+            }
+
+            .dashboard-card:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            }
+
+            .stat-icon {
+                width: 3rem;
+                height: 3rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 0.75rem;
+                font-size: 1.25rem;
+            }
+
+            .profile-progress-bar {
+                height: 0.6rem;
+                background-color: #e2e8f0;
+                border-radius: 1rem;
+                overflow: hidden;
+            }
+
+            .teacher-mini-card {
+                padding: 0.85rem;
+                border-radius: 0.75rem;
+                background: #f8fafc;
+                margin-bottom: 0.75rem;
+                display: flex;
+                align-items: center;
+                gap: 0.85rem;
+                border-left: 4px solid var(--primary);
+                transition: all 0.2s;
+            }
+
+            .teacher-mini-card:hover {
+                background: #f1f5f9;
+                transform: scale(1.02);
+            }
+
+            .task-item {
+                border-left: 4px solid var(--warning);
+                margin-bottom: 1rem;
+                padding: 1rem;
+                background: white;
+                border-radius: 0.5rem;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            }
+
+            .announcement-item {
+                border-left: 4px solid var(--success);
+                background: rgba(236, 253, 245, 0.5);
+                padding: 1rem;
+                border-radius: 0.5rem;
+                margin-bottom: 1rem;
+            }
+
+            .section-header i {
+                font-size: 1.2rem;
+            }
+        </style>
+
+        <div class="container py-5" style="margin-top: 60px; max-width: 1250px;">
+            <!-- Header & Profile Completion -->
+            <div class="row align-items-center mb-5 g-4">
+                <div class="col-lg-7">
+                    <h1 class="display-5 fw-bold mb-2">Welcome Back, <%= user.username %> 👋</h1>
+                    <p class="text-muted fs-5">Track your progress and stay connected with your institution.</p>
                 </div>
-                <div class="col-md-4">
-                    <div class="card bg-success text-white p-3">
-                        <h3>
-                            <%= stats.avgScore %>
-                        </h3>
-                        <p>Average Score</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card bg-info text-white p-3">
-                        <h3>
-                            <%= stats.totalAttempts %>
-                        </h3>
-                        <p>Total Quizzes Taken</p>
+                <div class="col-lg-5">
+                    <div class="dashboard-card p-4 border-primary border-opacity-10">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="fw-bold text-gray-700">Profile Readiness</span>
+                            <span class="text-primary fw-bold">
+                                <%= stats.profileCompletion %>%
+                            </span>
+                        </div>
+                        <div class="profile-progress-bar">
+                            <div class="bg-primary h-100" style="width: <%= stats.profileCompletion %>%"></div>
+                        </div>
+                        <div class="d-flex justify-content-between mt-2">
+                            <small class="text-muted">Keep your profile updated for better recommendations.</small>
+                            <a href="/profile" class="btn btn-sm btn-link p-0 text-decoration-none fw-bold">Edit →</a>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Charts -->
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="card p-3">
-                        <h5>📈 Progress Trend</h5>
-                        <canvas id="scoreChart"></canvas>
+            <!-- Stats Bar -->
+            <div class="row g-4 mb-5">
+                <div class="col-md-4">
+                    <div class="dashboard-card p-4 d-flex align-items-center gap-4">
+                        <div class="stat-icon" style="background: #eef2ff; color: #4f46e5;">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small fw-medium">Best Score</div>
+                            <div class="h3 fw-bold mb-0 text-dark">
+                                <%= stats.bestScore %><span class="fs-6 text-muted">/60</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card p-3">
-                        <h5>🎯 Recent History</h5>
-                        <ul class="list-group list-group-flush">
-                            <% results.slice(-5).reverse().forEach(r=> { %>
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span>
+                    <div class="dashboard-card p-4 d-flex align-items-center gap-4">
+                        <div class="stat-icon" style="background: #ecfdf5; color: #10b981;">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small fw-medium">Average Success</div>
+                            <div class="h3 fw-bold mb-0 text-dark">
+                                <%= stats.avgScore %><span class="fs-6 text-muted">%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="dashboard-card p-4 d-flex align-items-center gap-4">
+                        <div class="stat-icon" style="background: #fef3c7; color: #d97706;">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <div>
+                            <div class="text-muted small fw-medium">Total Attempts</div>
+                            <div class="h3 fw-bold mb-0 text-dark">
+                                <%= stats.totalAttempts %>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-5">
+                <!-- Main Content Area -->
+                <div class="col-lg-8">
+                    <!-- Analytics Card -->
+                    <div class="dashboard-card p-4 mb-5">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="fw-bold mb-0">📈 Performance Analytics</h5>
+                            <div class="btn-group">
+                                <a href="/smart-quiz" class="btn btn-sm btn-primary rounded-pill px-4">Take Quiz</a>
+                            </div>
+                        </div>
+                        <canvas id="scoreChart" style="max-height: 320px;"></canvas>
+                    </div>
+
+                    <!-- Campus Feed Section -->
+                    <div class="section-header d-flex align-items-center gap-3 mb-4">
+                        <div class="p-2 bg-indigo-100 rounded-lg text-primary" style="background: #eef2ff;"><i
+                                class="fas fa-university"></i></div>
+                        <h4 class="fw-bold mb-0">Campus Updates: <%= (profile && profile.collegeName &&
+                                profile.collegeName !=='N/A' ) ? profile.collegeName : 'Global Feed' %>
+                        </h4>
+                    </div>
+
+                    <div class="row g-4">
+                        <!-- Assignments -->
+                        <div class="col-md-6">
+                            <div class="dashboard-card p-4 h-100">
+                                <h5 class="fw-bold mb-4 d-flex justify-content-between align-items-center">
+                                    <span>📝 Tasks</span>
+                                    <span class="badge rounded-pill bg-warning bg-opacity-10 text-warning px-3"
+                                        style="font-size: 0.75rem;">
+                                        <%= feed.tasks.length %> Active
+                                    </span>
+                                </h5>
+                                <div class="task-list">
+                                    <% if (feed.tasks.length> 0) { %>
+                                        <% feed.tasks.forEach(task=> { %>
+                                            <div class="task-item">
+                                                <div class="d-flex justify-content-between align-items-start mb-1">
+                                                    <div class="fw-bold text-dark">
+                                                        <%= task.title %>
+                                                    </div>
+                                                    <span class="text-warning" style="font-size: 0.7rem;"><i
+                                                            class="fas fa-clock"></i></span>
+                                                </div>
+                                                <div class="text-muted small mt-1">
+                                                    Due: <%= task.dueDate %>
+                                                </div>
+                                            </div>
+                                            <% }); %>
+                                                <% } else { %>
+                                                    <div class="text-center py-5">
+                                                        <img src="https://illustrations.popsy.co/amber/list-is-empty.svg"
+                                                            style="width: 80px;" class="mb-3 opacity-50">
+                                                        <p class="text-muted small">No pending assignments</p>
+                                                    </div>
+                                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Resources -->
+                        <div class="col-12">
+                            <div class="dashboard-card p-4">
+                                <h5 class="fw-bold mb-4">📚 Resource Library</h5>
+                                <div class="row g-3">
+                                    <% if (feed.resources.length> 0) { %>
+                                        <% feed.resources.forEach(res=> { %>
+                                            <div class="col-md-6">
+                                                <div
+                                                    class="p-3 bg-light rounded-lg h-100 border border-info border-2 border-opacity-10">
+                                                    <div class="d-flex justify-content-between align-items-start">
+                                                        <div class="fw-bold text-dark">
+                                                            <%= res.title %>
+                                                        </div>
+                                                        <span class="badge bg-info bg-opacity-10 text-info">NEW</span>
+                                                    </div>
+                                                    <p class="text-muted small mt-2 mb-0">
+                                                        <%= res.description %>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <% }); %>
+                                                <% } else { %>
+                                                    <div class="text-center py-4 w-100">
+                                                        <p class="text-muted italic small">No shared study materials
+                                                            yet.</p>
+                                                    </div>
+                                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar Area -->
+                <div class="col-lg-4">
+                    <!-- Doubt Master & Faculty Search -->
+                    <div class="dashboard-card p-4 mb-4"
+                        style="background: linear-gradient(to bottom, #ffffff, #fafaff);">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="fw-bold mb-0">💬 Doubt Box</h5>
+                            <i class="fas fa-comment-dots text-primary opacity-50"></i>
+                        </div>
+
+                        <form action="/ask-doubt" method="POST" class="mb-4">
+                            <div class="mb-3">
+                                <select name="teacherId" class="form-select form-select-sm" required>
+                                    <option value="" disabled selected>Select a Teacher</option>
+                                    <% feed.teachers.forEach(t=> { %>
+                                        <option value="<%= t.userId %>">
+                                            <%= t.fullName %>
+                                        </option>
+                                        <% }); %>
+                                </select>
+                            </div>
+                            <div class="mb-2">
+                                <input type="text" name="title" placeholder="Topic e.g., Integral Doubt"
+                                    class="form-control form-control-sm" required>
+                            </div>
+                            <div class="mb-3">
+                                <textarea name="description" placeholder="Describe your doubt briefly..."
+                                    class="form-control form-control-sm" rows="2" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-sm w-100 rounded-pill shadow-sm">Ask
+                                Question</button>
+                        </form>
+
+                        <div class="divider">My Recent Doubts</div>
+                        <div class="teacher-list overflow-auto" style="max-height: 250px;">
+                            <% if (feed.doubts.length> 0) { %>
+                                <% feed.doubts.forEach(d=> { %>
+                                    <div class="p-3 mb-3 rounded-lg border <%= d.status === 'pending' ? 'border-warning-subtle bg-warning-subtle bg-opacity-10' : 'border-success-subtle bg-success-subtle bg-opacity-10' %>"
+                                        style="font-size: 0.75rem;">
+                                        <div class="d-flex justify-content-between mb-1">
+                                            <span class="fw-bold">
+                                                <%= d.title %>
+                                            </span>
+                                            <span
+                                                class="badge rounded-pill <%= d.status === 'pending' ? 'bg-warning' : 'bg-success' %> text-white">
+                                                <%= d.status %>
+                                            </span>
+                                        </div>
+                                        <div class="text-muted">
+                                            <%= d.description %>
+                                        </div>
+                                        <% if(d.status==='answered' ) { %>
+                                            <div class="mt-2 p-2 bg-white rounded border shadow-sm">
+                                                <strong class="text-success">Reply:</strong>
+                                                <%= d.teacherReply %>
+                                            </div>
+                                            <% } %>
+                                    </div>
+                                    <% }); %>
+                                        <% } else { %>
+                                            <div class="text-center py-4 text-muted small italic">No doubts yet. Be the
+                                                first to ask!</div>
+                                            <% } %>
+                        </div>
+                    </div>
+
+                    <!-- Quiz Recap -->
+                    <div class="dashboard-card p-4">
+                        <h5 class="fw-bold mb-4">🎯 Recent Activity</h5>
+                        <div class="timeline ps-3 border-start">
+                            <% results.slice(-4).reverse().forEach(r=> { %>
+                                <div class="mb-4 position-relative">
+                                    <div class="position-absolute translate-middle-x"
+                                        style="left: -17px; top: 5px; width: 8px; height: 8px; border-radius: 50%; background: var(--primary);">
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span class="fw-bold small">Quiz Complete</span>
+                                        <span class="badge bg-soft-primary text-primary" style="background: #eef2ff;">
+                                            <%= r.score %> pts
+                                        </span>
+                                    </div>
+                                    <div class="text-muted" style="font-size: 0.75rem;">
                                         <%= new Date(r.date).toLocaleDateString() %>
-                                    </span>
-                                    <span class="badge bg-primary rounded-pill">
-                                        <%= r.score %>
-                                    </span>
-                                </li>
+                                    </div>
+                                </div>
                                 <% }); %>
-                        </ul>
+                        </div>
+                        <a href="/smart-quiz" class="btn btn-outline-primary w-100 mt-2">View Full History</a>
                     </div>
                 </div>
             </div>
-
-            <div class="text-center mt-4">
-                <a href="/smart-quiz" class="btn btn-lg btn-outline-primary">➜ Take New Quiz</a>
-            </div>
-
         </div>
 
         <script>
-            const ctx = document.getElementById('scoreChart').getContext('2d');
-            const dataPoints = <% - JSON.stringify(results.map(r => r.score)) %>;
-            const labels = <% - JSON.stringify(results.map((r, i) => `Attempt ${i + 1}`)) %>;
+            document.addEventListener('DOMContentLoaded', function () {
+                const ctx = document.getElementById('scoreChart').getContext('2d');
+                const dataPoints = <% - JSON.stringify(results.map(r => r.score)) %>;
+                const labels = <% - JSON.stringify(results.map((r, i) => `Test ${i + 1}`)) %>;
 
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Quiz Score',
-                        data: dataPoints,
-                        borderColor: '#6366f1',
-                        tension: 0.3,
-                        fill: true,
-                        backgroundColor: 'rgba(99, 102, 241, 0.1)'
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: { beginAtZero: true, max: 60 }
-                    }
+                if (dataPoints.length > 0) {
+                    new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Performance Score',
+                                data: dataPoints,
+                                borderColor: '#4f46e5',
+                                backgroundColor: 'rgba(79, 70, 229, 0.08)',
+                                tension: 0.4,
+                                fill: true,
+                                pointBackgroundColor: '#4f46e5',
+                                pointBorderColor: '#fff',
+                                pointHoverRadius: 6
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: { display: false }
+                            },
+                            scales: {
+                                y: { beginAtZero: true, max: 60, grid: { color: 'rgba(0,0,0,0.03)' } },
+                                x: { grid: { display: false } }
+                            }
+                        }
+                    });
                 }
             });
         </script>
+
+        <%- include('layouts/footer'); -%>

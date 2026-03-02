@@ -40,9 +40,202 @@ router.post('/api/cet/predict', async (req, res) => {
             { location: null }
         ];
 
+<<<<<<< Updated upstream
         // Apply Location Filter if provided
         if (location && location !== "") {
             query.location = { $regex: new RegExp(location, 'i') };
+=======
+        // --- Fetch from MongoDB ---
+        const query = {};
+        if (location && location.trim() !== "") {
+            const locRegex = new RegExp(location, 'i');
+            query.$or = [
+                { location: locRegex },
+                { name: locRegex }
+            ];
+        }
+
+        // Fetch colleges that have at least one branch with a matching cutoff category and score
+        // This pre-filters the data significantly
+        const matchingColleges = await College.find({
+            ...query,
+            'branches.cutoffs': {
+                $elemMatch: {
+                    category: { $in: searchCategories },
+                    cetScore: { $lte: userScore }
+                }
+            }
+        }).lean();
+
+        // --- Process Results ---
+        const results = matchingColleges.map(college => {
+            const branchesVal = Array.isArray(college.branches)
+                ? college.branches
+                : Object.values(college.branches);
+
+            const eligibleBranches = branchesVal.map(b => {
+                // Filter cutoffs
+                const qualifyingCutoffs = b.cutoffs.filter(c =>
+                    searchCategories.includes(c.category) && c.cetScore <= userScore
+                );
+                if (qualifyingCutoffs.length === 0) return null;
+
+                // Sort: Newest Year -> Latest Round -> Highest Score
+                qualifyingCutoffs.sort((a, b) => {
+                    if (b.year !== a.year) return b.year - a.year;
+                    return b.round - a.round;
+                });
+
+                // Branch Name Filter
+                if (branch && branch.trim() !== "") {
+                    const bName = b.name.toLowerCase();
+                    const filter = branch.toLowerCase();
+                    if (filter === 'cs' || filter === 'computer') {
+                        if (!bName.includes('computer') && !bName.includes('data science') && !bName.includes('artificial')) return null;
+                    } else if (filter === 'it') {
+                        if (!bName.includes('information') && !bName.includes('it')) return null;
+                    } else if (filter === 'entc' || filter === 'electronics') {
+                        if (!bName.includes('electronics') && !bName.includes('e&tc')) return null;
+                    } else if (!bName.includes(filter)) {
+                        return null;
+                    }
+                }
+
+                // Update: Capture data for each round
+                const roundData = {};
+                qualifyingCutoffs.forEach(c => {
+                    const roundKey = `Round ${c.round}`;
+                    if (!roundData[roundKey]) {
+                        // Calculation logic per round
+                        const roundGap = userScore - c.cetScore;
+                        let rFit, rType, rBadge;
+                        if (roundGap > 5) {
+                            rFit = Math.min(99, Math.round(85 + (roundGap / 2)));
+                            rType = 'Safe';
+                            rBadge = 'badge-success-soft';
+                        } else if (roundGap >= 2) {
+                            rFit = Math.round(70 + roundGap * 5);
+                            rType = 'Moderate';
+                            rBadge = 'badge-warning-soft';
+                        } else {
+                            rFit = Math.round(60 + roundGap * 10);
+                            rType = 'Dream';
+                            rBadge = 'badge-danger-soft';
+                        }
+                        roundData[roundKey] = {
+                            score: c.cetScore,
+                            year: c.year,
+                            fitScore: rFit,
+                            type: rType,
+                            badgeClass: rBadge
+                        };
+                    }
+                });
+
+                const bestMatch = qualifyingCutoffs[0];
+
+                // Trend Data
+                const yearlyData = {};
+                qualifyingCutoffs.forEach(c => {
+                    const key = `${c.year}-R${c.round}`;
+                    if (!yearlyData[key]) yearlyData[key] = c.cetScore;
+                });
+
+                // Overall Calculation logic (based on latest round best match)
+                const gap = userScore - bestMatch.cetScore;
+                let fitScore, type, badgeClass;
+                if (gap > 5) {
+                    fitScore = Math.min(99, Math.round(85 + (gap / 2)));
+                    type = 'Safe';
+                    badgeClass = 'badge-success-soft';
+                } else if (gap >= 2) {
+                    fitScore = Math.round(70 + gap * 5);
+                    type = 'Moderate';
+                    badgeClass = 'badge-warning-soft';
+                } else {
+                    fitScore = Math.round(60 + gap * 10);
+                    type = 'Dream';
+                    badgeClass = 'badge-danger-soft';
+                }
+
+                return {
+                    name: b.name,
+                    cutoff: bestMatch.cetScore,
+                    year: bestMatch.year,
+                    round: bestMatch.round,
+                    trend: yearlyData,
+                    roundData: roundData, // Added rounds data
+                    category: bestMatch.category,
+                    fitScore, type, badgeClass
+                };
+            }).filter(Boolean);
+
+            if (eligibleBranches.length === 0) return null;
+
+            // College-level stats
+            const topBranches = eligibleBranches.sort((a, b) => b.fitScore - a.fitScore).slice(0, 3);
+            const avgFit = Math.round(topBranches.reduce((sum, b) => sum + b.fitScore, 0) / topBranches.length);
+            const bestType = topBranches[0].type;
+            const bestBadge = topBranches[0].badgeClass;
+
+            return {
+                name: college.name,
+                location: college.location || "Maharashtra",
+                branches: eligibleBranches,
+                fitScore: avgFit,
+                type: bestType,
+                badgeClass: bestBadge
+            };
+        }).filter(Boolean);
+
+        // Sort by Fit Score High -> Low
+        results.sort((a, b) => b.fitScore - a.fitScore);
+
+        // Limit results to top 100
+        const limitedResults = results.slice(0, 100);
+
+        // --- Similar Colleges Logic ---
+        let similarColleges = [];
+        if (limitedResults.length < 10) {
+            // Find colleges where lowest eligible cutoff is slightly > userScore
+            const slightlyAboveColleges = await College.find({
+                ...query,
+                'branches.cutoffs': {
+                    $elemMatch: {
+                        category: { $in: searchCategories },
+                        cetScore: { $gt: userScore, $lte: userScore + 5 }
+                    }
+                }
+            }).limit(20).lean();
+
+            similarColleges = slightlyAboveColleges.map(c => {
+                const branchesVal = Array.isArray(c.branches) ? c.branches : Object.values(c.branches);
+                const matchingBranch = branchesVal.find(b => {
+                    return b.cutoffs.some(cu =>
+                        searchCategories.includes(cu.category) &&
+                        cu.cetScore > userScore &&
+                        cu.cetScore <= userScore + 5
+                    );
+                });
+
+                if (!matchingBranch) return null;
+
+                const relevantCutoffs = matchingBranch.cutoffs
+                    .filter(cu => searchCategories.includes(cu.category) && cu.cetScore > userScore && cu.cetScore <= userScore + 5)
+                    .sort((a, b) => a.cetScore - b.cetScore);
+
+                if (relevantCutoffs.length === 0) return null;
+                const bestNearMiss = relevantCutoffs[0];
+
+                return {
+                    name: c.name,
+                    location: c.location || 'Maharashtra',
+                    branch: matchingBranch.name,
+                    cutoff: bestNearMiss.cetScore,
+                    gap: (bestNearMiss.cetScore - userScore).toFixed(2)
+                };
+            }).filter(Boolean).slice(0, 5);
+>>>>>>> Stashed changes
         }
 
         console.log("CET Query:", JSON.stringify(query, null, 2));
@@ -100,3 +293,4 @@ router.post('/api/cet/predict', async (req, res) => {
 });
 
 module.exports = router;
+

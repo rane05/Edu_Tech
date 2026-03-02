@@ -53,7 +53,36 @@
                                             <h6 class="card-subtitle mb-2 text-muted"><i
                                                     class="fas fa-map-marker-alt"></i>
                                                 <%= college.location %>
+<<<<<<< Updated upstream
                                             </h6>
+=======
+                                            </p>
+
+                                                                                        <!-- Eligible Branches & Rounds -->
+                                            <small class="text-uppercase text-secondary fw-bold"
+                                                style="font-size:0.7rem">Eligible Branches & Rounds (R1, R2, R3)</small>
+                                            <div class="d-flex flex-column gap-2 mt-1">
+                                                <% college.branches.slice(0, 3).forEach(b=> { %>
+                                                    <div class="p-2 border rounded-3 bg-light branch-chip" style="cursor:pointer"
+                                                         data-college="<%- college.name.replace(/"/g,'&quot;') %>"
+                                                         data-branch="<%- b.name.replace(/"/g,'&quot;') %>"
+                                                         data-trend="<%- JSON.stringify(b.trend || {}).replace(/"/g,'&quot;') %>">
+                                                        <div class="fw-bold text-dark small mb-1"><%= b.name %></div>
+                                                        <div class="d-flex flex-wrap gap-2">
+                                                            <% for(let roundKey in b.roundData) { %>
+                                                                <div class="bg-white px-2 py-1 rounded border shadow-sm d-flex align-items-center gap-1">
+                                                                    <span class="text-primary fw-bold" style="font-size:0.7rem"><%= roundKey %>:</span>
+                                                                    <span class="text-dark fw-bold" style="font-size:0.75rem"><%= b.roundData[roundKey].score.toFixed(2) %>%</span>
+                                                                    <span class="<%= b.roundData[roundKey].badgeClass %>" style="font-size:0.6rem; padding: 1px 4px;"><%= b.roundData[roundKey].type %></span>
+                                                                </div>
+                                                            <% } %>
+                                                        </div>
+                                                    </div>                                                <% }); %>
+                                                <% if (college.branches.length > 3) { %>
+                                                    <small class="text-muted ps-1">+<%= college.branches.length - 3 %> more branches available</small>
+                                                <% } %>
+                                            </div>
+>>>>>>> Stashed changes
                                         </div>
                                         <span class="badge bg-success">
                                             <%= college.rating %> ★
@@ -79,6 +108,7 @@
                                     </div>
                                 </div>
                             </div>
+<<<<<<< Updated upstream
                             <% }); %>
                                 <% } else if(locals.results) { %>
                                     <div class="alert alert-warning">No colleges found matching your criteria. Try
@@ -92,3 +122,144 @@
                 </div>
             </div>
         </div>
+=======
+                        <% }); %>
+                    </div>
+                    <% } %>
+
+                <% } else { %>
+                    <div class="text-center py-5 glass-card">
+                        <i class="fas fa-rocket fa-4x text-primary mb-4 opacity-50"></i>
+                        <h3>Ready to predict your future?</h3>
+                        <p class="text-muted">Enter your CET details on the left to get AI-powered recommendations.</p>
+                    </div>
+                <% } %>
+            </div>
+
+            <!-- ===== RIGHT: Analytics Panel ===== -->
+            <div class="col-lg-3 d-none d-lg-block">
+                <div class="analytics-panel sticky-top" style="top: 80px;">
+
+                    <% if (locals.results && results.length > 0) { %>
+                    <h6 class="fw-bold mb-2">Admission Overview</h6>
+                    <div class="d-flex justify-content-around text-center mb-3">
+                        <div>
+                            <% var safeLen = results.filter(function(r){ return r.type===' Safe'; }).length; %>
+                                                                <div class="fw-bold text-success h5 mb-0">
+                                                                    <%= safeLen %>
+                                                                </div>
+                                                                <small class="text-muted">Safe</small>
+                                                    </div>
+                                                    <div>
+                                                        <% var modLen=results.filter(function(r){ return
+                                                            r.type==='Moderate' ; }).length; %>
+                                                            <div class="fw-bold text-warning h5 mb-0">
+                                                                <%= modLen %>
+                                                            </div>
+                                                            <small class="text-muted">Moderate</small>
+                                                    </div>
+                                                    <div>
+                                                        <% var drmLen=results.filter(function(r){ return
+                                                            r.type==='Dream' ; }).length; %>
+                                                            <div class="fw-bold text-danger h5 mb-0">
+                                                                <%= drmLen %>
+                                                            </div>
+                                                            <small class="text-muted">Dream</small>
+                                                    </div>
+                                                </div>
+                                                <div class="progress mb-1" style="height:8px">
+                                                    <% var safeP=Math.round(safeLen / results.length * 100); %>
+                                                        <% var modP=Math.round(modLen / results.length * 100); %>
+                                                            <% var drmP=Math.round(drmLen / results.length * 100); %>
+                                                                <div class="progress-bar bg-success"
+                                                                    style="width:<%= safeP %>%"></div>
+                                                                <div class="progress-bar bg-warning"
+                                                                    style="width:<%= modP %>%"></div>
+                                                                <div class="progress-bar bg-danger"
+                                                                    style="width:<%= drmP %>%"></div>
+                                                </div>
+                                                <small class="text-muted d-block mb-3">Distribution of <%=
+                                                        results.length %> results</small>
+                                                <hr>
+                                                <% } %>
+
+                                                    <h6 class="fw-bold mb-3">Branch Trends (2024)</h6>
+                                                    <canvas id="trendChart" height="140"></canvas>
+
+                                                    <div class="mt-4 p-3 bg-light rounded-3 border">
+                                                        <h6 class="fw-bold text-primary mb-1"><i
+                                                                class="fas fa-lightbulb me-2"></i>AI Tip</h6>
+                                                        <small class="text-muted">
+                                                            <% if (locals.results && results.length> 0) { %>
+                                                                You qualify for <strong>
+                                                                    <%= results.length %>
+                                                                </strong> colleges.
+                                                                <strong>
+                                                                    <%= results.filter(r=>r.type==='Safe').length %>
+                                                                </strong> are safe picks - great options for Round 1!
+                                                                <% } else { %>
+                                                                    Students with borderline scores often secure seats
+                                                                    in
+                                                                    Round 2-3. Explore multiple categories!
+                                                                    <% } %>
+                                                        </small>
+                                                    </div>
+
+                                                    <!-- Wishlist Panel -->
+                                                    <div class="mt-4 p-3 bg-white rounded-3 border" id="wishlist-panel"
+                                                        style="display:none">
+                                                        <h6 class="fw-bold mb-2"><i
+                                                                class="fas fa-heart text-danger me-2"></i>Saved Colleges
+                                                        </h6>
+                                                        <div id="wishlist-items" class="d-flex flex-column gap-2"></div>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                </div>
+                </div><!-- /container -->
+
+                <!-- ===== COMPARE BAR ===== -->
+                <div id="compare-bar">
+                    <div id="compare-items"></div>
+                    <button class="btn btn-warning fw-bold px-4" onclick="openCompare()">
+                        <i class="fas fa-balance-scale me-2"></i>Compare Now
+                    </button>
+                    <button class="btn btn-outline-light btn-sm" onclick="clearCompare()">Clear</button>
+                </div>
+
+                <!-- ===== CUTOFF HISTORY MODAL ===== -->
+                <div class="modal fade" id="historyModal" tabindex="-1">
+                    <div class="modal-dialog modal-lg modal-history">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background: var(--primary-gradient); color: white;">
+                                <h5 class="modal-title" id="historyModalTitle">Cutoff History</h5>
+                                <button type="button" class="btn-close btn-close-white"
+                                    data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <canvas id="historyChart" height="100"></canvas>
+                                <div id="historyTable" class="mt-3"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== COMPARE MODAL ===== -->
+                <div class="modal fade" id="compare-modal" tabindex="-1">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header" style="background: var(--primary-gradient); color:white;">
+                                <h5 class="modal-title"><i class="fas fa-balance-scale me-2"></i>College Comparison</h5>
+                                <button type="button" class="btn-close btn-close-white"
+                                    data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body" id="compare-table-body">
+                                <p class="text-muted text-center">Add colleges using the Compare button on each card.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <script src="/js/predictor_ui.js"></script>
+>>>>>>> Stashed changes
