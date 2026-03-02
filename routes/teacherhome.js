@@ -5,6 +5,7 @@ const StudentProfile = require("../model/profile");
 const TeacherProfile = require("../model/TeacherProfile");
 const TeacherWork = require("../model/teacherwork");
 const Doubt = require("../model/Doubt");
+const QuizResult = require("../model/QuizResult");
 
 // Middleware for authentication
 const isAuthenticated = (req, res, next) => {
@@ -64,6 +65,21 @@ router.get("/teacher_home", async (req, res) => {
         // Fetch doubts asked to this teacher
         const doubts = await Doubt.find({ teacherId: userId }).populate('studentId', 'username').sort({ createdAt: -1 });
 
+        // LEADERBOARD LOGIC: Get top performance scores for students in this college
+        // We'll calculate the top 5 scores from QuizResult for students associated with this collegeName
+        const collegeStudentIds = students.map(s => s.userId);
+        const topPerformers = await QuizResult.find({ userId: { $in: collegeStudentIds } })
+            .select('userId score date')
+            .populate('userId', 'username email')
+            .sort({ score: -1 })
+            .limit(5);
+
+        // Fetch active live session links if any
+        const liveSessions = await TeacherWork.find({
+            type: "meeting",
+            collegeName: teacherProfile.collegeName
+        }).sort({ createdAt: -1 }).limit(1);
+
         res.render("teacher_home", {
             username: user.username,
             collegeName: teacherProfile.collegeName,
@@ -71,7 +87,9 @@ router.get("/teacher_home", async (req, res) => {
             tasks,
             announcements,
             resources,
-            doubts
+            doubts,
+            topPerformers,
+            liveSessions
         });
 
     } catch (error) {
@@ -192,6 +210,59 @@ router.post("/replyDoubt", async (req, res) => {
         res.redirect("/teacher_home");
     } catch (error) {
         console.error("Error replying to doubt:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+// POST: Add Quiz (Simple version for making it interesting as requested)
+router.post("/addQuiz", async (req, res) => {
+    try {
+        const { title, description } = req.body;
+        if (!title) return res.status(400).send("Quiz title is required");
+
+        const userId = req.session.userId;
+        const teacherProfile = await TeacherProfile.findOne({ userId });
+        if (!teacherProfile) return res.status(403).send("Profile required");
+
+        await TeacherWork.create({
+            type: "quiz",
+            title,
+            description: description || "Interactive quiz shared by faculty.",
+            teacherId: userId,
+            collegeName: teacherProfile.collegeName
+        });
+
+        res.redirect("/teacher_home");
+    } catch (error) {
+        console.error("Error adding quiz:", error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+// POST: Start Live Session (Share meeting link)
+router.post("/startLiveSession", async (req, res) => {
+    try {
+        const { title, description } = req.body; // description will be the link
+        if (!title || !description) return res.status(400).send("Meeting title and link required");
+
+        const userId = req.session.userId;
+        const teacherProfile = await TeacherProfile.findOne({ userId });
+        if (!teacherProfile) return res.status(403).send("Profile required");
+
+        // Clear previous meetings for this teacher to avoid clutter (Optional)
+        await TeacherWork.deleteMany({ type: "meeting", teacherId: userId });
+
+        await TeacherWork.create({
+            type: "meeting",
+            title,
+            description, // This is the URL
+            teacherId: userId,
+            collegeName: teacherProfile.collegeName
+        });
+
+        res.redirect("/teacher_home");
+    } catch (error) {
+        console.error("Error starting live session:", error);
         res.status(500).send("Internal Server Error");
     }
 });

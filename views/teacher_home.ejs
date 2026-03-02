@@ -1,558 +1,552 @@
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-<%- include('layouts/header'); -%>
-<%- include('layouts/tnavbar'); -%>
-<!-- <body class="bg-gray-50 dark:bg-gray-900"> -->
-    <!-- Main Container -->
-    <div class="min-h-screen p-15">
-        <!-- Header Section -->
-        <header class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-10">
-            <div class="flex justify-between items-center">
-                <div>
-                    <h1 class="text-3xl font-bold text-gray-800 dark:text-gray">Welcome, <%= username %></h1>
-
-                    <p class="text-gray-600 dark:text-gray-400">Senior Teacher - Mathematics Department</p>
-                </div>
-                <!-- Dark Mode Toggle -->
-                <button id="darkModeToggle" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700">
-                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                        <path class="dark:hidden" d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"></path>
-                        <path class="hidden dark:block" d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
-                    </svg>
-                </button>
-=======
 <%- include('layouts/header'); %>
     <%- include('layouts/tnavbar'); %>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-=======
-<%- include('layouts/header'); %>
-    <%- include('layouts/tnavbar'); %>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
->>>>>>> Stashed changes
-        <!-- Premium UI styles for Teacher Dashboard -->
+        <!-- Custom Tailwind Configuration & Scoped Styles -->
         <style>
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
             :root {
-                --primary: #6366f1;
-                --secondary: #4f46e5;
-                --success: #10b981;
-                --warning: #f59e0b;
-                --card-shadow: 0 4px 25px -5px rgba(0, 0, 0, 0.08);
+                --sidebar-width: 280px;
             }
 
             body {
-                background-color: #f3f4f6;
-                color: #1f2937;
                 font-family: 'Inter', sans-serif;
+                transition: background-color 0.3s, color 0.3s;
             }
 
-            .dashboard-card {
-                background: white;
-                border: none;
-                border-radius: 1.25rem;
-                box-shadow: var(--card-shadow);
-                transition: all 0.3s ease;
+            .dark body {
+                background-color: #0f172a;
+                color: #f1f5f9;
             }
 
-            .dashboard-card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.1);
+            .glass-card {
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.2);
             }
 
-            .gradient-header {
-                background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%);
-                border-radius: 1.25rem;
+            .dark .glass-card {
+                background: rgba(30, 41, 59, 0.7);
+                border: 1px solid rgba(255, 255, 255, 0.05);
             }
 
-            .form-input {
-                background: #f9fafb;
-                border: 1px solid #e5e7eb;
-                border-radius: 0.75rem;
-                padding: 0.6rem 1rem;
-                font-size: 0.875rem;
-                transition: border-color 0.2s;
+            .custom-scrollbar::-webkit-scrollbar {
+                width: 6px;
             }
 
-            .form-input:focus {
-                border-color: var(--primary);
-                outline: none;
-                background: white;
+            .custom-scrollbar::-webkit-scrollbar-thumb {
+                background: #cbd5e1;
+                border-radius: 10px;
             }
 
-            .action-btn {
-                padding: 0.6rem 1.25rem;
-                border-radius: 0.75rem;
-                font-weight: 600;
-                transition: all 0.2s;
+            .dark .custom-scrollbar::-webkit-scrollbar-thumb {
+                background: #475569;
             }
 
-            .student-row {
-                padding: 1rem;
-                border-bottom: 1px solid #f3f4f6;
-                transition: background 0.2s;
+            @keyframes pulse-custom {
+
+                0%,
+                100% {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+
+                50% {
+                    opacity: 0.7;
+                    transform: scale(1.05);
+                }
             }
 
-            .student-row:hover {
-                background: #f9fafb;
-            }
-
-            .doubt-card {
-                border-left: 4px solid var(--primary);
-            }
-
-            .doubt-card.answered {
-                border-left-color: var(--success);
+            .animate-pulse-custom {
+                animation: pulse-custom 2s infinite;
             }
         </style>
 
-        <div class="container py-5" style="margin-top: 60px; max-width: 1300px;">
-            <!-- Top Header Card -->
-            <div class="dashboard-card gradient-header p-5 text-white mb-5 position-relative overflow-hidden">
-                <div class="position-relative z-1">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div>
-                            <h1 class="display-6 fw-bold mb-1">Welcome, Prof. <%= username %>
-                            </h1>
-                            <p class="opacity-75 fs-5">Campus: <%= collegeName %> | <%= students.length %> Students
-                                        Linked</p>
-                        </div>
-                        <div class="d-none d-md-block">
-                            <button class="btn btn-light btn-sm rounded-pill px-4 fw-bold text-primary">View
-                                Reports</button>
-                        </div>
+        <div class="flex min-h-screen bg-slate-50 dark:bg-slate-900 pt-16">
+            <!-- Sidebar: Fixed Position on Desktop -->
+            <aside
+                class="hidden lg:flex w-72 flex-col fixed left-0 top-16 bottom-0 z-20 bg-indigo-700 dark:bg-slate-800 text-white overflow-y-auto custom-scrollbar shadow-2xl transition-all duration-300">
+                <!-- Sidebar Profile -->
+                <div class="p-6 text-center border-b border-indigo-600 dark:border-slate-700">
+                    <div
+                        class="w-20 h-20 bg-white/20 rounded-full mx-auto mb-3 flex items-center justify-center text-3xl font-bold">
+                        <%= username.charAt(0).toUpperCase() %>
                     </div>
-<<<<<<< Updated upstream
-                </div>
-                <!-- Decorative Circle -->
-                <div class="position-absolute bg-white opacity-10 rounded-circle"
-                    style="width: 300px; height: 300px; top: -100px; right: -100px;"></div>
->>>>>>> Stashed changes
-            </div>
-        </header>
-
-<<<<<<< Updated upstream
-        <!-- Search and Filter Section -->
-        <div class="bg-white dark:bg-white-200 rounded-lg shadow-lg p-6 mb-6">
-            <div class="flex flex-col md:flex-row gap-4">
-                <input type="text" placeholder="Search Students..." class="flex-1 px-4 py-2 rounded-lg border dark:bg-gray-700 dark:border-gray-600">
-                <select class="px-4 py-2 rounded-lg border dark:bg-gray-700 dark:border-gray-600">
-                    <option>All Subjects</option>
-                    <option>Mathematics</option>
-                    <option>Science</option>
-                    <option>English</option>
-                </select>
-                <select class="px-4 py-2 rounded-lg border dark:bg-gray-700 dark:border-gray-600">
-                    <option>All Status</option>
-                    <option>In Progress</option>
-                    <option>Completed</option>
-                </select>
-            </div>
-        </div>
-
-        <!-- Main Grid -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-            <!-- Syllabus Progress -->
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-                <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-black">Syllabus Progress</h2>
-                <div class="relative w-48 h-48 mx-auto">
-                    <svg class="transform -rotate-90 w-full h-full" viewBox="0 0 100 100">
-                        <circle class="text-gray-200 stroke-current" stroke-width="10" cx="50" cy="50" r="40" fill="none"/>
-                        <circle class="text-green-500 stroke-current" stroke-width="10" cx="50" cy="50" r="40" fill="none"
-                            stroke-dasharray="251.2" stroke-dashoffset="62.8"/>
-                    </svg>
-                    <div class="absolute inset-0 flex items-center justify-center">
-                        <span class="text-3xl font-bold text-green-500">75%</span>
-                    </div>
-=======
->>>>>>> Stashed changes
-                </div>
-                <!-- Decorative Circle -->
-                <div class="position-absolute bg-white opacity-10 rounded-circle"
-                    style="width: 300px; height: 300px; top: -100px; right: -100px;"></div>
-            </div>
-
-<<<<<<< Updated upstream
-            <!-- Student Progress -->
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-6">
-                <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-black">Student Progress</h2>
-                <div class="space-y-4">
-                    <% students.forEach(student => { %>
-                        <div class="flex justify-between items-center">
-                            <span class="text-gray-700 dark:text-black-300"><%= student.fullName %></span>
-                            <div class="w-32 bg-gray-200 rounded-full h-2.5">
-                                <div class="bg-blue-600 h-2.5 rounded-full" style="width: <%= student.progress %>%;"></div>
-                            </div>
-                            <span class="text-blue-600"><%= student.progress %>%</span>
-                        </div>
-                    <% }) %>
-                </div>
-            </div>
-
-            <!-- Tasks and Assignments -->
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-semibold text-gray-800 dark:text-black">Tasks</h2>
-                    <form action="/addTask" method="POST" class="flex gap-2">
-                        <input type="text" name="title" placeholder="Task Title" class="px-2 py-1 border rounded">
-                        <input type="date" name="dueDate" class="px-2 py-1 border rounded">
-                        <button type="submit" class="px-4 py-2 bg-blue-600 text-black rounded-lg hover:bg-blue-700">
-                            + Add Task
-                        </button>
-                    </form>
-                </div>
-                <div class="space-y-4">
-                    <% tasks.forEach(task => { %>
-                        <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                            <h3 class="font-semibold text-gray-800 dark:text-white"><%= task.title %></h3>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">Due Date: <%= task.dueDate %></p>
-                        </div>
-                    <% }) %>
-                </div>
-            </div>
-            
-        </div>
-
-        <!-- Aptitude Test Analytics -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-                <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-white">Aptitude Test Results</h2>
-                <canvas id="aptitudeChart" class="w-full"></canvas>
-            </div>
-
-            <!-- Announcements -->
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Announcements</h2>
-                    <form action="/addAnnouncement" method="POST" class="flex gap-2">
-                        <input type="text" name="title" placeholder="Announcement Title" class="px-2 py-1 border rounded">
-                        <input type="date" name="date" class="px-2 py-1 border rounded">
-                        <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
-                            + Add Announcement
-                        </button>
-                    </form>
-                </div>
-                <div class="space-y-4">
-                    <% announcements.forEach(announcement => { %>
-                        <div class="p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                            <h3 class="font-semibold text-gray-800 dark:text-white"><%= announcement.title %></h3>
-                            <p class="text-sm text-gray-600 dark:text-gray-400">Date: <%= announcement.date %></p>
-                        </div>
-                    <% }) %>
-                </div>
-            </div>
-            
-        </div>
-    </div>
-    <%- include('layouts/footer'); -%>
-
-    <script>
-        // Dark Mode Toggle
-        const darkModeToggle = document.getElementById('darkModeToggle');
-        darkModeToggle.addEventListener('click', () => {
-            document.documentElement.classList.toggle('dark');
-            localStorage.setItem('darkMode', document.documentElement.classList.contains('dark'));
-        });
-
-        // Check Dark Mode Preference
-        if (localStorage.getItem('darkMode') === 'true' || 
-            (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        }
-
-        // Aptitude Chart
-        const ctx = document.getElementById('aptitudeChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: ['Mathematics', 'Science', 'English', 'General Knowledge'],
-                datasets: [{
-                    label: 'Class Average (%)',
-                    data: [75, 82, 65, 78],
-                    backgroundColor: [
-                        'rgba(59, 130, 246, 0.5)',
-                        'rgba(16, 185, 129, 0.5)',
-                        'rgba(239, 68, 68, 0.5)',
-                        'rgba(139, 92, 246, 0.5)'
-                    ],
-                    borderColor: [
-                        'rgb(59, 130, 246)',
-                        'rgb(16, 185, 129)',
-                        'rgb(239, 68, 68)',
-                        'rgb(139, 92, 246)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 100
-                    }
-                }
-            }
-        });
-    </script>
-<!-- </body> -->
-=======
-=======
->>>>>>> Stashed changes
-            <!-- Main Grid Region -->
-            <div class="row g-4 mb-5">
-                <!-- Class Engagement -->
-                <div class="col-lg-4">
-                    <div class="dashboard-card p-4 h-100">
-                        <h5 class="fw-bold mb-4">Syllabus Coverage</h5>
-                        <div class="text-center py-3">
-                            <canvas id="syllabusChart" width="200" height="200"></canvas>
-                            <div class="mt-4">
-                                <h2 class="fw-bold text-primary mb-0">75%</h2>
-                                <small class="text-muted">Current Term Progress</small>
-                            </div>
-                        </div>
-                    </div>
+                    <h4 class="font-bold text-lg">Prof. <%= username %>
+                    </h4>
+                    <p class="text-indigo-200 dark:text-slate-400 text-xs mt-1 uppercase tracking-widest">
+                        <%= collegeName %>
+                    </p>
                 </div>
 
-                <!-- Create & Manage Content -->
-                <div class="col-lg-8">
-                    <div class="row g-4">
-                        <!-- Resource Creator (New) -->
-                        <div class="col-md-4">
-                            <div class="dashboard-card p-4 h-100">
-                                <div class="d-flex justify-content-between align-items-center mb-4">
-                                    <h5 class="fw-bold mb-0">📚 Add Resource</h5>
-                                    <i class="fas fa-book-open text-info opacity-50"></i>
+                <!-- Sidebar Insights -->
+                <div class="p-6 space-y-8">
+                    <!-- Syllabus Health -->
+                    <div>
+                        <h5
+                            class="text-xs font-semibold text-indigo-100 dark:text-slate-300 uppercase tracking-widest mb-4">
+                            Syllabus Health</h5>
+                        <div class="flex flex-col items-center">
+                            <div class="relative w-32 h-32">
+                                <canvas id="syllabusDoughnut" width="128" height="128"></canvas>
+                                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                                    <span class="text-xl font-bold">75%</span>
+                                    <span class="text-[10px] opacity-70">COMPLETED</span>
                                 </div>
-                                <form action="/addResource" method="POST">
-                                    <div class="mb-3">
-                                        <label class="small fw-bold text-muted mb-1">Resource Title</label>
-                                        <input type="text" name="title" placeholder="e.g., Python Basics PDF"
-                                            class="form-input w-100" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="small fw-bold text-muted mb-1">Short Description/Link</label>
-                                        <textarea name="description" placeholder="Provide a drive link or key notes"
-                                            class="form-input w-100" rows="1"></textarea>
-                                    </div>
-                                    <button type="submit"
-                                        class="action-btn btn-info w-100 border-0 shadow-sm text-white"
-                                        style="background: #0ea5e9;">Share Resource</button>
-                                </form>
-                            </div>
-                        </div>
-
-                        <!-- Task Creator -->
-                        <div class="col-md-4">
-                            <div class="dashboard-card p-4 h-100">
-                                <div class="d-flex justify-content-between align-items-center mb-4">
-                                    <h5 class="fw-bold mb-0">📝 Assign Work</h5>
-                                    <i class="fas fa-edit text-primary opacity-50"></i>
-                                </div>
-                                <form action="/addTask" method="POST" class="space-y-3">
-                                    <div class="mb-3">
-                                        <label class="small fw-bold text-muted mb-1">Task Title</label>
-                                        <input type="text" name="title" placeholder="e.g., Math Assignment 1"
-                                            class="form-input w-100" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="small fw-bold text-muted mb-1">Due Date</label>
-                                        <input type="date" name="dueDate" class="form-input w-100" required>
-                                    </div>
-                                    <button type="submit" class="action-btn btn-primary w-100 border-0 shadow-sm"
-                                        style="background: var(--primary);">Post to Class</button>
-                                </form>
-                            </div>
-                        </div>
-
-                        <!-- Announcement Creator -->
-                        <div class="col-md-4">
-                            <div class="dashboard-card p-4 h-100">
-                                <div class="d-flex justify-content-between align-items-center mb-4">
-                                    <h5 class="fw-bold mb-0">📢 News Blast</h5>
-                                    <i class="fas fa-bullhorn text-success opacity-50"></i>
-                                </div>
-                                <form action="/addAnnouncement" method="POST">
-                                    <div class="mb-3">
-                                        <label class="small fw-bold text-muted mb-1">Notice Title</label>
-                                        <input type="text" name="title" placeholder="e.g., Exam Postponed"
-                                            class="form-input w-100" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="small fw-bold text-muted mb-1">Post Date</label>
-                                        <input type="date" name="date" class="form-input w-100" required>
-                                    </div>
-                                    <button type="submit" class="action-btn btn-success w-100 border-0 shadow-sm"
-                                        style="background: var(--success);">Broadcast News</button>
-                                </form>
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <div class="row g-4">
-                <!-- Student Roster -->
-                <div class="col-lg-8">
-                    <div class="dashboard-card">
-                        <div class="p-4 border-bottom d-flex justify-content-between align-items-center">
-                            <h5 class="fw-bold mb-0">👨‍🎓 Student Roster (<%= collegeName %>)</h5>
-                            <div class="input-group input-group-sm w-auto">
-                                <input type="text" class="form-control rounded-pill px-3"
-                                    placeholder="Search students...">
-                            </div>
-                        </div>
-                        <div class="p-0 overflow-auto" style="max-height: 400px;">
-                            <% if(students.length> 0) { %>
-                                <% students.forEach(student=> { %>
-                                    <div class="student-row d-flex align-items-center justify-content-between">
-                                        <div class="d-flex align-items-center gap-3">
-                                            <div class="bg-light p-2 rounded-circle"><i
-                                                    class="fas fa-user text-muted"></i></div>
+                    <!-- College Toppers -->
+                    <div>
+                        <h5
+                            class="text-xs font-semibold text-indigo-100 dark:text-slate-300 uppercase tracking-widest mb-4">
+                            🏆 College Toppers</h5>
+                        <div class="space-y-3">
+                            <% if(locals.topPerformers && topPerformers.length> 0) { %>
+                                <% topPerformers.forEach((perf, index)=> { %>
+                                    <div
+                                        class="flex items-center justify-between bg-white/10 dark:bg-slate-700/50 p-3 rounded-xl transition-hover hover:bg-white/20">
+                                        <div class="flex items-center gap-3">
+                                            <span class="text-indigo-300 dark:text-slate-500 font-bold text-sm">#<%=
+                                                    index + 1 %></span>
                                             <div>
-                                                <div class="fw-bold small text-dark">
-                                                    <%= student.fullName %>
-                                                </div>
-                                                <div class="text-muted" style="font-size: 0.7rem;">ID: <%=
-                                                        student.userId.toString().slice(-6) %>
-                                                </div>
+                                                <p class="text-xs font-bold truncate w-24">
+                                                    <%= perf.userId ? perf.userId.username : 'Student' %>
+                                                </p>
+                                                <p class="text-[10px] opacity-60">
+                                                    <%= new Date(perf.date).toLocaleDateString() %>
+                                                </p>
                                             </div>
                                         </div>
-                                        <div class="w-25">
-                                            <div class="d-flex justify-content-between x-small mb-1">
-                                                <span class="text-muted" style="font-size: 0.65rem;">Course
-                                                    Progress</span>
-                                                <span class="fw-bold" style="font-size: 0.65rem;">
-                                                    <%= student.progress %>%
-                                                </span>
-                                            </div>
-                                            <div class="progress-pill">
-                                                <div class="bg-primary h-100" style="width: <%= student.progress %>%">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <button class="btn btn-sm btn-outline-light text-muted border-0"><i
-                                                    class="fas fa-ellipsis-v"></i></button>
-                                        </div>
+                                        <span class="text-xs font-bold text-indigo-200">
+                                            <%= perf.score %> pts
+                                        </span>
                                     </div>
-                                    <% }) %>
+                                    <% }); %>
                                         <% } else { %>
-                                            <div class="text-center py-5 text-muted small">No students from your
-                                                institution have joined yet.</div>
+                                            <p class="text-xs text-indigo-300 italic text-center py-4">Waiting for first
+                                                quiz...</p>
                                             <% } %>
                         </div>
                     </div>
                 </div>
+            </aside>
 
-                <!-- Doubt Management (Replaces static stats) -->
-                <div class="col-lg-4">
-                    <div class="dashboard-card p-4 h-100">
-                        <h5 class="fw-bold mb-4">💬 Student Doubts</h5>
-                        <div class="overflow-auto px-1" style="max-height: 580px;">
-                            <% if(doubts && doubts.length> 0) { %>
+            <!-- Main Content Area -->
+            <main class="flex-1 lg:ml-72 p-6 transition-all duration-300">
+                <!-- Top Toolbar (Unified Search & Dark Mode) -->
+                <div class="flex flex-col md:flex-row gap-4 mb-8 items-center justify-between">
+                    <div class="relative w-full md:w-96 group">
+                        <i
+                            class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors"></i>
+                        <input type="text" placeholder="Search students, tasks, or insights..."
+                            class="w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-800 border-none rounded-2xl shadow-sm focus:ring-2 focus:ring-indigo-500 transition-all dark:text-white">
+                    </div>
+
+                    <div class="flex items-center gap-4">
+                        <!-- Dark Mode Toggle -->
+                        <button id="darkModeToggle"
+                            class="p-3 bg-white dark:bg-slate-800 rounded-2xl shadow-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+                            <i class="fas fa-sun block dark:hidden"></i>
+                            <i class="fas fa-moon hidden dark:block"></i>
+                        </button>
+                        <div
+                            class="flex items-center gap-2 px-4 py-2 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-full text-xs font-bold border border-emerald-100 dark:border-emerald-900/50">
+                            <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+                            INSTITUTIONAL NODE ACTIVE
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content Command Center -->
+                <section class="mb-10">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-3">
+                            <i class="fas fa-rocket text-indigo-500"></i> Content Command Center
+                        </h2>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-6">
+                        <!-- Task Card -->
+                        <div class="glass-card p-6 rounded-3xl shadow-lg border-t-4 border-indigo-500 group">
+                            <div class="flex justify-between items-start mb-4">
+                                <div
+                                    class="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/50 rounded-xl flex items-center justify-center text-indigo-600 dark:text-indigo-400">
+                                    <i class="fas fa-tasks"></i>
+                                </div>
+                                <span
+                                    class="text-[10px] font-bold text-indigo-500 dark:text-indigo-400 uppercase tracking-widest">ASSIGN</span>
+                            </div>
+                            <form action="/addTask" method="POST">
+                                <input type="text" name="title" placeholder="Assignment Topic" required
+                                    class="w-full bg-slate-50 dark:bg-slate-900/50 border-none rounded-xl text-sm p-3 mb-2 focus:ring-1 focus:ring-indigo-500 dark:text-white">
+                                <input type="date" name="dueDate" required
+                                    class="w-full bg-slate-50 dark:bg-slate-900/50 border-none rounded-xl text-sm p-3 mb-4 focus:ring-1 focus:ring-indigo-500 dark:text-white">
+                                <button type="submit"
+                                    class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-indigo-200 dark:shadow-none transition-all">POST
+                                    TASK</button>
+                            </form>
+                        </div>
+
+                        <!-- Quiz Card -->
+                        <div class="glass-card p-6 rounded-3xl shadow-lg border-t-4 border-amber-500">
+                            <div class="flex justify-between items-start mb-4">
+                                <div
+                                    class="w-10 h-10 bg-amber-100 dark:bg-amber-900/50 rounded-xl flex items-center justify-center text-amber-600 dark:text-amber-400">
+                                    <i class="fas fa-bolt"></i>
+                                </div>
+                                <span
+                                    class="text-[10px] font-bold text-amber-500 dark:text-amber-400 uppercase tracking-widest">TEST</span>
+                            </div>
+                            <form action="/addQuiz" method="POST">
+                                <input type="text" name="title" placeholder="Quiz Name" required
+                                    class="w-full bg-slate-50 dark:bg-slate-900/50 border-none rounded-xl text-sm p-3 mb-2 focus:ring-1 focus:ring-amber-500 dark:text-white">
+                                <input type="text" name="description" placeholder="Instructions/Link"
+                                    class="w-full bg-slate-50 dark:bg-slate-900/50 border-none rounded-xl text-sm p-3 mb-4 focus:ring-1 focus:ring-amber-500 dark:text-white">
+                                <button type="submit"
+                                    class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-xs font-bold transition-all">LAUNCH
+                                    QUIZ</button>
+                            </form>
+                        </div>
+
+                        <!-- Live Card -->
+                        <div class="glass-card p-6 rounded-3xl shadow-lg border-t-4 border-rose-500">
+                            <div class="flex justify-between items-start mb-4">
+                                <div
+                                    class="w-10 h-10 bg-rose-100 dark:bg-rose-900/50 rounded-xl flex items-center justify-center text-rose-600 dark:text-rose-400">
+                                    <i class="fas fa-video text-xs animate-pulse"></i>
+                                </div>
+                                <span
+                                    class="text-[10px] font-bold text-rose-500 dark:text-rose-400 uppercase tracking-widest">STREAM</span>
+                            </div>
+                            <form action="/startLiveSession" method="POST">
+                                <input type="text" name="title" placeholder="Session Title" required
+                                    class="w-full bg-slate-50 dark:bg-slate-900/50 border-none rounded-xl text-sm p-3 mb-2 focus:ring-1 focus:ring-rose-500 dark:text-white">
+                                <input type="url" name="description" placeholder="Meeting URL" required
+                                    class="w-full bg-slate-50 dark:bg-slate-900/50 border-none rounded-xl text-sm p-3 mb-4 focus:ring-1 focus:ring-rose-500 dark:text-white">
+                                <button type="submit"
+                                    class="w-full py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold transition-all">START
+                                    LIVE</button>
+                            </form>
+                        </div>
+
+                        <!-- Announcement Card -->
+                        <div class="glass-card p-6 rounded-3xl shadow-lg border-t-4 border-emerald-500">
+                            <div class="flex justify-between items-start mb-4">
+                                <div
+                                    class="w-10 h-10 bg-emerald-100 dark:bg-emerald-900/50 rounded-xl flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+                                    <i class="fas fa-bullhorn"></i>
+                                </div>
+                                <span
+                                    class="text-[10px] font-bold text-emerald-500 dark:text-emerald-400 uppercase tracking-widest">CIRCULAR</span>
+                            </div>
+                            <form action="/addAnnouncement" method="POST">
+                                <input type="text" name="title" placeholder="News Topic" required
+                                    class="w-full bg-slate-50 dark:bg-slate-900/50 border-none rounded-xl text-sm p-3 mb-2 focus:ring-1 focus:ring-emerald-500 dark:text-white">
+                                <input type="date" name="date" required
+                                    class="w-full bg-slate-50 dark:bg-slate-900/50 border-none rounded-xl text-sm p-3 mb-4 focus:ring-1 focus:ring-emerald-500 dark:text-white">
+                                <button type="submit"
+                                    class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all">BROADCAST</button>
+                            </form>
+                        </div>
+
+                        <!-- Resources Card -->
+                        <div class="glass-card p-6 rounded-3xl shadow-lg border-t-4 border-cyan-500">
+                            <div class="flex justify-between items-start mb-4">
+                                <div
+                                    class="w-10 h-10 bg-cyan-100 dark:bg-cyan-900/50 rounded-xl flex items-center justify-center text-cyan-600 dark:text-cyan-400">
+                                    <i class="fas fa-book-open"></i>
+                                </div>
+                                <span
+                                    class="text-[10px] font-bold text-cyan-500 dark:text-cyan-400 uppercase tracking-widest">DRIVE</span>
+                            </div>
+                            <form action="/addResource" method="POST">
+                                <input type="text" name="title" placeholder="Doc Name" required
+                                    class="w-full bg-slate-50 dark:bg-slate-900/50 border-none rounded-xl text-sm p-3 mb-2 focus:ring-1 focus:ring-cyan-500 dark:text-white">
+                                <textarea name="description" placeholder="Notes/Links" rows="1"
+                                    class="w-full bg-slate-50 dark:bg-slate-900/50 border-none rounded-xl text-sm p-3 mb-4 focus:ring-1 focus:ring-cyan-500 dark:text-white"></textarea>
+                                <button type="submit"
+                                    class="w-full py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl text-xs font-bold transition-all">SHARE
+                                    DOCS</button>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Monitoring & Analytics Section -->
+                <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-10">
+                    <!-- Analytics Chart -->
+                    <div class="xl:col-span-2 glass-card p-8 rounded-3xl shadow-xl">
+                        <div class="flex items-center justify-between mb-8">
+                            <div>
+                                <h3 class="text-xl font-bold dark:text-white">Average Class Performance</h3>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Institutional Aptitude
+                                    Benchmarks</p>
+                            </div>
+                        </div>
+                        <div class="h-64">
+                            <canvas id="aptitudeChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Live Session Monitor Panel -->
+                    <div class="glass-card p-8 rounded-3xl shadow-xl flex flex-col justify-center text-center">
+                        <h3
+                            class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-6">
+                            Active Transmission</h3>
+                        <% if(locals.liveSessions && liveSessions.length> 0) { %>
+                            <div
+                                class="bg-rose-50 dark:bg-rose-900/20 border border-rose-100 dark:border-rose-900/50 p-6 rounded-3xl">
+                                <div
+                                    class="inline-flex items-center gap-2 px-3 py-1 bg-rose-500 text-white rounded-full text-[10px] font-black animate-pulse-custom mb-4">
+                                    <i class="fas fa-circle text-[6px]"></i> LIVE STREAMING
+                                </div>
+                                <h4 class="font-bold text-lg dark:text-white mb-2 truncate">
+                                    <%= liveSessions[0].title %>
+                                </h4>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mb-6 truncate">
+                                    <%= liveSessions[0].description %>
+                                </p>
+                                <a href="<%= liveSessions[0].description %>" target="_blank"
+                                    class="inline-block px-8 py-3 bg-rose-600 hover:bg-rose-700 text-white rounded-2xl text-sm font-bold shadow-lg shadow-rose-200 dark:shadow-none transition-all">
+                                    JOIN BROADCAST
+                                </a>
+                            </div>
+                            <% } else { %>
+                                <div class="flex flex-col items-center opacity-40 py-10">
+                                    <i
+                                        class="fas fa-satellite-dish text-6xl text-slate-300 dark:text-slate-600 mb-4"></i>
+                                    <p class="text-sm font-medium">No active broadcasts</p>
+                                </div>
+                                <% } %>
+                    </div>
+                </div>
+
+                <!-- Lists Section: Student Roster & Doubts -->
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                    <!-- Student Roster -->
+                    <div
+                        class="glass-card rounded-3xl shadow-xl overflow-hidden border border-slate-200/50 dark:border-slate-800">
+                        <div
+                            class="p-6 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                            <h3 class="font-bold dark:text-white flex items-center gap-2">
+                                <i class="fas fa-user-graduate text-indigo-500"></i> Student Roster
+                            </h3>
+                            <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">
+                                <%= students.length %> Total
+                            </span>
+                        </div>
+                        <div class="overflow-y-auto custom-scrollbar" style="max-height: 480px;">
+                            <% if(students.length> 0) { %>
+                                <table class="w-full text-left">
+                                    <thead
+                                        class="bg-slate-50 dark:bg-slate-800 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                                        <tr>
+                                            <th class="px-6 py-4">Student</th>
+                                            <th class="px-6 py-4 text-center">Progress</th>
+                                            <th class="px-6 py-4 text-right">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                                        <% students.forEach(student=> { %>
+                                            <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
+                                                <td class="px-6 py-4">
+                                                    <div class="flex items-center gap-3">
+                                                        <div
+                                                            class="w-10 h-10 bg-slate-100 dark:bg-slate-700 rounded-xl flex items-center justify-center text-slate-500">
+                                                            <i class="fas fa-face-smile"></i>
+                                                        </div>
+                                                        <div>
+                                                            <p class="text-sm font-bold dark:text-white">
+                                                                <%= student.fullName %>
+                                                            </p>
+                                                            <p class="text-[10px] text-slate-400">ID: <%=
+                                                                    student.userId.toString().slice(-6) %>
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="px-6 py-4">
+                                                    <div class="flex items-center gap-3">
+                                                        <div
+                                                            class="flex-1 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                                            <div class="h-full bg-indigo-500"
+                                                                style="width: calc(<%= student.progress || 0 %> * 1%)">
+                                                            </div>
+                                                        </div>
+                                                        <span
+                                                            class="text-xs font-bold text-slate-600 dark:text-slate-400">
+                                                            <%= student.progress %>%
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                                <td class="px-6 py-4 text-right">
+                                                    <button class="p-2 text-slate-300 hover:text-indigo-500"><i
+                                                            class="fas fa-ellipsis-v"></i></button>
+                                                </td>
+                                            </tr>
+                                            <% }); %>
+                                    </tbody>
+                                </table>
+                                <% } else { %>
+                                    <div class="p-20 text-center opacity-50">
+                                        <i class="fas fa-user-clock text-4xl mb-3"></i>
+                                        <p class="text-sm">Roster is empty</p>
+                                    </div>
+                                    <% } %>
+                        </div>
+                    </div>
+
+                    <!-- Doubt Management -->
+                    <div
+                        class="glass-card rounded-3xl shadow-xl overflow-hidden border border-slate-200/50 dark:border-slate-800">
+                        <div
+                            class="p-6 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                            <h3 class="font-bold dark:text-white flex items-center gap-2">
+                                <i class="fas fa-comment-alt text-amber-500"></i> Knowledge Request Queue
+                            </h3>
+                            <% const pendingCount=doubts.filter(d=> d.status === 'pending').length; %>
+                                <span class="text-xs font-bold text-amber-600 bg-amber-50 px-3 py-1 rounded-full">
+                                    <%= pendingCount %> Urgent
+                                </span>
+                        </div>
+                        <div class="p-6 overflow-y-auto custom-scrollbar space-y-4" style="max-height: 480px;">
+                            <% if (doubts && doubts.length> 0) { %>
                                 <% doubts.forEach(doubt=> { %>
                                     <div
-                                        class="doubt-card mb-4 p-3 bg-light rounded-3 shadow-sm <%= doubt.status === 'answered' ? 'answered' : '' %>">
-                                        <div class="d-flex justify-content-between align-items-start mb-2">
-                                            <div>
-                                                <span class="badge bg-indigo-soft text-primary x-small mb-1"
-                                                    style="background: #eef2ff;">By: <%= doubt.studentId?.username
-                                                        || 'Unknown' %></span>
+                                        class="p-5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 <%= doubt.status === 'answered' ? 'opacity-70' : 'ring-1 ring-amber-100 dark:ring-amber-900/30 shadow-md' %>">
+                                        <div class="flex justify-between items-start mb-4">
+                                            <div class="flex items-center gap-2">
+                                                <span
+                                                    class="px-2 py-1 rounded text-[9px] font-black uppercase tracking-tighter <%= doubt.status === 'pending' ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700' %>">
+                                                    <%= doubt.status %>
+                                                </span>
+                                                <span class="text-[10px] text-slate-400">
+                                                    <%= new Date(doubt.createdAt).toLocaleDateString() %>
+                                                </span>
                                             </div>
-                                            <span class="text-muted" style="font-size: 0.65rem;">
-                                                <%= new Date(doubt.createdAt).toLocaleDateString() %>
-                                            </span>
+                                            <div class="text-[10px] font-bold text-slate-500">
+                                                FROM: <%= doubt.studentId ? doubt.studentId.username : 'Anonymous' %>
+                                            </div>
                                         </div>
-                                        <h6 class="fw-bold mb-1 text-dark small">
+                                        <h4 class="font-bold text-sm dark:text-white mb-2">
                                             <%= doubt.title %>
-                                        </h6>
-                                        <p class="text-muted mb-3" style="font-size: 0.75rem;">
+                                        </h4>
+                                        <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 line-clamp-2">
                                             <%= doubt.description %>
                                         </p>
 
-                                        <% if(doubt.status==='pending' ) { %>
-                                            <div class="mt-2 pt-2 border-top">
-                                                <form action="/replyDoubt" method="POST">
-                                                    <input type="hidden" name="doubtId" value="<%= doubt._id %>">
-                                                    <div class="input-group input-group-sm">
-                                                        <input type="text" name="reply"
-                                                            placeholder="Share your insight..."
-                                                            class="form-control form-input border-0 bg-white"
-                                                            style="font-size: 0.75rem;" required>
-                                                        <button type="submit"
-                                                            class="btn btn-primary d-flex align-items-center">
-                                                            <i class="fas fa-paper-plane"></i>
-                                                        </button>
-                                                    </div>
-                                                </form>
-                                            </div>
+                                        <% if (doubt.status==='pending' ) { %>
+                                            <form action="/replyDoubt" method="POST" class="mt-4 flex gap-2">
+                                                <input type="hidden" name="doubtId" value="<%= doubt._id %>">
+                                                <input type="text" name="reply"
+                                                    placeholder="Write institutional response..." required
+                                                    class="flex-1 bg-slate-50 dark:bg-slate-900 border-none rounded-xl text-xs p-2.5 focus:ring-1 focus:ring-indigo-500 dark:text-white">
+                                                <button type="submit"
+                                                    class="px-4 py-2.5 bg-indigo-600 text-white rounded-xl text-xs font-bold hover:bg-indigo-700 transition-all">REPLY</button>
+                                            </form>
                                             <% } else { %>
                                                 <div
-                                                    class="bg-white p-2 border-start border-success border-4 rounded small shadow-sm">
-                                                    <div class="fw-bold text-success mb-1" style="font-size: 0.65rem;">
-                                                        My Reply:</div>
-                                                    <div class="text-dark" style="font-size: 0.7rem;">
+                                                    class="mt-2 pt-2 border-t border-slate-50 dark:border-slate-700 flex items-start gap-2">
+                                                    <i class="fas fa-check-circle text-emerald-500 mt-1 text-xs"></i>
+                                                    <p class="text-xs italic text-slate-500 dark:text-slate-400">
                                                         <%= doubt.teacherReply %>
-                                                    </div>
+                                                    </p>
                                                 </div>
                                                 <% } %>
                                     </div>
-                                    <% }) %>
+                                    <% }); %>
                                         <% } else { %>
-                                            <div class="text-center py-5 text-muted">
-                                                <i class="fas fa-comments fs-1 opacity-10 mb-3 d-block"></i>
-                                                <p class="small">No doubts yet! Students will see your expertise here
-                                                    when they ask questions.</p>
+                                            <div class="text-center py-20 opacity-30">
+                                                <i class="fas fa-comments text-5xl mb-3"></i>
+                                                <p class="text-sm">Inbox clear!</p>
                                             </div>
                                             <% } %>
                         </div>
                     </div>
                 </div>
-            </div>
+            </main>
         </div>
 
+        <!-- JS: Charts and Dark Mode Logic -->
         <script>
-            // Syllabus Doughnut Chart
-            new Chart(document.getElementById('syllabusChart'), {
-                type: 'doughnut',
-                data: {
-                    datasets: [{
-                        data: [75, 25],
-                        backgroundColor: ['#6366f1', '#f3f4f6'],
-                        borderWidth: 0,
-                        cutout: '80%'
-                    }]
-                },
-                options: {
-                    responsive: false,
-                    plugins: { legend: { display: false }, tooltip: { enabled: false } }
-                }
-            });
+            document.addEventListener('DOMContentLoaded', () => {
+                // Dark Mode Logic
+                const darkModeToggle = document.getElementById('darkModeToggle');
+                const setupDarkMode = () => {
+                    const isDark = localStorage.getItem('darkMode') === 'true' ||
+                        (!('darkMode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+                    document.documentElement.classList.toggle('dark', isDark);
+                };
 
-            // Performance Bar Chart
-            new Chart(document.getElementById('performanceChart'), {
-                type: 'bar',
-                data: {
-                    labels: ['Math', 'Sci', 'Eng', 'Art'],
-                    datasets: [{
-                        label: 'Avg Score',
-                        data: [42, 55, 38, 48],
-                        backgroundColor: 'rgba(99, 102, 241, 0.6)',
-                        borderRadius: 8
-                    }]
-                },
-                options: {
-                    plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } }
+                darkModeToggle.addEventListener('click', () => {
+                    const isDarkNow = document.documentElement.classList.toggle('dark');
+                    localStorage.setItem('darkMode', isDarkNow);
+                    // Redraw charts if needed (to change labels color)
+                    window.location.reload(); // Quickest way to sync chart themes
+                });
+                setupDarkMode();
+
+                const isDarkTheme = document.documentElement.classList.contains('dark');
+                const labelColor = isDarkTheme ? '#94a3b8' : '#64748b';
+                const gridColor = isDarkTheme ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
+
+                // Syllabus Doughnut
+                const sCtx = document.getElementById('syllabusDoughnut');
+                if (sCtx) {
+                    new Chart(sCtx, {
+                        type: 'doughnut',
+                        data: {
+                            datasets: [{
+                                data: [75, 25],
+                                backgroundColor: ['#fff', 'rgba(255,255,255,0.2)'],
+                                borderWidth: 0,
+                                cutout: '80%'
+                            }]
+                        },
+                        options: {
+                            responsive: false,
+                            plugins: { legend: { display: false }, tooltip: { enabled: false } }
+                        }
+                    });
+                }
+
+                // Aptitude Bar Chart
+                const aCtx = document.getElementById('aptitudeChart');
+                if (aCtx) {
+                    new Chart(aCtx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['Mathematics', 'Science', 'English', 'Social Studies', 'Reasoning'],
+                            datasets: [{
+                                label: 'Average Score (%)',
+                                data: [78, 85, 72, 80, 88],
+                                backgroundColor: isDarkTheme ? 'rgba(99, 102, 241, 0.5)' : 'rgba(99, 102, 241, 0.8)',
+                                borderRadius: 8,
+                                borderWidth: 0
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: { legend: { display: false } },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    max: 100,
+                                    grid: { color: gridColor },
+                                    ticks: { color: labelColor, font: { size: 10 } }
+                                },
+                                x: {
+                                    grid: { display: false },
+                                    ticks: { color: labelColor, font: { size: 10 } }
+                                }
+                            }
+                        }
+                    });
                 }
             });
         </script>
 
-<<<<<<< Updated upstream
-        <%- include('layouts/footer'); -%>
->>>>>>> Stashed changes
-=======
-        <%- include('layouts/footer'); -%>
->>>>>>> Stashed changes
+        <%- include('layouts/footer'); %>

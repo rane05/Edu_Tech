@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const TeacherWorkSchema = new mongoose.Schema({
     type: {
         type: String,
-        enum: ["task", "announcement", "resource"],
+        enum: ["task", "announcement", "resource", "quiz", "meeting"],
         required: true
     },
     title: {

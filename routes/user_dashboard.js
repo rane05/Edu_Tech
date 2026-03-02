@@ -26,21 +26,35 @@ router.get('/dashboard', async (req, res) => {
             institutionalTasks = await TeacherWork.find({
                 type: "task",
                 collegeName: profile.collegeName
-            }).limit(5).sort({ createdAt: -1 });
+            }).limit(10).sort({ createdAt: -1 });
 
             institutionalAnnouncements = await TeacherWork.find({
                 type: "announcement",
                 collegeName: profile.collegeName
-            }).limit(5).sort({ createdAt: -1 });
+            }).limit(10).sort({ createdAt: -1 });
 
             institutionalResources = await TeacherWork.find({
                 type: "resource",
+                collegeName: profile.collegeName
+            }).limit(10).sort({ createdAt: -1 });
+
+            const quizzes = await TeacherWork.find({
+                type: "quiz",
+                collegeName: profile.collegeName
+            }).limit(10).sort({ createdAt: -1 });
+
+            const meetings = await TeacherWork.find({
+                type: "meeting",
                 collegeName: profile.collegeName
             }).limit(5).sort({ createdAt: -1 });
 
             collegeTeachers = await TeacherProfile.find({
                 collegeName: profile.collegeName
             }).select('userId fullName email profileImage');
+
+            // Store in locals or pass in feed
+            res.locals.institutionalQuizzes = quizzes;
+            res.locals.institutionalMeetings = meetings;
         }
 
         // Fetch My Doubts
@@ -68,6 +82,8 @@ router.get('/dashboard', async (req, res) => {
                 tasks: institutionalTasks,
                 announcements: institutionalAnnouncements,
                 resources: institutionalResources || [],
+                quizzes: res.locals.institutionalQuizzes || [],
+                meetings: res.locals.institutionalMeetings || [],
                 teachers: collegeTeachers,
                 doubts: myDoubts
             }
