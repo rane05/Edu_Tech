@@ -1,181 +1,660 @@
 <%- include('layouts/header') %>
 
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap');
+
+    :root {
+      --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+      --secondary-gradient: linear-gradient(135deg, #3b82f6 0%, #2dd4bf 100%);
+      --accent-gradient: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+      --glass-bg: rgba(255, 255, 255, 0.9);
+      --glass-border: rgba(255, 255, 255, 0.4);
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Ambient background shapes */
+    .bg-shape {
+      position: fixed;
+      z-index: -1;
+      filter: blur(80px);
+      opacity: 0.4;
+      border-radius: 50%;
+    }
+
+    .shape-1 {
+      width: 400px;
+      height: 400px;
+      background: #6366f1;
+      top: -100px;
+      left: -100px;
+    }
+
+    .shape-2 {
+      width: 300px;
+      height: 300px;
+      background: #a855f7;
+      bottom: -50px;
+      right: -50px;
+    }
+
+    .glass-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      border-radius: 2.5rem;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
+    }
+
+    .gradient-text {
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .timer-card {
+      background: #1e293b;
+      color: white;
+      padding: 1.25rem;
+      border-radius: 2rem;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    #timer {
+      font-family: 'Monaco', 'Consolas', monospace;
+      font-weight: 800;
+      font-size: 2.5rem;
+      letter-spacing: -1px;
+    }
+
+    .xp-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 2rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      border: 1px solid #f1f5f9;
+    }
+
+    .question-nav-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      padding: 1rem;
+    }
+
+    .question-nav-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 2px solid #f1f5f9;
+      cursor: pointer;
+      padding: 0;
+      background: white;
+      color: #64748b;
+    }
+
+    .btn-not-answered:hover {
+      border-color: #6366f1;
+      color: #6366f1;
+      transform: translateY(-2px);
+    }
+
+    .btn-answered {
+      background: #10b981;
+      color: white;
+      border-color: #10b981;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+    }
+
+    .btn-current {
+      background: #6366f1;
+      color: white;
+      border-color: #6366f1;
+      transform: scale(1.15);
+      box-shadow: 0 8px 20px rgba(99, 102, 241, 0.3);
+      z-index: 5;
+    }
+
+    .question-card {
+      padding: 3rem;
+      transition: all 0.4s ease;
+    }
+
+    .section-badge {
+      background: rgba(99, 102, 241, 0.1);
+      color: #6366f1;
+      padding: 0.5rem 1rem;
+      border-radius: 1rem;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .question-text {
+      font-size: 1.85rem;
+      font-weight: 700;
+      line-height: 1.3;
+      color: #0f172a;
+      margin-bottom: 2.5rem;
+    }
+
+    .option-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+
+    @media (min-width: 768px) {
+      .option-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .option-wrapper {
+      position: relative;
+    }
+
+    .option-input {
+      position: absolute;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      z-index: 2;
+    }
+
+    .option-card {
+      padding: 1.5rem;
+      border-radius: 1.5rem;
+      border: 2px solid #f1f5f9;
+      background: white;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .option-key {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: #f8fafc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: #94a3b8;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .option-input:hover~.option-card {
+      border-color: #6366f1;
+      background: #fdfdff;
+      transform: scale(1.02);
+    }
+
+    .option-input:checked~.option-card {
+      background: #6366f1;
+      border-color: #6366f1;
+      box-shadow: 0 10px 25px rgba(99, 102, 241, 0.25);
+    }
+
+    .option-input:checked~.option-card .option-text {
+      color: white;
+    }
+
+    .option-input:checked~.option-card .option-key {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+    }
+
+    .option-text {
+      color: #475569;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .btn-action {
+      padding: 1rem 2rem;
+      border-radius: 1.25rem;
+      font-weight: 700;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid #e2e8f0;
+      color: #64748b;
+    }
+
+    .btn-outline:hover {
+      background: #f8fafc;
+      color: #1e293b;
+      border-color: #cbd5e1;
+    }
+
+    .btn-primary-premium {
+      background: var(--primary-gradient);
+      color: white;
+      box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2);
+    }
+
+    .btn-primary-premium:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 30px rgba(99, 102, 241, 0.3);
+    }
+
+    .btn-success-premium {
+      background: #10b981;
+      color: white;
+      box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
+    }
+
+    .btn-success-premium:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 30px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-danger-premium {
+      background: var(--accent-gradient);
+      color: white;
+      box-shadow: 0 10px 20px rgba(239, 68, 68, 0.2);
+    }
+
+    .sidebar-title {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 1.5rem;
+      padding: 0 1rem;
+    }
+
+    #start-btn-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .level-up-toast {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 3rem;
+      border-radius: 3rem;
+      box-shadow: 0 40px 100px rgba(0, 0, 0, 0.2);
+      z-index: 2000;
+      text-align: center;
+      animation: toast-animation 3s forwards;
+      border: 2px solid #6366f1;
+    }
+
+    @keyframes toast-animation {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -60%) scale(0.9);
+      }
+
+      15% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.05);
+      }
+
+      85% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.1);
+      }
+    }
+
+    @keyframes fadeInSlide {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-fade {
+      animation: fadeInSlide 0.5s ease forwards;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #e2e8f0;
+      border-radius: 10px;
+    }
+  </style>
+
   <body>
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+
     <%- include('layouts/navbar') %>
-      <div class="container py-5">
-        <div class="row justify-content-center">
-          <div class="card shadow-lg" style="width: 1500px;">
-            <div class="card-body">
-              <div class="text-center mb-4" style="font-family: 'Times new roman', sans-serif; font-weight: bold;">
-                <h1>Aptitude Test</h1>
-              </div>
-              <div class="row">
-                <div class="col-md-3">
-                  <div class="card bg-light mb-3 text-center"
-                    style="height: 100%; max-height: 400px; overflow-y: auto;">
-                    <div class="card-body">
-                      <div class="xp-section mb-3"
-                        style="background: #2C3E50; color: white; padding: 10px; border-radius: 8px;">
-                        <div class="level-badge" style="font-size: 1.2rem; font-weight: bold;">
-                          <i class="fas fa-star"></i> Level <span id="user-level">1</span>
-                        </div>
-                        <div class="xp-progress mt-2">
-                          <div class="progress" style="height: 8px;">
-                            <div id="xp-bar" class="progress-bar bg-warning" role="progressbar" style="width: 0%"></div>
+
+      <!-- Start Overlay -->
+      <div id="start-btn-container">
+        <div class="max-w-xl p-8">
+          <div class="text-6xl mb-6">🎯</div>
+          <h1 class="text-5xl font-black mb-4">Aptitude Masterclass</h1>
+          <p class="text-slate-500 text-lg mb-8">Ready to showcase your logical and verbal prowess? 60 questions, 60
+            minutes. Level up your profile and earn XP with every fast answer!</p>
+          <button id="start-btn" onclick="startTest()"
+            class="btn-action btn-primary-premium px-12 py-4 text-xl mx-auto">
+            Begin Assessment
+          </button>
+        </div>
+      </div>
+
+      <div class="container py-5" style="margin-top: 80px;">
+        <div class="row g-6" id="main-content-layout" style="display: none;">
+          <!-- Main Question Area -->
+          <div class="col-lg-8">
+            <form id="aptitudeForm" action="/responses/submit" method="POST" onsubmit="disableSubmitButton()">
+              <div id="questions-container">
+                <% questions.forEach(function(question, index){ %>
+                  <div class="glass-card question-card question animate-fade" id="question-<%= index %>"
+                    style="display: <%= index === 0 ? 'block' : 'none' %>;">
+
+                    <div class="section-badge">
+                      <i class="fas fa-layer-group"></i>
+                      <%= question.section %>
+                    </div>
+
+                    <h2 class="question-text">
+                      <%= index + 1 %>. <%= question.questionText %>
+                    </h2>
+
+                    <div class="option-grid">
+                      <% Object.entries(question.options).forEach(function(opt){ var key=opt[0], val=opt[1]; %>
+                        <div class="option-wrapper">
+                          <input class="option-input" type="radio" name="question-<%= question._id %>"
+                            value="<%= key %>" onchange="onSelectionChange(<%= index %>)">
+                          <div class="option-card">
+                            <div class="option-key">
+                              <%= key %>
+                            </div>
+                            <div class="option-text">
+                              <%= val %>
+                            </div>
                           </div>
-                          <small class="mt-1 d-block">XP: <span id="current-xp">0</span>/<span
-                              id="next-level-xp">100</span></small>
                         </div>
+                        <% }); %>
+                    </div>
+
+                    <div class="flex items-center justify-between mt-12 pt-8 border-t border-slate-100">
+                      <div class="flex gap-3">
+                        <button type="button" class="btn-action btn-outline" onclick="previousQuestion()" <%=index===0
+                          ? 'style="visibility:hidden"' : '' %>>
+                          <i class="fas fa-chevron-left"></i> Previous
+                        </button>
+                        <button type="button" class="btn-action btn-outline" id="next-btn-<%= index %>"
+                          onclick="nextQuestion()" <%=index===questions.length - 1 ? 'style="visibility:hidden"' : ''
+                          %>>
+                          Next <i class="fas fa-chevron-right"></i>
+                        </button>
                       </div>
-                      <h5 class="card-title">Time Left</h5>
-                      <div id="timer" class="display-4">60:00</div>
-                      <button id="start-btn" class="btn btn-primary btn-lg mt-3" onclick="startTest()">Start
-                        Test</button>
+                      <button type="button" class="btn-action btn-primary-premium" id="save-btn-<%= index %>"
+                        onclick="saveAnswer('<%= question._id %>', <%= index %>)">
+                        <i class="fas fa-check-circle"></i> Save & Continue
+                      </button>
                     </div>
-                    <div class="card-body">
-                      <h5 class="card-title">Jump to Question</h5>
-                      <h6 class="mt-3" style="font-family: 'Times new roman', sans-serif; font-weight: bold;">Verbal
-                        Ability</h6>
-                      <% questions.filter(function(q){ return q.section==='Verbal Ability' }).forEach(function(question,
-                        index){ %>
-                        <button type="button" id="nav-verbal-<%= index %>" class="btn btn-outline-danger btn-sm mb-1"
-                          onclick="jumpToQuestion(<%= index %>)">Q<%= index + 1 %></button>
-                        <% }); %>
-                          <h6 class="mt-3" style="font-family: 'Times new roman', sans-serif; font-weight: bold;">
-                            Logical Reasoning</h6>
-                          <% questions.filter(function(q){ return q.section==='Logical Reasoning'
-                            }).forEach(function(question, index){ %>
-                            <button type="button" id="nav-logical-<%= index %>"
-                              class="btn btn-outline-danger btn-sm mb-1" onclick="jumpToQuestion(<%= index + 20 %>)">Q
-                              <%= index + 1 %></button>
-                            <% }); %>
-                              <h6 class="mt-3" style="font-family: 'Times new roman', sans-serif; font-weight: bold;">
-                                Quantitative Aptitude</h6>
-                              <% questions.filter(function(q){ return q.section==='Quantitative Aptitude'
-                                }).forEach(function(question, index){ %>
-                                <button type="button" id="nav-quant-<%= index %>"
-                                  class="btn btn-outline-danger btn-sm mb-1"
-                                  onclick="jumpToQuestion(<%= index + 40 %>)">Q<%= index + 1 %></button>
-                                <% }); %>
-                    </div>
+
+                    <% if(index===questions.length - 1) { %>
+                      <div class="mt-8 pt-8 border-t border-slate-100 text-center">
+                        <p class="text-slate-400 mb-4 font-medium uppercase text-xs tracking-widest">Everything checked?
+                        </p>
+                        <button type="submit" id="submit-btn" class="btn-action btn-danger-premium mx-auto px-12">
+                          Submit Final Test
+                        </button>
+                      </div>
+                      <% } %>
                   </div>
+                  <% }); %>
+              </div>
+            </form>
+          </div>
+
+          <!-- Sidebar -->
+          <div class="col-lg-4">
+            <div class="sticky-top" style="top: 100px;">
+              <!-- Timer Widget -->
+              <div class="timer-card mb-4">
+                <div class="text-xs font-bold uppercase tracking-widest opacity-60 mb-1">Time Remaining</div>
+                <div id="timer">60:00</div>
+              </div>
+
+              <!-- XP & Level Widget -->
+              <div class="xp-card mb-4">
+                <div class="flex items-center justify-between mb-3">
+                  <span class="bg-indigo-600 text-white px-3 py-1 rounded-lg text-sm font-black">
+                    <i class="fas fa-bolt mr-1"></i> LVL <span id="user-level">1</span>
+                  </span>
+                  <span class="text-xs font-bold text-slate-400">
+                    <span id="current-xp">0</span> / <span id="next-level-xp">100</span> XP
+                  </span>
                 </div>
-                <div class="col-md-9">
-                  <form id="aptitudeForm" action="/responses/submit" method="POST" style="display: none;"
-                    onsubmit="disableSubmitButton()">
-                    <div id="questions-container">
-                      <% questions.forEach(function(question, index){ %>
-                        <div class="card mb-4 question" id="question-<%= index %>"
-                          style="display: <%= index === 0 ? 'block' : 'none' %>;">
-                          <div class="card-body">
-                            <h5 class="card-title">Q<%= index + 1 %>: <%= question.questionText %>
-                            </h5>
-                            <div class="row" style="padding-top: 50px;">
-                              <% Object.entries(question.options).forEach(function(opt){ var key=opt[0], val=opt[1]; %>
-                                <div class="col-md-6 mb-2" style="padding-bottom: 25px;">
-                                  <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="question-<%= question._id %>"
-                                      value="<%= key %>">
-                                    <label class="form-check-label">(<%= key %>) <%= val %></label>
-                                  </div>
-                                </div>
-                                <% }); %>
-                            </div>
-                            <div class="d-flex justify-content-between mt-3" style="padding-top: 25px;">
-                              <button type="button" class="btn btn-secondary"
-                                onclick="previousQuestion()">Previous</button>
-                              <button type="button" class="btn btn-primary" onclick="nextQuestion()">Next</button>
-                              <button type="button" class="btn btn-success"
-                                onclick="saveAnswer('<%= question._id %>', <%= index %>)">Save and Next</button>
-                            </div>
-                          </div>
-                        </div>
-                        <% }); %>
-                    </div>
-                    <div class="text-center mt-4">
-                      <button type="submit" id="submit-btn" class="btn btn-danger btn-lg">Submit Test</button>
-                    </div>
-                  </form>
+                <div class="progress bg-slate-100" style="height: 10px; border-radius: 5px;">
+                  <div id="xp-bar" class="progress-bar bg-indigo-600" role="progressbar"
+                    style="width: 0%; transition: width 0.5s ease;"></div>
+                </div>
+              </div>
+
+              <!-- Question Navigation -->
+              <div class="glass-card p-4 custom-scrollbar" style="max-height: 50vh; overflow-y: auto;">
+                <h5 class="sidebar-title">Verbal Ability</h5>
+                <div class="question-nav-container">
+                  <% questions.filter(q=> q.section==='Verbal Ability').forEach((_, i) => { %>
+                    <button type="button" id="nav-verbal-<%= i %>" class="question-nav-btn btn-not-answered"
+                      onclick="jumpToQuestion(<%= i %>)">
+                      <%= i + 1 %>
+                    </button>
+                    <% }); %>
+                </div>
+
+                <h5 class="sidebar-title">Logical Reasoning</h5>
+                <div class="question-nav-container">
+                  <% questions.filter(q=> q.section==='Logical Reasoning').forEach((_, i) => { %>
+                    <button type="button" id="nav-logical-<%= i %>" class="question-nav-btn btn-not-answered"
+                      onclick="jumpToQuestion(<%= i + 20 %>)">
+                      <%= i + 1 %>
+                    </button>
+                    <% }); %>
+                </div>
+
+                <h5 class="sidebar-title">Quantitative Aptitude</h5>
+                <div class="question-nav-container">
+                  <% questions.filter(q=> q.section==='Quantitative Aptitude').forEach((_, i) => { %>
+                    <button type="button" id="nav-quant-<%= i %>" class="question-nav-btn btn-not-answered"
+                      onclick="jumpToQuestion(<%= i + 40 %>)">
+                      <%= i + 1 %>
+                    </button>
+                    <% }); %>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+
       <%- include('layouts/footer') %>
+
         <script>
           let timer, totalTime = 3600, currentQuestion = 0, answers = {}, userXP = 0, userLevel = 1, baseXP = 100, questionStartTime;
+
           function calculateXPForLevel(l) { return baseXP * l; }
+
           function awardXP(a) {
             userXP += a;
             let n = calculateXPForLevel(userLevel);
-            if (userXP >= n) { userLevel++; showLevelUpAnimation(); }
+            if (userXP >= n) {
+              userLevel++;
+              showLevelUpAnimation();
+            }
             document.getElementById('current-xp').textContent = userXP;
             document.getElementById('next-level-xp').textContent = calculateXPForLevel(userLevel);
             document.getElementById('user-level').textContent = userLevel;
-            document.getElementById('xp-bar').style.width = (userXP % n) / n * 100 + '%';
+            document.getElementById('xp-bar').style.width = ((userXP % n) / n * 100) + '%';
           }
+
           function showLevelUpAnimation() {
             let div = document.createElement('div');
-            div.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(44,62,80,0.9);color:white;padding:20px;border-radius:10px;animation:fadeInOut 2s forwards;z-index:1000;';
-            div.innerHTML = '<h3>🎉 Level Up!</h3><p>You reached Level ' + userLevel + '</p>';
+            div.className = 'level-up-toast';
+            div.innerHTML = '<div style="font-size:4rem;margin-bottom:1rem;">🔥</div><h2 style="font-weight:900;color:#1e293b;">LEVEL UP!</h2><p style="color:#6366f1;font-weight:700;">You are now Level ' + userLevel + '</p>';
             document.body.appendChild(div);
-            setTimeout(function () { div.remove(); }, 2000);
+            setTimeout(() => div.remove(), 3000);
           }
+
           function startTest() {
-            document.getElementById('start-btn').style.display = 'none';
-            document.getElementById('aptitudeForm').style.display = 'block';
-            questionStartTime = Date.now();
-            timer = setInterval(function () {
-              let m = Math.floor(totalTime / 60), s = totalTime % 60;
-              document.getElementById('timer').innerHTML = m + ':' + (s < 10 ? '0' + s : s);
-              totalTime--;
-              if (totalTime < 0) {
-                clearInterval(timer);
-                alert("Time's up! Submitting.");
-                document.getElementById('aptitudeForm').submit();
-              }
-            }, 1000);
+            document.getElementById('start-btn-container').classList.add('animate-fade');
+            setTimeout(() => {
+              document.getElementById('start-btn-container').style.display = 'none';
+              document.getElementById('main-content-layout').style.display = 'flex';
+              questionStartTime = Date.now();
+              updateNav();
+
+              timer = setInterval(function () {
+                let m = Math.floor(totalTime / 60), s = totalTime % 60;
+                document.getElementById('timer').innerHTML = (m < 10 ? '0' + m : m) + ':' + (s < 10 ? '0' + s : s);
+                if (totalTime <= 300) {
+                  document.getElementById('timer').style.color = '#ef4444';
+                }
+                totalTime--;
+                if (totalTime < 0) {
+                  clearInterval(timer);
+                  alert("Time is up! Submitting your test.");
+                  document.getElementById('aptitudeForm').submit();
+                }
+              }, 1000);
+            }, 300);
           }
+
           function jumpToQuestion(n) {
-            document.querySelectorAll('.question').forEach(function (q, i) { q.style.display = i === n ? 'block' : 'none'; });
+            document.querySelectorAll('.question').forEach((q, i) => {
+              if (i === n) {
+                q.style.display = 'block';
+                q.classList.add('animate-fade');
+              } else {
+                q.style.display = 'none';
+                q.classList.remove('animate-fade');
+              }
+            });
             currentQuestion = n;
             questionStartTime = Date.now();
+            updateNav();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
           }
+
           function nextQuestion() {
-            let q = document.querySelectorAll('.question');
-            if (currentQuestion < q.length - 1) {
-              q[currentQuestion].style.display = 'none';
-              currentQuestion++;
-              q[currentQuestion].style.display = 'block';
-              questionStartTime = Date.now();
-            }
+            let qs = document.querySelectorAll('.question');
+            if (currentQuestion < qs.length - 1) jumpToQuestion(currentQuestion + 1);
           }
+
           function previousQuestion() {
-            let q = document.querySelectorAll('.question');
-            if (currentQuestion > 0) {
-              q[currentQuestion].style.display = 'none';
-              currentQuestion--;
-              q[currentQuestion].style.display = 'block';
-              questionStartTime = Date.now();
-            }
+            if (currentQuestion > 0) jumpToQuestion(currentQuestion - 1);
           }
+
+          function onSelectionChange(idx) {
+            // Optional visual feedback
+          }
+
           function saveAnswer(id, idx) {
             let sel = document.querySelector('input[name="question-' + id + '"]:checked');
             if (sel) {
               answers[id] = sel.value;
-              let sec = getSection(idx), nIdx = sec === 'verbal' ? idx : (sec === 'logical' ? idx - 20 : idx - 40);
-              awardXP(10 + Math.max(0, 30 - Math.floor((Date.now() - questionStartTime) / 1000)));
-              let btn = document.getElementById('nav-' + sec + '-' + nIdx);
-              if (btn) { btn.classList.remove('btn-outline-danger'); btn.classList.add('btn-outline-success'); }
-              nextQuestion();
-            } else { alert("Select an answer"); }
+              let sec = getSection(idx),
+                relIdx = idx < 20 ? idx : (idx < 40 ? idx - 20 : idx - 40);
+
+              // Speed bonus XP
+              let duration = Math.floor((Date.now() - questionStartTime) / 1000);
+              awardXP(Math.max(10, 50 - duration));
+
+              let btn = document.getElementById('nav-' + sec + '-' + relIdx);
+              if (btn) {
+                btn.classList.remove('btn-not-answered');
+                btn.classList.add('btn-answered');
+              }
+
+              if (idx < 59) nextQuestion();
+              else alert("Check complete! Submit to finalize.");
+            } else {
+              alert("Please select an answer choice.");
+            }
           }
+
+          function updateNav() {
+            document.querySelectorAll('.question-nav-btn').forEach(b => b.classList.remove('btn-current'));
+            let sec = getSection(currentQuestion),
+              relIdx = currentQuestion < 20 ? currentQuestion : (currentQuestion < 40 ? currentQuestion - 20 : currentQuestion - 40);
+            let activeBtn = document.getElementById('nav-' + sec + '-' + relIdx);
+            if (activeBtn) activeBtn.classList.add('btn-current');
+          }
+
           function getSection(i) { return i < 20 ? 'verbal' : (i < 40 ? 'logical' : 'quant'); }
-          function disableSubmitButton() { let b = document.getElementById('submit-btn'); if (b) b.disabled = true; }
-          const style = document.createElement('style');
-          style.textContent = '@keyframes fadeInOut{0%{opacity:0;transform:translate(-50%,-50%) scale(0.8);}10%{opacity:1;transform:translate(-50%,-50%) scale(1.1);}20%{transform:translate(-50%,-50%) scale(1);}80%{opacity:1;}100%{opacity:0;}}';
-          document.head.appendChild(style);
+
+          function disableSubmitButton() {
+            let b = document.getElementById('submit-btn');
+            if (b) {
+              b.disabled = true;
+              b.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+            }
+          }
         </script>
   </body>
 
