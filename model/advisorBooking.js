@@ -1,5 +1,9 @@
 const mongoose = require('mongoose');
 
+/**
+ * AdvisorBooking Schema
+ * Stores high-intent leads for global education counseling.
+ */
 const AdvisorBookingSchema = new mongoose.Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     name: { type: String, required: true },
