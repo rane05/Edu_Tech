@@ -8,7 +8,8 @@ const TeacherProfileSchema = new mongoose.Schema({
     profileImage: { type: String, default: '' },
     state: { type: String, required: true },
     district: { type: String, required: true },
-    collegeName: { type: String, required: true } // College affiliation
+    collegeName: { type: String, required: true }, // College affiliation
+    uniqueCode: { type: String, unique: true } // Unique code for student linking
 });
 
 module.exports = mongoose.model('TeacherProfile', TeacherProfileSchema);

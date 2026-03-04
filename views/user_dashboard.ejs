@@ -1,93 +1,441 @@
 <%- include('layouts/header'); %>
     <%- include('layouts/navbar'); %>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-        <div class="container" style="margin-top: 40px;">
-            <h2>📊 My Performance Dashboard</h2>
+        <!-- Custom Style Overrides for "Next Level" UI -->
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap');
 
-            <!-- Stats Cards -->
-            <div class="row mb-4">
-                <div class="col-md-4">
-                    <div class="card bg-primary text-white p-3">
-                        <h3>
-                            <%= stats.bestScore %> / 60
-                        </h3>
-                        <p>All-Time Best Score</p>
+            :root {
+                --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+                --secondary-gradient: linear-gradient(135deg, #3b82f6 0%, #2dd4bf 100%);
+                --accent-gradient: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+            }
+
+            body {
+                font-family: 'Outfit', sans-serif;
+                background-color: #f8fafc;
+            }
+
+            .glass-card {
+                background: rgba(255, 255, 255, 0.8);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+            }
+
+            .stat-card {
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            .stat-card:hover {
+                transform: translateY(-5px);
+            }
+
+            .gradient-text {
+                background: var(--primary-gradient);
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+            .custom-scrollbar::-webkit-scrollbar {
+                width: 4px;
+            }
+
+            .custom-scrollbar::-webkit-scrollbar-track {
+                background: #f1f1f1;
+            }
+
+            .custom-scrollbar::-webkit-scrollbar-thumb {
+                background: #cbd5e1;
+                border-radius: 10px;
+            }
+
+            .btn-premium {
+                background: var(--primary-gradient);
+                color: white;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+            }
+
+            .btn-premium:hover {
+                box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+                transform: scale(1.02);
+                color: white;
+            }
+        </style>
+
+        <div class="min-h-screen pb-12">
+            <div style="height: 120px; width: 100%;"></div> <!-- Fixed spacer to clear the navbar -->
+            <div class="container mx-auto px-4">
+                <!-- Header Section with Glass Enhancement -->
+                <div
+                    class="glass-card rounded-[2.5rem] p-8 mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                    <div class="max-w-full overflow-hidden">
+                        <h1
+                            class="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-2 flex flex-wrap items-center gap-3">
+                            Hello, <span class="gradient-text truncate block max-w-[280px] md:max-w-xl">
+                                <%= username.split('@')[0] %>
+                            </span> 👋
+                        </h1>
+                        <p class="text-slate-500 font-medium tracking-wide">Ready to conquer your career goals today?
+                        </p>
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card bg-success text-white p-3">
-                        <h3>
-                            <%= stats.avgScore %>
-                        </h3>
-                        <p>Average Score</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="card bg-info text-white p-3">
-                        <h3>
-                            <%= stats.totalAttempts %>
-                        </h3>
-                        <p>Total Quizzes Taken</p>
+                    <div class="flex-shrink-0">
+                        <a href="/smart-quiz"
+                            class="btn-premium px-8 py-4 rounded-2xl font-bold flex items-center gap-3">
+                            <i class="fas fa-rocket"></i> Take New Quiz
+                        </a>
                     </div>
                 </div>
             </div>
 
-            <!-- Charts -->
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="card p-3">
-                        <h5>📈 Progress Trend</h5>
-                        <canvas id="scoreChart"></canvas>
+            <!-- Global Stats Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                <!-- Best Score Card -->
+                <div class="glass-card stat-card rounded-3xl p-6 relative overflow-hidden group">
+                    <div
+                        class="absolute -right-4 -top-4 w-24 h-24 bg-indigo-50 rounded-full opacity-50 group-hover:scale-150 transition-transform duration-700">
                     </div>
+                    <div class="flex items-center gap-4 mb-4">
+                        <div
+                            class="w-12 h-12 bg-indigo-100 rounded-2xl flex items-center justify-center text-indigo-600 shadow-sm">
+                            <i class="fas fa-trophy text-xl"></i>
+                        </div>
+                        <span class="text-slate-500 font-bold uppercase text-xs tracking-widest">Peak
+                            Performance</span>
+                    </div>
+                    <h3 class="text-4xl font-black text-slate-900 mb-1">
+                        <%= bestScore || 0 %><span class="text-lg text-slate-400 font-bold"> / 60</span>
+                    </h3>
+                    <p class="text-sm text-slate-400 font-semibold">Your all-time high score</p>
                 </div>
-                <div class="col-md-4">
-                    <div class="card p-3">
-                        <h5>🎯 Recent History</h5>
-                        <ul class="list-group list-group-flush">
-                            <% results.slice(-5).reverse().forEach(r=> { %>
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <span>
-                                        <%= new Date(r.date).toLocaleDateString() %>
-                                    </span>
-                                    <span class="badge bg-primary rounded-pill">
-                                        <%= r.score %>
-                                    </span>
-                                </li>
-                                <% }); %>
-                        </ul>
+
+                <!-- Average Card -->
+                <div class="glass-card stat-card rounded-3xl p-6 relative overflow-hidden group">
+                    <div
+                        class="absolute -right-4 -top-4 w-24 h-24 bg-emerald-50 rounded-full opacity-50 group-hover:scale-150 transition-transform duration-700">
                     </div>
+                    <div class="flex items-center gap-4 mb-4">
+                        <div
+                            class="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-600 shadow-sm">
+                            <i class="fas fa-chart-line text-xl"></i>
+                        </div>
+                        <span class="text-slate-500 font-bold uppercase text-xs tracking-widest">Consistency</span>
+                    </div>
+                    <h3 class="text-4xl font-black text-slate-900 mb-1">
+                        <%= avgScore || 0 %>
+                    </h3>
+                    <p class="text-sm text-slate-400 font-semibold">Average assessment rating</p>
+                </div>
+
+                <!-- Total Quizzes Card -->
+                <div class="glass-card stat-card rounded-3xl p-6 relative overflow-hidden group">
+                    <div
+                        class="absolute -right-4 -top-4 w-24 h-24 bg-amber-50 rounded-full opacity-50 group-hover:scale-150 transition-transform duration-700">
+                    </div>
+                    <div class="flex items-center gap-4 mb-4">
+                        <div
+                            class="w-12 h-12 bg-amber-100 rounded-2xl flex items-center justify-center text-amber-600 shadow-sm">
+                            <i class="fas fa-fire-alt text-xl"></i>
+                        </div>
+                        <span class="text-slate-500 font-bold uppercase text-xs tracking-widest">Global
+                            Activity</span>
+                    </div>
+                    <h3 class="text-4xl font-black text-slate-900 mb-1">
+                        <%= totalAttempts %>
+                    </h3>
+                    <p class="text-sm text-slate-400 font-semibold">Total knowledge checkpoints</p>
                 </div>
             </div>
 
-            <div class="text-center mt-4">
-                <a href="/smart-quiz" class="btn btn-lg btn-outline-primary">➜ Take New Quiz</a>
-            </div>
+            <!-- Major Section Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
 
+                <!-- Left Column: Updates & Vault -->
+                <div class="lg:col-span-8 space-y-8">
+
+                    <!-- Institutional Feed -->
+                    <div class="glass-card rounded-[2.5rem] p-8">
+                        <div class="flex items-center justify-between mb-8">
+                            <div>
+                                <h2 class="text-2xl font-black text-slate-900 tracking-tight">Institutional Feed
+                                </h2>
+                                <p class="text-slate-400 text-sm font-medium">Direct updates from your mentors</p>
+                            </div>
+                            <div class="flex -space-x-3 overflow-hidden">
+                                <div
+                                    class="w-10 h-10 rounded-full bg-indigo-500 border-2 border-white flex items-center justify-center text-white text-xs font-bold">
+                                    A</div>
+                                <div
+                                    class="w-10 h-10 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center text-white text-xs font-bold">
+                                    S</div>
+                                <div
+                                    class="w-10 h-10 rounded-full bg-amber-500 border-2 border-white flex items-center justify-center text-white text-xs font-bold">
+                                    K</div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Update Stream -->
+                            <div class="space-y-4">
+                                <h6 class="text-[10px] font-black uppercase text-slate-300 tracking-[0.2em] mb-4">
+                                    Latest Broadcasts</h6>
+                                <div class="space-y-4 custom-scrollbar max-h-[400px] overflow-y-auto pr-2">
+                                    <% if (teacherUpdates.length> 0) { %>
+                                        <% teacherUpdates.forEach(update=> { %>
+                                            <div
+                                                class="p-4 bg-white rounded-3xl border border-slate-100 shadow-sm hover:border-indigo-200 transition-all group">
+                                                <div class="flex justify-between items-start mb-2">
+                                                    <span
+                                                        class="px-3 py-1 bg-<%= update.type === 'task' ? 'indigo' : 'amber' %>-50 text-<%= update.type === 'task' ? 'indigo' : 'amber' %>-600 rounded-full text-[10px] font-black uppercase tracking-wider h-fit">
+                                                        <%= update.type %>
+                                                    </span>
+                                                    <span
+                                                        class="text-[10px] font-bold text-slate-300 group-hover:text-slate-500">
+                                                        <%= update.dueDate || update.date %>
+                                                    </span>
+                                                </div>
+                                                <h4 class="text-sm font-bold text-slate-800 leading-tight">
+                                                    <%= update.title %>
+                                                </h4>
+                                            </div>
+                                            <% }); %>
+                                                <% } else { %>
+                                                    <div
+                                                        class="py-12 text-center bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200">
+                                                        <p class="text-slate-400 font-bold italic">No broadcasts
+                                                            today</p>
+                                                    </div>
+                                                    <% } %>
+                                </div>
+                            </div>
+
+                            <!-- Study Vault (Styled Grid) -->
+                            <div class="space-y-4">
+                                <h6 class="text-[10px] font-black uppercase text-slate-300 tracking-[0.2em] mb-4">
+                                    Knowledge Vault</h6>
+                                <div class="grid grid-cols-1 gap-3">
+                                    <% if (resources.length> 0) { %>
+                                        <% resources.forEach(res=> { %>
+                                            <a href="<%= res.link %>" target="_blank"
+                                                class="flex items-center p-4 bg-gradient-to-r from-emerald-50 to-white rounded-3xl border border-emerald-100 group hover:shadow-lg transition-all">
+                                                <div
+                                                    class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center text-emerald-50 shadow-inner group-hover:scale-110 transition-transform">
+                                                    <i class="fas fa-file-pdf text-emerald-500"></i>
+                                                </div>
+                                                <div class="ml-4 flex-1">
+                                                    <h5 class="text-xs font-black text-slate-900 truncate">
+                                                        <%= res.title %>
+                                                    </h5>
+                                                    <p
+                                                        class="text-[9px] font-bold text-emerald-500 uppercase tracking-widest mt-1">
+                                                        Unlock Content</p>
+                                                </div>
+                                                <i
+                                                    class="fas fa-chevron-right text-slate-200 group-hover:text-emerald-300 text-xs"></i>
+                                            </a>
+                                            <% }); %>
+                                                <% } else { %>
+                                                    <div class="py-12 text-center bg-emerald-50 rounded-3xl opacity-50">
+                                                        <p class="text-emerald-400 text-xs font-bold">Vault is
+                                                            currently empty</p>
+                                                    </div>
+                                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Performance Chart Container -->
+                    <div class="glass-card rounded-[2.5rem] p-8">
+                        <div class="flex items-center justify-between mb-10">
+                            <div>
+                                <h2 class="text-2xl font-black text-slate-900 tracking-tight">Growth Analytics</h2>
+                                <p class="text-slate-400 text-sm font-medium">Your score trajectory over time</p>
+                            </div>
+                            <div class="px-4 py-2 bg-indigo-50 text-indigo-600 rounded-2xl text-xs font-black">Score
+                                Axis: 0-60</div>
+                        </div>
+                        <div class="w-full h-[300px]">
+                            <canvas id="scoreChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Doubts & History -->
+                <div class="lg:col-span-4 space-y-8">
+
+                    <!-- Doubt Hub -->
+                    <div class="bg-slate-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-2xl">
+                        <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-500 rounded-full blur-[80px] opacity-20">
+                        </div>
+
+                        <div class="flex flex-col h-full relative z-10">
+                            <div class="mb-8">
+                                <h2 class="text-2xl font-black tracking-tight mb-2">Expert Concierge</h2>
+                                <p class="text-slate-400 text-xs font-bold tracking-widest uppercase">Ask anything
+                                    anonymously</p>
+                            </div>
+
+                            <form action="/submitDoubt" method="POST" class="space-y-4 mb-10">
+                                <input type="text" name="subject" placeholder="Subject"
+                                    class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-sm focus:bg-white/10 focus:border-indigo-400 outline-none transition-all placeholder:text-white/20"
+                                    required>
+                                <textarea name="question" placeholder="Your specific question..." rows="4"
+                                    class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-sm focus:bg-white/10 focus:border-indigo-400 outline-none transition-all placeholder:text-white/20 resize-none"
+                                    required></textarea>
+                                <button type="submit"
+                                    class="w-full bg-white text-slate-900 font-black py-4 rounded-2xl hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-indigo-500/20">Shoot
+                                    Message</button>
+                            </form>
+
+                            <div class="flex-1">
+                                <h6 class="text-[10px] font-black uppercase text-white/30 tracking-[0.2em] mb-6">
+                                    Expert Responses</h6>
+                                <div class="space-y-4 custom-scrollbar max-h-[300px] overflow-y-auto pr-2">
+                                    <% if (myDoubts.length> 0) { %>
+                                        <% myDoubts.forEach(doubt=> { %>
+                                            <div
+                                                class="p-5 rounded-3xl <%= doubt.status === 'resolved' ? 'bg-indigo-500/20 border border-indigo-400/30' : 'bg-white/5 border border-white/10' %>">
+                                                <div class="flex justify-between items-center mb-3">
+                                                    <span
+                                                        class="text-[9px] font-black uppercase tracking-widest <%= doubt.status === 'resolved' ? 'text-indigo-400' : 'text-slate-500' %>">
+                                                        <%= doubt.subject %>
+                                                    </span>
+                                                    <span
+                                                        class="w-2 h-2 rounded-full <%= doubt.status === 'resolved' ? 'bg-indigo-400 animate-pulse' : 'bg-slate-700' %>"></span>
+                                                </div>
+                                                <p class="text-xs font-bold leading-relaxed opacity-90 mb-3">
+                                                    <%= doubt.question %>
+                                                </p>
+                                                <% if (doubt.status==='resolved' ) { %>
+                                                    <div class="mt-4 pt-4 border-t border-white/10">
+                                                        <p
+                                                            class="text-[10px] text-indigo-400 font-black tracking-widest uppercase mb-1">
+                                                            Response</p>
+                                                        <p class="text-[11px] italic text-slate-300">
+                                                            <%= doubt.answer %>
+                                                        </p>
+                                                    </div>
+                                                    <% } %>
+                                            </div>
+                                            <% }); %>
+                                                <% } else { %>
+                                                    <p
+                                                        class="text-center text-white/20 text-[10px] font-black uppercase tracking-widest py-8">
+                                                        Inbox is empty</p>
+                                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- History Feeds -->
+                    <div class="glass-card rounded-[2.5rem] p-8">
+                        <h2 class="text-xl font-black text-slate-900 mb-8 tracking-tight">Recent Benchmarks</h2>
+                        <div class="space-y-4">
+                            <% if (results && results.length> 0) { %>
+                                <% results.slice(-5).reverse().forEach(r=> { %>
+                                    <div
+                                        class="flex items-center justify-between p-4 hover:bg-slate-50 rounded-2xl transition-colors group">
+                                        <div class="flex items-center gap-4">
+                                            <div
+                                                class="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-400 group-hover:bg-indigo-50 group-hover:text-indigo-500 transition-colors">
+                                                <i class="fas fa-calendar-check text-xs"></i>
+                                            </div>
+                                            <div>
+                                                <p class="text-xs font-black text-slate-900">
+                                                    <%= new Date(r.date).toLocaleDateString() %>
+                                                </p>
+                                                <p class="text-[10px] font-bold text-slate-400 uppercase">Automated
+                                                    Test</p>
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <span class="text-base font-black text-slate-900">
+                                                <%= r.score %>
+                                            </span>
+                                            <span
+                                                class="text-[9px] font-bold text-slate-300 d-block tracking-tighter">SCORE</span>
+                                        </div>
+                                    </div>
+                                    <% }); %>
+                                        <% } else { %>
+                                            <p class="text-center text-slate-300 text-xs py-10 italic">No history
+                                                recorded yet</p>
+                                            <% } %>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
         </div>
 
         <script>
-            const ctx = document.getElementById('scoreChart').getContext('2d');
-            const dataPoints = <% - JSON.stringify(results.map(r => r.score)) %>;
-            const labels = <% - JSON.stringify(results.map((r, i) => `Attempt ${i + 1}`)) %>;
+            document.addEventListener('DOMContentLoaded', () => {
+                const ctx = document.getElementById('scoreChart').getContext('2d');
 
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Quiz Score',
-                        data: dataPoints,
-                        borderColor: '#6366f1',
-                        tension: 0.3,
-                        fill: true,
-                        backgroundColor: 'rgba(99, 102, 241, 0.1)'
-                    }]
-                },
-                options: {
-                    scales: {
-                        y: { beginAtZero: true, max: 60 }
+                // Data parsing
+                const resultsRaw = <% - JSON.stringify(results || []) %>;
+                const dataPoints = resultsRaw.map(r => r.score);
+                const labels = resultsRaw.map((_, i) => `Attempt ${i + 1}`);
+
+                // Custom Gradient for Chart
+                const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+                gradient.addColorStop(0, 'rgba(99, 102, 241, 0.4)');
+                gradient.addColorStop(1, 'rgba(99, 102, 241, 0)');
+
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Quiz Rating',
+                            data: dataPoints,
+                            borderColor: '#6366f1',
+                            borderWidth: 4,
+                            pointBackgroundColor: '#ffffff',
+                            pointBorderColor: '#6366f1',
+                            pointBorderWidth: 3,
+                            pointRadius: 6,
+                            pointHoverRadius: 8,
+                            tension: 0.4,
+                            fill: true,
+                            backgroundColor: gradient
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                backgroundColor: '#0f172a',
+                                titleFont: { size: 14, weight: 'bold' },
+                                bodyFont: { size: 13 },
+                                padding: 12,
+                                cornerRadius: 12,
+                                displayColors: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 60,
+                                grid: { color: '#f1f5f9', drawBorder: false },
+                                ticks: { font: { weight: 'bold', size: 11 }, color: '#94a3b8' }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: { font: { weight: 'bold', size: 11 }, color: '#94a3b8' }
+                            }
+                        }
                     }
-                }
+                });
             });
         </script>
+
+        <%- include('layouts/footer'); %>

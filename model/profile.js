@@ -19,8 +19,9 @@ const ProfileSchema = new mongoose.Schema({
     skills: { type: String, default: '' },
     careerGoal: { type: String, default: '' },
     uniqueCode: { type: String, unique: true }, // Unique code for linking
-    parentUsername: { type: String, default: null } // Store parent's username if linked
-   
+    parentUsername: { type: String, default: null }, // Store parent's username if linked
+    linkedTeacher: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null } // Explicit link to teacher
+
 
 });
 

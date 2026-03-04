@@ -42,39 +42,63 @@ router.get('/login', (req, res) => {
     res.render('login');
 });
 
-// Login POST request
-router.post('/login', async (req, res) => {
+router.post('/login', async (req, res, next) => {
     try {
         const { username, password, role } = req.body;
 
-        const user = await User.findOne({ username, role });
+        if (!role) {
+            req.flash('error', 'Please select a role.');
+            return res.redirect('/login');
+        }
+
+        // First find user by username to provide better feedback
+        const user = await User.findOne({ username });
         if (!user) {
-            req.flash('error', 'Invalid username, password, or role.');
+            req.flash('error', 'No account found with this email.');
             return res.redirect('/login');
         }
 
-        const { user: authedUser, error } = await user.authenticate(password);
-        if (error || !authedUser) {
-            req.flash('error', 'Invalid username, password, or role.');
+        // Check if role matches
+        if (user.role !== role) {
+            req.flash('error', `This account is registered as a ${user.role}, not a ${role}.`);
             return res.redirect('/login');
         }
 
-        req.session.userId = user._id;
-        req.session.role = user.role;
+        // Use passport to authenticate the user's password
+        passport.authenticate('local', (err, authedUser, info) => {
+            if (err) {
+                console.error("Passport auth error:", err);
+                return next(err);
+            }
+            if (!authedUser) {
+                req.flash('error', info.message || 'Invalid username or password.');
+                return res.redirect('/login');
+            }
 
-        req.flash('success', 'Successfully logged in!');
+            // Establish passport session
+            req.login(authedUser, (err) => {
+                if (err) return next(err);
 
-        // Redirect based on role
-        if (role === 'student') {
-            return res.redirect('/');
-        } else if (role === 'parent') {
-            return res.redirect('/parent_home');
-        } else if (role === 'teacher') {
-            return res.redirect('/teacher_home');
-        }
+                // Set custom session data for legacy route checks
+                req.session.userId = authedUser._id;
+                req.session.role = authedUser.role;
+
+                req.flash('success', `Welcome back, ${authedUser.username}!`);
+
+                // Redirect based on role
+                if (authedUser.role === 'student') {
+                    return res.redirect('/');
+                } else if (authedUser.role === 'parent') {
+                    return res.redirect('/parentprofile'); // Consistent with parent dashboard
+                } else if (authedUser.role === 'teacher') {
+                    return res.redirect('/teacher_home');
+                }
+                res.redirect('/');
+            });
+        })(req, res, next);
 
     } catch (err) {
-        console.error("Login error:", err);
+        console.error("Login unexpected error:", err);
         req.flash('error', 'An unexpected error occurred during login.');
         res.redirect('/login');
     }
@@ -82,13 +106,16 @@ router.post('/login', async (req, res) => {
 
 
 // Logout route
-router.get('/logout', (req, res) => {
-    req.session.destroy((err) => {
-        if (err) {
-            console.error("Logout Error:", err);
-            return res.redirect('/'); // Just redirect rather than crashing
-        }
-        res.redirect('/login');
+router.get('/logout', (req, res, next) => {
+    req.logout((err) => {
+        if (err) return next(err);
+
+        req.session.destroy((err) => {
+            if (err) {
+                console.error("Session destruction error:", err);
+            }
+            res.redirect('/login');
+        });
     });
 });
 

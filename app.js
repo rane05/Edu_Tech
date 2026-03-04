@@ -72,6 +72,7 @@ const smartQuiz = require('./routes/smart_quiz.js');
 const leaderboard = require('./routes/leaderboard.js');
 const userDashboard = require('./routes/user_dashboard.js');
 const resumeBuilder = require('./routes/resume_builder.js');
+const parentDashboard = require('./routes/parent_dashboard.js');
 
 
 let app = express();
@@ -183,6 +184,7 @@ app.use(smartQuiz);
 app.use(leaderboard);
 app.use(userDashboard);
 app.use(resumeBuilder);
+app.use(parentDashboard);
 app.use(require('./routes/cet_search.js')); // Register CET Search
 app.use(require('./routes/jee_search.js')); // Register JEE Search
 app.use(teacherHomeRoutes); // Use teacher home routes
@@ -249,23 +251,6 @@ app.get('/verify', (req, res) => {
     res.render('blockchain')
 
 });
-
-app.get('/parent_home', (req, res) => {
-    if (req.session.role !== 'parent') {
-        return res.redirect('/login');
-    }
-    res.render('parent_home');
-});
-
-app.get('/teacher_home', (req, res) => {
-    if (req.session.role !== 'teacher') {
-        return res.redirect('/login');
-    }
-    res.render('teacher_home');
-});
-
-
-
 
 app.get('/career_resources', (req, res) => {
     res.render('career_resources')

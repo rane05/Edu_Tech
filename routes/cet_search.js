@@ -2,20 +2,30 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs');
 const path = require('path');
+const College = require('../model/cetCollege');
 
-// Load JSON data into memory on startup
 const COLLEGES_DATA_PATH = path.join(__dirname, '../all_colleges_data.json');
 let allColleges = [];
 
-try {
-    const rawData = fs.readFileSync(COLLEGES_DATA_PATH, 'utf8');
-    const collegesObj = JSON.parse(rawData);
-    // Convert object { "2130": {...}, ... } to array [ {...}, ... ]
-    allColleges = Object.values(collegesObj);
-    console.log(`Loaded ${allColleges.length} colleges from JSON.`);
-} catch (err) {
-    console.error("Error loading college data JSON:", err);
-}
+// Load data into memory on startup
+const loadColleges = async () => {
+    try {
+        if (fs.existsSync(COLLEGES_DATA_PATH)) {
+            const rawData = fs.readFileSync(COLLEGES_DATA_PATH, 'utf8');
+            const collegesObj = JSON.parse(rawData);
+            allColleges = Object.values(collegesObj);
+            console.log(`Loaded ${allColleges.length} colleges from JSON.`);
+        } else {
+            console.log("JSON file missing, fetching colleges from MongoDB...");
+            allColleges = await College.find({}).lean();
+            console.log(`Loaded ${allColleges.length} colleges from MongoDB.`);
+        }
+    } catch (err) {
+        console.error("Error loading college data:", err);
+    }
+};
+
+loadColleges();
 
 // Render the Search Page
 router.get('/cet-predictor', (req, res) => {

@@ -1,232 +1,185 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduNavigator Dashboard</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
+<!-- Modern Glassmorphism Parent Navbar -->
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap');
 
-        nav {
-            background: #ffffff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    :root {
+        --p-primary: #10b981;
+        --p-dark: #0f172a;
+        --p-slate: #64748b;
+    }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
+    .glass-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 70px;
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s ease;
+    }
 
-        .logo span:first-child {
-            color: #27ae60; /* Green for Edu */
-        }
+    .nav-container {
+        max-width: 1280px;
+        margin: 0 auto;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 2rem;
+    }
 
-        .logo span:last-child {
-            color: #2980b9; /* Blue for Navigator */
-        }
+    .nav-brand {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 800;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
 
+    .brand-edu {
+        color: var(--p-primary);
+    }
+
+    .brand-nav {
+        color: var(--p-dark);
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 2.5rem;
+        align-items: center;
+    }
+
+    .nav-link {
+        text-decoration: none;
+        color: var(--p-slate);
+        font-weight: 600;
+        font-size: 0.95rem;
+        font-family: 'Outfit', sans-serif;
+        transition: all 0.2s ease;
+        position: relative;
+    }
+
+    .nav-link:hover {
+        color: var(--p-primary);
+    }
+
+    .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: var(--p-primary);
+        transition: width 0.3s ease;
+    }
+
+    .nav-link:hover::after {
+        width: 100%;
+    }
+
+    .btn-logout {
+        background: var(--p-dark);
+        color: white !important;
+        padding: 0.6rem 1.25rem;
+        border-radius: 0.75rem;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 0.9rem;
+        transition: all 0.2s ease;
+    }
+
+    .btn-logout:hover {
+        background: #1e293b;
+        transform: translateY(-1px);
+    }
+
+    /* Mobile Toggle */
+    .mobile-toggle {
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        cursor: pointer;
+    }
+
+    .bar {
+        width: 22px;
+        height: 2px;
+        background: var(--p-dark);
+        transition: 0.3s;
+    }
+
+    @media (max-width: 768px) {
         .nav-links {
+            position: fixed;
+            top: 70px;
+            right: -100%;
+            width: 80%;
+            height: calc(100vh - 70px);
+            background: white;
+            flex-direction: column;
+            padding: 2rem;
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.05);
+            transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .nav-links.active {
+            right: 0;
+        }
+
+        .mobile-toggle {
             display: flex;
-            gap: 1.5rem;
-            align-items: center;
         }
+    }
+</style>
 
-        .nav-links a {
-            text-decoration: none;
-            color: #34495e;
-            position: relative;
-            transition: all 0.3s ease;
-        }
+<nav class="glass-nav">
+    <div class="nav-container">
+        <a href="/parent_home" class="nav-brand">
+            <span class="brand-edu">Edu</span><span class="brand-nav">Navigator</span>
+        </a>
 
-        .nav-links a:hover {
-            color: #27ae60;
-            transform: translateY(-3px);
-        }
-
-        .dropdown {
-            position: relative;
-        }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background: #fff;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-            min-width: 200px;
-            top: 100%;
-            left: 0;
-            z-index: 1;
-            border-radius: 5px;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-
-        .dropdown-content a {
-            padding: 12px 16px;
-            display: block;
-            color: #2c3e50;
-            transition: all 0.3s ease;
-        }
-
-        .dropdown-content a:hover {
-            background: #f8f9fa;
-            transform: translateX(5px);
-            color: #27ae60;
-        }
-
-        .login-btn {
-            background: #e74c3c;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-        }
-
-        .login-btn:hover {
-            background: #27ae60;
-            transform: translateY(-3px);
-            box-shadow: 0 4px 8px rgba(88, 182, 11, 0.3);
-        }
-
-        .hamburger {
-            display: none;
-            cursor: pointer;
-        }
-
-        .hamburger .line {
-            width: 25px;
-            height: 3px;
-            background: #2c3e50;
-            margin: 5px 0;
-            transition: 0.3s;
-        }
-
-        @media (max-width: 768px) {
-            .hamburger {
-                display: block;
-            }
-
-            .nav-links {
-                position: fixed;
-                top: 70px;
-                left: -100%;
-                width: 100%;
-                height: calc(100vh - 70px);
-                background: #fff;
-                flex-direction: column;
-                gap: 0;
-                transition: 0.3s;
-                padding: 1rem 0;
-            }
-
-            .nav-links.active {
-                left: 0;
-            }
-
-            .nav-links a {
-                padding: 1rem 2rem;
-                width: 100%;
-            }
-
-            .dropdown-content {
-                position: static;
-                box-shadow: none;
-                display: none;
-                background: #f8f9fa;
-            }
-
-            .dropdown:hover .dropdown-content {
-                display: none;
-            }
-
-            .dropdown.active .dropdown-content {
-                display: block;
-            }
-
-            .login-btn {
-                margin: 1rem;
-                text-align: center;
-            }
-        }
-    </style>
-</head>
-<body>
-    <nav>
-        <div class="logo">
-            <span>Edu</span><span>Navigator</span>
+        <div class="mobile-toggle" id="mobile-toggle">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
         </div>
-        <div class="hamburger">
-            <div class="line"></div>
-            <div class="line"></div>
-            <div class="line"></div>
+
+        <div class="nav-links" id="nav-links">
+            <a href="/parent_home" class="nav-link">Dashboard</a>
+            <a href="/parentprofile" class="nav-link">My Profile</a>
+
+            <% if (typeof userId !=='undefined' && userId) { %>
+                <a href="/logout" class="btn-logout">Log Out</a>
+                <% } else { %>
+                    <a href="/login" class="nav-link">Log In</a>
+                    <% } %>
         </div>
-        <div class="nav-links">
-          <a  href="/parent_home">Home</a>
-          <a  href="/parentprofile">Profile</a>
-     
-            
-          <% if (userId) { %>
-       
-            <li class="nav-item">
-                <a class="nav-link" href="/logout">Logout</a>
-              </li>
-    
-              <% } else { %>
-    
-              <li class="nav-item">
-                <a class="nav-link" href="/login">Login</a>
-             
-            </li>
-            <% }  %>
-  
-        </div>
-    </nav>
+    </div>
+</nav>
 
-    <script>
-        const hamburger = document.querySelector('.hamburger');
-        const navLinks = document.querySelector('.nav-links');
-        const dropdowns = document.querySelectorAll('.dropdown');
+<script>
+    const toggle = document.getElementById('mobile-toggle');
+    const links = document.getElementById('nav-links');
 
-        hamburger.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-            hamburger.classList.toggle('active');
-        });
+    toggle.addEventListener('click', () => {
+        links.classList.toggle('active');
+        toggle.classList.toggle('active');
+    });
 
-        dropdowns.forEach(dropdown => {
-            const link = dropdown.querySelector('a');
-            link.addEventListener('click', (e) => {
-                if (window.innerWidth <= 768) {
-                    e.preventDefault();
-                    dropdown.classList.toggle('active');
-                }
-            });
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!navLinks.contains(e.target) && !hamburger.contains(e.target)) {
-                navLinks.classList.remove('active');
-                dropdowns.forEach(dropdown => dropdown.classList.remove('active'));
-            }
-        });
-
-        window.addEventListener('resize', () => {
-            if (window.innerWidth > 768) {
-                navLinks.classList.remove('active');
-                dropdowns.forEach(dropdown => dropdown.classList.remove('active'));
-            }
-        });
-    </script>
-</body>
-</html>
-
+    // Close on click outside
+    document.addEventListener('click', (e) => {
+        if (!toggle.contains(e.target) && !links.contains(e.target)) {
+            links.classList.remove('active');
+        }
+    });
+</script>
