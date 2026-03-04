@@ -1,538 +1,1251 @@
 <%- include('layouts/header'); %>
-  <%- include('layouts/navbar'); %>
+    <%- include('layouts/navbar'); %>
 
-    <style>
-      :root {
-        --color-primary: #FFB800;
-        --color-secondary: #00A8FF;
-        --color-accent: #6C63FF;
-        --color-dark: #1A1A2E;
-        --color-text: #2D3748;
-        --color-text-light: #718096;
-        --color-bg: #FFFFFF;
-        --color-bg-light: #F7FAFC;
-        --color-bg-dark: #16213E;
-      }
+        <!-- GSAP + ScrollTrigger -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+        <style>
+            /* Base Reset & Variables */
+            :root {
+                --primary: #4F46E5;
+                --primary-light: #6366f1;
+                --accent: #14B8A6;
+                --dark: #111827;
+                --dark-surface: #1F2937;
+                --light-bg: #F9FAFB;
+                --text-primary: #1E293B;
+                --text-secondary: #64748B;
+                --gray-100: #F1F5F9;
+                --gray-200: #E2E8F0;
+                --gray-300: #CBD5E1;
+                --radius: 16px;
+                --transition-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+                --shadow-soft: 0 10px 40px -10px rgba(0, 0, 0, 0.05);
+                --shadow-hover: 0 20px 40px -10px rgba(79, 70, 229, 0.15);
+            }
 
-      body {
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', sans-serif;
-        color: var(--color-text);
-        line-height: 1.6;
-        background: var(--color-bg);
-      }
+            /* We are stripping Tailwind for this specific page structure */
+            .cr-page {
+                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+                color: var(--text-primary);
+                background-color: var(--light-bg);
+                overflow-x: hidden;
+                line-height: 1.5;
+            }
 
-      /* Hero Section */
-      .resources-hero {
-        padding: 80px 20px 60px;
-        background: var(--color-bg-light);
-        text-align: center;
-      }
+            .cr-container {
+                max-width: 1280px;
+                margin: 0 auto;
+                padding: 0 24px;
+                position: relative;
+                z-index: 2;
+            }
 
-      .resources-hero h1 {
-        font-size: clamp(2.5rem, 5vw, 3.5rem);
-        font-weight: 800;
-        color: var(--color-dark);
-        margin-bottom: 15px;
-      }
+            /* 12-Column Grid System */
+            .cr-grid {
+                display: grid;
+                grid-template-columns: repeat(12, 1fr);
+                gap: 32px;
+            }
 
-      .resources-hero p {
-        font-size: 1.125rem;
-        color: var(--color-text-light);
-        margin-bottom: 30px;
-      }
+            /* Typography */
+            .cr-h1 {
+                font-size: 56px;
+                font-weight: 800;
+                line-height: 1.1;
+                letter-spacing: -0.02em;
+                color: var(--dark);
+                margin: 0;
+            }
 
-      .search-bar {
-        max-width: 600px;
-        margin: 0 auto;
-        position: relative;
-      }
+            .cr-h2 {
+                font-size: 36px;
+                font-weight: 700;
+                line-height: 1.2;
+                letter-spacing: -0.01em;
+                color: var(--dark);
+                margin: 0;
+            }
 
-      .search-input {
-        width: 100%;
-        padding: 15px 50px 15px 20px;
-        border-radius: 50px;
-        border: 1px solid #E2E8F0;
-        font-size: 1rem;
-        background: white;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        transition: all 0.3s;
-      }
+            .cr-h3 {
+                font-size: 24px;
+                font-weight: 600;
+                line-height: 1.3;
+                color: var(--dark);
+                margin: 0;
+            }
 
-      .search-input:focus {
-        outline: none;
-        border-color: var(--color-secondary);
-        box-shadow: 0 4px 20px rgba(0, 168, 255, 0.15);
-      }
+            .cr-body-large {
+                font-size: 18px;
+                color: var(--text-secondary);
+                line-height: 1.6;
+            }
 
-      .search-icon {
-        position: absolute;
-        right: 20px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: var(--color-text-light);
-      }
+            .cr-body {
+                font-size: 16px;
+                color: var(--text-secondary);
+                line-height: 1.5;
+            }
 
-      /* Resources Container */
-      .resources-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 80px 20px;
-      }
+            /* Buttons */
+            .cr-btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                padding: 14px 28px;
+                border-radius: 12px;
+                font-size: 16px;
+                font-weight: 600;
+                text-decoration: none;
+                transition: all 0.3s var(--transition-smooth);
+                cursor: pointer;
+                border: none;
+            }
 
-      .resource-section {
-        margin-bottom: 60px;
-      }
+            .cr-btn-primary {
+                background: var(--primary);
+                color: #fff;
+                box-shadow: 0 4px 14px 0 rgba(79, 70, 229, 0.39);
+            }
 
-      .section-title {
-        font-size: 2rem;
-        font-weight: 700;
-        color: var(--color-dark);
-        margin-bottom: 15px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-      }
+            .cr-btn-primary:hover {
+                background: var(--primary-light);
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(79, 70, 229, 0.23);
+                color: white;
+            }
 
-      .section-title i {
-        color: var(--color-primary);
-        font-size: 1.75rem;
-      }
+            .cr-btn-secondary {
+                background: #fff;
+                color: var(--text-primary);
+                border: 1px solid var(--gray-200);
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+            }
 
-      .section-subtitle {
-        font-size: 1rem;
-        color: var(--color-text-light);
-        margin-bottom: 40px;
-      }
+            .cr-btn-secondary:hover {
+                border-color: var(--gray-300);
+                background: var(--gray-100);
+                transform: translateY(-2px);
+                color: var(--text-primary);
+            }
 
-      .resource-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-        gap: 30px;
-      }
+            /* 1. Hero Section */
+            .cr-hero {
+                position: relative;
+                padding: 180px 0 100px;
+                background: radial-gradient(circle at 80% 20%, rgba(20, 184, 166, 0.05) 0%, transparent 40%),
+                    radial-gradient(circle at 20% 80%, rgba(79, 70, 229, 0.05) 0%, transparent 40%);
+            }
 
-      .resource-card {
-        background: white;
-        border-radius: 15px;
-        padding: 30px;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        border: 1px solid rgba(0, 0, 0, 0.05);
-        transition: all 0.3s ease;
-      }
+            .cr-hero-content {
+                grid-column: 1 / 7;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                position: relative;
+                z-index: 10;
+            }
 
-      .resource-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      }
+            .cr-hero-visual {
+                grid-column: 8 / 13;
+                position: relative;
+                perspective: 1000px;
+            }
 
-      .resource-card h3 {
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: var(--color-dark);
-        margin-bottom: 12px;
-      }
+            /* Micro Badge */
+            .cr-badge {
+                display: inline-flex;
+                align-items: center;
+                padding: 6px 14px;
+                background: rgba(79, 70, 229, 0.1);
+                color: var(--primary);
+                border-radius: 100px;
+                font-size: 14px;
+                font-weight: 600;
+                margin-bottom: 24px;
+                width: max-content;
+                border: 1px solid rgba(79, 70, 229, 0.2);
+            }
 
-      .tags {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 8px;
-        margin-bottom: 15px;
-      }
+            /* Split Highlight */
+            .cr-text-gradient {
+                background: linear-gradient(135deg, var(--primary), var(--accent));
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+                display: inline-block;
+            }
 
-      .tag {
-        display: inline-block;
-        padding: 5px 12px;
-        background: rgba(255, 184, 0, 0.1);
-        color: #D97706;
-        border-radius: 20px;
-        font-size: 0.75rem;
-        font-weight: 600;
-      }
+            .cr-hero-actions {
+                display: flex;
+                gap: 16px;
+                margin-top: 40px;
+                align-items: center;
+            }
 
-      .resource-card p {
-        color: var(--color-text-light);
-        font-size: 0.9375rem;
-        margin-bottom: 20px;
-        line-height: 1.6;
-      }
+            .cr-trust-line {
+                margin-top: 32px;
+                font-size: 14px;
+                color: var(--text-secondary);
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
 
-      .resource-link {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        color: var(--color-secondary);
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 0.9375rem;
-        transition: all 0.3s;
-      }
+            .cr-avatars {
+                display: flex;
+            }
 
-      .resource-link:hover {
-        color: var(--color-primary);
-        gap: 12px;
-      }
+            .cr-avatars img {
+                width: 32px;
+                height: 32px;
+                border-radius: 50%;
+                border: 2px solid white;
+                margin-left: -12px;
+            }
 
-      /* Footer */
-      .footer {
-        background: var(--color-bg-dark);
-        color: white;
-        padding: 60px 20px 30px;
-      }
+            .cr-avatars img:first-child {
+                margin-left: 0;
+            }
 
-      .footer-container {
-        max-width: 1200px;
-        margin: 0 auto;
-      }
+            /* Dashboard Mockup Component */
+            .cr-mockup-wrapper {
+                position: relative;
+                width: 100%;
+                transform-style: preserve-3d;
+            }
 
-      .footer-top {
-        display: grid;
-        grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
-        gap: 40px;
-        margin-bottom: 40px;
-      }
+            .cr-mockup-glow {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 100%;
+                height: 100%;
+                transform: translate(-50%, -50%);
+                background: radial-gradient(circle, rgba(79, 70, 229, 0.15) 0%, transparent 60%);
+                filter: blur(40px);
+                z-index: 1;
+            }
 
-      .footer-column h3 {
-        font-size: 1.125rem;
-        margin-bottom: 20px;
-      }
+            .cr-mockup {
+                background: white;
+                border-radius: 20px;
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+                border: 1px solid rgba(0, 0, 0, 0.05);
+                padding: 24px;
+                position: relative;
+                z-index: 2;
+                transform: rotateY(-5deg) rotateX(5deg);
+                transition: transform 0.1s;
+            }
 
-      .footer-column ul {
-        list-style: none;
-      }
+            .cr-mockup-header {
+                display: flex;
+                gap: 8px;
+                margin-bottom: 24px;
+            }
 
-      .footer-column ul li {
-        margin-bottom: 10px;
-      }
+            .cr-mockup-dot {
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                background: #E2E8F0;
+            }
 
-      .footer-column a {
-        color: rgba(255, 255, 255, 0.7);
-        text-decoration: none;
-        transition: color 0.3s;
-      }
+            .cr-mockup-dot:nth-child(1) {
+                background: #EF4444;
+            }
 
-      .footer-column a:hover {
-        color: white;
-      }
+            .cr-mockup-dot:nth-child(2) {
+                background: #F59E0B;
+            }
 
-      .newsletter-form {
-        display: flex;
-        gap: 10px;
-        margin-top: 20px;
-      }
+            .cr-mockup-dot:nth-child(3) {
+                background: #10B981;
+            }
 
-      .newsletter-form input {
-        flex: 1;
-        padding: 12px 20px;
-        border: none;
-        border-radius: 25px;
-        outline: none;
-      }
+            .cr-mock-line {
+                height: 12px;
+                background: #F1F5F9;
+                border-radius: 6px;
+                margin-bottom: 12px;
+            }
 
-      .newsletter-form button {
-        padding: 12px 30px;
-        background: var(--color-primary);
-        color: white;
-        border: none;
-        border-radius: 25px;
-        font-weight: 600;
-        cursor: pointer;
-      }
+            .cr-mock-line.w-full {
+                width: 100%;
+            }
 
-      .footer-bottom {
-        padding-top: 30px;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        text-align: center;
-        color: rgba(255, 255, 255, 0.6);
-      }
+            .cr-mock-line.w-3-4 {
+                width: 75%;
+            }
 
-      /* Responsive */
-      @media (max-width: 768px) {
-        .resource-grid {
-          grid-template-columns: 1fr;
-        }
+            .cr-mock-line.w-1-2 {
+                width: 50%;
+            }
 
-        .footer-top {
-          grid-template-columns: 1fr;
-        }
-      }
-    </style>
+            .cr-mock-card-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+                margin-top: 24px;
+            }
 
-    <!-- Hero Section -->
-    <section class="resources-hero">
-      <h1>Career Resources</h1>
-      <p>Discover tools, guides, and materials to accelerate your career journey</p>
-      <form class="search-bar" action="/search" method="GET">
-        <input type="text" class="search-input" name="q" id="resourceSearch"
-          placeholder="Search for resources, tools, guides...">
-        <button type="submit"
-          style="background:none; border:none; position:absolute; right:20px; top:50%; transform:translateY(-50%); cursor:pointer;">
-          <i class="fas fa-search search-icon" style="position:static; transform:none;"></i>
-        </button>
-      </form>
-    </section>
+            .cr-mock-card {
+                background: #F8FAFC;
+                border: 1px solid #E2E8F0;
+                border-radius: 12px;
+                height: 80px;
+            }
 
-    <!-- Resources Container -->
-    <div class="resources-container">
+            /* 2. Feature Cards Section */
+            .cr-section {
+                padding: 120px 0;
+            }
 
-      <!-- Career Assessment Tools -->
-      <section class="resource-section">
-        <h2 class="section-title">
-          <i class="fas fa-clipboard-check"></i>
-          Career Assessment Tools
-        </h2>
-        <p class="section-subtitle">Discover your strengths and find careers that match your personality</p>
-        <div class="resource-grid">
-          <div class="resource-card">
-            <h3>Myers-Briggs Type Indicator (MBTI)</h3>
-            <div class="tags">
-              <span class="tag">Personality Test</span>
-              <span class="tag">Career Matching</span>
-            </div>
-            <p>Discover your personality type and find careers that match your preferences and strengths.</p>
-            <a href="https://www.16personalities.com/" target="_blank" class="resource-link">
-              Take the Test <i class="fas fa-arrow-right"></i>
-            </a>
-          </div>
-          <div class="resource-card">
-            <h3>Strong Interest Inventory</h3>
-            <div class="tags">
-              <span class="tag">Interest Assessment</span>
-              <span class="tag">Career Planning</span>
-            </div>
-            <p>Explore your interests and find career paths that align with your passions.</p>
-            <a href="#" class="resource-link">
-              Learn More <i class="fas fa-arrow-right"></i>
-            </a>
-          </div>
-          <div class="resource-card">
-            <h3>Skills Assessment</h3>
-            <div class="tags">
-              <span class="tag">Skills Analysis</span>
-              <span class="tag">Development</span>
-            </div>
-            <p>Evaluate your current skills and identify areas for improvement.</p>
-            <a href="#" class="resource-link">
-              Start Assessment <i class="fas fa-arrow-right"></i>
-            </a>
-          </div>
+            .cr-section-header {
+                text-align: center;
+                max-width: 600px;
+                margin: 0 auto 64px;
+            }
+
+            .cr-cards-grid {
+                grid-template-columns: repeat(12, 1fr);
+            }
+
+            .cr-card {
+                grid-column: span 6;
+                background: white;
+                border-radius: var(--radius);
+                padding: 40px;
+                border: 1px solid var(--gray-200);
+                position: relative;
+                overflow: hidden;
+                transition: all 0.3s var(--transition-smooth);
+                box-shadow: var(--shadow-soft);
+                display: flex;
+                flex-direction: column;
+            }
+
+            .cr-card:hover {
+                transform: translateY(-6px);
+                box-shadow: var(--shadow-hover);
+                border-color: rgba(79, 70, 229, 0.3);
+            }
+
+            .cr-card-icon {
+                width: 56px;
+                height: 56px;
+                border-radius: 16px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 24px;
+                margin-bottom: 24px;
+                transition: transform 0.3s var(--transition-smooth);
+            }
+
+            .cr-card:hover .cr-card-icon {
+                transform: scale(1.05);
+            }
+
+            .cr-card-p1 .cr-card-icon {
+                background: rgba(79, 70, 229, 0.1);
+                color: var(--primary);
+            }
+
+            .cr-card-p2 .cr-card-icon {
+                background: rgba(20, 184, 166, 0.1);
+                color: var(--accent);
+            }
+
+            .cr-card-p3 .cr-card-icon {
+                background: rgba(245, 158, 11, 0.1);
+                color: #F59E0B;
+            }
+
+            .cr-card-p4 .cr-card-icon {
+                background: rgba(236, 72, 153, 0.1);
+                color: #EC4899;
+            }
+
+            .cr-card h3 {
+                margin-bottom: 12px;
+            }
+
+            .cr-card p {
+                margin-bottom: 24px;
+                flex-grow: 1;
+            }
+
+            .cr-card-link {
+                font-weight: 600;
+                color: var(--primary);
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                text-decoration: none;
+                position: relative;
+                width: max-content;
+            }
+
+            .cr-card-link::after {
+                content: '';
+                position: absolute;
+                bottom: -2px;
+                left: 0;
+                width: 0%;
+                height: 2px;
+                background: var(--primary);
+                transition: width 0.3s var(--transition-smooth);
+            }
+
+            .cr-card:hover .cr-card-link::after {
+                width: 100%;
+            }
+
+            /* Accent Highlight Card */
+            .cr-card-highlight {
+                background: linear-gradient(to bottom right, #ffffff, #F5F3FF);
+                border-color: rgba(79, 70, 229, 0.2);
+            }
+
+            .cr-card-highlight::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                border: 2px solid var(--primary);
+                border-radius: var(--radius);
+                opacity: 0;
+                transition: opacity 0.3s;
+                pointer-events: none;
+            }
+
+            .cr-card-highlight:hover::before {
+                opacity: 0.2;
+            }
+
+            .cr-popular-badge {
+                position: absolute;
+                top: 24px;
+                right: 24px;
+                background: rgba(79, 70, 229, 0.1);
+                color: var(--primary);
+                padding: 6px 14px;
+                border-radius: 100px;
+                font-size: 13px;
+                font-weight: 700;
+                animation: cr-pulse 2s infinite;
+            }
+
+            @keyframes cr-pulse {
+                0% {
+                    box-shadow: 0 0 0 0 rgba(79, 70, 229, 0.4);
+                }
+
+                70% {
+                    box-shadow: 0 0 0 8px rgba(79, 70, 229, 0);
+                }
+
+                100% {
+                    box-shadow: 0 0 0 0 rgba(79, 70, 229, 0);
+                }
+            }
+
+            /* 3. Progress Section - Dark Block */
+            .cr-dark-block {
+                background-color: var(--dark);
+                border-radius: 24px;
+                padding: 80px;
+                color: white;
+                position: relative;
+                overflow: hidden;
+                margin: 60px auto;
+            }
+
+            .cr-dark-pattern {
+                position: absolute;
+                inset: 0;
+                background-image: radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px);
+                background-size: 24px 24px;
+                opacity: 0.5;
+            }
+
+            .cr-dark-glow {
+                position: absolute;
+                top: -50%;
+                right: -20%;
+                width: 600px;
+                height: 600px;
+                background: radial-gradient(circle, rgba(79, 70, 229, 0.2) 0%, transparent 70%);
+                border-radius: 50%;
+            }
+
+            .cr-dark-grid {
+                grid-template-columns: repeat(12, 1fr);
+                position: relative;
+                z-index: 10;
+                align-items: center;
+            }
+
+            .cr-dark-left {
+                grid-column: 1 / 6;
+            }
+
+            .cr-dark-left .cr-h2 {
+                color: #fff;
+            }
+
+            .cr-dark-left .cr-body-large {
+                color: #9CA3AF;
+                margin-top: 16px;
+            }
+
+            .cr-dark-right {
+                grid-column: 7 / 13;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 24px;
+            }
+
+            .cr-stat-card {
+                background: rgba(255, 255, 255, 0.03);
+                border: 1px solid rgba(255, 255, 255, 0.05);
+                backdrop-filter: blur(10px);
+                border-radius: 16px;
+                padding: 32px 24px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+
+            .cr-stat-val {
+                font-size: 48px;
+                font-weight: 800;
+                line-height: 1;
+                color: white;
+                margin-bottom: 8px;
+            }
+
+            .cr-stat-label {
+                font-size: 14px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+                color: var(--accent);
+            }
+
+            /* 4. How It Works */
+            .cr-steps-wrapper {
+                display: flex;
+                justify-content: space-between;
+                position: relative;
+                margin-top: 60px;
+            }
+
+            .cr-step-connector {
+                position: absolute;
+                top: 36px;
+                left: 10%;
+                right: 10%;
+                height: 2px;
+                background: var(--gray-200);
+                z-index: 1;
+            }
+
+            .cr-step-connector-active {
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                width: 0%;
+                background: var(--primary);
+            }
+
+            .cr-step {
+                width: 30%;
+                text-align: center;
+                position: relative;
+                z-index: 2;
+            }
+
+            .cr-step-icon {
+                width: 72px;
+                height: 72px;
+                background: white;
+                border: 2px solid var(--gray-200);
+                border-radius: 50%;
+                margin: 0 auto 24px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 24px;
+                color: var(--primary);
+                transition: all 0.3s;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            }
+
+            .cr-step.is-active .cr-step-icon {
+                border-color: var(--primary);
+                background: rgba(79, 70, 229, 0.05);
+                transform: scale(1.1);
+            }
+
+            .cr-step-title {
+                font-size: 20px;
+                font-weight: 700;
+                color: var(--dark);
+                margin-bottom: 12px;
+            }
+
+            /* 5. Testimonials Carousel */
+            .cr-testimonials {
+                overflow: hidden;
+                padding: 20px 0;
+                mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+                -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            }
+
+            .cr-testi-track {
+                display: flex;
+                gap: 32px;
+                width: max-content;
+            }
+
+            .cr-testi-card {
+                width: 400px;
+                background: white;
+                border: 1px solid var(--gray-200);
+                border-radius: var(--radius);
+                padding: 40px 32px;
+                box-shadow: var(--shadow-soft);
+                position: relative;
+                transition: transform 0.3s;
+            }
+
+            .cr-testi-card:hover {
+                transform: translateY(-4px);
+                box-shadow: var(--shadow-hover);
+            }
+
+            .cr-quote-mark {
+                position: absolute;
+                top: 16px;
+                right: 24px;
+                font-size: 80px;
+                color: rgba(79, 70, 229, 0.08);
+                font-family: serif;
+                line-height: 1;
+                pointer-events: none;
+            }
+
+            .cr-testi-text {
+                font-size: 16px;
+                color: var(--text-primary);
+                font-style: italic;
+                margin-bottom: 32px;
+                position: relative;
+                z-index: 2;
+                line-height: 1.6;
+            }
+
+            .cr-testi-author {
+                display: flex;
+                align-items: center;
+                gap: 16px;
+            }
+
+            .cr-testi-author img {
+                width: 56px;
+                height: 56px;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+
+            .cr-testi-name {
+                font-weight: 700;
+                color: var(--dark);
+                font-size: 16px;
+            }
+
+            .cr-testi-role {
+                font-size: 14px;
+                color: var(--text-secondary);
+            }
+
+            /* 6. Final CTA */
+            .cr-final-cta {
+                text-align: center;
+                padding: 160px 0;
+                background: linear-gradient(to bottom, transparent, #EEF2FF);
+                position: relative;
+                overflow: hidden;
+            }
+
+            .cr-cta-glow {
+                position: absolute;
+                bottom: -100px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 800px;
+                height: 400px;
+                background: radial-gradient(ellipse, rgba(79, 70, 229, 0.25) 0%, transparent 60%);
+                filter: blur(50px);
+            }
+
+            /* GSAP Hidden States */
+            .gsap-reveal {
+                opacity: 0;
+                visibility: hidden;
+            }
+
+            @media (max-width: 1024px) {
+                .cr-hero-content {
+                    grid-column: 1 / 13;
+                    text-align: center;
+                    align-items: center;
+                }
+
+                .cr-hero-actions {
+                    justify-content: center;
+                }
+
+                .cr-hero-visual {
+                    display: none;
+                }
+
+                .cr-card {
+                    grid-column: span 12;
+                }
+
+                .cr-dark-left {
+                    grid-column: 1 / 13;
+                    text-align: center;
+                    margin-bottom: 40px;
+                }
+
+                .cr-dark-right {
+                    grid-column: 1 / 13;
+                }
+            }
+
+            @media (max-width: 768px) {
+                .cr-h1 {
+                    font-size: 40px;
+                }
+
+                .cr-steps-wrapper {
+                    flex-direction: column;
+                    gap: 40px;
+                }
+
+                .cr-step {
+                    width: 100%;
+                }
+
+                .cr-step-connector {
+                    display: none;
+                }
+
+                .cr-dark-block {
+                    padding: 40px 24px;
+                }
+
+                .cr-dark-right {
+                    grid-template-columns: 1fr;
+                }
+
+                .cr-testi-card {
+                    width: 320px;
+                }
+            }
+        </style>
+
+        <div class="cr-page">
+            <div class="cr-container">
+
+                <!-- 1. Hero Section -->
+                <section class="cr-hero cr-grid">
+                    <div class="cr-hero-content">
+                        <div class="cr-badge gsap-hero-el">Career Acceleration Platform</div>
+                        <h1 class="cr-h1 gsap-hero-el">
+                            Build Your Career.<br>
+                            <span class="cr-text-gradient">Engineered for Success.</span>
+                        </h1>
+                        <p class="cr-body-large gsap-hero-el" style="margin-top: 24px; max-width: 480px;">
+                            The tools, structure, and insights you need to land your dream role. Designed for serious
+                            engineering students and professionals.
+                        </p>
+                        <div class="cr-hero-actions gsap-hero-el">
+                            <a href="#roadmaps" class="cr-btn cr-btn-primary">Explore Roadmaps</a>
+                            <a href="#" class="cr-btn cr-btn-secondary"><i class="fas fa-play"
+                                    style="margin-right: 8px;"></i> Watch Demo</a>
+                        </div>
+                        <div class="cr-trust-line gsap-hero-el">
+                            <div class="cr-avatars">
+                                <img src="https://i.pravatar.cc/100?img=1" alt="User">
+                                <img src="https://i.pravatar.cc/100?img=2" alt="User">
+                                <img src="https://i.pravatar.cc/100?img=3" alt="User">
+                                <img src="https://i.pravatar.cc/100?img=4" alt="User">
+                            </div>
+                            <span>Trusted by <strong>2,000+</strong> ambitious learners</span>
+                        </div>
+                    </div>
+
+                    <div class="cr-hero-visual gsap-hero-el" id="hero-mockup-container">
+                        <div class="cr-mockup-wrapper" id="hero-mockup">
+                            <div class="cr-mockup-glow"></div>
+                            <div class="cr-mockup">
+                                <div class="cr-mockup-header">
+                                    <div class="cr-mockup-dot"></div>
+                                    <div class="cr-mockup-dot"></div>
+                                    <div class="cr-mockup-dot"></div>
+                                </div>
+                                <div class="cr-mock-line w-1-2"></div>
+                                <div class="cr-mock-line w-3-4"></div>
+                                <div class="cr-mock-line w-full"></div>
+
+                                <div class="cr-mock-card-grid">
+                                    <div class="cr-mock-card"></div>
+                                    <div class="cr-mock-card"
+                                        style="background: rgba(79, 70, 229, 0.05); border-color: rgba(79, 70, 229, 0.2);">
+                                    </div>
+                                    <div class="cr-mock-card"></div>
+                                    <div class="cr-mock-card"></div>
+                                </div>
+                                <div style="margin-top: 24px;">
+                                    <div class="cr-mock-line w-full" style="height: 48px; border-radius: 8px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. Feature Cards -->
+                <section class="cr-section" id="roadmaps">
+                    <div class="cr-section-header gsap-reveal">
+                        <h2 class="cr-h2">The Toolkit Architecture</h2>
+                        <p class="cr-body-large" style="margin-top: 16px;">Structured frameworks to build your profile,
+                            prep for interviews, and accelerate growth.</p>
+                    </div>
+
+                    <div class="cr-grid cr-cards-grid">
+
+                        <!-- Highlight Card -->
+                        <div class="cr-card cr-card-p1 cr-card-highlight gsap-reveal">
+                            <div class="cr-popular-badge">Most Popular</div>
+                            <div class="cr-card-icon"><i class="fas fa-map-marked-alt"></i></div>
+                            <h3 class="cr-h3">Career Roadmap</h3>
+                            <p class="cr-body">A step-by-step interactive timeline to master skills, build projects, and get certified.</p>
+                            <a href="/career-roadmap/Software Engineering" class="cr-card-link">Find Your Path <i class="fas fa-arrow-right"
+                                    style="font-size: 14px;"></i></a>
+                        </div>
+
+                        <!-- Standard Cards -->
+                        <div class="cr-card cr-card-p2 gsap-reveal">
+                            <div class="cr-card-icon"><i class="fas fa-video"></i></div>
+                            <h3 class="cr-h3">Webinars</h3>
+                            <p class="cr-body">Interactive learning hub. Join live sessions or watch on-demand technical deep dives.</p>
+                            <a href="/webinars" class="cr-card-link" style="color: var(--accent);">Explore Webinars <i
+                                    class="fas fa-arrow-right" style="font-size: 14px;"></i></a>
+                        </div>
+
+                        <div class="cr-card cr-card-p3 gsap-reveal">
+                            <div class="cr-card-icon"><i class="fas fa-toolbox"></i></div>
+                            <h3 class="cr-h3">Toolkit Dashboard</h3>
+                            <p class="cr-body">ATS Resume builders, technical interview prep banks, and skill assessment tools.</p>
+                            <a href="/career_resources" class="cr-card-link" style="color: #F59E0B;">Open Toolkit <i
+                                    class="fas fa-arrow-right" style="font-size: 14px;"></i></a>
+                        </div>
+
+                        <div class="cr-card cr-card-p4 gsap-reveal">
+                            <div class="cr-card-icon"><i class="fas fa-user-tie"></i></div>
+                            <h3 class="cr-h3">Mentorship</h3>
+                            <p class="cr-body">Connect with industry experts. Book 1-on-1 sessions for guidance and mock interviews.</p>
+                            <a href="/CC" class="cr-card-link" style="color: #EC4899;">Meet Mentors <i
+                                    class="fas fa-arrow-right" style="font-size: 14px;"></i></a>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. Progress Section - Dark Block -->
+                <section class="cr-dark-block gsap-reveal">
+                    <div class="cr-dark-pattern"></div>
+                    <div class="cr-dark-glow"></div>
+                    <div class="cr-grid cr-dark-grid">
+                        <div class="cr-dark-left">
+                            <h2 class="cr-h2">Your Growth,<br>Structured & Measurable</h2>
+                            <p class="cr-body-large">We track your momentum so you can focus on building. Join thousands
+                                of engineers leveling up their careers daily.</p>
+                        </div>
+                        <div class="cr-dark-right">
+                            <div class="cr-stat-card">
+                                <div class="cr-stat-val"><span class="gsap-counter" data-target="50">0</span>+</div>
+                                <div class="cr-stat-label">Live Webinars</div>
+                            </div>
+                            <div class="cr-stat-card">
+                                <div class="cr-stat-val"><span class="gsap-counter" data-target="12">0</span></div>
+                                <div class="cr-stat-label">Career Tracks</div>
+                            </div>
+                            <div class="cr-stat-card"
+                                style="grid-column: 1 / -1; align-items: center; text-align: center;">
+                                <div class="cr-stat-val"><span class="gsap-counter" data-target="2500">0</span>+</div>
+                                <div class="cr-stat-label" style="color: var(--primary-light);">Active Engineers
+                                    Learning</div>
+
+                                <!-- Mini Timeline UI -->
+                                <div
+                                    style="width: 100%; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; margin-top: 32px; position: relative; overflow: hidden;">
+                                    <div class="gsap-progress-fill"
+                                        style="position: absolute; top:0; left:0; bottom:0; width: 0%; background: var(--primary);">
+                                    </div>
+                                </div>
+                                <div
+                                    style="display: flex; justify-content: space-between; width: 100%; margin-top: 12px; font-size: 13px; color: #9CA3AF; font-weight: 600;">
+                                    <span style="color: #fff;">Enrolled</span>
+                                    <span style="color: #fff;">Learning</span>
+                                    <span style="color: #fff;">Interviewing</span>
+                                    <span>Hired</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. How It Works -->
+                <section class="cr-section">
+                    <div class="cr-section-header gsap-reveal">
+                        <h2 class="cr-h2">Systematic Progression</h2>
+                        <p class="cr-body-large" style="margin-top: 16px;">No guesswork. We provide a deterministic
+                            framework to reach your target engineering role.</p>
+                    </div>
+
+                    <div class="cr-steps-wrapper gsap-reveal">
+                        <div class="cr-step-connector">
+                            <div class="cr-step-connector-active" id="step-connector"></div>
+                        </div>
+
+                        <div class="cr-step" id="step-1">
+                            <div class="cr-step-icon"><i class="fas fa-compass"></i></div>
+                            <h4 class="cr-step-title">1. Discover</h4>
+                            <p class="cr-body">Assess your current skills and define your target architecture or
+                                software role.</p>
+                        </div>
+
+                        <div class="cr-step" id="step-2">
+                            <div class="cr-step-icon"><i class="fas fa-layer-group"></i></div>
+                            <h4 class="cr-step-title">2. Build</h4>
+                            <p class="cr-body">Follow curated roadmaps, attend tech webinars, and build production-grade
+                                projects.</p>
+                        </div>
+
+                        <div class="cr-step" id="step-3">
+                            <div class="cr-step-icon"><i class="fas fa-rocket"></i></div>
+                            <h4 class="cr-step-title">3. Launch</h4>
+                            <p class="cr-body">Polish your resume, crush mock interviews, and confidently land the
+                                offer.</p>
+                        </div>
+                    </div>
+                </section>
+
+            </div> <!-- End Container -->
+
+            <!-- 5. Testimonial Carousel (Full Width) -->
+            <section class="cr-section" style="padding-top: 0;">
+                <div class="cr-section-header gsap-reveal pb-8">
+                    <h2 class="cr-h2">Proof of Work</h2>
+                </div>
+                <div class="cr-testimonials gsap-reveal">
+                    <div class="cr-testi-track" id="testimonial-track">
+                        <!-- Card 1 -->
+                        <div class="cr-testi-card">
+                            <div class="cr-quote-mark">“</div>
+                            <p class="cr-testi-text">The System Design roadmap completely changed my perspective. I
+                                finally understand how microservices scale in production environments.</p>
+                            <div class="cr-testi-author">
+                                <img src="https://i.pravatar.cc/100?img=5" alt="Sarah J.">
+                                <div>
+                                    <div class="cr-testi-name">Sarah Jenkins</div>
+                                    <div class="cr-testi-role">Backend Engineer @ Stripe</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 2 -->
+                        <div class="cr-testi-card">
+                            <div class="cr-quote-mark">“</div>
+                            <p class="cr-testi-text">The resume auditor caught formatting issues that were getting me
+                                auto-rejected. Two weeks later, I got a call from Amazon.</p>
+                            <div class="cr-testi-author">
+                                <img src="https://i.pravatar.cc/100?img=11" alt="Mark T.">
+                                <div>
+                                    <div class="cr-testi-name">Mark Thompson</div>
+                                    <div class="cr-testi-role">SDE II @ Amazon</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 3 -->
+                        <div class="cr-testi-card">
+                            <div class="cr-quote-mark">“</div>
+                            <p class="cr-testi-text">Mock interviews simulated the exact pressure of a real technical
+                                round. The feedback was brutally honest and incredibly helpful.</p>
+                            <div class="cr-testi-author">
+                                <img src="https://i.pravatar.cc/100?img=9" alt="Elena R.">
+                                <div>
+                                    <div class="cr-testi-name">Elena Rodriguez</div>
+                                    <div class="cr-testi-role">Frontend Lead @ Vercel</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Duplicates for seamless infinite loop -->
+                        <div class="cr-testi-card">
+                            <div class="cr-quote-mark">“</div>
+                            <p class="cr-testi-text">The System Design roadmap completely changed my perspective. I
+                                finally understand how microservices scale in production environments.</p>
+                            <div class="cr-testi-author">
+                                <img src="https://i.pravatar.cc/100?img=5" alt="Sarah J.">
+                                <div>
+                                    <div class="cr-testi-name">Sarah Jenkins</div>
+                                    <div class="cr-testi-role">Backend Engineer @ Stripe</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="cr-testi-card">
+                            <div class="cr-quote-mark">“</div>
+                            <p class="cr-testi-text">The resume auditor caught formatting issues that were getting me
+                                auto-rejected. Two weeks later, I got a call from Amazon.</p>
+                            <div class="cr-testi-author">
+                                <img src="https://i.pravatar.cc/100?img=11" alt="Mark T.">
+                                <div>
+                                    <div class="cr-testi-name">Mark Thompson</div>
+                                    <div class="cr-testi-role">SDE II @ Amazon</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. Final CTA -->
+            <section class="cr-final-cta">
+                <div class="cr-cta-glow"></div>
+                <div class="cr-container" style="position: relative; z-index: 10;">
+                    <h2 class="cr-h1" id="cta-headline"></h2>
+                    <p class="cr-body-large" style="margin: 24px auto 40px; max-width: 500px;">
+                        Stop guessing. Start building. Join the platform engineered to accelerate technical careers.
+                    </p>
+                    <a href="/login" class="cr-btn cr-btn-primary"
+                        style="padding: 18px 40px; font-size: 18px; border-radius: 100px; box-shadow: 0 10px 30px -10px rgba(79,70,229,0.5);">
+                        Start Building for Free
+                    </a>
+                </div>
+            </section>
+
         </div>
-      </section>
 
-      <!-- Learning Resources -->
-      <section class="resource-section">
-        <h2 class="section-title">
-          <i class="fas fa-graduation-cap"></i>
-          Learning Resources
-        </h2>
-        <p class="section-subtitle">Level up your skills with courses and certifications</p>
-        <div class="resource-grid">
-          <div class="resource-card">
-            <h3>Online Courses</h3>
-            <div class="tags">
-              <span class="tag">Coursera</span>
-              <span class="tag">Udemy</span>
-              <span class="tag">edX</span>
-            </div>
-            <p>Access thousands of courses from top universities and institutions.</p>
-            <a href="https://www.coursera.org/" target="_blank" class="resource-link">
-              Browse Courses <i class="fas fa-arrow-right"></i>
-            </a>
-          </div>
-          <div class="resource-card">
-            <h3>Skill Development</h3>
-            <div class="tags">
-              <span class="tag">Technical Skills</span>
-              <span class="tag">Soft Skills</span>
-            </div>
-            <p>Resources to help you develop both technical and soft skills.</p>
-            <a href="#" class="resource-link">
-              Explore Skills <i class="fas fa-arrow-right"></i>
-            </a>
-          </div>
-          <div class="resource-card">
-            <h3>Industry Certifications</h3>
-            <div class="tags">
-              <span class="tag">Professional</span>
-              <span class="tag">Technical</span>
-            </div>
-            <p>Find relevant certifications for your career path.</p>
-            <a href="#" class="resource-link">
-              View Certifications <i class="fas fa-arrow-right"></i>
-            </a>
-          </div>
-        </div>
-      </section>
+        <!-- Implementation Scripts -->
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                // Inject Dynamic Split Text before GSAP Initialization
+                const ctaHeader = document.getElementById('cta-headline');
+                if (ctaHeader) {
+                    const text = "Ready to Upgrade Your Trajectory?";
+                    const words = text.split(' ');
+                    words.forEach((word, i) => {
+                        const span = document.createElement('span');
+                        span.innerText = word + ' ';
+                        span.style.display = 'inline-block';
+                        span.classList.add('gsap-cta-word');
+                        ctaHeader.appendChild(span);
+                        if (i === 2) {
+                            ctaHeader.appendChild(document.createElement('br'));
+                        }
+                    });
+                }
 
-      <!-- Career Planning -->
-      <section class="resource-section">
-        <h2 class="section-title">
-          <i class="fas fa-map-marked-alt"></i>
-          Career Planning
-        </h2>
-        <p class="section-subtitle">Build your professional brand and prepare for success</p>
-        <div class="resource-grid">
-          <div class="resource-card">
-            <h3>Resume Building</h3>
-            <div class="tags">
-              <span class="tag">Templates</span>
-              <span class="tag">Tips</span>
-            </div>
-            <p>Create a professional resume with our templates and guides.</p>
-            <a href="#" class="resource-link">
-              Build Resume <i class="fas fa-arrow-right"></i>
-            </a>
-          </div>
-          <div class="resource-card">
-            <h3>Interview Preparation</h3>
-            <div class="tags">
-              <span class="tag">Practice</span>
-              <span class="tag">Questions</span>
-            </div>
-            <p>Prepare for interviews with common questions and expert tips.</p>
-            <a href="#" class="resource-link">
-              Practice Now <i class="fas fa-arrow-right"></i>
-            </a>
-          </div>
-          <div class="resource-card">
-            <h3>Career Path Guides</h3>
-            <div class="tags">
-              <span class="tag">Industry Insights</span>
-              <span class="tag">Growth Paths</span>
-            </div>
-            <p>Detailed guides on various career paths and industries.</p>
-            <a href="#" class="resource-link">
-              View Guides <i class="fas fa-arrow-right"></i>
-            </a>
-          </div>
-        </div>
-      </section>
+                // Interactive Card Glows (Mouse follow map/radial gradient)
+                const cards = document.querySelectorAll('.cr-card');
+                cards.forEach(card => {
+                    card.addEventListener('mousemove', (e) => {
+                        const rect = card.getBoundingClientRect();
+                        const x = e.clientX - rect.left;
+                        const y = e.clientY - rect.top;
+                        card.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(79, 70, 229, 0.04) 0%, white 60%)`;
+                    });
+                    card.addEventListener('mouseleave', () => {
+                        card.style.background = 'white';
+                        if (card.classList.contains('cr-card-highlight')) {
+                            card.style.background = 'linear-gradient(to bottom right, #ffffff, #F5F3FF)';
+                        }
+                    });
+                });
 
-      <!-- Industry Insights -->
-      <section class="resource-section">
-        <h2 class="section-title">
-          <i class="fas fa-chart-line"></i>
-          Industry Insights
-        </h2>
-        <p class="section-subtitle">Stay informed with market trends and salary data</p>
-        <div class="resource-grid">
-          <div class="resource-card">
-            <h3>Market Trends</h3>
-            <div class="tags">
-              <span class="tag">Analysis</span>
-              <span class="tag">Reports</span>
-            </div>
-            <p>Stay updated with the latest industry trends and market analysis.</p>
-            <a href="#" class="resource-link">
-              View Trends <i class="fas fa-arrow-right"></i>
-            </a>
-          </div>
-          <div class="resource-card">
-            <h3>Salary Guides</h3>
-            <div class="tags">
-              <span class="tag">Compensation</span>
-              <span class="tag">Benefits</span>
-            </div>
-            <p>Research salary ranges and compensation packages for different roles.</p>
-            <a href="#" class="resource-link">
-              Check Salaries <i class="fas fa-arrow-right"></i>
-            </a>
-          </div>
-          <div class="resource-card">
-            <h3>Company Reviews</h3>
-            <div class="tags">
-              <span class="tag">Workplace</span>
-              <span class="tag">Culture</span>
-            </div>
-            <p>Read reviews and insights about potential employers.</p>
-            <a href="#" class="resource-link">
-              Read Reviews <i class="fas fa-arrow-right"></i>
-            </a>
-          </div>
-        </div>
-      </section>
+                // Start GSAP Layer
+                if (typeof gsap !== "undefined" && typeof ScrollTrigger !== "undefined") {
+                    gsap.registerPlugin(ScrollTrigger);
 
-    </div>
+                    // Initial states
+                    gsap.set(".gsap-hero-el", { y: 30, opacity: 0 });
+                    gsap.set(".gsap-reveal", { y: 40, opacity: 0, visibility: "visible" });
+                    gsap.set(".gsap-cta-word", { y: 30, opacity: 0, rotationX: -45 });
 
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="footer-container">
-        <div class="footer-top">
-          <div class="footer-column">
-            <h3>EduNavigator</h3>
-            <p style="color: rgba(255,255,255,0.7); margin-top: 20px;">Your AI-powered guide to career success and
-              college admissions.</p>
-            <div class="newsletter-form">
-              <input type="email" placeholder="Enter your email">
-              <button>Subscribe</button>
-            </div>
-          </div>
-          <div class="footer-column">
-            <h3>Product</h3>
-            <ul>
-              <li><a href="#">Career Counseling</a></li>
-              <li><a href="#">College Finder</a></li>
-              <li><a href="#">Scholarships</a></li>
-              <li><a href="#">Projects</a></li>
-            </ul>
-          </div>
-          <div class="footer-column">
-            <h3>Company</h3>
-            <ul>
-              <li><a href="#">About Us</a></li>
-              <li><a href="#">Careers</a></li>
-              <li><a href="#">Blog</a></li>
-              <li><a href="#">Contact</a></li>
-            </ul>
-          </div>
-          <div class="footer-column">
-            <h3>Resources</h3>
-            <ul>
-              <li><a href="#">Help Center</a></li>
-              <li><a href="#">FAQs</a></li>
-              <li><a href="#">Guides</a></li>
-              <li><a href="#">Webinars</a></li>
-            </ul>
-          </div>
-          <div class="footer-column">
-            <h3>Legal</h3>
-            <ul>
-              <li><a href="#">Privacy Policy</a></li>
-              <li><a href="#">Terms of Service</a></li>
-              <li><a href="#">Cookie Policy</a></li>
-            </ul>
-          </div>
-        </div>
-        <div class="footer-bottom">
-          <p>&copy; 2024 EduNavigator. All rights reserved.</p>
-        </div>
-      </div>
-    </footer>
+                    // --- 1. Hero Entrance Animation ---
+                    const heroTl = gsap.timeline({ defaults: { ease: "power3.out" } });
 
-    <script>
-      // Search functionality
-      document.getElementById('resourceSearch').addEventListener('input', function (e) {
-        const searchTerm = e.target.value.toLowerCase();
-        const cards = document.querySelectorAll('.resource-card');
+                    heroTl.to(".gsap-hero-el", {
+                        y: 0,
+                        opacity: 1,
+                        duration: 1,
+                        stagger: 0.15,
+                        delay: 0.2
+                    })
+                        .fromTo("#hero-mockup",
+                            { y: 40, opacity: 0, rotateX: 10 },
+                            { y: 0, opacity: 1, rotateX: 5, duration: 1.5 },
+                            "-=1.2"
+                        );
 
-        cards.forEach(card => {
-          const title = card.querySelector('h3').textContent.toLowerCase();
-          const description = card.querySelector('p').textContent.toLowerCase();
-          const tags = Array.from(card.querySelectorAll('.tag')).map(tag => tag.textContent.toLowerCase());
+                    // Floating mockup
+                    gsap.to("#hero-mockup", {
+                        y: "+=15",
+                        duration: 3,
+                        yoyo: true,
+                        repeat: -1,
+                        ease: "sine.inOut"
+                    });
 
-          const matches = title.includes(searchTerm) ||
-            description.includes(searchTerm) ||
-            tags.some(tag => tag.includes(searchTerm));
+                    // Mouse parallax for mockup
+                    const heroSection = document.querySelector('.cr-hero');
+                    const mockup = document.getElementById('hero-mockup');
 
-          card.style.display = matches ? 'block' : 'none';
-        });
-      });
-    </script>
+                    if (heroSection && mockup) {
+                        heroSection.addEventListener('mousemove', (e) => {
+                            if (window.innerWidth > 1024) {
+                                const xPos = (e.clientX / window.innerWidth - 0.5) * 20;
+                                const yPos = (e.clientY / window.innerHeight - 0.5) * 20;
 
-    </body>
+                                gsap.to(mockup, {
+                                    rotateY: xPos - 5,
+                                    rotateX: -yPos + 5,
+                                    duration: 0.5,
+                                    ease: "power2.out"
+                                });
+                            }
+                        });
+                        heroSection.addEventListener('mouseleave', () => {
+                            gsap.to(mockup, { rotateY: -5, rotateX: 5, duration: 1, ease: "power3.out" });
+                        });
+                    }
 
-    </html>
+                    // --- 2. Scroll Reveals ---
+                    const revealElements = document.querySelectorAll('.gsap-reveal');
+                    revealElements.forEach((el) => {
+                        gsap.to(el, {
+                            scrollTrigger: {
+                                trigger: el,
+                                start: "top 85%",
+                                toggleActions: "play none none reverse"
+                            },
+                            y: 0,
+                            opacity: 1,
+                            duration: 0.8,
+                            ease: "power3.out"
+                        });
+                    });
+
+                    // --- 3. Progress Section Counters ---
+                    ScrollTrigger.create({
+                        trigger: ".cr-dark-block",
+                        start: "top 75%",
+                        onEnter: () => {
+                            gsap.to(".gsap-progress-fill", { width: "70%", duration: 1.5, ease: "power3.inOut" });
+
+                            const counters = document.querySelectorAll('.gsap-counter');
+                            counters.forEach(counter => {
+                                const target = parseInt(counter.getAttribute('data-target'));
+                                gsap.to(counter, {
+                                    innerHTML: target,
+                                    duration: 2,
+                                    snap: { innerHTML: 1 },
+                                    ease: "power2.out"
+                                });
+                            });
+                        }
+                    });
+
+                    // --- 4. How It Works - Scroll Connector ---
+                    const stepsWrp = document.querySelector(".cr-steps-wrapper");
+                    if (stepsWrp) {
+                        const stepTl = gsap.timeline({
+                            scrollTrigger: {
+                                trigger: stepsWrp,
+                                start: "top 70%",
+                                end: "bottom 50%",
+                                scrub: 1
+                            }
+                        });
+
+                        stepTl.to("#step-connector", {
+                            width: "100%",
+                            ease: "none"
+                        });
+
+                        ScrollTrigger.create({
+                            trigger: stepsWrp,
+                            start: "top 60%",
+                            onEnter: () => { document.getElementById('step-1').classList.add('is-active'); }
+                        });
+                        ScrollTrigger.create({
+                            trigger: stepsWrp,
+                            start: "top 30%",
+                            onEnter: () => { document.getElementById('step-2').classList.add('is-active'); }
+                        });
+                        ScrollTrigger.create({
+                            trigger: stepsWrp,
+                            start: "top 10%",
+                            onEnter: () => { document.getElementById('step-3').classList.add('is-active'); }
+                        });
+                    }
+
+                    // --- 5. Infinite Testimonials Carousel ---
+                    const track = document.getElementById("testimonial-track");
+                    if (track) {
+                        // Track width / 2 because we duplicated the cards
+                        const scrollTween = gsap.to(track, {
+                            x: "-=" + (400 * 3 + 32 * 3) + "px", // Approximate width of 3 cards + gaps
+                            duration: 20,
+                            ease: "none",
+                            repeat: -1,
+                            modifiers: {
+                                x: gsap.utils.unitize(x => parseFloat(x) % (400 * 3 + 32 * 3)) // Wrap logic
+                            }
+                        });
+
+                        track.addEventListener("mouseenter", () => scrollTween.pause());
+                        track.addEventListener("mouseleave", () => scrollTween.play());
+                    }
+
+                    // --- 6. Final CTA Text Animation ---
+                    gsap.to(".gsap-cta-word", {
+                        scrollTrigger: {
+                            trigger: ".cr-final-cta",
+                            start: "top 80%"
+                        },
+                        y: 0,
+                        opacity: 1,
+                        rotationX: 0,
+                        stagger: 0.1,
+                        duration: 0.8,
+                        ease: "back.out(1.7)"
+                    });
+                }
+            });
+        </script>
+
+        <%- include('layouts/footer'); %>

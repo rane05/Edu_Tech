@@ -1,94 +1,552 @@
 <%- include('layouts/header'); %>
+    <link rel="stylesheet" href="/css/premium_predictor.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <%- include('layouts/navbar'); %>
 
-        <div class="container" style="margin-top: 100px; margin-bottom: 50px;">
-            <div class="row">
-                <!-- Search Form -->
-                <div class="col-md-4">
-                    <div class="card p-4 shadow-sm" style="border-radius: 12px;">
-                        <h3 class="mb-4">🎓 College Predictor</h3>
+        <style>
+            /* ===== Upgrade Styles ===== */
+            :root {
+                --primary-gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+                --success-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+                --warning-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+                --danger-gradient: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            }
+
+            /* Compare bar */
+            #compare-bar {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: #1e1b4b;
+                color: white;
+                padding: 14px 32px;
+                z-index: 9999;
+                display: none;
+                align-items: center;
+                gap: 16px;
+                box-shadow: 0 -4px 24px rgba(99, 102, 241, 0.3);
+                border-top: 2px solid #6366f1;
+            }
+
+            #compare-bar.show {
+                display: flex;
+            }
+
+            #compare-items {
+                display: flex;
+                gap: 12px;
+                flex: 1;
+            }
+
+            .compare-chip {
+                background: rgba(255, 255, 255, 0.12);
+                border-radius: 20px;
+                padding: 4px 14px;
+                font-size: 0.8rem;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+            .compare-chip .remove {
+                cursor: pointer;
+                opacity: 0.7;
+            }
+
+            .compare-chip .remove:hover {
+                opacity: 1;
+            }
+
+            /* College card */
+            .college-card {
+                background: white;
+                border-radius: 16px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+                transition: box-shadow 0.2s;
+                overflow: hidden;
+                border: 1px solid rgba(99, 102, 241, 0.08);
+            }
+
+            .college-card:hover {
+                box-shadow: 0 8px 32px rgba(99, 102, 241, 0.15);
+            }
+
+            .college-card.selected-compare {
+                border: 2px solid #6366f1;
+            }
+
+            /* Fit score ring */
+            .fit-ring-wrap {
+                position: relative;
+                width: 72px;
+                height: 72px;
+            }
+
+            .fit-ring-wrap canvas {
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+
+            .fit-ring-label {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                text-align: center;
+                line-height: 1.1;
+            }
+
+            .fit-ring-label .score-num {
+                font-size: 1.1rem;
+                font-weight: 800;
+            }
+
+            .fit-ring-label .score-text {
+                font-size: 0.5rem;
+                color: #9ca3af;
+                font-weight: 600;
+                letter-spacing: 0.05em;
+            }
+
+            /* Safe/Moderate/Dream badges */
+            .badge-success-soft {
+                background: #d1fae5;
+                color: #065f46;
+                border-radius: 99px;
+                padding: 3px 12px;
+                font-size: 0.75rem;
+                font-weight: 700;
+            }
+
+            .badge-warning-soft {
+                background: #fef3c7;
+                color: #92400e;
+                border-radius: 99px;
+                padding: 3px 12px;
+                font-size: 0.75rem;
+                font-weight: 700;
+            }
+
+            .badge-danger-soft {
+                background: #fee2e2;
+                color: #991b1b;
+                border-radius: 99px;
+                padding: 3px 12px;
+                font-size: 0.75rem;
+                font-weight: 700;
+            }
+
+            /* Trend sparkline */
+            .trend-line {
+                stroke-width: 2;
+                fill: none;
+            }
+
+            .trend-area {
+                opacity: 0.12;
+            }
+
+            /* Wishlist btn */
+            .btn-wishlist {
+                border: none;
+                background: none;
+                padding: 0;
+                cursor: pointer;
+            }
+
+            .btn-wishlist .fa-heart {
+                color: #d1d5db;
+                font-size: 1.1rem;
+                transition: color 0.2s;
+            }
+
+            .btn-wishlist.saved .fa-heart {
+                color: #ef4444;
+            }
+
+            /* Modal */
+            .modal-history .list-group-item {
+                border: none;
+                border-bottom: 1px solid #f3f4f6;
+            }
+
+            /* Similar colleges */
+            .similar-card {
+                background: linear-gradient(135deg, #f8f7ff, #eef2ff);
+                border: 1px solid #c7d2fe;
+                border-radius: 14px;
+                padding: 14px 18px;
+                margin-bottom: 10px;
+            }
+
+            /* Comparison table */
+            #compare-modal .table thead {
+                background: var(--primary-gradient);
+                color: white;
+            }
+
+            #compare-modal .table tbody tr:hover {
+                background: #f8f7ff;
+            }
+
+            #compare-modal .better {
+                color: #059669;
+                font-weight: 700;
+            }
+        </style>
+
+        <div class="container-fluid px-4" style="margin-top: 80px; padding-bottom: 100px;">
+
+            <!-- Hero -->
+            <div class="hero-section mb-5">
+                <h1 class="hero-title">AI-Powered College Predictor</h1>
+                <p class="lead text-muted">Discover your best-fit engineering colleges with our intelligent decision
+                    engine.</p>
+                <div class="d-flex justify-content-center gap-3 mt-3">
+                    <span class="badge bg-primary rounded-pill">AI Active</span>
+                    <small class="text-muted align-self-center">analyzing 2022-2024 trends</small>
+                </div>
+            </div>
+
+            <div class="row g-4">
+
+                <!-- ===== LEFT: Filters ===== -->
+                <div class="col-lg-3">
+                    <div class="glass-card filter-sidebar">
+                        <h5 class="mb-4"><i class="fas fa-sliders-h me-2"></i>Smart Filters</h5>
                         <form action="/api/cet/predict" method="POST">
-                            <div class="mb-3">
-                                <label class="form-label">CET Percentile</label>
-                                <input type="number" step="0.01" name="score" class="form-control"
-                                    placeholder="e.g. 85.5" value="<%= locals.score || '' %>">
+
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">CET Percentile</label>
+                                <div class="input-group">
+                                    <input type="number" step="0.01" name="score" id="scoreInput" class="form-control"
+                                        placeholder="99.5" value="<%= locals.score || '' %>" required>
+                                    <span class="input-group-text bg-white">%</span>
+                                </div>
+                                <input type="range" class="form-range mt-2" min="0" max="100" step="0.5" id="scoreRange"
+                                    value="<%= locals.score || 80 %>"
+                                    oninput="document.getElementById('scoreInput').value = this.value">
                             </div>
 
-                            <div class="mb-3">
-                                <label class="form-label">Category</label>
-                                <select name="category" class="form-select" required>
-                                    <option value="OPEN" <%=locals.category==='OPEN' ? 'selected' : '' %>>OPEN / General
-                                    </option>
-                                    <option value="OBC" <%=locals.category==='OBC' ? 'selected' : '' %>>OBC</option>
-                                    <option value="SC" <%=locals.category==='SC' ? 'selected' : '' %>>SC</option>
-                                    <option value="ST" <%=locals.category==='ST' ? 'selected' : '' %>>ST</option>
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Category</label>
+                                <select name="category" class="form-select border-0 bg-light" required>
+                                    <%
+                                        ['OPEN','OBC','SC','ST','VJ','NT1','NT2','NT3','EWS','TFWS','PWD','DEF'].forEach(cat=>
+                                        { %>
+                                        <option value="<%= cat %>" <%=locals.category===cat?'selected':'' %>><%= cat %>
+                                        </option>
+                                        <% }); %>
                                 </select>
                             </div>
-                            <!-- State Locked to Maharashtra -->
-                            <input type="hidden" name="state" value="Maharashtra">
 
-                            <button type="submit" class="btn btn-primary w-100">🔮 Predict Colleges</button>
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Preferred Branch</label>
+                                <input type="text" name="branch" id="branchInput" class="form-control"
+                                    placeholder="e.g. Computer" value="<%= locals.branch || '' %>">
+                                <div class="d-flex flex-wrap gap-1 mt-2">
+                                    <% ['Computer','IT','Civil','Mechanical','Electronics','Chemical'].forEach(b=> { %>
+                                        <span class="badge badge-soft" style="cursor:pointer"
+                                            onclick="document.getElementById('branchInput').value='<%= b %>'">
+                                            <%= b.substring(0,5) %>
+                                        </span>
+                                        <% }); %>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-bold">Preferred City</label>
+                                <select name="location" class="form-select border-0 bg-light">
+                                    <option value="" <%=!locals.location?'selected':'' %>>All Maharashtra</option>
+                                    <%
+                                        ['Mumbai','Pune','Nagpur','Nashik','Aurangabad','Thane','Kolhapur'].forEach(city=>
+                                        { %>
+                                        <option value="<%= city %>" <%=locals.location===city?'selected':'' %>><%= city
+                                                %>
+                                        </option>
+                                        <% }); %>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100 py-3 rounded-3 shadow-lg"
+                                style="background: var(--primary-gradient); border: none;">
+                                <i class="fas fa-magic me-2"></i> Predict Now
+                            </button>
                         </form>
 
-                        <% if(locals.error) { %>
-                            <div class="alert alert-danger mt-3">
-                                <%= error %>
+                        <!-- Wishlist shortcut -->
+                        <% if (locals.results && results.length> 0) { %>
+                            <div class="mt-4 pt-3 border-top">
+                                <h6 class="fw-bold mb-2"><i class="far fa-heart me-2 text-danger"></i>My Wishlist</h6>
+                                <div id="wishlist-preview" class="small text-muted">Click <i class="far fa-heart"></i>
+                                    on any card to save.</div>
                             </div>
                             <% } %>
                     </div>
                 </div>
 
-                <!-- Results Display -->
-                <div class="col-md-8">
+                <!-- ===== CENTER: Results ===== -->
+                <div class="col-lg-6">
                     <% if(locals.results && results.length> 0) { %>
-                        <h4 class="mb-3">🎯 Recommended Colleges (<%= results.length %>)</h4>
-                        <% results.forEach(college=> { %>
-                            <div class="card mb-3 shadow-sm border-0">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between align-items-start">
-                                        <div>
-                                            <h5 class="card-title text-primary">
-                                                <%= college.name %>
-                                            </h5>
-                                            <h6 class="card-subtitle mb-2 text-muted"><i
-                                                    class="fas fa-map-marker-alt"></i>
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold m-0">
+                                <%= results.length %> Colleges Found
+                            </h5>
+                            <button class="btn btn-outline-primary btn-sm" id="compareBtn" onclick="openCompare()"
+                                style="display:none">
+                                <i class="fas fa-balance-scale me-1"></i> Compare (<span id="compareCount">0</span>)
+                            </button>
+                        </div>
+
+                        <div class="d-flex flex-column gap-3" id="results-list">
+                            <% results.forEach((college, idx)=> { %>
+                                <div class="college-card p-4" id="card-<%= idx %>" data-name="<%= college.name %>"
+                                    data-location="<%= college.location %>" data-fit="<%= college.fitScore %>"
+                                    data-type="<%= college.type %>"
+                                    data-cutoff="<%= college.branches[0] ? college.branches[0].cutoff : 'N/A' %>"
+                                    data-branch="<%= college.branches[0] ? college.branches[0].name : '' %>">
+
+                                    <div class="row align-items-center">
+                                        <!-- Info -->
+                                        <div class="col-md-8">
+                                            <div class="d-flex align-items-center mb-1 gap-2">
+                                                <h5 class="fw-bold mb-0 text-primary" style="font-size:1rem">
+                                                    <%= college.name %>
+                                                </h5>
+                                                <i class="fas fa-check-circle text-success fa-xs"
+                                                    title="Verified Data"></i>
+                                            </div>
+                                            <p class="text-muted mb-2 small"><i class="fas fa-map-marker-alt me-1"></i>
                                                 <%= college.location %>
-                                            </h6>
+                                            </p>
+
+                                            <!-- Eligible Branches -->
+                                            <small class="text-uppercase text-secondary fw-bold"
+                                                style="font-size:0.7rem">Eligible Branches</small>
+                                            <div class="d-flex flex-wrap gap-2 mt-1">
+                                                <% college.branches.slice(0, 3).forEach(b=> { %>
+                                                    <div class="branch-chip badge-soft px-3 py-2 d-flex flex-column align-items-start"
+                                                        style="cursor:pointer; border-radius:10px; background:#f0f4ff;"
+                                                        data-college="<%- college.name.replace(/" /g,'&quot;') %>"
+                                                        data-branch="<%- b.name.replace(/"/g,'&quot;') %>"
+                                                            data-trend="<%- JSON.stringify(b.trend ||
+                                                                {}).replace(/"/g,'&quot;') %>">
+                                                                <span class="fw-semibold" style="font-size:0.8rem">
+                                                                    <%= b.name.split(' ').slice(0,3).join(' ') %></span>
+                                                     <small style="opacity:0.75; font-size:0.72rem">
+                                                         Cutoff: <strong><%= b.cutoff.toFixed(2) %>%</strong>
+                                                         &nbsp;·&nbsp;<span class="<%= b.badgeClass %>" style="padding:1px 6px"><%= b.type %></span>
+                                                     </small>
+                                                 </div>
+                                             <% }); %>
+                                            <% if (college.branches.length > 3) { %>
+                                                <span class="badge bg-light text-muted border align-self-center">+<%= college.branches.length - 3 %> more</span>
+                                            <% } %>
                                         </div>
-                                        <span class="badge bg-success">
-                                            <%= college.rating %> ★
-                                        </span>
                                     </div>
 
-                                    <div class="row mt-2">
-                                        <div class="col-md-6"><small><strong>Fees:</strong> ₹<%= college.fees %></small>
+                                    <!-- Fit Score + Actions -->
+                                    <div class="col-md-4 text-center ps-4 border-start border-light">
+                                        <div class="d-flex justify-content-center mb-2">
+                                            <div class="fit-ring-wrap">
+                                                <canvas class="fit-ring-canvas" width="72" height="72"
+                                                    data-score="<%= college.fitScore %>"
+                                                    data-type="<%= college.type %>"></canvas>
+                                                <div class="fit-ring-label">
+                                                    <div class="score-num"><%= college.fitScore %></div>
+                                                    <div class="score-text">FIT</div>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="col-md-6"><small><strong>Placement:</strong>
-                                                <%= college.placement %>/10
-                                            </small></div>
-                                    </div>
+                                        <span class="<%= college.badgeClass %> mb-3 d-inline-block"><%= college.type %> Match</span>
 
-                                    <hr>
-                                    <h6>Eligible Branches:</h6>
-                                    <div class="d-flex flex-wrap gap-2">
-                                        <% college.branches.forEach(branch=> { %>
-                                            <span class="badge bg-light text-dark border">
-                                                <%= branch.name %> (Cutoff: <%= branch.cutoff %>)
-                                            </span>
-                                            <% }); %>
+                                        <div class="d-grid gap-2 mt-2">
+                                            <a href="https://www.google.com/search?q=<%= encodeURIComponent(college.name) %>+official+website"
+                                                target="_blank" class="btn btn-outline-primary btn-sm">
+                                                <i class="fas fa-external-link-alt me-1"></i>Visit
+                                            </a>
+                                             <div class="d-flex gap-2">
+                                                 <button class="btn btn-light btn-sm flex-grow-1 btn-wishlist"
+                                                     id="wish-<%= idx %>"
+                                                     data-idx="<%= idx %>"
+                                                     data-name="<%- college.name.replace(/"/g,' &quot;') %>"
+                                                                        data-location="<%= college.location %>"
+                                                                            data-fit="<%= college.fitScore %>">
+                                                                                <i class="far fa-heart"></i> Save
+                                                                                </button>
+                                                                                <button
+                                                                                    class="btn btn-light btn-sm flex-grow-1 btn-compare"
+                                                                                    data-idx="<%= idx %>">
+                                                                                    <i class="fas fa-plus-circle"></i>
+                                                                                    Compare
+                                                                                </button>
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <% }); %>
+                        </div>
+
+                        <% } else if(locals.results) { %>
+                            <div class="text-center py-5">
+                                <img src="https://cdni.iconscout.com/illustration/premium/thumb/no-data-found-8867280-7265556.png"
+                                    width="180" alt="No Data">
+                                <h5 class="mt-3 text-muted">No colleges found matching these criteria.</h5>
+                                <p class="text-muted">Try a higher score, different category, or "All Maharashtra" city.
+                                </p>
+                            </div>
+
+                            <!-- Similar (borderline) colleges -->
+                            <% if (locals.similarColleges && similarColleges.length> 0) { %>
+                                <div class="mt-4">
+                                    <h6 class="fw-bold text-secondary mb-3">
+                                        <i class="fas fa-compass me-2 text-warning"></i>
+                                        Almost There - Colleges Just Above Your Score
+                                    </h6>
+                                    <% similarColleges.forEach(c=> { %>
+                                        <div class="similar-card">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <div class="fw-bold text-dark" style="font-size:0.9rem">
+                                                        <%= c.name %>
+                                                    </div>
+                                                    <small class="text-muted"><i class="fas fa-map-marker-alt me-1"></i>
+                                                        <%= c.location %>
+                                                    </small>
+                                                    <div class="mt-1 small">Branch: <strong>
+                                                            <%= c.branch.split(' ').slice(0,3).join(' ') %></strong></div>
+                                    </div>
+                                    <div class="text-end">
+                                        <div class="fw-bold text-danger"><%= c.cutoff.toFixed(2) %>%</div>
+                                        <small class="text-muted">+<%= c.gap %> needed</small>
                                     </div>
                                 </div>
                             </div>
-                            <% }); %>
-                                <% } else if(locals.results) { %>
-                                    <div class="alert alert-warning">No colleges found matching your criteria. Try
-                                        lowering the cutoff.</div>
-                                    <% } else { %>
-                                        <div class="text-center text-muted mt-5">
-                                            <i class="fas fa-university fa-3x mb-3"></i>
-                                            <h5>Enter your score to see college predictions</h5>
+                        <% }); %>
+                    </div>
+                    <% } %>
+
+                <% } else { %>
+                    <div class="text-center py-5 glass-card">
+                        <i class="fas fa-rocket fa-4x text-primary mb-4 opacity-50"></i>
+                        <h3>Ready to predict your future?</h3>
+                        <p class="text-muted">Enter your CET details on the left to get AI-powered recommendations.</p>
+                    </div>
+                <% } %>
+            </div>
+
+            <!-- ===== RIGHT: Analytics Panel ===== -->
+            <div class="col-lg-3 d-none d-lg-block">
+                <div class="analytics-panel sticky-top" style="top: 80px;">
+
+                    <% if (locals.results && results.length > 0) { %>
+                    <h6 class="fw-bold mb-2">Admission Overview</h6>
+                    <div class="d-flex justify-content-around text-center mb-3">
+                        <div>
+                            <% var safeLen = results.filter(function(r){ return r.type==='Safe'; }).length; %>
+                            <div class="fw-bold text-success h5 mb-0"><%= safeLen %></div>
+                            <small class="text-muted">Safe</small>
+                        </div>
+                        <div>
+                            <% var modLen = results.filter(function(r){ return r.type==='Moderate'; }).length; %>
+                            <div class="fw-bold text-warning h5 mb-0"><%= modLen %></div>
+                            <small class="text-muted">Moderate</small>
+                        </div>
+                        <div>
+                            <% var drmLen = results.filter(function(r){ return r.type==='Dream'; }).length; %>
+                            <div class="fw-bold text-danger h5 mb-0"><%= drmLen %></div>
+                            <small class="text-muted">Dream</small>
+                        </div>
+                    </div>
+                    <div class="progress mb-1" style="height:8px">
+                        <% var safeP = Math.round(safeLen / results.length * 100); %>
+                        <% var modP  = Math.round(modLen  / results.length * 100); %>
+                        <% var drmP  = Math.round(drmLen  / results.length * 100); %>
+                        <div class="progress-bar bg-success" style="width:<%= safeP %>%"></div>
+                        <div class="progress-bar bg-warning" style="width:<%= modP %>%"></div>
+                        <div class="progress-bar bg-danger"  style="width:<%= drmP %>%"></div>
+                    </div>
+                    <small class="text-muted d-block mb-3">Distribution of <%= results.length %> results</small>
+                    <hr>
+                    <% } %>
+
+                                                <h6 class="fw-bold mb-3">Branch Trends (2024)</h6>
+                                                <canvas id="trendChart" height="140"></canvas>
+
+                                                <div class="mt-4 p-3 bg-light rounded-3 border">
+                                                    <h6 class="fw-bold text-primary mb-1"><i
+                                                            class="fas fa-lightbulb me-2"></i>AI Tip</h6>
+                                                    <small class="text-muted">
+                                                        <% if (locals.results && results.length> 0) { %>
+                                                            You qualify for <strong>
+                                                                <%= results.length %>
+                                                            </strong> colleges.
+                                                            <strong>
+                                                                <%= results.filter(r=>r.type==='Safe').length %>
+                                                            </strong> are safe picks - great options for Round 1!
+                                                            <% } else { %>
+                                                                Students with borderline scores often secure seats in
+                                                                Round 2-3. Explore multiple categories!
+                                                                <% } %>
+                                                    </small>
+                                                </div>
+
+                                                <!-- Wishlist Panel -->
+                                                <div class="mt-4 p-3 bg-white rounded-3 border" id="wishlist-panel"
+                                                    style="display:none">
+                                                    <h6 class="fw-bold mb-2"><i
+                                                            class="fas fa-heart text-danger me-2"></i>Saved Colleges
+                                                    </h6>
+                                                    <div id="wishlist-items" class="d-flex flex-column gap-2"></div>
+                                                </div>
                                         </div>
-                                        <% } %>
+                                </div>
+                </div>
+            </div><!-- /container -->
+
+            <!-- ===== COMPARE BAR ===== -->
+            <div id="compare-bar">
+                <div id="compare-items"></div>
+                <button class="btn btn-warning fw-bold px-4" onclick="openCompare()">
+                    <i class="fas fa-balance-scale me-2"></i>Compare Now
+                </button>
+                <button class="btn btn-outline-light btn-sm" onclick="clearCompare()">Clear</button>
+            </div>
+
+            <!-- ===== CUTOFF HISTORY MODAL ===== -->
+            <div class="modal fade" id="historyModal" tabindex="-1">
+                <div class="modal-dialog modal-lg modal-history">
+                    <div class="modal-content">
+                        <div class="modal-header" style="background: var(--primary-gradient); color: white;">
+                            <h5 class="modal-title" id="historyModalTitle">Cutoff History</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <canvas id="historyChart" height="100"></canvas>
+                            <div id="historyTable" class="mt-3"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+
+            <!-- ===== COMPARE MODAL ===== -->
+            <div class="modal fade" id="compare-modal" tabindex="-1">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header" style="background: var(--primary-gradient); color:white;">
+                            <h5 class="modal-title"><i class="fas fa-balance-scale me-2"></i>College Comparison</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body" id="compare-table-body">
+                            <p class="text-muted text-center">Add colleges using the Compare button on each card.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script src="/js/predictor_ui.js"></script>

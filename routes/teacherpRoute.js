@@ -60,39 +60,46 @@ router.post("/tprofile", upload.single("profileImage"), async (req, res) => {
             return res.status(401).send("Unauthorized");
         }
         const {
-                fullName,
-                email, 
-                phone, 
-                state, 
-                district, 
-                collegeName 
-            } = req.body;
-      
-            const profileData = {
-                userId,
-                fullName: fullName?.trim() || "",
-                email: email?.trim() || "",
-                phone: phone?.trim() || "",
-                state: state?.trim() || "",
-                district: district?.trim() || "",
-                collegeName: collegeName?.trim() || "",
-                profileImage: req.file ? `/uploads/${req.file.filename}` : req.body.existingProfileImage
-            };
+            fullName,
+            email,
+            phone,
+            state,
+            district,
+            collegeName
+        } = req.body;
 
-            // Check if profile exists, update or create new
-                    let profile = await TeacherProfile.findOne({ userId });
-                    if (profile) {
-                        await TeacherProfile.updateOne({ userId }, profileData);
-                    } else {
-                        await new TeacherProfile(profileData).save();
-                    }
-            
-                    res.redirect("/tprofile");
-                } catch (error) {
-                    console.error(error);
-                    res.status(500).send("Error saving profile");
-                }
-            });
+        const profileData = {
+            userId,
+            fullName: fullName?.trim() || "",
+            email: email?.trim() || "",
+            phone: phone?.trim() || "",
+            state: state?.trim() || "",
+            district: district?.trim() || "",
+            collegeName: collegeName?.trim() || "",
+            profileImage: req.file ? `/uploads/${req.file.filename}` : req.body.existingProfileImage
+        };
+
+        // Check if profile exists, update or create new
+        let profile = await TeacherProfile.findOne({ userId });
+
+        if (profile) {
+            // Ensure uniqueCode exists even for old profiles
+            if (!profile.uniqueCode) {
+                profileData.uniqueCode = 'TECH-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+            }
+            await TeacherProfile.updateOne({ userId }, profileData);
+        } else {
+            // Generate uniqueCode for new profile
+            profileData.uniqueCode = 'TECH-' + Math.random().toString(36).substr(2, 9).toUpperCase();
+            await new TeacherProfile(profileData).save();
+        }
+
+        res.redirect("/tprofile");
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Error saving profile");
+    }
+});
 
 
 module.exports = router;

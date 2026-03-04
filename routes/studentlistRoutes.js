@@ -26,14 +26,14 @@ router.get("/studentlist", async (req, res) => {
             return res.status(404).send("User not found");
         }
 
-        // Fetch the teacher's profile using fullName from TeacherProfile.js
-        const teacherProfile = await TeacherProfile.findOne({ fullName: user.username });
+        // Fetch the teacher's profile safely
+        const teacherProfile = await TeacherProfile.findOne({ userId });
 
         if (!teacherProfile) {
             return res.render("student_list", { students: [] });
         }
 
-        // Fetch students from Profile.js who belong to the same college as the teacher
+        // Fetch ALL students from the same college for institutional connection
         const students = await StudentProfile.find({ collegeName: teacherProfile.collegeName });
 
         // Fetch student details

@@ -1,6 +1,7 @@
 <%- include('layouts/header'); %>
   <%- include('layouts/navbar'); %>
 
+<<<<<<< HEAD
     <div class="page-transition">
 
       <style>
@@ -992,6 +993,1163 @@
           color: var(--color-dark);
           margin-bottom: 25px;
           line-height: 1.2;
+=======
+    <style>
+      :root {
+        /* V6 Premium SaaS Layered Palette */
+        /* Global Platform Theme Remapping (V7 - Yellow Theme) */
+
+        /* Backgrounds */
+        --c-cream: #F7FAFC;
+        /* Global light bg */
+        --c-cream-alt: #FFFFFF;
+        /* Global white */
+        --c-base: #FFFFFF;
+        /* Card surfaces */
+
+        /* Typography */
+        --c-navy: #1A1A2E;
+        /* Global dark text */
+        --c-navy-muted: #2D3748;
+        /* Global dark secondary text */
+        --c-slate: #4A5568;
+        /* Global standard body text */
+        --c-slate-light: #718096;
+        /* Global light text */
+
+        /* Accents mapped to Classic Yellow Theme */
+        --c-indigo: #FFB800;
+        /* Primary Yellow */
+        --c-indigo-soft: rgba(255, 184, 0, 0.1);
+        --c-teal: #00A8FF;
+        /* Secondary Blue */
+        --c-teal-soft: rgba(0, 168, 255, 0.1);
+
+        /* Secondary Accents */
+        --c-amber: #6C63FF;
+        /* Accent Purple */
+        --c-amber-soft: rgba(108, 99, 255, 0.1);
+        --c-coral: #10B981;
+        /* Success Green */
+        --c-coral-soft: rgba(16, 185, 129, 0.1);
+
+        /* Ambient Glows Adjusted for new palette */
+        --c-indigo-glow: rgba(255, 184, 0, 0.15);
+        /* Yellow glow */
+        --c-teal-glow: rgba(0, 168, 255, 0.12);
+        /* Blue glow */
+        --c-amber-glow: rgba(108, 99, 255, 0.08);
+        /* Purple glow */
+        --c-coral-glow: rgba(16, 185, 129, 0.08);
+        /* Green glow */
+        --c-tint-indigo: #FFFaf0;
+        /* Yellow tint */
+        --c-tint-lavender: #f0f8ff;
+        /* Blue tint */
+        /* Spacing System (Maintained from V5) */
+        --space-section-ds: 120px;
+        --space-section-tb: 80px;
+        --space-section-mb: 64px;
+        --gap-xl: 48px;
+        --gap-lg: 32px;
+        --gap-md: 24px;
+        --gap-sm: 16px;
+        --card-pad: 32px;
+
+        /* V6 Refined Shadows (Color hinted) */
+        --shadow-micro: 0 1px 2px rgba(15, 23, 42, 0.04);
+        --shadow-soft: 0 4px 12px rgba(15, 23, 42, 0.05), 0 1px 3px rgba(15, 23, 42, 0.03);
+        --shadow-float: 0 24px 48px rgba(15, 23, 42, 0.08), 0 8px 16px rgba(15, 23, 42, 0.03);
+        --shadow-base-ui: 0 4px 12px rgba(15, 23, 42, 0.06);
+        --shadow-glass: 0 8px 32px rgba(15, 23, 42, 0.05);
+
+        /* Section Specific Drop Shadows for Cards */
+        --shadow-glow-indigo: 0 12px 32px rgba(99, 102, 241, 0.08);
+
+        /* Motion Focus */
+        --dur-hover: 280ms;
+        --dur-reveal: 400ms;
+        --dur-chart: 800ms;
+        --dur-float: 6s;
+        --ease-out-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+        --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+        --bg-noise: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='1'/%3E%3C/svg%3E");
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', sans-serif;
+        background-color: var(--c-cream);
+        /* V6: Removed pure white #FFF globally */
+        color: var(--c-navy);
+        -webkit-font-smoothing: antialiased;
+        overflow-x: hidden;
+      }
+
+      /* Base Realism Overlay */
+      .noise-overlay {
+        position: fixed;
+        inset: 0;
+        background-image: var(--bg-noise);
+        opacity: 0.02;
+        /* Subtle grain for physical feel */
+        pointer-events: none;
+        z-index: 9999;
+      }
+
+      /* V6 Refined Glass Token - Reduced Blur for realism */
+      .glass-acrylic {
+        background: rgba(255, 255, 255, 0.55);
+        /* Lighter base */
+        backdrop-filter: blur(12px) saturate(140%);
+        -webkit-backdrop-filter: blur(12px) saturate(140%);
+        border-radius: 20px;
+        box-shadow: var(--shadow-glass);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        /* Physical rim light */
+        border-top: 1px solid rgba(255, 255, 255, 0.9);
+        border-left: 1px solid rgba(255, 255, 255, 0.9);
+        position: relative;
+        overflow: hidden;
+        transition: transform var(--dur-hover) var(--ease-out-smooth), box-shadow var(--dur-hover) ease, backdrop-filter var(--dur-hover) ease;
+      }
+
+      .glass-acrylic::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background-image: var(--bg-noise);
+        opacity: 0.02;
+        z-index: 0;
+      }
+
+      .glass-acrylic::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1;
+        background: linear-gradient(110deg, transparent 20%, rgba(255, 255, 255, 0.5) 40%, transparent 60%);
+        transform: translateX(-150%);
+        animation: glassSweep 8s infinite var(--ease-in-out);
+      }
+
+      @keyframes glassSweep {
+
+        0%,
+        30% {
+          transform: translateX(-150%);
+        }
+
+        70%,
+        100% {
+          transform: translateX(150%);
+        }
+      }
+
+      /* Typography Hierarchy */
+      .text-display {
+        font-size: clamp(3.5rem, 6.5vw, 6.2rem);
+        line-height: 1.05;
+        letter-spacing: -0.04em;
+        font-weight: 800;
+        color: var(--c-navy);
+      }
+
+      .text-h1 {
+        font-size: clamp(2.5rem, 4vw, 3.5rem);
+        line-height: 1.1;
+        letter-spacing: -0.03em;
+        font-weight: 700;
+        color: var(--c-navy);
+      }
+
+      .text-h2 {
+        font-size: clamp(2rem, 3.5vw, 2.75rem);
+        line-height: 1.15;
+        letter-spacing: -0.02em;
+        font-weight: 700;
+        color: var(--c-navy);
+      }
+
+      .text-h3 {
+        font-size: 1.35rem;
+        line-height: 1.4;
+        font-weight: 600;
+        color: var(--c-navy);
+        letter-spacing: -0.01em;
+      }
+
+      .text-lead {
+        font-size: 1.25rem;
+        line-height: 1.6;
+        color: var(--c-slate);
+        font-weight: 400;
+        max-width: 58ch;
+      }
+
+      .text-body {
+        font-size: 1.05rem;
+        line-height: 1.65;
+        color: var(--c-slate);
+        max-width: 60ch;
+      }
+
+      .text-small {
+        font-size: 0.875rem;
+        color: var(--c-slate-light);
+        font-weight: 500;
+      }
+
+      .text-eyebrow {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--c-slate-light);
+        margin-bottom: 1rem;
+        display: block;
+      }
+
+      /* Gradient Text Accents */
+      .accent-gradient-indigo {
+        background: linear-gradient(135deg, var(--c-navy), var(--c-indigo));
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      /* Layout */
+      .section {
+        padding: var(--space-section-ds) 0;
+        position: relative;
+      }
+
+      .mb-large {
+        margin-bottom: 3rem;
+      }
+
+      .mb-medium {
+        margin-bottom: 1.5rem;
+      }
+
+      /* V6 Color Alternations */
+      .b-alt {
+        background: var(--c-cream-alt);
+      }
+
+      .b-white {
+        background: var(--c-cream);
+      }
+
+      .b-tint-indigo {
+        background: var(--c-tint-indigo);
+      }
+
+      .b-tint-lavender {
+        background: var(--c-tint-lavender);
+      }
+
+      /* V6 Subtle Edges (removed hard black borders) */
+      .edge-top {
+        border-top: 1px solid rgba(15, 23, 42, 0.03);
+      }
+
+      .edge-bot {
+        border-bottom: 1px solid rgba(15, 23, 42, 0.03);
+      }
+
+      .container {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 2rem;
+        position: relative;
+        z-index: 2;
+      }
+
+      .text-center {
+        text-align: center;
+      }
+
+      .relative {
+        position: relative;
+      }
+
+      /* Buttons: V6 Gradient & Pulse */
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem 1.75rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        border-radius: 8px;
+        text-decoration: none;
+        border: 1px solid transparent;
+        cursor: pointer;
+        transition: all var(--dur-hover) var(--ease-out-smooth);
+      }
+
+      /* Buttons updated to classic yellow gradient */
+      .btn-primary {
+        background: linear-gradient(135deg, #FFB800, #E5A700);
+        color: #1A1A2E;
+        /* Dark text on yellow for high contrast */
+        border: none;
+        padding: 0.85rem 1.75rem;
+        border-radius: 8px;
+        font-weight: 700;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all var(--dur-hover) var(--ease-out-smooth);
+        box-shadow: 0 4px 15px rgba(255, 184, 0, 0.3);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn-primary::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 50%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+        transition: left 0.6s ease;
+        pointer-events: none;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(255, 184, 0, 0.5);
+        background: linear-gradient(135deg, #E5A700, #FFB800);
+      }
+
+      .btn-primary:hover::before {
+        left: 150%;
+      }
+
+      .btn-primary:active {
+        transform: scale(0.97);
+        box-shadow: 0 2px 8px rgba(255, 184, 0, 0.2);
+      }
+
+      .btn-outline {
+        background: rgba(255, 255, 255, 0.5);
+        /* Tinted transparent */
+        color: var(--c-navy);
+        border: 1px solid rgba(15, 23, 42, 0.1);
+        backdrop-filter: blur(4px);
+      }
+
+      .btn-outline:hover {
+        background: var(--c-base);
+        border-color: rgba(15, 23, 42, 0.2);
+        box-shadow: var(--shadow-micro);
+      }
+
+      /* Ambient Motion Glows */
+      @keyframes floatGlow {
+        0% {
+          transform: scale(1) translate(0, 0);
+          opacity: 0.6;
+        }
+
+        50% {
+          transform: scale(1.1) translate(2%, 2%);
+          opacity: 0.8;
+        }
+
+        100% {
+          transform: scale(1) translate(0, 0);
+          opacity: 0.6;
+        }
+      }
+
+      /* ================== V5/V6: 1. HERO & PLATFORM OVERVIEW ================== */
+      .hero {
+        min-height: 100vh;
+        padding-top: 180px;
+        padding-bottom: 80px;
+        display: flex;
+        align-items: center;
+        position: relative;
+        background: var(--c-cream-alt);
+        overflow: hidden;
+      }
+
+      /* V6 Hero Ambient Indigo Glow */
+      .hero::before {
+        content: '';
+        position: absolute;
+        top: 10%;
+        right: 5%;
+        width: 50vw;
+        height: 50vw;
+        background: radial-gradient(circle, var(--c-indigo-glow) 0%, transparent 70%);
+        filter: blur(100px);
+        z-index: 0;
+        pointer-events: none;
+        animation: floatGlow 15s ease-in-out infinite;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 10fr 12fr;
+        gap: var(--gap-lg);
+        align-items: center;
+      }
+
+      .hero-content {
+        max-width: 500px;
+      }
+
+      .hero-pillars {
+        display: flex;
+        gap: var(--gap-md);
+        margin-top: 2.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid rgba(15, 23, 42, 0.05);
+      }
+
+      .hp-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--c-slate);
+      }
+
+      .hp-item i {
+        font-size: 1rem;
+        color: var(--c-indigo);
+        opacity: 0.8;
+      }
+
+      .hero-visual {
+        position: relative;
+        height: 500px;
+        width: 100%;
+        perspective: 1200px;
+      }
+
+      /* Base glass retains its properties */
+      .mockup-base {
+        position: absolute;
+        width: 520px;
+        height: 380px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotateY(-5deg) rotateX(2deg);
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        z-index: 2;
+        animation: mockFloat var(--dur-float) ease-in-out infinite alternate;
+      }
+
+      @keyframes mockFloat {
+        0% {
+          transform: translate(-50%, -50%) rotateY(-5deg) rotateX(2deg) translateY(0);
+        }
+
+        100% {
+          transform: translate(-50%, -50%) rotateY(-5deg) rotateX(2deg) translateY(-15px);
+        }
+      }
+
+      .mock-nav {
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid rgba(15, 23, 42, 0.05);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        z-index: 3;
+        position: relative;
+      }
+
+      .mock-dots {
+        display: flex;
+        gap: 6px;
+      }
+
+      .mock-dots span {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: rgba(15, 23, 42, 0.1);
+      }
+
+      .mock-dots span:nth-child(1) {
+        background: rgba(15, 23, 42, 0.2);
+      }
+
+      .mock-body {
+        padding: 2rem;
+        flex: 1;
+        position: relative;
+        z-index: 3;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .mock-skeleton {
+        height: 8px;
+        border-radius: 4px;
+        background: rgba(15, 23, 42, 0.04);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .mock-skeleton::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        transform: translateX(-100%);
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), transparent);
+        animation: shimmer 2.5s infinite;
+      }
+
+      @keyframes shimmer {
+        100% {
+          transform: translateX(100%);
+        }
+      }
+
+      /* V6 Refined Cards: Tinted off-white, physical rim light, soft shadow */
+      .mock-internal-card {
+        background: var(--c-base);
+        /* Just barely off-white */
+        padding: 1rem;
+        border-radius: 12px;
+        border: 1px solid rgba(15, 23, 42, 0.03);
+        border-top: 1px solid rgba(255, 255, 255, 0.8);
+        border-left: 1px solid rgba(255, 255, 255, 0.8);
+        margin-top: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        position: relative;
+        box-shadow: var(--shadow-soft);
+      }
+
+      /* ================== V5/V6: 2. CORE PILLARS (THE MAIN HUB) ================== */
+      .hub-section {
+        background: var(--c-cream);
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* V6 Hub Ambient Teal Glow */
+      .hub-section::before {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: -10%;
+        width: 60vw;
+        height: 60vw;
+        background: radial-gradient(circle, var(--c-teal-glow) 0%, transparent 60%);
+        filter: blur(120px);
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      .pillar-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--gap-lg);
+        margin-top: 4rem;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* V6 Elevated Cards */
+      .pillar-card {
+        background: var(--c-base);
+        /* Not pure white */
+        border-radius: 24px;
+        padding: var(--card-pad);
+        border: 1px solid rgba(15, 23, 42, 0.03);
+        border-top: 1px solid rgba(255, 255, 255, 0.9);
+        border-left: 1px solid rgba(255, 255, 255, 0.9);
+        box-shadow: var(--shadow-soft);
+        position: relative;
+        overflow: hidden;
+        transition: all var(--dur-hover) var(--ease-out-smooth);
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      /* Hover Interaction for Cards adds a soft wash based on section */
+      .pillar-card::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, transparent, rgba(13, 148, 136, 0.03));
+        opacity: 0;
+        transition: opacity var(--dur-hover) ease;
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      .pillar-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-float);
+      }
+
+      .pillar-card:hover::before {
+        opacity: 1;
+      }
+
+      .pillar-card>* {
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Spot Colors for Hierarchy */
+      .pc-features .pc-icon-wrap {
+        background: var(--c-indigo-soft);
+        color: var(--c-indigo);
+        border: 1px solid rgba(99, 102, 241, 0.1);
+      }
+
+      .pc-tools .pc-icon-wrap {
+        background: var(--c-teal-soft);
+        color: var(--c-teal);
+        border: 1px solid rgba(13, 148, 136, 0.1);
+      }
+
+      .pc-assess .pc-icon-wrap {
+        background: var(--c-amber-soft);
+        color: var(--c-amber);
+        border: 1px solid rgba(245, 158, 11, 0.1);
+      }
+
+      .pc-resources .pc-icon-wrap {
+        background: var(--c-coral-soft);
+        color: var(--c-coral);
+        border: 1px solid rgba(225, 29, 72, 0.1);
+      }
+
+      .pc-header {
+        display: flex;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+
+      .pc-icon-wrap {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        flex-shrink: 0;
+      }
+
+      .pc-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-top: 1rem;
+      }
+
+      .pc-list-item {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: var(--c-navy);
+        font-weight: 500;
+        font-size: 0.95rem;
+      }
+
+      .pc-list-item i {
+        color: var(--c-slate-light);
+        font-size: 0.8rem;
+      }
+
+      /* Pillar Subtle Connectors */
+      .hub-connectors {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.3;
+      }
+
+      .hub-connectors svg line {
+        stroke: var(--c-slate-light);
+        stroke-width: 1;
+        stroke-dasharray: 4 4;
+      }
+
+      /* ================== V5/V6: 3. FEATURE STORYTELLING ================== */
+      .story-section {
+        background: var(--c-tint-lavender);
+        /* V6: Light lavender atmospheric layer */
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* V6 Story Ambient Glow */
+      .story-section::after {
+        content: '';
+        position: absolute;
+        top: 20%;
+        right: -10%;
+        width: 70vw;
+        height: 70vw;
+        background: radial-gradient(circle, var(--c-indigo-glow) 0%, transparent 60%);
+        filter: blur(120px);
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      .story-block {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--gap-xl);
+        align-items: center;
+        margin-bottom: 8rem;
+        position: relative;
+        z-index: 1;
+      }
+
+      .story-block:last-child {
+        margin-bottom: 0;
+      }
+
+      .story-block.reversed {
+        direction: rtl;
+      }
+
+      .story-block.reversed>* {
+        direction: ltr;
+      }
+
+      .story-text {
+        max-width: 460px;
+      }
+
+      .story-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: 20px;
+        background: var(--c-base);
+        border: 1px solid rgba(15, 23, 42, 0.05);
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--c-navy);
+        margin-bottom: 1.5rem;
+        box-shadow: var(--shadow-micro);
+      }
+
+      /* V6 Elevated Image Wrap */
+      .story-visual-wrap {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 4/3;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--c-base);
+        border-radius: 24px;
+        box-shadow: var(--shadow-float);
+        border: 1px solid rgba(15, 23, 42, 0.03);
+        border-top: 1px solid rgba(255, 255, 255, 0.8);
+        border-left: 1px solid rgba(255, 255, 255, 0.8);
+        overflow: hidden;
+      }
+
+      .sv-bg-grid {
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(#E2E8F0 1px, transparent 1px);
+        background-size: 20px 20px;
+        opacity: 0.5;
+      }
+
+      /* Specific UI mocks for storytelling */
+      .ui-mock-form {
+        width: 80%;
+        background: var(--c-base);
+        border-radius: 12px;
+        box-shadow: var(--shadow-base-ui);
+        border: 1px solid rgba(15, 23, 42, 0.04);
+        border-top: 1px solid rgba(255, 255, 255, 0.9);
+        padding: 1.5rem;
+        z-index: 2;
+        position: relative;
+      }
+
+      .ui-skeleton-line {
+        height: 12px;
+        background: rgba(15, 23, 42, 0.04);
+        border-radius: 4px;
+        margin-bottom: 12px;
+        width: 100%;
+      }
+
+      /* ================== V5/V6: 4. ECOSYSTEM JOURNEY ================== */
+      .journey-section {
+        background: var(--c-cream-alt);
+        overflow: hidden;
+        padding-bottom: 160px;
+        position: relative;
+      }
+
+      /* Subtle Indigo glow behind the path */
+      .journey-section::before {
+        content: '';
+        position: absolute;
+        top: 10%;
+        left: 50%;
+        width: 80vw;
+        height: 30vw;
+        transform: translateX(-50%);
+        background: radial-gradient(ellipse, var(--c-indigo-glow) 0%, transparent 70%);
+        filter: blur(80px);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      .journey-flow {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        position: relative;
+        margin-top: 4rem;
+        padding-top: 2rem;
+        z-index: 1;
+      }
+
+      .j-line {
+        position: absolute;
+        top: 22px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, var(--c-indigo), transparent);
+        opacity: 0.15;
+        z-index: 0;
+      }
+
+      .j-node {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        position: relative;
+        z-index: 1;
+        width: 140px;
+      }
+
+      .j-dot {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--c-base);
+        border: 2px solid var(--c-indigo-soft);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: var(--shadow-soft);
+        margin-bottom: 1rem;
+        color: var(--c-indigo);
+        font-size: 1.1rem;
+        transition: all var(--dur-hover);
+      }
+
+      .j-node:hover .j-dot {
+        transform: scale(1.1);
+        border-color: var(--c-indigo);
+        background: var(--c-indigo);
+        color: white;
+        box-shadow: var(--shadow-glow-indigo);
+      }
+
+      .j-title {
+        font-weight: 700;
+        font-size: 0.95rem;
+        color: var(--c-navy);
+        margin-bottom: 4px;
+      }
+
+      .j-desc {
+        font-size: 0.8rem;
+        color: var(--c-slate-light);
+        line-height: 1.4;
+      }
+
+      /* ================== V5/V6: 5. GROWTH HUB (Analytics) ================== */
+      .growth-section {
+        background: var(--c-cream);
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* V6 Amber Warm Glow */
+      .growth-section::before {
+        content: '';
+        position: absolute;
+        top: 30%;
+        right: -5%;
+        width: 60vw;
+        height: 60vw;
+        background: radial-gradient(circle, var(--c-amber-glow) 0%, transparent 60%);
+        filter: blur(120px);
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      .growth-wrap {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--gap-xl);
+        align-items: center;
+        position: relative;
+        z-index: 1;
+      }
+
+      .growth-context {
+        padding-right: 2rem;
+        border-right: 1px solid rgba(15, 23, 42, 0.05);
+      }
+
+      .analytics-board {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .a-sheet {
+        position: absolute;
+        width: 100%;
+        height: 90%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+      }
+
+      /* V6 Elevated Main Chart Card */
+      .a-card-main {
+        position: relative;
+        width: 70%;
+        background: var(--c-base);
+        border-radius: 18px;
+        box-shadow: var(--shadow-base-ui);
+        border: 1px solid rgba(15, 23, 42, 0.03);
+        border-top: 1px solid rgba(255, 255, 255, 0.8);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 2.5rem 1.5rem;
+        z-index: 3;
+      }
+
+      .a-ring-wrap {
+        position: relative;
+        width: 160px;
+        height: 160px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+      }
+
+      .a-ring-svg {
+        position: absolute;
+        inset: 0;
+        transform: rotate(-90deg);
+      }
+
+      .a-ring-bg {
+        fill: none;
+        stroke: var(--c-cream-alt);
+        stroke-width: 6;
+      }
+
+      .a-ring-fg {
+        fill: none;
+        stroke: var(--c-indigo);
+        stroke-width: 6;
+        stroke-dasharray: 440;
+        stroke-dashoffset: 440;
+        transition: stroke-dashoffset var(--dur-chart) var(--ease-in-out);
+        stroke-linecap: round;
+        animation: ringPulse 4s infinite alternate;
+        /* V6 slow color motion on ring */
+      }
+
+      @keyframes ringPulse {
+        0% {
+          filter: drop-shadow(0 0 4px rgba(99, 102, 241, 0.2));
+        }
+
+        100% {
+          filter: drop-shadow(0 0 12px rgba(99, 102, 241, 0.5));
+        }
+      }
+
+      .a-score {
+        font-size: 3.5rem;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        color: var(--c-navy);
+        line-height: 1;
+      }
+
+      .a-stat-pill {
+        position: absolute;
+        background: #FFF;
+        border: 1px solid rgba(0, 0, 0, 0.04);
+        box-shadow: var(--shadow-base-ui);
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        top: 10%;
+        right: -5%;
+        color: var(--c-teal);
+        z-index: 4;
+        animation: solidFloat 5s ease-in-out infinite alternate;
+      }
+
+      @keyframes solidFloat {
+        0% {
+          transform: translateY(0);
+        }
+
+        100% {
+          transform: translateY(-8px);
+        }
+      }
+
+      /* ================== V5/V6: 6. COMMUNITY & LEADERBOARD ================== */
+      .community-section {
+        background: var(--c-cream-alt);
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* V6 Coral Ambient Glow */
+      .community-section::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: -10%;
+        width: 50vw;
+        height: 50vw;
+        background: radial-gradient(circle, var(--c-coral-glow) 0%, transparent 60%);
+        filter: blur(120px);
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      .com-grid {
+        display: grid;
+        grid-template-columns: 10fr 14fr;
+        gap: var(--gap-xl);
+        align-items: center;
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Leaderboard Glass Preview */
+      .lb-preview {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        padding: 1.5rem;
+      }
+
+      /* V6 Refined Leaderboard Rows */
+      .lb-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 16px;
+        background: var(--c-base);
+        /* Not pure white */
+        border-radius: 8px;
+        border: 1px solid rgba(15, 23, 42, 0.03);
+        border-top: 1px solid rgba(255, 255, 255, 0.8);
+        box-shadow: var(--shadow-micro);
+        transition: transform var(--dur-hover);
+      }
+
+      .lb-row:hover {
+        transform: translateX(4px);
+        box-shadow: var(--shadow-soft);
+      }
+
+      .lb-user {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .lb-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #E2E8F0;
+      }
+
+      .lb-score {
+        font-weight: 700;
+        color: var(--c-indigo);
+      }
+
+      /* Cinematic Testimonials within Community */
+      .test-marquee {
+        display: flex;
+        width: 100%;
+        padding: 2rem 0;
+        margin-top: 4rem;
+        position: relative;
+        z-index: 1;
+        mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+        -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+      }
+
+      .test-track {
+        display: flex;
+        gap: var(--gap-md);
+        animation: scrollHoriz 40s linear infinite;
+        width: max-content;
+      }
+
+      .test-track:hover {
+        animation-play-state: paused;
+      }
+
+      @keyframes scrollHoriz {
+        0% {
+          transform: translateX(0);
+>>>>>>> smalluichange
         }
 
         .why-content p {
@@ -1001,6 +2159,7 @@
           line-height: 1.8;
         }
 
+<<<<<<< HEAD
         .benefits-grid {
           display: grid;
           grid-template-columns: 1fr 1fr;
@@ -1107,10 +2266,843 @@
                 </div>
                 <span class="benefit-text">100% Personalized</span>
               </div>
+=======
+      /* V6 Refined Testimonial Cards */
+      .t-card {
+        width: 380px;
+        white-space: normal;
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+        border-radius: 12px;
+        padding: var(--card-pad);
+        background: var(--c-base);
+        /* Replaced cream-alt with explicit card surface */
+        border: 1px solid rgba(15, 23, 42, 0.03);
+        border-top: 1px solid rgba(255, 255, 255, 0.8);
+        box-shadow: var(--shadow-soft);
+        transition: transform var(--dur-hover);
+      }
+
+      .t-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-float);
+      }
+
+      .t-featured {
+        width: 440px;
+      }
+
+      .t-quote {
+        font-size: 1.05rem;
+        line-height: 1.6;
+        color: var(--c-slate);
+        margin-bottom: 2rem;
+        position: relative;
+        z-index: 2;
+      }
+
+      .t-author {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        z-index: 2;
+        position: relative;
+      }
+
+      /* ================== V5/V6: 7. EMOTIONAL FINAL CTA ================== */
+      .final-cta {
+        text-align: center;
+        background: var(--c-cream);
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* V6 Warm CTA Glow mapped to Yellow Brand */
+      .final-cta::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 60vw;
+        height: 60vw;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255, 184, 0, 0.1) 0%, rgba(0, 168, 255, 0.05) 40%, transparent 70%);
+        filter: blur(80px);
+        z-index: 0;
+        pointer-events: none;
+        animation: floatGlow 15s ease-in-out infinite reverse;
+      }
+
+      /* ================== V8: PARALLAX BACKGROUND LAYERS ================== */
+      .hero-parallax-container {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+        overflow: hidden;
+      }
+
+      .parallax-layer {
+        position: absolute;
+        pointer-events: none;
+        transition: transform 0.1s cubic-bezier(0.2, 0.8, 0.2, 1);
+        opacity: 0.15;
+        /* Much softer background blend */
+        z-index: 0;
+      }
+
+      .parallax-float {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      /* Push images to the absolute edges to frame the hero content beautifully */
+      .p-img-1 {
+        top: 10%;
+        left: -2%;
+        width: 220px;
+      }
+
+      .p-img-1 .parallax-float {
+        animation: floatGlow 10s infinite alternate;
+      }
+
+      .p-img-2 {
+        bottom: 5%;
+        right: -5%;
+        width: 280px;
+      }
+
+      .p-img-2 .parallax-float {
+        animation: floatGlow 12s infinite alternate-reverse;
+      }
+
+      .p-img-3 {
+        top: 60%;
+        left: -4%;
+        width: 140px;
+      }
+
+      .p-img-3 .parallax-float {
+        animation: floatGlow 8s infinite alternate;
+      }
+
+      .p-img-4 {
+        top: 5%;
+        right: 2%;
+        width: 180px;
+      }
+
+      .p-img-4 .parallax-float {
+        animation: floatGlow 14s infinite alternate-reverse;
+      }
+
+      .p-img-5 {
+        bottom: 10%;
+        left: 35%;
+        width: 150px;
+        opacity: 0.1;
+      }
+
+      .p-img-5 .parallax-float {
+        animation: floatGlow 11s infinite alternate;
+      }
+
+      .cta-inner {
+        max-width: 680px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        z-index: 2;
+        padding: 4rem;
+        border-radius: 24px;
+      }
+
+      .footer {
+        background: var(--c-cream);
+        padding: var(--space-section-tb) 0 3rem;
+        border-top: 1px solid rgba(15, 23, 42, 0.05);
+        position: relative;
+      }
+
+      .footer-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr 1fr 1.5fr;
+        gap: var(--gap-lg);
+        margin-bottom: 5rem;
+        position: relative;
+        z-index: 2;
+      }
+
+      .footer-brand .logo {
+        font-size: 1.25rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        color: var(--c-navy);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .f-col h5 {
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--c-slate-light);
+        margin-bottom: 1.5rem;
+      }
+
+      .f-col a {
+        display: block;
+        color: var(--c-slate);
+        text-decoration: none;
+        margin-bottom: 1rem;
+        font-size: 0.95rem;
+        font-weight: 400;
+        transition: color 0.2s;
+      }
+
+      .f-col a:hover {
+        color: var(--c-navy);
+      }
+
+      .subscribe-box {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1rem;
+      }
+
+      .subscribe-box input {
+        flex: 1;
+        padding: 0.6rem 1rem;
+        border: 1px solid rgba(15, 23, 42, 0.1);
+        border-radius: 6px;
+        font-family: inherit;
+        font-size: 0.95rem;
+        transition: all 0.2s;
+        background: var(--c-tint-indigo);
+        color: var(--c-navy);
+      }
+
+      .subscribe-box input:focus {
+        outline: none;
+        border-color: var(--c-indigo);
+        background: var(--c-base);
+        box-shadow: 0 0 0 3px var(--c-indigo-glow);
+      }
+
+      .subscribe-box button {
+        padding: 0.6rem 1rem;
+        background: var(--c-navy);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.1s;
+      }
+
+      .subscribe-box button:active {
+        transform: scale(0.96);
+      }
+
+      .footer-bottom {
+        border-top: 1px solid rgba(15, 23, 42, 0.05);
+        padding-top: 2rem;
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.85rem;
+        color: var(--c-slate-light);
+        position: relative;
+        z-index: 2;
+      }
+
+      @media(max-width: 1024px) {
+        .section {
+          padding: var(--space-section-tb) 0;
+        }
+
+        .hero-grid,
+        .pillar-grid,
+        .story-block,
+        .growth-wrap,
+        .com-grid {
+          grid-template-columns: 1fr;
+          gap: var(--gap-lg);
+        }
+
+        .story-block.reversed {
+          direction: ltr;
+        }
+
+        .hero-content {
+          margin: 0 auto;
+          text-align: center;
+        }
+
+        .hero-actions {
+          justify-content: center;
+        }
+
+        .hero-pillars {
+          justify-content: center;
+          flex-wrap: wrap;
+        }
+
+        .journey-flow {
+          display: none;
+        }
+
+        .mockup-base {
+          position: relative;
+          top: auto;
+          left: auto;
+          transform: none;
+          width: 100%;
+          max-width: 500px;
+          margin: 0 auto;
+          min-height: 320px;
+          height: auto;
+          animation: none;
+        }
+
+        .growth-context {
+          padding-right: 0;
+          border-right: none;
+          border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+          padding-bottom: 2rem;
+        }
+
+        .footer-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      @media(max-width: 640px) {
+        .section {
+          padding: var(--space-section-mb) 0;
+        }
+
+        .text-display {
+          font-size: 2.75rem;
+        }
+
+        .footer-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .footer-bottom {
+          flex-direction: column;
+          gap: 1rem;
+          text-align: center;
+        }
+      }
+
+      /* V9 College Carousel */
+      .college-carousel {
+        position: relative;
+        width: 100%;
+        height: 180px;
+        border-radius: 12px;
+        overflow: hidden;
+        background: var(--c-slate-light);
+        margin-bottom: 20px;
+      }
+
+      .carousel-img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0;
+        transition: opacity 0.8s ease-in-out, transform 8s ease-out;
+        transform: scale(1.05);
+      }
+
+      .carousel-img.active {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      .carousel-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(15, 23, 42, 0.4), transparent);
+        pointer-events: none;
+      }
+
+      /* V7 Override: Prevent carr_style.css from forcing hero h1 to green */
+      .hero h1.text-display {
+        color: var(--c-navy) !important;
+      }
+    </style>
+
+    <div class="noise-overlay"></div>
+
+    <main>
+      <!-- V5/V8 SECTION 1: HERO & PLATFORM OVERVIEW (With Restored Parallax) -->
+      <section class="hero section" id="hero-section">
+
+        <!-- V8 Restored Parallax Layers -->
+        <div class="hero-parallax-container">
+          <div class="parallax-layer p-img-1" data-speed="0.08"><img src="/img/hero_parallax/hero-1.png"
+              class="parallax-float" alt=""></div>
+          <div class="parallax-layer p-img-2" data-speed="-0.05"><img src="/img/hero_parallax/hero-2.png"
+              class="parallax-float" alt=""></div>
+          <div class="parallax-layer p-img-3" data-speed="0.10"><img src="/img/hero_parallax/hero-3.png"
+              class="parallax-float" alt=""></div>
+          <div class="parallax-layer p-img-4" data-speed="-0.07"><img src="/img/hero_parallax/hero-4.png"
+              class="parallax-float" alt=""></div>
+          <div class="parallax-layer p-img-5" data-speed="0.06"><img src="/img/hero_parallax/hero-5.png"
+              class="parallax-float" alt=""></div>
+        </div>
+
+        <div class="container hero-grid">
+          <div class="hero-content">
+            <span class="text-eyebrow">EduNavigator Platform</span>
+            <h1 class="text-display mb-medium">Precision career architecture.</h1>
+            <p class="text-lead mb-medium">An all-in-one platform built for ambitious students. We combine predictive
+              models, technical assessments, and expert resources to map your highest-leverage career trajectory.</p>
+            <div class="hero-actions">
+              <a href="/register" class="btn btn-primary">Start Assessment</a>
+              <a href="/integrations" class="btn btn-outline">Explore Tools</a>
+            </div>
+
+            <!-- Pillar Overview Indicators -->
+            <div class="hero-pillars">
+              <div class="hp-item"><i class="fas fa-layer-group"></i> Features</div>
+              <div class="hp-item"><i class="fas fa-wrench"></i> Tools</div>
+              <div class="hp-item"><i class="fas fa-chart-line"></i> Assessment</div>
+              <div class="hp-item"><i class="fas fa-book-open"></i> Resources</div>
+            </div>
+          </div>
+
+          <div class="hero-visual">
+            <div class="mockup-base glass-acrylic">
+              <div class="mock-nav">
+                <div class="mock-dots"><span></span><span></span><span></span></div>
+                <div class="text-small" style="font-weight:600; color:var(--c-navy);">Workspace Overview</div>
+                <div style="width:24px; height:24px; border-radius:50%; background:rgba(0,0,0,0.08);"></div>
+              </div>
+              <div class="mock-body">
+                <div class="mock-skeleton" style="width: 120px;"></div>
+                <div class="mock-skeleton" style="width: 200px;"></div>
+
+                <div class="mock-internal-card">
+                  <div
+                    style="width:40px; height:40px; border-radius:8px; background:var(--c-indigo-soft); color:var(--c-indigo); display:flex; align-items:center; justify-content:center;">
+                    <i class="fas fa-brain"></i>
+                  </div>
+                  <div style="flex:1;">
+                    <div style="font-size:0.8rem; font-weight:600; color:var(--c-navy); margin-bottom:4px;">Cognitive
+                      Readiness</div>
+                    <div class="mock-skeleton" style="width:80%; margin:0; height:6px;"></div>
+                  </div>
+                  <div style="font-size:0.85rem; font-weight:700; color:var(--c-teal);">Strong</div>
+                </div>
+
+                <div class="mock-internal-card">
+                  <div
+                    style="width:40px; height:40px; border-radius:8px; background:var(--c-coral-soft); color:var(--c-coral); display:flex; align-items:center; justify-content:center;">
+                    <i class="fas fa-briefcase"></i>
+                  </div>
+                  <div style="flex:1;">
+                    <div style="font-size:0.8rem; font-weight:600; color:var(--c-navy); margin-bottom:4px;">Market Match
+                    </div>
+                    <div class="mock-skeleton" style="width:60%; margin:0; height:6px;"></div>
+                  </div>
+                  <div style="font-size:0.85rem; font-weight:700; color:var(--c-amber);">Evaluating</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
+
+      <!-- V5 SECTION 2: CORE PLATFORM PILLARS -->
+      <section class="hub-section section edge-top">
+        <div class="container relative">
+          <div class="text-center mb-large" style="max-width:600px; margin:0 auto 4rem auto;">
+            <span class="text-eyebrow">The Hub</span>
+            <h2 class="text-h2 mb-medium">Everything connects.</h2>
+            <p class="text-body" style="margin:0 auto;">Not just independent tools. The platform is organized into four
+              interconnected pillars designed to guide you from discovery to placement.</p>
+          </div>
+
+          <div class="pillar-grid">
+            <!-- Features Pillar -->
+            <div class="pillar-card pc-features">
+              <div class="pc-header">
+                <div class="pc-icon-wrap"><i class="fas fa-compass"></i></div>
+                <div>
+                  <h3 class="text-h3">Discovery Features</h3>
+                  <p class="text-body" style="font-size:0.95rem; line-height:1.4;">Find direction based on hard market
+                    data and predictive algorithms.</p>
+                </div>
+              </div>
+              <div class="pc-list">
+                <div class="pc-list-item"><i class="fas fa-check"></i> College Predictor Engine</div>
+                <div class="pc-list-item"><i class="fas fa-check"></i> AI Career Trends Analysis</div>
+                <div class="pc-list-item"><i class="fas fa-check"></i> Skills & Interests Mapping</div>
+                <div class="pc-list-item"><i class="fas fa-check"></i> Curated Career Bank</div>
+              </div>
+            </div>
+
+            <!-- Tools Pillar -->
+            <div class="pillar-card pc-tools">
+              <div class="pc-header">
+                <div class="pc-icon-wrap"><i class="fas fa-cubes"></i></div>
+                <div>
+                  <h3 class="text-h3">Execution Tools</h3>
+                  <p class="text-body" style="font-size:0.95rem; line-height:1.4;">Build your profile, practice live
+                    interviews, and generate targeted resumes.</p>
+                </div>
+              </div>
+              <div class="pc-list">
+                <div class="pc-list-item"><i class="fas fa-arrow-right"></i> Dynamic Resume Builder</div>
+                <div class="pc-list-item"><i class="fas fa-arrow-right"></i> Live AI Interview Simulator</div>
+                <div class="pc-list-item"><i class="fas fa-arrow-right"></i> GitHub Profile Analyzer</div>
+                <div class="pc-list-item"><i class="fas fa-arrow-right"></i> 24/7 AI Career Chat</div>
+              </div>
+            </div>
+
+            <!-- Assessment Pillar -->
+            <div class="pillar-card pc-assess">
+              <div class="pc-header">
+                <div class="pc-icon-wrap"><i class="fas fa-chart-pie"></i></div>
+                <div>
+                  <h3 class="text-h3">Assessment Lab</h3>
+                  <p class="text-body" style="font-size:0.95rem; line-height:1.4;">Benchmark your quantitative and
+                    verbal skills against global cohorts.</p>
+                </div>
+              </div>
+              <div class="pc-list">
+                <div class="pc-list-item"><i class="fas fa-circle-notch"></i> Adaptive Smart Quiz Format</div>
+                <div class="pc-list-item"><i class="fas fa-circle-notch"></i> Core Aptitude Scoring</div>
+                <div class="pc-list-item"><i class="fas fa-circle-notch"></i> Real-time Leaderboard</div>
+              </div>
+            </div>
+
+            <!-- Resources Pillar -->
+            <div class="pillar-card pc-resources">
+              <div class="pc-header">
+                <div class="pc-icon-wrap"><i class="fas fa-book"></i></div>
+                <div>
+                  <h3 class="text-h3">Resource Library</h3>
+                  <p class="text-body" style="font-size:0.95rem; line-height:1.4;">Access deep-dive roadmaps, secure
+                    funding, and find mentorship.</p>
+                </div>
+              </div>
+              <div class="pc-list">
+                <div class="pc-list-item"><i class="fas fa-bookmark"></i> Specialized Career Roadmaps</div>
+                <div class="pc-list-item"><i class="fas fa-bookmark"></i> Scholarship Database</div>
+                <div class="pc-list-item"><i class="fas fa-bookmark"></i> Live Industry Webinars</div>
+                <div class="pc-list-item"><i class="fas fa-bookmark"></i> Mentorship Connection</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- V5 SECTION 3: FEATURE SPOTLIGHT STORYTELLING -->
+      <section class="story-section section edge-top">
+        <div class="container">
+
+          <!-- Spotlight 1: College Predictor -->
+          <div class="story-block">
+            <div class="story-text">
+              <div class="story-pill"><i class="fas fa-university" style="color:var(--c-indigo);"></i> Discovery Engine
+              </div>
+              <h2 class="text-h2 mb-medium">Algorithmically map your acceptance chances.</h2>
+              <p class="text-body mb-medium">Don't rely on guesswork. Our college predictor uses historical admission
+                data for JEE and MHT-CET to instantly calculate your probability of acceptance across top institutions
+                based on your specific percentile and category.</p>
+              <a href="/exam_choice" class="btn btn-outline">Try Predictor</a>
+            </div>
+            <div class="story-visual-wrap">
+              <div class="sv-bg-grid"></div>
+              <div class="ui-mock-form" style="padding: 16px;">
+                <div class="college-carousel">
+                  <img src="/img/colleges/media__1771916962641.jpg" class="carousel-img active" alt="COEP">
+                  <img src="/img/colleges/media__1771916962661.jpg" class="carousel-img" alt="VJTI">
+                  <img src="/img/colleges/media__1771916962727.jpg" class="carousel-img" alt="PICT">
+                  <img src="/img/colleges/media__1771916962745.jpg" class="carousel-img" alt="SPIT">
+                  <div class="carousel-overlay"></div>
+                </div>
+                <!-- <div class="ui-skeleton-line" style="width:40%;"></div>
+                <div class="ui-skeleton-line" style="width:100%; height:40px; margin-bottom:20px;"></div>
+                <div class="ui-skeleton-line" style="width:30%;"></div>
+                <div class="ui-skeleton-line" style="width:100%; height:40px; margin-bottom:24px;"></div> -->
+                <div
+                  style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #E2E8F0; padding-top:16px;">
+                  <div id="predict-name" style="font-weight:600; color:var(--c-teal); transition: opacity 0.3s;">COEP
+                    Tech (CS)</div>
+                  <div id="predict-prob" style="font-weight:800; font-size:1.2rem; transition: opacity 0.3s;">98.4%
+                    Prob.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Spotlight 2: Profile Analyzer (Reversed) -->
+          <div class="story-block reversed">
+            <div class="story-text">
+              <div class="story-pill"><i class="fab fa-github" style="color:var(--c-navy);"></i> Technical Parsing</div>
+              <h2 class="text-h2 mb-medium">Evaluate code quality, not just bullet points.</h2>
+              <p class="text-body mb-medium">Hook up your GitHub. The Profile Analyzer breaks down your repositories,
+                determining complexity, architectural patterns, and commit consistency to prove you actually know how to
+                build.</p>
+              <a href="/integrations" class="btn btn-outline">Analyze Profile</a>
+            </div>
+            <div class="story-visual-wrap" style="background:var(--c-navy);">
+              <div style="width:80%; padding:20px; font-family:monospace; color:#A0AEC0; font-size:0.85rem;">
+                <div>{</div>
+                <div style="padding-left:20px;">"user": "<span style="color:#60A5FA;">developer_01</span>",</div>
+                <div style="padding-left:20px;">"architectural_score": <span style="color:#A78BFA;">92</span>,</div>
+                <div style="padding-left:20px;">"languages": ["<span style="color:#34D399;">TS</span>", "<span
+                    style="color:#34D399;">Rust</span>"],</div>
+                <div style="padding-left:20px;">"commit_volume": <span style="color:#A78BFA;">"High"</span></div>
+                <div>}</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Spotlight 3: AI Interview Simulator -->
+          <div class="story-block">
+            <div class="story-text">
+              <div class="story-pill"><i class="fas fa-microphone" style="color:var(--c-coral);"></i> Live Execution
+              </div>
+              <h2 class="text-h2 mb-medium">Live stress-testing before the real thing.</h2>
+              <p class="text-body mb-medium">The AI Interview Simulator listens, responds dynamically, and grades your
+                answers. Choose from System Design, DSA, or Behavioral rounds and get instant tactical feedback on your
+                delivery.</p>
+              <a href="/interview-simulator" class="btn btn-outline">Start Simulator</a>
+            </div>
+            <div class="story-visual-wrap" style="padding: 0; overflow: hidden; border-radius: 20px;">
+              <div class="sv-bg-grid"></div>
+              <img src="/img/features/interview_sim.jpg" alt="AI Interview Simulator"
+                style="width: 100%; height: 100%; object-fit: cover; border-radius: 20px; transition: transform 0.5s ease;"
+                class="hover-scale-img">
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- V5 SECTION 4: ECOSYSTEM HORIZONTAL JOURNEY -->
+      <section class="journey-section section edge-top">
+        <div class="container relative">
+          <div class="text-center mb-large">
+            <span class="text-eyebrow">The Pipeline</span>
+            <h2 class="text-h2">How it all fits together.</h2>
+          </div>
+
+          <div class="journey-flow">
+            <div class="j-line"></div>
+            <div class="j-node">
+              <div class="j-dot">1</div>
+              <div class="j-title">Discover</div>
+              <div class="j-desc">Career Trends & Assess</div>
+            </div>
+            <div class="j-node">
+              <div class="j-dot">2</div>
+              <div class="j-title">Analyze</div>
+              <div class="j-desc">Identify cognitive gaps</div>
+            </div>
+            <div class="j-node">
+              <div class="j-dot">3</div>
+              <div class="j-title">Improve</div>
+              <div class="j-desc">Interviews & Roadmaps</div>
+            </div>
+            <div class="j-node">
+              <div class="j-dot">4</div>
+              <div class="j-title">Build</div>
+              <div class="j-desc">Algorithmic Resumes</div>
+            </div>
+            <div class="j-node">
+              <div class="j-dot">5</div>
+              <div class="j-title">Apply</div>
+              <div class="j-desc">College Predictor insights</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- V5 SECTION 5: PERSONAL GROWTH HUB (Analytics Integration) -->
+      <section class="growth-section section edge-top">
+        <div class="container growth-wrap">
+
+          <div class="growth-context">
+            <span class="text-eyebrow">The Dashboard</span>
+            <h2 class="text-h2 mb-medium">Metrics that dictate your next move.</h2>
+            <p class="text-lead mb-medium">What happens after you use the tools? The platform aggregates your data into
+              a unified dashboard.</p>
+            <p class="text-body mb-medium">We don't just score you—we synthesize your assessment logic, your interview
+              performance, and your GitHub commits to identify exactly what you need to study next to remain globally
+              competitive.</p>
+            <div style="display:flex; gap:16px; margin-top:2rem;">
+              <div style="display:flex; gap:8px; align-items:center; font-size:0.9rem; font-weight:600;"><i
+                  class="fas fa-shield-alt text-slate"></i> Verified Data</div>
+              <div style="display:flex; gap:8px; align-items:center; font-size:0.9rem; font-weight:600;"><i
+                  class="fas fa-lock text-slate"></i> Private Context</div>
+            </div>
+          </div>
+
+          <!-- Glass Analytics Board Preserved from V4 -->
+          <div class="analytics-board">
+            <div class="a-sheet glass-acrylic"></div>
+            <div class="a-stat-pill"><i class="fas fa-bolt"></i> Analysis Ready</div>
+
+            <div class="a-card-main">
+              <div class="text-eyebrow" style="margin-bottom:0;">Core Synthesis</div>
+              <div class="a-ring-wrap">
+                <svg class="a-ring-svg" viewBox="0 0 160 160">
+                  <circle class="a-ring-bg" cx="80" cy="80" r="70"></circle>
+                  <circle class="a-ring-fg" cx="80" cy="80" r="70" id="dash-ring"></circle>
+                </svg>
+                <div class="a-score" id="dash-score">0</div>
+              </div>
+              <div
+                style="display:flex; gap:2rem; padding-top:1.5rem; border-top:1px solid rgba(0,0,0,0.04); width:100%; justify-content:center;">
+                <div style="text-align:center;">
+                  <div style="font-size:1.25rem; font-weight:700;">89%</div>
+                  <div class="text-small">Verbal</div>
+                </div>
+                <div style="text-align:center;">
+                  <div style="font-size:1.25rem; font-weight:700;">94%</div>
+                  <div class="text-small">Logic</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- V5 SECTION 6: COMMUNITY & PROOF -->
+      <section class="community-section section edge-top">
+        <div class="container">
+
+          <div class="com-grid">
+            <!-- Text & Stats -->
+            <div>
+              <span class="text-eyebrow">Community</span>
+              <h2 class="text-h2 mb-medium">You are not building in isolation.</h2>
+              <p class="text-body mb-large">Join thousands of students competing on the global leaderboard and
+                redefining their trajectories through peer momentum.</p>
+
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+                <div>
+                  <div style="font-size:2.5rem; font-weight:800; color:var(--c-navy); line-height:1;">12k+</div>
+                  <div class="text-small">Resumes Generated</div>
+                </div>
+                <div>
+                  <div style="font-size:2.5rem; font-weight:800; color:var(--c-navy); line-height:1;">Top 5%</div>
+                  <div class="text-small">Placement Rate</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Leaderboard Glass Visual -->
+            <div class="glass-acrylic lb-preview">
+              <div class="text-eyebrow" style="margin-left:8px; margin-bottom:12px;">Global Leaderboard (Live)</div>
+              <div class="lb-row" style="background:#FFF;">
+                <div class="lb-user">
+                  <div class="lb-avatar"
+                    style="background:var(--c-indigo-soft); color:var(--c-indigo); display:flex; align-items:center; justify-content:center; font-size:0.75rem;">
+                    1</div> <span style="font-weight:600;">Arjun K.</span>
+                </div>
+                <div class="lb-score">98.4</div>
+              </div>
+              <div class="lb-row" style="opacity:0.9;">
+                <div class="lb-user">
+                  <div class="lb-avatar"></div> <span>Priya M.</span>
+                </div>
+                <div class="lb-score" style="color:var(--c-slate);">96.2</div>
+              </div>
+              <div class="lb-row" style="opacity:0.7;">
+                <div class="lb-user">
+                  <div class="lb-avatar"></div> <span>Sam T.</span>
+                </div>
+                <div class="lb-score" style="color:var(--c-slate);">94.1</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Preserved V4 Testimonials Marquee -->
+          <div class="test-marquee">
+            <div class="test-track">
+              <div class="t-card" style="box-shadow:var(--shadow-micro);">
+                <div class="t-watermark">"</div>
+                <p class="t-quote">The aptitude synthesis spotted a lateral pivot into DevRel that perfectly aligned
+                  with my quantitative baseline.</p>
+                <div class="t-author">
+                  <div class="t-avatar"></div>
+                  <div>
+                    <div style="font-weight:600; font-size:0.9rem;">Elena R.</div>
+                    <div class="text-small">DevRel, Vercel</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Glass Testimonial -->
+              <div class="glass-acrylic glass-lift t-card t-featured">
+                <div class="t-watermark">"</div>
+                <p class="t-quote" style="color:var(--c-navy); font-weight:500;">Ran through the AI Simulator here for
+                  three weeks, completely rebuilt my narrative structure, and passed easily.</p>
+                <div class="t-author">
+                  <div class="t-avatar" style="background:#F1F5F9;"></div>
+                  <div>
+                    <div style="font-weight:600; font-size:0.9rem;">Marcus J.</div>
+                    <div class="text-small">Senior SWE, Meta</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="t-card" style="box-shadow:var(--shadow-micro);">
+                <div class="t-watermark">"</div>
+                <p class="t-quote">Connecting my GitHub to the Profile Analyzer instantly bypassed the generic resume
+                  screen. The metrics spoke for themselves.</p>
+                <div class="t-author">
+                  <div class="t-avatar"></div>
+                  <div>
+                    <div style="font-weight:600; font-size:0.9rem;">David L.</div>
+                    <div class="text-small">Backend Dev</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- V5 SECTION 7: EMOTIONAL CTA -->
+      <section class="final-cta section b-white edge-top">
+        <div class="container relative">
+          <div class="glass-acrylic cta-inner">
+            <h2 class="text-h1 mb-medium" style="position:relative; z-index:2;">Ready to compile your career?</h2>
+            <p class="text-lead mb-large" style="position:relative; z-index:2;">Stop guessing. Start measuring. Join the
+              engineers building verified trajectories.</p>
+            <div style="display:flex; gap:var(--gap-sm); position:relative; z-index:2;">
+              <a href="/register" class="btn btn-primary">Start Your Journey</a>
+              <a href="/login" class="btn btn-outline" style="background:white;">Sign In</a>
+>>>>>>> smalluichange
+            </div>
+          </div>
+        </div>
+      </section>
+<<<<<<< HEAD
 
 
 
@@ -2509,6 +4501,151 @@
           });
         });
       </script>
+=======
+    </main>
+
+    <%- include('layouts/footer'); %>
+      <!-- Note: The footer layout logic was pulled into layouts/footer if it exists, otherwise I'll restore the hardcoded footer if prefered, but for cleanliness assuming includes/footer applies. I will append the hardcoded V4 footer below to guarantee nothing breaks. -->
+      <footer class="footer">
+        <div class="container">
+          <div class="footer-grid">
+            <div class="footer-brand" style="grid-column: span 2;">
+              <div class="logo">
+                <div style="width:20px; height:20px; background:var(--c-navy); border-radius:4px;"></div>
+                EduNavigator
+              </div>
+            </div>
+            <div class="f-col">
+              <h5>Platform</h5>
+              <a href="/integrations">Profile Analyzer</a>
+              <a href="/interview-simulator">AI Interviewer</a>
+              <a href="/resume-builder">Algorithmic Resume</a>
+            </div>
+            <div class="f-col">
+              <h5>Company</h5>
+              <a href="#">Manifesto</a>
+              <a href="#">Security</a>
+              <a href="#">Contact</a>
+            </div>
+            <div class="f-col" style="grid-column: span 1.5;">
+              <h5>Updates</h5>
+              <form class="subscribe-box" onsubmit="event.preventDefault();">
+                <input type="email" placeholder="example@domain.com" required>
+                <button type="submit">Subscribe</button>
+              </form>
+            </div>
+          </div>
+          <div class="footer-bottom">
+            <div>&copy; 2026 EduNavigator. All schemas reserved.</div>
+            <div style="display:flex; gap:var(--gap-md);">
+              <a href="#"><i class="fab fa-twitter"></i></a>
+              <a href="#"><i class="fab fa-github"></i></a>
+              <a href="#"><i class="fab fa-linkedin"></i></a>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+      <script>
+        // Shared Intersection logic
+        document.addEventListener('DOMContentLoaded', () => {
+          // Analytics Ring
+          const ring = document.getElementById('dash-ring');
+          const scoreVal = document.getElementById('dash-score');
+          if (ring && scoreVal) {
+            const targetScore = 93;
+            const observer = new IntersectionObserver((entries) => {
+              if (entries[0].isIntersecting) {
+                setTimeout(() => {
+                  ring.style.strokeDashoffset = '30';
+                  let current = 0;
+                  const interval = setInterval(() => {
+                    current += 1;
+                    if (current >= targetScore) { current = targetScore; clearInterval(interval); }
+                    scoreVal.innerText = current;
+                  }, 9);
+                }, 100);
+                observer.disconnect();
+              }
+            }, { threshold: 0.6 });
+            observer.observe(document.querySelector('.growth-wrap'));
+          }
+
+          // V8: Hero Parallax Javascript Engine
+          const heroSection = document.getElementById('hero-section');
+          const parallaxLayers = document.querySelectorAll('.parallax-layer');
+
+          if (heroSection && parallaxLayers.length > 0) {
+            heroSection.addEventListener('mousemove', (e) => {
+              // Calculate center of window representing the hero
+              const rect = heroSection.getBoundingClientRect();
+              const centerX = rect.left + rect.width / 2;
+              const centerY = rect.top + rect.height / 2;
+
+              const mouseX = e.clientX - centerX;
+              const mouseY = e.clientY - centerY;
+
+              // Smoothly map mouse to translation based on data-speed
+              parallaxLayers.forEach(layer => {
+                const speed = parseFloat(layer.getAttribute('data-speed')) || 0;
+                // Stronger effect limits to prevent flying completely off-screen
+                const xPos = Math.max(-50, Math.min(50, -(mouseX * speed)));
+                const yPos = Math.max(-50, Math.min(50, -(mouseY * speed)));
+
+                // Directly set the inline transform
+                layer.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
+              });
+            });
+
+            heroSection.addEventListener('mouseleave', () => {
+              parallaxLayers.forEach(layer => {
+                layer.style.transform = `translate3d(0, 0, 0)`;
+              });
+            });
+          }
+
+          // V9: College Predictor Carousel Engine
+          const collegeData = [
+            { name: "COEP Tech (CS)", prob: "98.4% Prob." },
+            { name: "VJTI Mumbai (IT)", prob: "95.2% Prob." },
+            { name: "PICT Pune (CE)", prob: "92.1% Prob." },
+            { name: "SPIT Mumbai (CS)", prob: "89.7% Prob." }
+          ];
+          const slides = document.querySelectorAll('.carousel-img');
+          const nameEl = document.getElementById('predict-name');
+          const probEl = document.getElementById('predict-prob');
+
+          if (slides.length > 0 && nameEl && probEl) {
+            let currentSlide = 0;
+            setInterval(() => {
+              // Fade out text softly
+              nameEl.style.opacity = 0;
+              probEl.style.opacity = 0;
+
+              setTimeout(() => {
+                // Remove active from old slide
+                slides[currentSlide].classList.remove('active');
+
+                // Next slide
+                currentSlide = (currentSlide + 1) % slides.length;
+                slides[currentSlide].classList.add('active');
+
+                // Update text
+                nameEl.innerText = collegeData[currentSlide].name;
+                probEl.innerText = collegeData[currentSlide].prob;
+
+                // Fade in text
+                nameEl.style.opacity = 1;
+                probEl.style.opacity = 1;
+              }, 300); // Wait for text fade before changing image
+
+            }, 3500); // Cycle every 3.5 seconds
+          }
+
+        });
+      </script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+>>>>>>> smalluichange
       </body>
 
       </html>

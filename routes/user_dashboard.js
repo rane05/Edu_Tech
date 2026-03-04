@@ -16,14 +16,70 @@ router.get('/dashboard', async (req, res) => {
         const bestScore = totalAttempts > 0 ? Math.max(...results.map(r => r.score)) : 0;
         const avgScore = totalAttempts > 0 ? (results.reduce((a, b) => a + b.score, 0) / totalAttempts).toFixed(1) : 0;
 
+        // Fetch Teacher Updates (Direct Institutional Connection)
+        const Profile = require('../model/profile');
+        const TeacherWork = require('../model/teacherwork');
+        const Doubt = require('../model/Doubt');
+        const studentProfile = await Profile.findOne({ userId });
+
+        let teacherUpdates = [];
+        let resources = [];
+        let myDoubts = [];
+
+        if (studentProfile && studentProfile.collegeName) {
+            // Find all work shared with THIS college
+            teacherUpdates = await TeacherWork.find({ collegeName: studentProfile.collegeName, type: { $in: ["task", "announcement"] } })
+                .sort({ createdAt: -1 })
+                .limit(10);
+
+            resources = await TeacherWork.find({ collegeName: studentProfile.collegeName, type: "resource" })
+                .sort({ createdAt: -1 });
+
+            myDoubts = await Doubt.find({ studentId: userId }).sort({ createdAt: -1 });
+        }
+
         res.render('user_dashboard', {
-            user: user,
-            results,
-            stats: { totalAttempts, bestScore, avgScore }
+            username: req.user.username,
+            totalAttempts,
+            bestScore,
+            avgScore,
+            results, // Added back
+            teacherUpdates,
+            resources,
+            myDoubts
         });
     } catch (err) {
         console.error(err);
         res.redirect('/');
+    }
+});
+
+// POST: Submit Doubt
+router.post('/submitDoubt', async (req, res) => {
+    try {
+        const { subject, question } = req.body;
+        const userId = req.user._id;
+
+        const Profile = require('../model/profile');
+        const Doubt = require('../model/Doubt');
+
+        const studentProfile = await Profile.findOne({ userId });
+        if (!studentProfile || !studentProfile.collegeName) {
+            return res.status(400).send("Student profile or college name not found.");
+        }
+
+        await Doubt.create({
+            studentId: userId,
+            studentName: studentProfile.fullName,
+            collegeName: studentProfile.collegeName,
+            subject,
+            question
+        });
+
+        res.redirect('/dashboard');
+    } catch (err) {
+        console.error("Doubt submission error:", err);
+        res.status(500).send("Error submitting doubt");
     }
 });
 

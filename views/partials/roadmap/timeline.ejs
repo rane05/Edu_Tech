@@ -1,0 +1,138 @@
+<!-- views/partials/roadmap/timeline.ejs -->
+<div class="glass-card p-6 md:p-8">
+    <div class="flex items-center justify-between mb-8">
+        <h2 class="text-2xl font-bold text-slate-800">
+            <i class="fas fa-route text-indigo-500 mr-2"></i> Learning Path
+        </h2>
+    </div>
+
+    <!-- Timeline Wrapper -->
+    <div class="timeline-container space-y-6">
+
+        <% roadmap.generated_phases.forEach(function(phase, index) { %>
+            <div class="phase-card relative bg-white border border-slate-200 rounded-xl p-6">
+                <!-- Dot indicator -->
+                <div class="timeline-dot top-8"></div>
+
+                <!-- Card Header -->
+                <div class="flex items-start justify-between cursor-pointer group"
+                    onclick="togglePhase('phase-<%= index %>')">
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-wider text-indigo-500 mb-1 block">Phase <%=
+                                phase.phaseNumber %> • <%= phase.estimatedDurationWeeks %> Weeks</span>
+                        <h3 class="text-lg font-bold text-slate-800 group-hover:text-indigo-600 transition-colors">
+                            <%= phase.phaseName %>
+                        </h3>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <span class="bg-indigo-50 text-indigo-600 text-xs font-bold px-2 py-1 rounded-md">
+                            <%= phase.topics.length %> Modules
+                        </span>
+                        <button
+                            class="w-8 h-8 rounded-full bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition-colors">
+                            <i id="icon-phase-<%= index %>"
+                                class="fas fa-chevron-down transition-transform duration-300"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Expandable Content Box -->
+                <div id="phase-<%= index %>" class="smooth-expand max-h-0 opacity-0 mt-0">
+                    <div class="pt-6 border-t border-slate-100 mt-4 space-y-5">
+
+                        <!-- Topics List with custom checkboxes -->
+                        <div>
+                            <h4 class="text-sm font-bold text-slate-700 mb-3 flex items-center">
+                                <i class="fas fa-book-open text-teal-500 mr-2"></i> Core Objectives
+                            </h4>
+                            <ul class="space-y-3">
+                                <% phase.topics.forEach(function(topic, tIndex) { %>
+                                    <li class="flex items-start group">
+                                        <label class="flex items-start cursor-pointer group w-full">
+                                            <div class="relative flex items-center justify-center mt-0.5 mr-3">
+                                                <input type="checkbox" onchange="toggleTaskSync(this)"
+                                                    data-task-id="phase<%= index %>-top<%= tIndex %>"
+                                                    class="peer sr-only" <%=user && user.roadmapProgress &&
+                                                    user.roadmapProgress.includes(`phase${index}-top${tIndex}`)
+                                                    ? 'checked' : '' %>>
+                                                <div
+                                                    class="w-5 h-5 rounded border-2 border-slate-300 peer-checked:bg-indigo-600 peer-checked:border-indigo-600 transition-colors flex items-center justify-center">
+                                                    <i
+                                                        class="fas fa-check text-white text-xs opacity-0 peer-checked:opacity-100 transition-opacity"></i>
+                                                </div>
+                                            </div>
+                                            <span
+                                                class="text-slate-600 peer-checked:text-slate-400 peer-checked:line-through transition-colors text-sm font-medium leading-relaxed">
+                                                <%= topic %>
+                                            </span>
+                                        </label>
+                                    </li>
+                                    <% }); %>
+                            </ul>
+                        </div>
+
+                        <!-- Mini Project Callout -->
+                        <% if(phase.projects && phase.projects.length> 0) { %>
+                            <div class="bg-slate-50 rounded-lg p-4 border border-slate-100">
+                                <h4
+                                    class="text-xs font-bold text-slate-800 uppercase tracking-widest mb-1 flex items-center text-orange-500">
+                                    <i class="fas fa-laptop-code mr-1"></i> Phase Project
+                                </h4>
+                                <p class="text-sm text-slate-700 font-semibold mb-1">
+                                    <%= phase.projects[0].title %>
+                                </p>
+                                <p class="text-xs text-slate-500">
+                                    <%= phase.projects[0].objective %>
+                                </p>
+                            </div>
+                            <% } %>
+
+                    </div>
+                </div>
+            </div>
+            <% }); %>
+
+    </div>
+</div>
+
+<script>
+    function togglePhase(id) {
+        const el = document.getElementById(id);
+        const icon = document.getElementById('icon-' + id);
+
+        if (el.style.maxHeight && el.style.maxHeight !== '0px') {
+            el.style.maxHeight = '0px';
+            el.style.opacity = '0';
+            el.style.marginTop = '0px';
+            icon.style.transform = 'rotate(0deg)';
+        } else {
+            el.style.maxHeight = el.scrollHeight + 'px';
+            el.style.opacity = '1';
+            el.style.marginTop = '1rem';
+            icon.style.transform = 'rotate(180deg)';
+        }
+    }
+
+    // Expand the first phase by default on load
+    window.addEventListener('DOMContentLoaded', () => {
+        togglePhase('phase-0');
+
+        // Auto-check completed tasks if needed based on data (placeholder sync logic)
+        if (window.updateGlobalProgress) window.updateGlobalProgress();
+    });
+
+    function toggleTaskSync(checkbox) {
+        const stepId = checkbox.dataset.taskId;
+        const isCompleted = checkbox.checked;
+
+        // Sync to backend API
+        fetch('/api/roadmap/progress', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ stepId: stepId })
+        }).catch(e => console.error("Failed to sync progress:", e));
+
+        // Call global func to update progress bar smoothly
+        if (window.updateGlobalProgress) window.updateGlobalProgress();
+    }
+</script>

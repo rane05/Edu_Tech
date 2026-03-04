@@ -1,529 +1,512 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analyzer - EduNavigator</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<%- include('layouts/header'); %>
+    <%- include('layouts/navbar'); %>
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #333;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-            color: white;
-        }
-
-        .header h1 {
-            font-size: 3rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .header p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
-
-        .tools-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 30px;
-            margin-bottom: 40px;
-        }
-
-        .tool-card {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            backdrop-filter: blur(10px);
-            transition: transform 0.3s ease;
-        }
-
-        .tool-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .tool-card h2 {
-            color: #667eea;
-            margin-bottom: 20px;
-            font-size: 1.6rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: #555;
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e1e5e9;
-            border-radius: 10px;
-            font-size: 16px;
-            transition: all 0.3s ease;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-        }
-
-        .analyze-btn {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            transition: all 0.3s ease;
-        }
-
-        .analyze-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .results-section {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            backdrop-filter: blur(10px);
-            margin-top: 30px;
-            display: none;
-        }
-
-        .results-section.show {
-            display: block;
-            animation: slideIn 0.5s ease-out;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
+        <style>
+            :root {
+                --color-primary: #FFB800;
+                /* Yellow */
+                --color-secondary: #00A8FF;
+                /* Blue */
+                --color-dark: #1A1A2E;
+                /* Dark Text/Headers */
+                --color-text: #2D3748;
+                /* Body Text */
+                --color-bg-light: #F7FAFC;
+                /* Main Background */
             }
-            to {
-                opacity: 1;
-                transform: translateY(0);
+
+            body {
+                background-color: var(--color-bg-light);
+                color: var(--color-text);
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
             }
-        }
 
-        .result-card {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-        }
-
-        .result-card h3 {
-            margin-bottom: 15px;
-            font-size: 1.4rem;
-        }
-
-        .result-item {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            backdrop-filter: blur(5px);
-        }
-
-        .result-item h4 {
-            color: #fff;
-            margin-bottom: 8px;
-        }
-
-        .result-stats {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin-top: 10px;
-        }
-
-        .stat {
-            background: rgba(255, 255, 255, 0.2);
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 14px;
-        }
-
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #667eea;
-        }
-
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        @media (max-width: 768px) {
-            .tools-grid {
-                grid-template-columns: 1fr;
+            /* Cards */
+            .feature-card {
+                background: white;
+                border-radius: 20px;
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+                transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease;
+                border: 1px solid rgba(0, 0, 0, 0.02);
             }
-            
-            .header h1 {
-                font-size: 2rem;
+
+            .feature-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
             }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <h1>🔍 AI-Powered Analyzer</h1>
-            <p>Analyze profiles, projects, and research with advanced AI insights</p>
-        </div>
 
-        <div class="tools-grid">
-            <!-- LinkedIn Profile Analysis -->
-            <div class="tool-card">
-                <h2>🔗 LinkedIn Profile Analysis</h2>
-                <form id="linkedinForm">
-                    <div class="form-group">
-                        <label for="linkedinUrl">LinkedIn Profile URL</label>
-                        <input type="url" id="linkedinUrl" name="profileUrl" placeholder="https://linkedin.com/in/username" required>
-                    </div>
-                    <button type="submit" class="analyze-btn">🔍 Analyze Profile</button>
-                </form>
-            </div>
+            .input-light {
+                background: #F7FAFC;
+                border: 1px solid #E2E8F0;
+                color: var(--color-text);
+                transition: all 0.3s ease;
+            }
 
-            <!-- GitHub Repository Analysis -->
-            <div class="tool-card">
-                <h2>📚 GitHub Project Evaluation</h2>
-                <form id="githubForm">
-                    <div class="form-group">
-                        <label for="githubUrl">GitHub Repository URL</label>
-                        <input type="url" id="githubUrl" name="repositoryUrl" placeholder="https://github.com/username/repo" required>
-                    </div>
-                    <button type="submit" class="analyze-btn">🔍 Evaluate Project</button>
-                </form>
-            </div>
+            .input-light:focus {
+                outline: none;
+                border-color: var(--color-secondary);
+                box-shadow: 0 0 0 3px rgba(0, 168, 255, 0.15);
+                background: white;
+            }
 
-            <!-- Google Scholar Research Analysis -->
-            <div class="tool-card">
-                <h2>📖 Research Topic Analysis</h2>
-                <form id="scholarForm">
-                    <div class="form-group">
-                        <label for="researchTopic">Research Topic</label>
-                        <textarea id="researchTopic" name="researchTopic" rows="3" placeholder="Describe your research area or topic of interest" required></textarea>
-                    </div>
-                    <button type="submit" class="analyze-btn">🔍 Analyze Research</button>
-                </form>
-            </div>
+            .btn-primary-theme {
+                background: var(--color-secondary);
+                color: white;
+                transition: all 0.3s ease;
+                border: 2px solid var(--color-secondary);
+            }
 
-            <!-- Certification Management -->
-            <div class="tool-card">
-                <h2>🏆 Certification Tracker</h2>
-                <form id="certificationForm">
-                    <div class="form-group">
-                        <label for="certificateId">Certificate ID</label>
-                        <input type="text" id="certificateId" name="certificateId" placeholder="Enter certificate ID" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="issuer">Issuing Organization</label>
-                        <input type="text" id="issuer" name="issuer" placeholder="e.g., Microsoft, AWS, Google" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="issueDate">Issue Date</label>
-                        <input type="date" id="issueDate" name="issueDate" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="expirationDate">Expiration Date (Optional)</label>
-                        <input type="date" id="expirationDate" name="expirationDate">
-                    </div>
-                    <div class="form-group">
-                        <label for="skillsCovered">Skills Covered</label>
-                        <input type="text" id="skillsCovered" name="skillsCovered" placeholder="e.g., JavaScript, React, Node.js" required>
-                    </div>
-                    <button type="submit" class="analyze-btn">➕ Add Certification</button>
-                </form>
-            </div>
+            .btn-primary-theme:hover {
+                background: #0097E6;
+                border-color: #0097E6;
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(0, 168, 255, 0.3);
+            }
 
-            <!-- Certification Verification -->
-            <div class="tool-card">
-                <h2>✅ Verify Certification</h2>
-                <form id="verificationForm">
-                    <div class="form-group">
-                        <label for="verifyCertificateId">Certificate ID</label>
-                        <input type="text" id="verifyCertificateId" name="certificateId" placeholder="Enter certificate ID to verify" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="verifyIssuer">Issuing Organization</label>
-                        <input type="text" id="verifyIssuer" name="issuer" placeholder="e.g., Microsoft, AWS, Google" required>
-                    </div>
-                    <button type="submit" class="analyze-btn">✅ Verify Certificate</button>
-                </form>
-            </div>
-        </div>
+            .btn-warning-theme {
+                background: var(--color-primary);
+                color: var(--color-dark);
+                transition: all 0.3s ease;
+                border: 2px solid var(--color-primary);
+            }
 
-        <!-- Results Section -->
-        <div class="results-section" id="resultsSection">
-            <div class="loading" id="loadingSection">
-                <div class="spinner"></div>
-                <h3>AI is analyzing your data...</h3>
-                <p>This may take a few moments</p>
-            </div>
+            .btn-warning-theme:hover {
+                background: #F0AD00;
+                border-color: #F0AD00;
+                transform: translateY(-2px);
+                box-shadow: 0 6px 20px rgba(255, 184, 0, 0.3);
+            }
 
-            <div id="resultsContent" style="display: none;">
-                <!-- Results will be populated here -->
-            </div>
-        </div>
-    </div>
+            .badge-primary {
+                background: linear-gradient(135deg, var(--color-secondary), #0BC5FF);
+                color: white;
+            }
 
-    <script>
-        // LinkedIn Profile Analysis
-        document.getElementById('linkedinForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const formData = new FormData(e.target);
-            await analyzeData('/api/linkedin-analysis', formData, 'LinkedIn Profile Analysis');
-        });
+            .badge-warning {
+                background: linear-gradient(135deg, var(--color-primary), #FFC024);
+                color: white;
+            }
 
-        // GitHub Repository Analysis
-        document.getElementById('githubForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const formData = new FormData(e.target);
-            await analyzeData('/api/github-analysis', formData, 'GitHub Repository Analysis');
-        });
+            .badge-purple {
+                background: linear-gradient(135deg, #9f7aea, #b794f4);
+                color: white;
+            }
 
-        // Google Scholar Research Analysis
-        document.getElementById('scholarForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const formData = new FormData(e.target);
-            await analyzeData('/api/google-scholar-analysis', formData, 'Research Topic Analysis');
-        });
+            .badge-green {
+                background: linear-gradient(135deg, #48bb78, #68d391);
+                color: white;
+            }
 
-        // Add Certification
-        document.getElementById('certificationForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const formData = new FormData(e.target);
-            await analyzeData('/api/certifications/add', formData, 'Certification Added');
-        });
+            .badge-gray {
+                background: linear-gradient(135deg, #4a5568, #718096);
+                color: white;
+            }
 
-        // Verify Certification
-        document.getElementById('verificationForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const formData = new FormData(e.target);
-            await analyzeData('/api/certifications/verify', formData, 'Certification Verification');
-        });
+            .text-gradient {
+                background: linear-gradient(135deg, var(--color-secondary), var(--color-primary));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
 
-        async function analyzeData(endpoint, formData, analysisType) {
-            // Show loading
-            document.getElementById('resultsSection').classList.add('show');
-            document.getElementById('loadingSection').style.display = 'block';
-            document.getElementById('resultsContent').style.display = 'none';
-
-            try {
-                const data = {};
-                for (let [key, value] of formData.entries()) {
-                    data[key] = value;
+            /* Animations */
+            @keyframes slideUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
                 }
 
-                const response = await fetch(endpoint, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                });
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
 
-                const result = await response.json();
-                
-                if (result.success) {
-                    displayResults(result, analysisType);
+            .animate-slide-up {
+                animation: slideUp 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            }
+
+            .delay-100 {
+                animation-delay: 150ms;
+            }
+
+            .radial-progress-bg {
+                stroke: #EDF2F7;
+            }
+
+            .radial-progress-fill {
+                stroke: var(--color-secondary);
+            }
+        </style>
+
+        <!-- Main Content -->
+        <main class="pt-32 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+
+
+
+            <!-- Tools Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 mb-16 animate-slide-up delay-100">
+
+                <!-- LinkedIn Analysis -->
+                <div class="feature-card p-8 group relative overflow-hidden flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-5 mb-8">
+                            <div
+                                class="w-16 h-16 rounded-full badge-primary text-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                                <i class="fab fa-linkedin-in"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold" style="color: var(--color-dark);">LinkedIn Audit</h3>
+                        </div>
+                        <form id="linkedinForm" class="space-y-5">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-2">Profile URL</label>
+                                <input type="url" name="profileUrl" placeholder="https://linkedin.com/in/..."
+                                    class="w-full input-light rounded-xl px-4 py-3.5 text-base" required>
+                            </div>
+                        </form>
+                    </div>
+                    <button type="submit" form="linkedinForm"
+                        class="w-full mt-6 py-3.5 rounded-full btn-primary-theme text-base font-bold shadow-md">
+                        <i class="fas fa-search mr-2"></i> Analyze Profile
+                    </button>
+                </div>
+
+                <!-- GitHub Analysis -->
+                <div class="feature-card p-8 group relative overflow-hidden flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-5 mb-8">
+                            <div
+                                class="w-16 h-16 rounded-full badge-gray text-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                                <i class="fab fa-github"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold" style="color: var(--color-dark);">Code Review</h3>
+                        </div>
+                        <form id="githubForm" class="space-y-5">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-2">Repository URL</label>
+                                <input type="url" name="repositoryUrl" placeholder="https://github.com/..."
+                                    class="w-full input-light rounded-xl px-4 py-3.5 text-base" required>
+                            </div>
+                        </form>
+                    </div>
+                    <button type="submit" form="githubForm"
+                        class="w-full mt-6 py-3.5 rounded-full bg-gray-800 hover:bg-gray-900 border-2 border-gray-800 text-white text-base font-bold shadow-md transition-all group-hover:shadow-xl group-hover:-translate-y-0.5">
+                        <i class="fas fa-code-branch mr-2"></i> Evaluate Repo
+                    </button>
+                </div>
+
+                <!-- Research Analysis -->
+                <div class="feature-card p-8 group relative overflow-hidden flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-5 mb-8">
+                            <div
+                                class="w-16 h-16 rounded-full badge-purple text-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                                <i class="fas fa-microscope"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold" style="color: var(--color-dark);">Research Scanner</h3>
+                        </div>
+                        <form id="scholarForm" class="space-y-5">
+                            <div>
+                                <label class="block text-sm font-bold text-gray-700 mb-2">Topic / Abstract</label>
+                                <textarea name="researchTopic" rows="2" placeholder="Describe research area..."
+                                    class="w-full input-light rounded-xl px-4 py-3.5 text-base resize-none"
+                                    required></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <button type="submit" form="scholarForm"
+                        class="w-full mt-6 py-3.5 rounded-full border-2 border-purple-600 bg-purple-600 hover:bg-purple-700 text-white text-base font-bold shadow-md transition-all group-hover:shadow-xl group-hover:-translate-y-0.5">
+                        <i class="fas fa-flask mr-2"></i> Analyze Topic
+                    </button>
+                </div>
+
+
+
+                <!-- Add Certification -->
+                <div class="feature-card p-8 group relative overflow-hidden flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-5 mb-8">
+                            <div
+                                class="w-16 h-16 rounded-full badge-warning text-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                                <i class="fas fa-plus-circle text-white"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold" style="color: var(--color-dark);">Add Credential</h3>
+                        </div>
+                        <p class="text-gray-500 text-sm mb-6 leading-relaxed">Securely record new credentials and
+                            certifications into your verified professional footprint.</p>
+                    </div>
+                    <button onclick="document.getElementById('addCertModal').classList.remove('hidden')"
+                        class="w-full mt-auto py-3.5 rounded-full border-2 border-dashed border-yellow-400 text-yellow-600 hover:text-white hover:bg-yellow-500 hover:border-yellow-500 transition-all text-base font-bold flex items-center justify-center">
+                        <i class="fas fa-plus mr-2"></i> Open Upload Form
+                    </button>
+                </div>
+            </div>
+
+            <!-- Add Cert Modal -->
+            <div id="addCertModal"
+                class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-gray-900/60 backdrop-blur-sm">
+                <div class="bg-white p-8 rounded-[2rem] max-w-md w-full relative m-4 shadow-2xl border border-gray-100 animate-slide-up"
+                    style="animation-duration: 0.3s; transform:translateY(0);">
+                    <button onclick="document.getElementById('addCertModal').classList.add('hidden')"
+                        class="absolute top-6 right-6 text-gray-400 hover:text-gray-800 bg-gray-100 hover:bg-gray-200 rounded-full w-10 h-10 flex items-center justify-center transition-colors">
+                        <i class="fas fa-times text-lg"></i>
+                    </button>
+                    <h3 class="text-2xl font-bold mb-8" style="color: var(--color-dark);">Add New Certification</h3>
+                    <form id="certificationForm" class="space-y-5">
+                        <input type="text" name="certificateId" placeholder="Certificate ID"
+                            class="w-full input-light rounded-xl px-4 py-3.5 text-base" required>
+                        <input type="text" name="issuer" placeholder="Issuer (e.g. AWS)"
+                            class="w-full input-light rounded-xl px-4 py-3.5 text-base" required>
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="date" name="issueDate"
+                                class="w-full input-light rounded-xl px-4 py-3.5 text-base text-gray-500" required>
+                            <input type="date" name="expirationDate"
+                                class="w-full input-light rounded-xl px-4 py-3.5 text-base text-gray-500">
+                        </div>
+                        <input type="text" name="skillsCovered" placeholder="Skills (comma separated)"
+                            class="w-full input-light rounded-xl px-4 py-3.5 text-base" required>
+                        <button type="submit"
+                            class="w-full py-4 rounded-full btn-warning-theme font-bold shadow-lg mt-6 text-base tracking-wide uppercase">
+                            Save to Profile
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Results Section -->
+            <div id="resultsSection" class="hidden animate-slide-up scroll-mt-32">
+                <div class="flex items-center justify-between mb-8 pb-4 border-b border-gray-200">
+                    <h2 class="text-3xl font-extrabold flex items-center gap-3" style="color: var(--color-dark);">
+                        <i class="fas fa-bolt text-yellow-500"></i> Analysis Results
+                    </h2>
+                    <button onclick="document.getElementById('resultsSection').classList.add('hidden')"
+                        class="text-sm font-bold text-gray-500 hover:text-gray-800 bg-white px-5 py-2.5 rounded-full border border-gray-200 shadow-sm transition-colors hover:bg-gray-50">
+                        <i class="fas fa-times mr-1"></i> Clear Form
+                    </button>
+                </div>
+
+                <div id="loadingSection"
+                    class="hidden py-24 text-center bg-white rounded-[2rem] shadow-md border border-gray-100">
+                    <div
+                        class="inline-block w-16 h-16 border-4 border-blue-100 border-t-blue-500 rounded-full animate-spin mb-6">
+                    </div>
+                    <h3 class="text-2xl font-bold" style="color: var(--color-dark);">Neural Processing...</h3>
+                    <p class="text-gray-500 mt-2 text-lg">Analyzing data points and generating insights</p>
+                </div>
+
+                <div id="resultsContent" class="grid grid-cols-1 gap-8">
+                    <!-- Results injected here -->
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Client Script -->
+        <script>
+            // Form Handlers
+            const forms = [
+                { id: 'linkedinForm', url: '/api/linkedin-analysis', type: 'LinkedIn' },
+                { id: 'githubForm', url: '/api/github-analysis', type: 'GitHub' },
+                { id: 'scholarForm', url: '/api/google-scholar-analysis', type: 'Research' },
+                { id: 'certificationForm', url: '/api/certifications/add', type: 'AddCert' }
+            ];
+
+            forms.forEach(({ id, url, type }) => {
+                const form = document.getElementById(id);
+                if (form) {
+                    form.addEventListener('submit', async (e) => {
+                        e.preventDefault();
+                        if (type === 'AddCert') document.getElementById('addCertModal').classList.add('hidden');
+                        await analyzeData(url, new FormData(e.target), type);
+                    });
+                }
+            });
+
+            async function analyzeData(endpoint, formData, type) {
+                const resultsSection = document.getElementById('resultsSection');
+                const loading = document.getElementById('loadingSection');
+                const content = document.getElementById('resultsContent');
+
+                resultsSection.classList.remove('hidden');
+                loading.classList.remove('hidden');
+                content.classList.add('hidden');
+
+                // Smooth scroll
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
+
+                try {
+                    // Convert formData to JSON
+                    const data = Object.fromEntries(formData.entries());
+
+                    const response = await fetch(endpoint, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        displayResults(result, type);
+                    } else {
+                        throw new Error(result.error);
+                    }
+                } catch (error) {
+                    content.innerHTML = `
+                <div class="bg-red-50 border border-red-200 p-10 rounded-[2rem] text-center shadow-md">
+                    <div class="text-red-500 text-6xl mb-6"><i class="fas fa-exclamation-triangle"></i></div>
+                    <h3 class="text-3xl font-bold text-red-900 mb-3">Analysis Failed</h3>
+                    <p class="text-red-700 text-lg">${error.message || 'An unexpected error occurred.'}</p>
+                </div>
+            `;
+                } finally {
+                    loading.classList.add('hidden');
+                    content.classList.remove('hidden');
+                }
+            }
+
+            function displayResults(result, type) {
+                const content = document.getElementById('resultsContent');
+                let html = '';
+
+                if (type === 'LinkedIn') {
+                    const a = result.analysis;
+                    html = `
+                <div class="feature-card p-10 bg-white">
+                    <div class="flex flex-col md:flex-row gap-12 items-center md:items-start">
+                         <!-- Radial Score -->
+                        <div class="relative w-48 h-48 flex-shrink-0">
+                            <svg class="w-full h-full transform -rotate-90 drop-shadow-sm">
+                                <circle cx="96" cy="96" r="84" class="radial-progress-bg" stroke-width="16" fill="transparent" />
+                                <circle cx="96" cy="96" r="84" class="radial-progress-fill" stroke-width="16" fill="transparent" stroke-dasharray="527.7" stroke-dashoffset="${527.7 * (1 - a.profileStrength / 100)}" stroke-linecap="round" />
+                            </svg>
+                            <div class="absolute inset-0 flex items-center justify-center flex-col">
+                                <span class="text-5xl font-extrabold" style="color: var(--color-dark);">${a.profileStrength}</span>
+                                <span class="text-xs text-gray-400 font-bold uppercase tracking-widest mt-2">Score</span>
+                            </div>
+                        </div>
+                        
+                        <div class="flex-1 w-full mt-4 md:mt-2">
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4 pb-6 border-b border-gray-100">
+                                <div>
+                                    <h3 class="text-3xl font-extrabold tracking-tight" style="color: var(--color-dark);">Profile Strength</h3>
+                                    <p class="text-lg text-gray-500 font-medium mt-2">${a.experienceLevel} <span class="text-gray-300 mx-2">•</span> <span class="text-blue-600 font-semibold">${a.industryFit}</span></p>
+                                </div>
+                                <div class="px-5 py-2 rounded-xl bg-blue-50 text-blue-600 text-base font-extrabold border border-blue-100 shadow-sm">Top 10%</div>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                                <div>
+                                    <h4 class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-5 flex items-center gap-2"><i class="fas fa-tags"></i> Key Skills Detected</h4>
+                                    <div class="flex flex-wrap gap-2.5">
+                                        ${a.keySkills.map(s => `<span class="px-4 py-2 rounded-xl bg-gray-50 text-sm text-gray-800 font-bold border border-gray-200 shadow-sm hover:border-blue-300 hover:bg-blue-50 cursor-default transition-colors">${s}</span>`).join('')}
+                                    </div>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-5 flex items-center gap-2"><i class="fas fa-magic"></i> AI Recommendations</h4>
+                                    <ul class="space-y-4">
+                                        ${a.recommendations.map(r => `
+                                            <li class="p-4 bg-blue-50/50 rounded-xl border border-blue-100 flex items-start gap-4">
+                                                <div class="w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0 mt-0.5"><i class="fas fa-lightbulb text-xs"></i></div>
+                                                <span class="text-gray-700 font-medium leading-relaxed">${r}</span>
+                                            </li>
+                                        `).join('')}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+                } else if (type === 'GitHub') {
+                    const a = result.analysis;
+                    html = `
+                <div class="feature-card p-10 bg-white">
+                    <div class="flex items-center gap-6 mb-10 pb-6 border-b border-gray-100">
+                        <div class="p-5 bg-gray-900 rounded-[1.5rem] shadow-lg"><i class="fab fa-github text-white text-4xl"></i></div>
+                        <div>
+                            <h3 class="text-3xl font-extrabold tracking-tight" style="color: var(--color-dark);">Repository Audit</h3>
+                            <p class="text-lg text-gray-500 font-medium mt-2">Quality: <span class="text-gray-900 font-bold">${a.codeQuality}%</span> <span class="text-gray-300 mx-2">•</span> Activity: <span class="text-gray-900 font-bold">${a.activity}%</span></p>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+                        <div class="p-6 bg-gray-50 border border-gray-100 rounded-2xl text-center shadow-sm hover:shadow-md transition-shadow">
+                            <div class="text-4xl font-black text-gray-900 mb-2">${a.codeQuality}%</div>
+                            <div class="text-xs font-bold text-gray-400 uppercase tracking-widest">Quality</div>
+                        </div>
+                        <div class="p-6 bg-gray-50 border border-gray-100 rounded-2xl text-center shadow-sm hover:shadow-md transition-shadow">
+                            <div class="text-4xl font-black text-gray-900 mb-2">${a.documentation}%</div>
+                            <div class="text-xs font-bold text-gray-400 uppercase tracking-widest">Docs</div>
+                        </div>
+                        <div class="p-6 bg-gray-50 border border-gray-100 rounded-2xl text-center shadow-sm hover:shadow-md transition-shadow">
+                            <div class="text-4xl font-black text-gray-900 mb-2">${a.collaboration}%</div>
+                            <div class="text-xs font-bold text-gray-400 uppercase tracking-widest">Collab</div>
+                        </div>
+                         <div class="p-6 bg-gray-50 border border-gray-100 rounded-2xl text-center shadow-sm hover:shadow-md transition-shadow flex flex-col justify-center">
+                            <div class="text-2xl font-black text-blue-600 mb-2">${a.complexity}</div>
+                            <div class="text-xs font-bold text-gray-400 uppercase tracking-widest">Level</div>
+                        </div>
+                    </div>
+
+                     <div class="p-8 bg-green-50 border border-green-200 rounded-3xl">
+                        <h4 class="text-lg font-extrabold text-green-800 mb-4 flex items-center gap-2"><i class="fas fa-medal text-green-500"></i> Key Strengths</h4>
+                         <div class="flex flex-wrap gap-3">
+                            ${a.strengths.map(s => `<span class="text-base font-bold text-green-800 flex items-center gap-2 bg-white px-4 py-2 rounded-xl border border-green-200 shadow-sm"><i class="fas fa-check text-green-500"></i> ${s}</span>`).join(' ')}
+                        </div>
+                    </div>
+                </div>
+            `;
+                } else if (type === 'Research') {
+                    const a = result.analysis;
+                    html = `
+                <div class="feature-card p-10 bg-white">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 pb-6 border-b border-gray-100 gap-6">
+                        <h3 class="text-3xl font-extrabold flex items-center gap-5 tracking-tight" style="color: var(--color-dark);">
+                            <div class="w-16 h-16 flex items-center justify-center bg-purple-100 text-purple-600 rounded-[1.5rem] shadow-sm"><i class="fas fa-book-reader text-2xl"></i></div>
+                            Research Impact
+                        </h3>
+                        <div class="text-left md:text-right bg-purple-50 px-6 py-4 rounded-2xl border border-purple-100 shadow-sm">
+                            <div class="text-4xl font-black text-purple-600">${a.relevance}%</div>
+                            <div class="text-xs font-bold text-purple-400 uppercase tracking-widest mt-1">Relevance Score</div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid lg:grid-cols-2 gap-10">
+                        <div>
+                            <h4 class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-5 flex items-center gap-2"><i class="fas fa-fire text-orange-400"></i> Trending Topics</h4>
+                            <div class="flex flex-wrap gap-3">
+                                 ${a.currentTrends.map(t => `<span class="px-4 py-2.5 rounded-xl bg-purple-50 text-purple-700 text-sm font-bold border border-purple-100 shadow-sm hover:bg-purple-100 cursor-default transition-colors">${t}</span>`).join('')}
+                            </div>
+                        </div>
+                         <div>
+                            <h4 class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-5 flex items-center gap-2"><i class="fas fa-building text-blue-400"></i> Key Venues</h4>
+                            <div class="space-y-3">
+                                ${a.publicationVenues.map(v => `
+                                    <div class="p-4 bg-gray-50 rounded-xl text-base text-gray-800 font-bold border border-gray-200 shadow-sm flex items-center gap-4 hover:border-gray-300 transition-colors">
+                                        <div class="w-10 h-10 rounded-lg bg-white shadow-sm flex items-center justify-center text-gray-400 shrink-0"><i class="fas fa-university"></i></div>
+                                        ${v}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
                 } else {
-                    throw new Error(result.error);
+                    html = `
+                <div class="feature-card p-12 text-center bg-white">
+                    <div class="inline-flex items-center justify-center w-24 h-24 rounded-full bg-green-100 mb-8 border-4 border-white shadow-md">
+                        <i class="fas fa-check text-green-500 text-5xl"></i>
+                    </div>
+                    <h3 class="text-3xl font-extrabold text-gray-900 mb-3 tracking-tight">Success</h3>
+                    <p class="text-gray-500 text-xl font-medium">Operation completed successfully.</p>
+                </div>
+            `;
                 }
-            } catch (error) {
-                console.error('Error:', error);
-                document.getElementById('resultsContent').innerHTML = `
-                    <div style="color: #e74c3c; text-align: center; padding: 20px;">
-                        <h3>❌ Analysis Failed</h3>
-                        <p>${error.message || 'Something went wrong. Please try again.'}</p>
-                    </div>
-                `;
-            } finally {
-                document.getElementById('loadingSection').style.display = 'none';
-                document.getElementById('resultsContent').style.display = 'block';
+
+                content.innerHTML = html;
             }
-        }
+        </script>
 
-        function displayResults(result, analysisType) {
-            let content = `<h2 style="color: #667eea; margin-bottom: 25px;">🔍 ${analysisType} Results</h2>`;
-
-            if (analysisType === 'LinkedIn Profile Analysis') {
-                const analysis = result.analysis;
-                content += `
-                    <div class="result-card">
-                        <h3>📊 Profile Analysis</h3>
-                        <div class="result-item">
-                            <h4>Profile Strength</h4>
-                            <div class="result-stats">
-                                <span class="stat">📈 ${analysis.profileStrength}%</span>
-                                <span class="stat">🎯 ${analysis.experienceLevel}</span>
-                                <span class="stat">🏭 ${analysis.industryFit}</span>
-                            </div>
-                        </div>
-                        <div class="result-item">
-                            <h4>Key Skills</h4>
-                            <p>${analysis.keySkills.join(', ')}</p>
-                        </div>
-                        <div class="result-item">
-                            <h4>Recommendations</h4>
-                            <ul style="margin-left: 20px;">
-                                ${analysis.recommendations.map(rec => `<li>${rec}</li>`).join('')}
-                            </ul>
-                        </div>
-                        <div class="result-item">
-                            <h4>Growth Areas</h4>
-                            <p>${analysis.growthAreas.join(', ')}</p>
-                        </div>
-                    </div>
-                `;
-            } else if (analysisType === 'GitHub Repository Analysis') {
-                const analysis = result.analysis;
-                content += `
-                    <div class="result-card">
-                        <h3>📚 Repository Analysis</h3>
-                        <div class="result-item">
-                            <h4>Code Quality Metrics</h4>
-                            <div class="result-stats">
-                                <span class="stat">💻 ${analysis.codeQuality}%</span>
-                                <span class="stat">📖 ${analysis.documentation}%</span>
-                                <span class="stat">📈 ${analysis.activity}%</span>
-                                <span class="stat">🤝 ${analysis.collaboration}%</span>
-                            </div>
-                        </div>
-                        <div class="result-item">
-                            <h4>Technologies Used</h4>
-                            <p>${analysis.technologies.join(', ')}</p>
-                        </div>
-                        <div class="result-item">
-                            <h4>Strengths</h4>
-                            <ul style="margin-left: 20px;">
-                                ${analysis.strengths.map(strength => `<li>${strength}</li>`).join('')}
-                            </ul>
-                        </div>
-                        <div class="result-item">
-                            <h4>Areas for Improvement</h4>
-                            <ul style="margin-left: 20px;">
-                                ${analysis.improvements.map(improvement => `<li>${improvement}</li>`).join('')}
-                            </ul>
-                        </div>
-                    </div>
-                `;
-            } else if (analysisType === 'Research Topic Analysis') {
-                const analysis = result.analysis;
-                content += `
-                    <div class="result-card">
-                        <h3>🔬 Research Analysis</h3>
-                        <div class="result-item">
-                            <h4>Relevance Score</h4>
-                            <div class="result-stats">
-                                <span class="stat">📊 ${analysis.relevance}%</span>
-                            </div>
-                        </div>
-                        <div class="result-item">
-                            <h4>Current Trends</h4>
-                            <ul style="margin-left: 20px;">
-                                ${analysis.currentTrends.map(trend => `<li>${trend}</li>`).join('')}
-                            </ul>
-                        </div>
-                        <div class="result-item">
-                            <h4>Key Researchers</h4>
-                            <ul style="margin-left: 20px;">
-                                ${analysis.keyResearchers.map(researcher => `<li>${researcher}</li>`).join('')}
-                            </ul>
-                        </div>
-                        <div class="result-item">
-                            <h4>Funding Opportunities</h4>
-                            <ul style="margin-left: 20px;">
-                                ${analysis.fundingOpportunities.map(opportunity => `<li>${opportunity}</li>`).join('')}
-                            </ul>
-                        </div>
-                    </div>
-                `;
-            } else if (analysisType === 'Certification Added') {
-                const certification = result.certification;
-                content += `
-                    <div class="result-card">
-                        <h3>🏆 Certification Added Successfully</h3>
-                        <div class="result-item">
-                            <h4>Certificate Details</h4>
-                            <p><strong>ID:</strong> ${certification.certificateId}</p>
-                            <p><strong>Issuer:</strong> ${certification.issuer}</p>
-                            <p><strong>Issue Date:</strong> ${new Date(certification.issueDate).toLocaleDateString()}</p>
-                            <p><strong>Skills:</strong> ${certification.skillsCovered.join(', ')}</p>
-                            <p><strong>Status:</strong> ${certification.status}</p>
-                        </div>
-                    </div>
-                `;
-            } else if (analysisType === 'Certification Verification') {
-                const verification = result.verification;
-                content += `
-                    <div class="result-card">
-                        <h3>✅ Certification Verification</h3>
-                        <div class="result-item">
-                            <h4>Verification Results</h4>
-                            <p><strong>Status:</strong> ${verification.status}</p>
-                            <p><strong>Certificate ID:</strong> ${verification.certificateId}</p>
-                            <p><strong>Issuer:</strong> ${verification.issuer}</p>
-                            <p><strong>Verification Date:</strong> ${new Date(verification.verificationDate).toLocaleDateString()}</p>
-                            <p><strong>Skills:</strong> ${verification.skills.join(', ')}</p>
-                        </div>
-                    </div>
-                `;
-            }
-
-            document.getElementById('resultsContent').innerHTML = content;
-        }
-    </script>
-</body>
-</html>
+        <%- include('layouts/footer'); %>

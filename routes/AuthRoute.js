@@ -25,11 +25,13 @@ router.post('/register', async (req, res) => {
         await User.register(user, password); // Use `await` instead of callback
 
         // After successful registration, redirect to login page
+        req.flash('success', 'Registration successful! Please log in.');
         return res.redirect('/login');
 
     } catch (err) {
         console.error("Registration error:", err);
-        res.status(500).send("Error registering user.");
+        req.flash('error', err.message || 'Error registering user.');
+        res.redirect('/register');
     }
 });
 
@@ -40,47 +42,80 @@ router.get('/login', (req, res) => {
     res.render('login');
 });
 
-// Login POST request
-router.post('/login', async (req, res) => {
+router.post('/login', async (req, res, next) => {
     try {
         const { username, password, role } = req.body;
 
-        const user = await User.findOne({ username, role });
+        if (!role) {
+            req.flash('error', 'Please select a role.');
+            return res.redirect('/login');
+        }
+
+        // First find user by username to provide better feedback
+        const user = await User.findOne({ username });
         if (!user) {
-            return res.status(401).send('User not found');
+            req.flash('error', 'No account found with this email.');
+            return res.redirect('/login');
         }
 
-        const authenticated = await user.authenticate(password);
-        if (!authenticated) {
-            return res.status(401).send('Invalid credentials');
+        // Check if role matches
+        if (user.role !== role) {
+            req.flash('error', `This account is registered as a ${user.role}, not a ${role}.`);
+            return res.redirect('/login');
         }
 
-        req.session.userId = user._id;
-        req.session.role = user.role;
+        // Use passport to authenticate the user's password
+        passport.authenticate('local', (err, authedUser, info) => {
+            if (err) {
+                console.error("Passport auth error:", err);
+                return next(err);
+            }
+            if (!authedUser) {
+                req.flash('error', info.message || 'Invalid username or password.');
+                return res.redirect('/login');
+            }
 
-        // Redirect based on role
-        if (role === 'student') {
-            return res.redirect('/');
-        } else if (role === 'parent') {
-            return res.redirect('/parent_home');
-        } else if (role === 'teacher') {
-            return res.redirect('/teacher_home');
-        }
+            // Establish passport session
+            req.login(authedUser, (err) => {
+                if (err) return next(err);
+
+                // Set custom session data for legacy route checks
+                req.session.userId = authedUser._id;
+                req.session.role = authedUser.role;
+
+                req.flash('success', `Welcome back, ${authedUser.username}!`);
+
+                // Redirect based on role
+                if (authedUser.role === 'student') {
+                    return res.redirect('/');
+                } else if (authedUser.role === 'parent') {
+                    return res.redirect('/parentprofile'); // Consistent with parent dashboard
+                } else if (authedUser.role === 'teacher') {
+                    return res.redirect('/teacher_home');
+                }
+                res.redirect('/');
+            });
+        })(req, res, next);
 
     } catch (err) {
-        console.error("Login error:", err);
-        res.status(500).send("Error during login.");
+        console.error("Login unexpected error:", err);
+        req.flash('error', 'An unexpected error occurred during login.');
+        res.redirect('/login');
     }
 });
 
 
 // Logout route
-router.get('/logout', (req, res) => {
-    req.session.destroy((err) => {
-        if (err) {
-            return res.status(500).send('Error logging out');
-        }
-        res.redirect('/login');
+router.get('/logout', (req, res, next) => {
+    req.logout((err) => {
+        if (err) return next(err);
+
+        req.session.destroy((err) => {
+            if (err) {
+                console.error("Session destruction error:", err);
+            }
+            res.redirect('/login');
+        });
     });
 });
 

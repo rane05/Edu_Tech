@@ -195,6 +195,7 @@
                 border-radius: 2px;
             }
 
+<<<<<<< HEAD
             /* Enhanced Form Elements */
             .form-group {
                 margin-bottom: 25px;
@@ -942,6 +943,119 @@
                                 </div>
                             </div>
                         </div>
+=======
+    <!-- Status Overlay (Thinking/Listening) -->
+    <div id="statusOverlay"
+        style="display:none; position:fixed; top:20px; left:50%; transform:translateX(-50%); z-index:2000; background:rgba(0,0,0,0.7); padding:10px 20px; border-radius:30px; border: 1px solid rgba(255,255,255,0.2); backdrop-filter:blur(10px);">
+        <div style="display:flex; align-items:center; gap:10px; color:white;">
+            <div id="statusIcon" class="spinner" style="width:20px; height:20px; margin:0; border-width:2px;"></div>
+            <span id="statusText">AI is thinking...</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header fade-in">
+            <h1><i class="fas fa-microphone-alt"></i> Voice Interview AI</h1>
+            <p>Experience a realistic interview. Spoken questions, real-time analysis, adaptive difficulty.</p>
+        </div>
+
+        <div class="main-content">
+            <!-- SETUP SECTION -->
+            <div class="form-section slide-in-left" id="setupSection">
+                <h2><i class="fas fa-cog"></i> Interview Setup</h2>
+                <form id="interviewForm">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="name" value="<%= user.name || '' %>" placeholder="Enter your full name"
+                            required>
+                    </div>
+
+                    <div class="btn-group">
+                        <button type="button" class="btn" id="startBtn">
+                            <i class="fas fa-play"></i> Start Voice Interview
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- INTERVIEW INTERFACE (Hidden initially) -->
+            <div class="form-section fade-in" id="interviewInterface"
+                style="display: none; width: 100%; max-width: 800px; margin: 0 auto; text-align: center;">
+
+                <!-- AI Avatar / Visualizer -->
+                <div
+                    style="margin: 30px auto; width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, #60a5fa, #ec4899); display: flex; align-items: center; justify-content: center; position: relative;">
+                    <i class="fas fa-robot" style="font-size: 3rem; color: white;"></i>
+                    <div id="speakingRing"
+                        style="position: absolute; top: -5px; left: -5px; right: -5px; bottom: -5px; border: 3px solid #60a5fa; border-radius: 50%; opacity: 0;">
+                    </div>
+                </div>
+
+                <!-- Live Transcript Area -->
+                <div
+                    style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; margin-bottom: 30px; min-height: 150px; text-align: left;">
+                    <p
+                        style="color: #fbbf24; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">
+                        <i class="fas fa-comment-dots"></i> Current Question:
+                    </p>
+                    <h3 id="currentQuestionText" style="color: white; margin-bottom: 20px;">Waiting to start...</h3>
+
+                    <hr style="border-color: rgba(255,255,255,0.1); margin: 15px 0;">
+
+                    <p
+                        style="color: #34d399; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;">
+                        <i class="fas fa-microphone"></i> Your Answer:
+                    </p>
+                    <p id="liveTranscript" style="color: #cbd5e1; font-style: italic; min-height: 40px;">...</p>
+                </div>
+
+                <!-- Controls -->
+                <div class="btn-group">
+                    <button id="micBtn" class="btn"
+                        style="border-radius: 50%; width: 70px; height: 70px; padding: 0; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; background: #ef4444;"
+                        disabled>
+                        <i class="fas fa-microphone-slash"></i>
+                    </button>
+                </div>
+                <p id="micStatus" style="margin-top: 15px; color: #94a3b8;">Initialize interview to enable microphone
+                </p>
+
+                <button class="btn" id="finishAnswerBtn"
+                    style="margin-top: 20px; display: none; background: linear-gradient(135deg, #10b981, #059669);">
+                    <i class="fas fa-check"></i> Submit Answer
+                </button>
+            </div>
+
+            <!-- FINAL REPORT SECTION (Hidden initially) -->
+            <div class="results-section slide-in-right" id="reportSection" style="display: none;">
+                <h2><i class="fas fa-clipboard-check"></i> Interview Report</h2>
+                <div class="feedback-container">
+                    <div class="sentiment-badge" id="finalScoreBadge">Score: 0/100</div>
+
+                    <div class="feedback-section">
+                        <h3>Summary</h3>
+                        <p id="finalSummary">...</p>
+                    </div>
+
+                    <div class="feedback-section">
+                        <h3>Strengths</h3>
+                        <ul id="finalStrengths" class="feedback-list"></ul>
+                    </div>
+
+                    <div class="feedback-section">
+                        <h3>Areas for Improvement</h3>
+                        <ul id="finalWeaknesses" class="feedback-list"></ul>
+                    </div>
+
+                    <div class="feedback-section">
+                        <h3>Recommendation</h3>
+                        <p id="finalRecommendation" style="font-size: 1.2rem; font-weight: bold; color: #fbbf24;">...
+                        </p>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn" onclick="window.location.reload()">Start New Interview</button>
+>>>>>>> smalluichange
                     </div>
                 </div>
 
@@ -958,6 +1072,7 @@
                     </div>
                 </div>
             </div>
+<<<<<<< HEAD
 
             <!-- Start Interview Modal -->
             <div id="startInterviewModal" class="modal">
@@ -1020,6 +1135,345 @@
                     setTimeout(() => {
                         feedback.classList.remove('show');
                     }, 3000);
+=======
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // --- CONFIGURATION ---
+        const synth = window.speechSynthesis;
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition = new SpeechRecognition();
+
+        // --- STATE ---
+        let interviewId = null;
+        let isListening = false;
+        let isSpeaking = false;
+        let fullTranscript = '';
+
+        // --- DOM ELEMENTS ---
+        const setupSection = document.getElementById('setupSection');
+        const interviewInterface = document.getElementById('interviewInterface');
+        const reportSection = document.getElementById('reportSection');
+        const micBtn = document.getElementById('micBtn');
+        const liveTranscript = document.getElementById('liveTranscript');
+        const currentQuestionText = document.getElementById('currentQuestionText');
+        const statusOverlay = document.getElementById('statusOverlay');
+        const statusText = document.getElementById('statusText');
+        const finishAnswerBtn = document.getElementById('finishAnswerBtn');
+        const progressBar = document.getElementById('progressBar');
+        const speakingRing = document.getElementById('speakingRing');
+
+        // --- INITIALIZATION ---
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.lang = 'en-US';
+
+        // --- EVENT LISTENERS ---
+        document.getElementById('startBtn').addEventListener('click', startInterview);
+        finishAnswerBtn.addEventListener('click', submitAnswer);
+
+        // --- SPEECH RECOGNITION HANDLERS ---
+        recognition.onstart = () => {
+            isListening = true;
+            micBtn.style.background = '#10b981'; // Green
+            micBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+            micBtn.classList.add('pulse-animation');
+            document.getElementById('micStatus').innerText = "Listening... Speak clearly.";
+            finishAnswerBtn.style.display = 'inline-block';
+        };
+
+        recognition.onend = () => {
+            if (isListening) recognition.start(); // Auto-restart if we supplied logic to keep it on
+            else {
+                micBtn.style.background = '#ef4444'; // Red
+                micBtn.innerHTML = '<i class="fas fa-microphone-slash"></i>';
+                micBtn.classList.remove('pulse-animation');
+                document.getElementById('micStatus').innerText = "Microphone off.";
+            }
+        };
+
+        recognition.onresult = (event) => {
+            let interimTranscript = '';
+            for (let i = event.resultIndex; i < event.results.length; ++i) {
+                if (event.results[i].isFinal) {
+                    fullTranscript += event.results[i][0].transcript;
+                } else {
+                    interimTranscript += event.results[i][0].transcript;
+                }
+            }
+            liveTranscript.innerText = fullTranscript + ' ' + interimTranscript;
+        };
+
+        // --- CORE FUNCTIONS ---
+
+        async function startInterview() {
+            const name = document.getElementById('name').value;
+            // Defaults for conversational flow
+            const role = "Unspecified";
+            const seniority = "Unspecified";
+            const background = "Unspecified";
+
+            if (!name) return alert("Please enter your name");
+
+            showLoading("Initializing Interview...");
+
+            try {
+                const res = await fetch('/interview/start', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ role, seniority, name, background })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    interviewId = data.interviewId;
+                    hideLoading();
+
+                    // Switch UI
+                    setupSection.style.display = 'none';
+                    interviewInterface.style.display = 'block';
+
+                    // Update State
+                    currentQuestionText.innerText = data.firstQuestion;
+                    updateProgress(0, data.totalQuestions);
+
+                    // AI Speaks Greeting first, then Question
+                    await speakText(data.greeting);
+                    await speakText(data.firstQuestion);
+
+                    // Auto-start Mic
+                    startListening();
+                } else {
+                    alert(data.error);
+                    hideLoading();
+                }
+            } catch (e) {
+                console.error(e);
+                alert("Failed to start");
+                hideLoading();
+            }
+        }
+
+        async function submitAnswer() {
+            stopListening();
+            showLoading("Analyzing Response...");
+
+            const transcriptToSend = liveTranscript.innerText; // Get what's currently visible
+            // fullTranscript has final parts, but innerText has everything including interim if any left.
+
+            try {
+                const res = await fetch('/interview/submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        interviewId,
+                        transcript: transcriptToSend
+                    })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    // Reset transcript for next turn
+                    fullTranscript = '';
+                    liveTranscript.innerText = '...';
+                    finishAnswerBtn.style.display = 'none';
+
+                    // 1. Speak Feedback
+                    if (data.feedback) {
+                        updateStatus("AI is giving feedback...");
+                        await speakText(data.feedback);
+                    }
+
+                    if (data.isCompleted) {
+                        // End Interview
+                        hideLoading();
+                        showReport(data.finalReport);
+                    } else {
+                        // Next Question
+                        hideLoading();
+                        currentQuestionText.innerText = data.nextQuestion;
+                        updateProgress(data.currentQuestionIndex, 5); // Assuming 5 is max
+
+                        updateStatus("AI is asking next question...");
+                        await speakText(data.nextQuestion);
+
+                        startListening();
+                    }
+                }
+            } catch (e) {
+                console.error(e);
+                alert("Error submitting answer");
+                hideLoading();
+            }
+        }
+
+        // --- UTILS ---
+
+        function startListening() {
+            if (isListening) return;
+            try {
+                fullTranscript = '';
+                liveTranscript.innerText = '';
+                recognition.start();
+                isListening = true;
+            } catch (e) { console.log("Mic already active"); }
+        }
+
+        function stopListening() {
+            isListening = false;
+            recognition.stop();
+        }
+
+        function speakText(text) {
+            return new Promise((resolve) => {
+                if (!text) return resolve();
+
+                // Visuals
+                speakingRing.style.opacity = '1';
+                speakingRing.style.animation = 'pulse 1.5s infinite';
+
+                // Cancel current speech
+                synth.cancel();
+
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 1.0;
+                utterance.pitch = 1.0;
+
+                // Try to find a good voice
+                const voices = synth.getVoices();
+                const preferredVoice = voices.find(v => v.name.includes('Google US English') || v.name.includes('Female')) || voices[0];
+                if (preferredVoice) utterance.voice = preferredVoice;
+
+                utterance.onend = () => {
+                    speakingRing.style.opacity = '0';
+                    speakingRing.style.animation = 'none';
+                    resolve();
+                };
+
+                synth.speak(utterance);
+            });
+        }
+
+        function showReport(report) {
+            interviewInterface.style.display = 'none';
+            reportSection.style.display = 'block';
+
+            document.getElementById('finalScoreBadge').innerText = `Score: ${report.score}/100`;
+            document.getElementById('finalSummary').innerText = report.summary;
+            document.getElementById('finalRecommendation').innerText = report.recommendation;
+
+            const sList = document.getElementById('finalStrengths');
+            sList.innerHTML = report.strengths.map(s => `<li>${s}</li>`).join('');
+
+            const wList = document.getElementById('finalWeaknesses');
+            wList.innerHTML = report.weaknesses.map(w => `<li>${w}</li>`).join('');
+        }
+
+        function showLoading(msg) {
+            statusOverlay.style.display = 'block';
+            statusText.innerText = msg;
+        }
+
+        function hideLoading() {
+            statusOverlay.style.display = 'none';
+        }
+
+        function updateStatus(msg) {
+            statusOverlay.style.display = 'block';
+            statusText.innerText = msg;
+        }
+
+        function updateProgress(current, total) {
+            const pct = (current / total) * 100;
+            progressBar.style.width = pct + '%';
+        }
+
+        // Styles injection for pulse animation if missing
+        const style = document.createElement('style');
+        style.innerHTML = `
+            .pulse-animation {
+                animation: pulse-red 2s infinite;
+            }
+            @keyframes pulse-red {
+                0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+                70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+                100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+    <!-- Voice Interaction Modal -->
+    <div id="voiceModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 20px;">🎙️ Voice Interface</h2>
+            <div id="visualizer-container"
+                style="height: 100px; background: #000; margin-bottom: 20px; border-radius: 10px; position: relative; overflow: hidden;">
+                <canvas id="visualizer" width="400" height="100"></canvas>
+            </div>
+
+            <p id="voiceStatus" style="font-size: 1.1rem; color: #4b5563; min-height: 30px;">
+                Ready to speak...
+            </p>
+
+            <div style="display: flex; gap: 15px; justify-content: center; margin-top: 20px;">
+                <button id="micBtn" class="modal-btn" onclick="toggleMic()"
+                    style="border-radius: 50%; width: 60px; height: 60px; padding: 0; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-microphone" style="font-size: 1.5rem;"></i>
+                </button>
+                <button id="speakBtn" class="modal-btn" onclick="speakLastResponse()"
+                    style="border-radius: 50%; width: 60px; height: 60px; padding: 0; display: flex; align-items: center; justify-content: center; background: #6366f1;">
+                    <i class="fas fa-volume-up" style="font-size: 1.5rem;"></i>
+                </button>
+            </div>
+            <button class="btn" style="margin-top: 20px; background: transparent; color: #666; box-shadow: none;"
+                onclick="closeVoiceModal()">Close Voice Mode</button>
+        </div>
+    </div>
+
+    <!-- Floating Action Button for Voice -->
+    <button onclick="openVoiceModal()"
+        style="position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #f59e0b, #ec4899); border: none; color: white; font-size: 1.5rem; cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,0.3); z-index: 999; transition: transform 0.3s;"
+        onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+        <i class="fas fa-microphone-alt"></i>
+    </button>
+
+    <script>
+        // --- VOICE LOGIC ---
+        let recognition;
+        let isListening = false;
+        let synthesis = window.speechSynthesis;
+        let lastAIResponse = "Welcome to the AI Interview Simulator. I am ready to begin.";
+
+        // Initialize Speech Recognition
+        if ('webkitSpeechRecognition' in window) {
+            recognition = new webkitSpeechRecognition();
+            recognition.continuous = false;
+            recognition.interimResults = true;
+            recognition.lang = 'en-US';
+
+            recognition.onstart = () => {
+                isListening = true;
+                document.getElementById('micBtn').style.background = '#ef4444';
+                document.getElementById('micBtn').innerHTML = '<i class="fas fa-stop"></i>';
+                document.getElementById('voiceStatus').innerText = "Listening...";
+                startVisualizer();
+            };
+
+            recognition.onend = () => {
+                isListening = false;
+                document.getElementById('micBtn').style.background = 'linear-gradient(135deg, #fbbf24, #f59e0b)';
+                document.getElementById('micBtn').innerHTML = '<i class="fas fa-microphone"></i>';
+                stopVisualizer();
+
+                // If we have a final transcript, treating it as "done"
+                const transcript = document.getElementById('voiceStatus').innerText;
+                if (!transcript.includes("Listening...") && !transcript.includes("Processing...")) {
+                    // Add to the main text area? Or submitting directly?
+                    // For now, let's just create a bridge to existing flow
+                    console.log("Speech captured: ", transcript);
+>>>>>>> smalluichange
                 }
 
                 // Enhanced speech recognition

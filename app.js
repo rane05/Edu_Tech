@@ -11,6 +11,13 @@ const User = require("./model/User.js");
 const CetCollege = require('./model/cetCollege');
 // const College = require('./model/College');
 
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
+const mongoSanitize = require('express-mongo-sanitize');
+const cors = require('cors');
+const morgan = require('morgan');
+const flash = require('connect-flash');
+
 const http = require('http');
 const WebSocket = require('ws');
 const nodemailer = require('nodemailer');
@@ -65,6 +72,7 @@ const smartQuiz = require('./routes/smart_quiz.js');
 const leaderboard = require('./routes/leaderboard.js');
 const userDashboard = require('./routes/user_dashboard.js');
 const resumeBuilder = require('./routes/resume_builder.js');
+const parentDashboard = require('./routes/parent_dashboard.js');
 
 
 let app = express();
@@ -83,13 +91,37 @@ mongoose.connect(process.env.MONGODB_URI)
 
 
 app.set("view engine", "ejs");
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.json());
+
+// --- Security, Logging, and Sanitization Middleware ---
+app.use(helmet({ contentSecurityPolicy: false })); // Basic headers
+app.use(cors());
+app.use(morgan("dev")); // HTTP Logging
+app.use(mongoSanitize()); // Prevent NoSQL injection
+
+// --- Global Rate Limiting ---
+const globalLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 300, // Limit each IP to 300 requests per window
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+app.use(globalLimiter);
+
+app.use(bodyParser.urlencoded({ extended: true, limit: '10kb' })); // Restrict payload size
+app.use(express.json({ limit: '10kb' })); // Restrict JSON payload size
+
 app.use(require("express-session")({
-    secret: "Rusty is a dog",
+    secret: process.env.SESSION_SECRET || "fallback_secure_secret_change_in_prod",
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production', // Only send over HTTPS in production
+        sameSite: 'lax',
+        maxAge: 1000 * 60 * 60 * 24 // 1 day
+    }
 }));
+app.use(flash());
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -101,6 +133,8 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
     res.locals.userId = req.session.userId || null;  // `userId` will be available in all templates
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
     next();
 });
 // Middleware to check if the user is logged in
@@ -150,9 +184,13 @@ app.use(smartQuiz);
 app.use(leaderboard);
 app.use(userDashboard);
 app.use(resumeBuilder);
+app.use(parentDashboard);
 app.use(require('./routes/cet_search.js')); // Register CET Search
 app.use(require('./routes/jee_search.js')); // Register JEE Search
 app.use(teacherHomeRoutes); // Use teacher home routes
+app.use('/api', require('./routes/api_webinars.js')); // Live webinars API
+app.use('/api/roadmap', require('./routes/api_roadmap.js')); // Real user progress tracking API
+
 
 
 
@@ -160,8 +198,22 @@ app.use(teacherHomeRoutes); // Use teacher home routes
 
 
 
+// --- Global Error Handler ---
+app.use((err, req, res, next) => {
+    console.error("Global Error Handler caught:", err);
+    res.status(err.status || 500);
+    res.send("Internal Server Error: Something went wrong.");
+});
+
 const server = http.createServer(app);
-const wss = new WebSocket.Server({ server });
+const wss = new WebSocket.Server({
+    server,
+    verifyClient: (info, cb) => {
+        // Simple origin validation placeholder for production
+        // cb(info.origin === 'https://yourdomain.com', 401, 'Unauthorized');
+        cb(true);
+    }
+});
 
 wss.on('connection', ws => {
     ws.on('message', message => {
@@ -199,23 +251,6 @@ app.get('/verify', (req, res) => {
     res.render('blockchain')
 
 });
-
-app.get('/parent_home', (req, res) => {
-    if (req.session.role !== 'parent') {
-        return res.redirect('/login');
-    }
-    res.render('parent_home');
-});
-
-app.get('/teacher_home', (req, res) => {
-    if (req.session.role !== 'teacher') {
-        return res.redirect('/login');
-    }
-    res.render('teacher_home');
-});
-
-
-
 
 app.get('/career_resources', (req, res) => {
     res.render('career_resources')

@@ -1,0 +1,60 @@
+<!-- views/partials/roadmap/projects.ejs -->
+<div class="glass-card p-6">
+    <div class="mb-6">
+        <h3 class="text-xl font-bold text-slate-800 flex items-center">
+            <i class="fas fa-code-merge text-indigo-500 mr-2"></i> Capstone Projects
+        </h3>
+        <p class="text-sm text-slate-500 mt-1">Portfolio builders structured by the AI.</p>
+    </div>
+
+    <div class="space-y-4">
+        <% let allProjects=[]; if (roadmap.generated_phases) { roadmap.generated_phases.forEach(p=> {
+            if (p.projects && p.projects.length > 0) {
+            p.projects.forEach(proj => allProjects.push(proj));
+            }
+            });
+            }
+            const displayProjects = allProjects.slice(0, 3);
+            %>
+
+            <% if (displayProjects.length> 0) { %>
+                <% displayProjects.forEach((proj, idx)=> {
+                    const colors = [
+                    'bg-emerald-50 text-emerald-600 border-emerald-200',
+                    'bg-indigo-50 text-indigo-600 border-indigo-200',
+                    'bg-purple-50 text-purple-600 border-purple-200'
+                    ];
+                    const cardColor = colors[idx % 3];
+                    %>
+                    <div
+                        class="border border-slate-100 rounded-xl p-5 hover:border-slate-300 transition-colors shadow-sm bg-white relative overflow-hidden group">
+                        <div
+                            class="absolute left-0 top-0 bottom-0 w-1 <%= cardColor.split(' ')[0] %> group-hover:w-1.5 transition-all">
+                        </div>
+                        <div class="flex justify-between items-start mb-2 pl-2">
+                            <h4 class="font-bold text-slate-800">
+                                <%= proj.title %>
+                            </h4>
+                            <span
+                                class="<%= cardColor %> text-[10px] font-extrabold uppercase px-2 py-0.5 rounded border tracking-wider">
+                                <%= proj.difficulty || 'Core' %>
+                            </span>
+                        </div>
+                        <p class="text-sm text-slate-500 mb-3 pl-2 leading-relaxed">
+                            <%= proj.objective %>
+                        </p>
+                        <div class="pl-2 bg-slate-50 p-2 text-xs rounded border border-slate-100 italic text-slate-600">
+                            <span class="font-bold text-slate-400 not-italic block uppercase text-[10px] mb-1">Resume
+                                Bullet</span>
+                            "<%= proj.resumeBullet %>"
+                        </div>
+                    </div>
+                    <% }); %>
+                        <% } else { %>
+                            <div class="text-center p-8 bg-slate-50 rounded-xl border border-dashed border-slate-300">
+                                <i class="fas fa-folder-open text-slate-300 text-3xl mb-2"></i>
+                                <p class="text-sm text-slate-500">No major projects found in this roadmap.</p>
+                            </div>
+                            <% } %>
+    </div>
+</div>

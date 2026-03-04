@@ -1,1383 +1,624 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Interview Simulator - EduNavigator</title>
+    <title>AI Interview Live - EduNavigator</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --success: #22c55e;
+            --error: #ef4444;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Inter', -apple-system, system-ui, sans-serif;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
-            color: white;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-
-        /* 3D Interactive Background */
-        .interactive-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .bg-element {
-            position: absolute;
-            background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(236, 72, 153, 0.1));
-            border-radius: 50%;
-            animation: float 20s ease-in-out infinite;
-        }
-
-        .bg-element:nth-child(1) { width: 300px; height: 300px; top: -150px; left: -150px; animation-delay: 0s; }
-        .bg-element:nth-child(2) { width: 200px; height: 200px; top: 50%; right: -100px; animation-delay: 5s; }
-        .bg-element:nth-child(3) { width: 250px; height: 250px; bottom: -125px; left: 50%; animation-delay: 10s; }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); opacity: 0.1; }
-            33% { transform: translate(50px, 50px) rotate(120deg); opacity: 0.2; }
-            66% { transform: translate(-30px, 80px) rotate(240deg); opacity: 0.15; }
-        }
-
-        /* Enhanced Header */
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-            padding: 60px 0;
-            position: relative;
-            perspective: 1000px;
-        }
-
-        .header h1 {
-            font-size: 4rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6, #ec4899);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 20px;
-            text-shadow: 0 0 30px rgba(96, 165, 250, 0.3);
-            animation: glow 2s ease-in-out infinite alternate;
-            transform-style: preserve-3d;
-        }
-
-        @keyframes glow {
-            from { text-shadow: 0 0 20px rgba(96, 165, 250, 0.5); }
-            to { text-shadow: 0 0 30px rgba(236, 72, 153, 0.8), 0 0 40px rgba(96, 165, 250, 0.6); }
-        }
-
-        .header p {
-            font-size: 1.3rem;
-            color: #cbd5e1;
-            max-width: 700px;
-            margin: 0 auto;
-            line-height: 1.8;
-            opacity: 0;
-            animation: fadeInUp 0.8s ease 0.3s forwards;
-        }
-
-        /* 3D Main Content */
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            margin-bottom: 40px;
-            perspective: 1000px;
-        }
-
-        .form-section, .results-section {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(25px);
-            border-radius: 25px;
-            padding: 35px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            transform-style: preserve-3d;
-            position: relative;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
             overflow: hidden;
+            /* Prevent body scroll, handle in content */
         }
 
-        .form-section::before, .results-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(79, 70, 229, 0.05) 0%, rgba(236, 72, 153, 0.05) 100%);
-            opacity: 0;
-            transition: all 0.5s ease;
-            transform: scale(0.8);
-            z-index: -1;
+        /* --- NAVBAR (Simple) --- */
+        .navbar {
+            padding: 1rem 2rem;
+            background: rgba(30, 41, 59, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .form-section:hover::before, .results-section:hover::before {
-            opacity: 1;
-            transform: scale(1);
+        .logo {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--accent);
         }
 
-        .form-section:hover, .results-section:hover {
-            transform: translateY(-10px) translateZ(20px) rotateX(5deg);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-            border-color: rgba(79, 70, 229, 0.3);
+        .nav-end a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 0.9rem;
         }
 
-        .form-section h2, .results-section h2 {
-            font-size: 2rem;
-            margin-bottom: 30px;
-            color: #fbbf24;
-            text-align: center;
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            position: relative;
+        /* --- MAIN LAYOUT --- */
+        .main-container {
+            flex: 1;
+            display: flex;
+            height: calc(100vh - 60px);
         }
 
-        .form-section h2::after, .results-section h2::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(135deg, #fbbf24, #f59e0b);
-            border-radius: 2px;
+        /* LEFT: Sidebar / Setup */
+        .sidebar {
+            width: 350px;
+            background: var(--card-bg);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            overflow-y: auto;
         }
 
-        /* Enhanced Form Elements */
+        .section-title {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
         .form-group {
-            margin-bottom: 25px;
-            position: relative;
+            margin-bottom: 1rem;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 10px;
-            font-weight: 600;
-            color: #e2e8f0;
-            font-size: 1.1rem;
-            transition: all 0.3s ease;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
         }
 
-        .form-group input, .form-group select, .form-group textarea {
+        .form-control {
             width: 100%;
-            padding: 18px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            border-radius: 15px;
-            background: rgba(255, 255, 255, 0.08);
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
             color: white;
-            font-size: 1rem;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            backdrop-filter: blur(10px);
+            font-size: 0.95rem;
         }
 
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+        .form-control:focus {
             outline: none;
-            border-color: #60a5fa;
-            box-shadow: 0 0 25px rgba(96, 165, 250, 0.4);
-            transform: translateY(-2px) scale(1.02);
+            border-color: var(--accent);
         }
 
-        .form-group textarea {
-            resize: vertical;
-            min-height: 140px;
-        }
-
-        /* Enhanced Buttons */
         .btn {
-            background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899);
-            color: white;
+            width: 100%;
+            padding: 0.85rem;
+            border-radius: 8px;
             border: none;
-            padding: 18px 35px;
-            border-radius: 15px;
-            font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            margin: 12px 8px;
-            position: relative;
-            overflow: hidden;
-            transform-style: preserve-3d;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.6s ease;
-        }
-
-        .btn:hover::before {
-            left: 100%;
-        }
-
-        .btn:hover {
-            transform: translateY(-3px) translateZ(10px) scale(1.05);
-            box-shadow: 0 15px 35px rgba(59, 130, 246, 0.5);
-        }
-
-        .btn:active {
-            transform: translateY(-1px) translateZ(5px) scale(1.02);
-        }
-
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .btn-group {
-            text-align: center;
-            margin-top: 25px;
-        }
-
-        /* Enhanced Loading Animation */
-        .loading {
-            text-align: center;
-            padding: 50px;
-            color: #cbd5e1;
-        }
-
-        .spinner {
-            width: 60px;
-            height: 60px;
-            border: 4px solid rgba(255, 255, 255, 0.1);
-            border-top: 4px solid #60a5fa;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 25px;
-            position: relative;
-        }
-
-        .spinner::after {
-            content: '';
-            position: absolute;
-            top: -4px;
-            left: -4px;
-            right: -4px;
-            bottom: -4px;
-            border: 2px solid transparent;
-            border-top: 2px solid #ec4899;
-            border-radius: 50%;
-            animation: spin 1.5s linear infinite reverse;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Enhanced Feedback Container */
-        .feedback-container {
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
-            padding: 30px;
-            margin-top: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(15px);
-            transition: all 0.3s ease;
-        }
-
-        .feedback-container:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Enhanced Sentiment Badge */
-        .sentiment-badge {
-            display: inline-block;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-weight: 700;
-            font-size: 1rem;
-            margin-bottom: 25px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            animation: badgePulse 2s ease-in-out infinite;
-        }
-
-        @keyframes badgePulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        .sentiment-positive {
-            background: linear-gradient(135deg, #10b981, #059669);
-            color: white;
-            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
-        }
-
-        .sentiment-negative {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: white;
-            box-shadow: 0 5px 15px rgba(239, 68, 68, 0.4);
-        }
-
-        .sentiment-neutral {
-            background: linear-gradient(135deg, #6b7280, #4b5563);
-            color: white;
-            box-shadow: 0 5px 15px rgba(107, 114, 128, 0.4);
-        }
-
-        /* Enhanced Confidence Bar */
-        .confidence-bar {
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 15px;
-            height: 25px;
-            margin: 20px 0;
-            overflow: hidden;
-            position: relative;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        .confidence-fill {
-            height: 100%;
-            background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981, #3b82f6);
-            border-radius: 15px;
-            transition: width 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .confidence-fill::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            animation: shimmer 2s ease-in-out infinite;
-        }
-
-        @keyframes shimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
-        }
-
-        /* Enhanced Feedback Sections */
-        .feedback-section {
-            margin: 25px 0;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            border-left: 4px solid #60a5fa;
-            transition: all 0.3s ease;
-        }
-
-        .feedback-section:hover {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateX(5px);
-        }
-
-        .feedback-section h3 {
-            color: #fbbf24;
-            margin-bottom: 15px;
-            font-size: 1.4rem;
+            transition: all 0.2s;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 10px;
         }
 
-        .feedback-list {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .feedback-list li {
-            background: rgba(255, 255, 255, 0.08);
-            margin: 10px 0;
-            padding: 15px 18px;
-            border-radius: 10px;
-            border-left: 4px solid #60a5fa;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feedback-list li::before {
-            content: '✨';
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            opacity: 0;
-            transition: all 0.3s ease;
-        }
-
-        .feedback-list li:hover {
-            background: rgba(255, 255, 255, 0.12);
-            transform: translateX(5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .feedback-list li:hover::before {
-            opacity: 1;
-            transform: translateY(-50%) rotate(360deg);
-        }
-
-        /* Questions Header and Counter */
-        .questions-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .question-counter {
-            background: linear-gradient(135deg, #60a5fa, #8b5cf6);
+        .btn-primary {
+            background: var(--accent);
             color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: 700;
-            font-size: 1.1rem;
-            box-shadow: 0 4px 15px rgba(96, 165, 250, 0.3);
-            animation: counterPulse 2s ease-in-out infinite;
         }
 
-        @keyframes counterPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+        .btn-primary:hover {
+            background: var(--accent-hover);
         }
 
-        .question-item {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            margin: 15px 0;
-            border-radius: 15px;
-            border-left: 4px solid #60a5fa;
-            transition: all 0.3s ease;
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-secondary);
+        }
+
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+        }
+
+        .btn-danger:hover {
+            background: rgba(239, 68, 68, 0.3);
+        }
+
+        /* RIGHT: Interaction Area */
+        .chat-area {
+            flex: 1;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 70%);
             position: relative;
-            overflow: hidden;
         }
 
-        .question-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
+        /* AVATAR */
+        .avatar-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin-bottom: 2rem;
+        }
+
+        .avatar-circle {
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, rgba(79, 70, 229, 0.05) 0%, rgba(236, 72, 153, 0.05) 100%);
-            opacity: 0;
-            transition: all 0.3s ease;
-            transform: scale(0.8);
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+            z-index: 2;
+            position: relative;
+            transition: transform 0.2s;
         }
 
-        .question-item:hover::before {
-            opacity: 1;
-            transform: scale(1);
+        .avatar-ring {
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            border: 2px solid rgba(99, 102, 241, 0.3);
+            border-radius: 50%;
+            z-index: 1;
         }
 
-        .question-item:hover {
-            transform: translateX(5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        .avatar-container.speaking .avatar-ring {
+            animation: pulse-ring 2s infinite;
         }
 
-        .question-number {
-            color: #fbbf24;
-            font-weight: 700;
-            font-size: 1.2rem;
-            margin-bottom: 8px;
+        @keyframes pulse-ring {
+            0% {
+                transform: scale(0.8);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
         }
 
-        .question-text {
-            color: #e2e8f0;
-            font-size: 1.1rem;
+        /* TRANSCRIPT */
+        .transcript-box {
+            width: 100%;
+            max-width: 700px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            min-height: 150px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .ai-text {
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
             line-height: 1.6;
         }
 
-        /* Enhanced Camera Section */
-        .camera-section {
-            text-align: center;
-            margin-top: 40px;
-            padding: 30px;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 20px;
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            transition: all 0.3s ease;
-        }
-
-        .camera-section:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        .camera-section h3 {
-            color: #fbbf24;
-            margin-bottom: 20px;
-            font-size: 1.5rem;
-        }
-
-        #video {
-            width: 100%;
-            max-width: 450px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
-        }
-
-        #video:hover {
-            transform: scale(1.02);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
-        }
-
-        .camera-controls {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        /* Real-time Feedback Indicators */
-        .real-time-feedback {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(16, 185, 129, 0.9);
-            color: white;
-            padding: 15px 20px;
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
-            transform: translateX(400px);
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 1000;
-        }
-
-        .real-time-feedback.show {
-            transform: translateX(0);
-        }
-
-        /* Enhanced Animations */
-        .fade-in {
-            animation: fadeInUp 0.8s ease-out;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(40px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .slide-in-left {
-            animation: slideInLeft 0.8s ease-out;
-        }
-
-        @keyframes slideInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-40px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .slide-in-right {
-            animation: slideInRight 0.8s ease-out;
-        }
-
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(40px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .navbar {
-                padding: 10px 0;
-            }
-
-            .nav-container {
-                padding: 0 15px;
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .nav-links {
-                gap: 20px;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            .nav-link {
-                font-size: 0.9rem;
-            }
-
-            .header {
-                margin-top: 120px;
-            }
-            .main-content {
-                grid-template-columns: 1fr;
-                gap: 25px;
-            }
-
-            .header h1 {
-                font-size: 2.8rem;
-            }
-
-            .container {
-                padding: 15px;
-            }
-
-            .form-section, .results-section {
-                padding: 25px;
-            }
-
-            .btn {
-                padding: 15px 25px;
-                font-size: 1rem;
-            }
-        }
-
-        /* Navigation Bar */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            z-index: 1000;
-            padding: 15px 0;
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-        }
-
-        .nav-logo {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #60a5fa;
-        }
-
-        .nav-logo i {
-            font-size: 2rem;
-            background: linear-gradient(135deg, #60a5fa, #ec4899);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 30px;
-        }
-
-        .nav-link {
-            color: #cbd5e1;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .nav-link:hover {
-            color: #60a5fa;
-            transform: translateY(-2px);
-        }
-
-        .nav-link i {
+        .user-text {
+            color: var(--text-secondary);
+            font-style: italic;
             font-size: 1.1rem;
         }
 
-        /* Adjust header margin for navbar */
-        .header {
-            margin-top: 80px;
+        /* CONTROLS */
+        .controls {
+            display: flex;
+            gap: 1rem;
         }
 
-        /* Interactive Cursor */
-        .interactive-cursor {
-            position: fixed;
-            width: 20px;
-            height: 20px;
-            background: linear-gradient(135deg, #60a5fa, #ec4899);
+        .control-btn {
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            transition: transform 0.1s ease;
-            mix-blend-mode: difference;
-        }
-
-        .interactive-cursor.hover {
-            transform: scale(2);
-        }
-
-        /* Progress Indicator */
-        .progress-indicator {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
             background: rgba(255, 255, 255, 0.1);
-            z-index: 1001;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, #60a5fa, #8b5cf6, #ec4899);
-            width: 0%;
-            transition: width 0.3s ease;
-            position: relative;
-            overflow: hidden;
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
         }
 
-        .progress-bar::after {
-            content: '';
+        .control-btn.active {
+            background: var(--success);
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.4);
+        }
+
+        .control-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* FEEDBACK OVERLAY */
+        .feedback-overlay {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-            animation: progressShimmer 2s ease-in-out infinite;
+            top: 2rem;
+            right: 2rem;
+            background: rgba(15, 23, 42, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1.5rem;
+            border-radius: 12px;
+            width: 300px;
+            transform: translateX(120%);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            backdrop-filter: blur(10px);
+            z-index: 100;
         }
 
-        @keyframes progressShimmer {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+        .feedback-overlay.show {
+            transform: translateX(0);
+        }
+
+        .feedback-score {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 1rem;
+        }
+
+        .feedback-score span {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 400;
+            text-transform: uppercase;
+        }
+
+        .feedback-item {
+            margin-bottom: 0.8rem;
+            font-size: 0.9rem;
+            color: #e2e8f0;
+        }
+
+        .feedback-item i {
+            color: var(--success);
+            margin-right: 8px;
+        }
+
+        /* UTILS */
+        .hidden {
+            display: none !important;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            background: rgba(255, 255, 255, 0.1);
         }
     </style>
 </head>
+
 <body>
-    <!-- Interactive Background -->
-    <div class="interactive-bg">
-        <div class="bg-element"></div>
-        <div class="bg-element"></div>
-        <div class="bg-element"></div>
-    </div>
 
-    <!-- Progress Indicator -->
-    <div class="progress-indicator">
-        <div class="progress-bar" id="progressBar"></div>
-    </div>
-
-    <!-- Interactive Cursor -->
-    <div class="interactive-cursor" id="interactiveCursor"></div>
-
-    <!-- Real-time Feedback -->
-    <div class="real-time-feedback" id="realTimeFeedback">
-        <i class="fas fa-check-circle"></i>
-        <span>Great response! Keep going...</span>
-    </div>
-
-    <!-- Navigation Bar -->
+    <!-- NAVBAR -->
     <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <i class="fas fa-graduation-cap"></i>
-                <span>EduNavigator</span>
-            </div>
-            <div class="nav-links">
-                <a href="/" class="nav-link"><i class="fas fa-home"></i> Home</a>
-                <a href="/career-bank" class="nav-link"><i class="fas fa-briefcase"></i> Career Bank</a>
-                <a href="/resources" class="nav-link"><i class="fas fa-book"></i> Resources</a>
-                <a href="/contact" class="nav-link"><i class="fas fa-envelope"></i> Contact</a>
-            </div>
+        <div class="logo"><i class="fas fa-graduation-cap"></i> EduNavigator AI</div>
+        <div class="nav-end">
+            <span class="badge" id="status-badge">System Ready</span>
+            <a href="/">Exit</a>
         </div>
     </nav>
 
-    <div class="container">
-        <div class="header fade-in">
-            <h1><i class="fas fa-microphone-alt"></i> AI Interview Simulator</h1>
-            <p>Master your interview skills with AI-powered questions, real-time feedback, and personalized coaching. Experience the future of interview preparation.</p>
-        </div>
+    <div class="main-container">
 
-        <div class="main-content">
-            <div class="form-section slide-in-left">
-                <h2><i class="fas fa-cog"></i> Interview Setup</h2>
-                <form id="interviewForm">
-                    <div class="form-group">
-                        <label for="role"><i class="fas fa-briefcase"></i> Job Role:</label>
-                        <input type="text" id="role" name="role" placeholder="e.g., Software Developer, Product Manager" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="seniority"><i class="fas fa-chart-line"></i> Seniority Level:</label>
-                        <select id="seniority" name="seniority" required>
-                            <option value="">Select level</option>
-                            <option value="entry">Entry Level</option>
-                            <option value="mid">Mid Level</option>
-                            <option value="senior">Senior Level</option>
-                        </select>
-                    </div>
-
-                    <div class="btn-group">
-                        <button type="button" class="btn" id="generateQuestionsBtn">
-                            <i class="fas fa-magic"></i> Generate Questions
-                        </button>
-                    </div>
-                </form>
-
-                <div id="questionsContainer" style="display: none;">
-                    <div class="questions-header">
-                        <h3 style="color: #fbbf24; margin: 0 0 20px 0;">
-                            <i class="fas fa-list-ul"></i> Interview Questions
-                        </h3>
-                        <div class="question-counter">
-                            <span id="currentQuestion">0</span> / <span id="totalQuestions">15</span>
-                        </div>
-                    </div>
-                    <div id="questionsList"></div>
-                    
-                    <div class="form-group" style="margin-top: 30px;">
-                        <label for="transcript"><i class="fas fa-comments"></i> Your Response:</label>
-                        <textarea id="transcript" name="transcript" placeholder="Type or speak your interview response here..."></textarea>
-                    </div>
-
-                    <div class="btn-group">
-                        <button type="button" class="btn" id="recordBtn">
-                            <i class="fas fa-microphone"></i> Start Recording
-                        </button>
-                        <button type="button" class="btn" id="stopRecordBtn" style="display: none;">
-                            <i class="fas fa-stop"></i> Stop Recording
-                        </button>
-                        <button type="button" class="btn" id="nextQuestionBtn" style="display: none;">
-                            <i class="fas fa-arrow-right"></i> Next Question
-                        </button>
-                        <button type="button" class="btn" id="analyzeBtn">
-                            <i class="fas fa-search"></i> Analyze Response
-                        </button>
-                    </div>
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div>
+                <div class="section-title">Interview Configuration</div>
+                <div class="form-group">
+                    <label>Target Role</label>
+                    <input type="text" id="role" class="form-control" placeholder="e.g. React Developer"
+                        value="Frontend Developer">
                 </div>
+                <div class="form-group">
+                    <label>Seniority Level</label>
+                    <select id="seniority" class="form-control">
+                        <option value="Intern">Intern</option>
+                        <option value="Junior" selected>Junior</option>
+                        <option value="Mid-Level">Mid-Level</option>
+                        <option value="Senior">Senior</option>
+                    </select>
+                </div>
+                <button id="generateQuestionsBtn" class="btn btn-primary">
+                    <i class="fas fa-magic"></i> Start Interview
+                </button>
             </div>
 
-            <div class="results-section slide-in-right">
-                <h2><i class="fas fa-chart-bar"></i> AI Analysis</h2>
-                <div id="loadingSection" class="loading" style="display: none;">
-                    <div class="spinner"></div>
-                    <p>Analyzing your response with AI...</p>
+            <div id="progress-section" class="hidden">
+                <div class="section-title" style="margin-top: 2rem;">Progress</div>
+                <div style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 10px;">
+                    Question <span id="current-q">0</span> of <span id="total-q">5</span>
                 </div>
-                
-                <div id="feedbackContainer" style="display: none;">
-                    <div class="feedback-container">
-                        <div id="sentimentBadge" class="sentiment-badge"></div>
-                        
-                        <div class="feedback-section">
-                            <h3><i class="fas fa-tachometer-alt"></i> Confidence Level</h3>
-                            <div class="confidence-bar">
-                                <div id="confidenceFill" class="confidence-fill" style="width: 0%"></div>
-                            </div>
-                            <p id="confidenceText"></p>
-                        </div>
-
-                        <div class="feedback-section">
-                            <h3><i class="fas fa-file-alt"></i> Summary</h3>
-                            <p id="summaryText"></p>
-                        </div>
-
-                        <div class="feedback-section">
-                            <h3><i class="fas fa-star"></i> Strengths</h3>
-                            <ul id="strengthsList" class="feedback-list"></ul>
-                        </div>
-
-                        <div class="feedback-section">
-                            <h3><i class="fas fa-lightbulb"></i> Areas for Improvement</h3>
-                            <ul id="gapsList" class="feedback-list"></ul>
-                        </div>
-
-                        <div class="feedback-section">
-                            <h3><i class="fas fa-rocket"></i> Recommendations</h3>
-                            <ul id="recommendationsList" class="feedback-list"></ul>
-                        </div>
-
-                        <div class="feedback-section">
-                            <h3><i class="fas fa-question-circle"></i> Follow-up Question</h3>
-                            <p id="followUpQuestion" style="background: rgba(255, 255, 255, 0.1); padding: 18px; border-radius: 10px; border-left: 4px solid #fbbf24;"></p>
-                        </div>
-                    </div>
+                <div style="height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px;">
+                    <div id="progress-bar"
+                        style="width: 0%; height: 100%; background: var(--accent); transition: width 0.3s;"></div>
                 </div>
             </div>
         </div>
 
-        <div class="camera-section fade-in">
-            <h3><i class="fas fa-camera"></i> Facial Confidence Detection</h3>
-            <video id="video" autoplay muted></video>
-            <div class="camera-controls">
-                <button class="btn" id="startCameraBtn">
-                    <i class="fas fa-play"></i> Start Camera
+        <!-- CHAT AREA -->
+        <div class="chat-area">
+
+            <div class="avatar-container" id="avatar">
+                <div class="avatar-ring"></div>
+                <div class="avatar-circle">
+                    <i class="fas fa-robot"></i>
+                </div>
+            </div>
+
+            <div class="transcript-box">
+                <div id="ai-text" class="ai-text">Welcome. Please configure your interview settings and click 'Start'.
+                </div>
+                <div id="user-text" class="user-text"></div>
+            </div>
+
+            <div class="controls hidden" id="action-controls">
+                <button class="control-btn" id="mic-btn" onclick="toggleRecording()">
+                    <i class="fas fa-microphone"></i>
                 </button>
-                <button class="btn" id="stopCameraBtn" style="display: none;">
-                    <i class="fas fa-stop"></i> Stop Camera
+                <button class="control-btn" id="analyze-btn" onclick="submitAnswer()"
+                    style="background: var(--accent);">
+                    <i class="fas fa-check"></i>
+                </button>
+                <button class="control-btn" id="next-btn" onclick="nextQuestion()" style="display: none;">
+                    <i class="fas fa-arrow-right"></i>
                 </button>
             </div>
+
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+    <!-- FEEDBACK OVERLAY -->
+    <div class="feedback-overlay" id="feedback-panel">
+        <div class="feedback-score" id="fb-score">0 <span>/ 100</span></div>
+        <div id="fb-content"></div>
+    </div>
+
     <script>
-        // Enhanced Interactive Features
+        // State
+        let questions = [];
+        let currentIndex = 0;
         let recognition;
         let isRecording = false;
-        let stream = null;
-        let currentQuestionIndex = 0;
-        let interviewProgress = 0;
 
-        // Initialize interactive cursor
-        const cursor = document.getElementById('interactiveCursor');
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-        });
+        // Elements
+        const els = {
+            role: document.getElementById('role'),
+            seniority: document.getElementById('seniority'),
+            startBtn: document.getElementById('generateQuestionsBtn'),
+            aiText: document.getElementById('ai-text'),
+            userText: document.getElementById('user-text'),
+            micBtn: document.getElementById('mic-btn'),
+            controls: document.getElementById('action-controls'),
+            avatar: document.getElementById('avatar'),
+            statusBadge: document.getElementById('status-badge'),
+            progressBar: document.getElementById('progress-bar'),
+            currentQ: document.getElementById('current-q'),
+            totalQ: document.getElementById('total-q'),
+            progressSection: document.getElementById('progress-section'),
+            nextBtn: document.getElementById('next-btn'),
+            analyzeBtn: document.getElementById('analyze-btn'),
+            feedbackPanel: document.getElementById('feedback-panel'),
+            fbScore: document.getElementById('fb-score'),
+            fbContent: document.getElementById('fb-content')
+        };
 
-        // Add hover effects to interactive elements
-        const interactiveElements = document.querySelectorAll('.btn, .form-section, .results-section, .camera-section');
-        interactiveElements.forEach(el => {
-            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
-            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
-        });
-
-        // Progress bar animation
-        function updateProgress(progress) {
-            const progressBar = document.getElementById('progressBar');
-            progressBar.style.width = progress + '%';
-        }
-
-        // Real-time feedback system
-        function showRealTimeFeedback(message, type = 'success') {
-            const feedback = document.getElementById('realTimeFeedback');
-            feedback.querySelector('span').textContent = message;
-            feedback.className = `real-time-feedback ${type}`;
-            feedback.classList.add('show');
-            
-            setTimeout(() => {
-                feedback.classList.remove('show');
-            }, 3000);
-        }
-
-        // Enhanced speech recognition
-        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-            recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        // --- SPEECH RECOGNITION ---
+        if ('webkitSpeechRecognition' in window) {
+            recognition = new webkitSpeechRecognition();
             recognition.continuous = true;
             recognition.interimResults = true;
-            
-            recognition.onresult = function(event) {
-                let finalTranscript = '';
-                for (let i = event.resultIndex; i < event.results.length; i++) {
-                    if (event.results[i].isFinal) {
-                        finalTranscript += event.results[i].transcript;
-                    }
-                }
-                if (finalTranscript) {
-                    const transcript = document.getElementById('transcript');
-                    transcript.value += finalTranscript + ' ';
-                    
-                    // Show real-time feedback
-                    showRealTimeFeedback('Great! Keep speaking...', 'success');
-                    
-                    // Update progress
-                    interviewProgress += 10;
-                    updateProgress(Math.min(interviewProgress, 100));
-                }
+
+            recognition.onstart = () => {
+                isRecording = true;
+                els.micBtn.classList.add('active');
+                els.statusBadge.textContent = "Listening...";
+                els.statusBadge.style.color = "#4ade80";
             };
 
-            recognition.onerror = function(event) {
-                showRealTimeFeedback('Speech recognition error. Please try again.', 'error');
+            recognition.onresult = (event) => {
+                let final = '';
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) final += event.results[i][0].transcript;
+                }
+                if (final) els.userText.textContent = final;
             };
+
+            recognition.onend = () => {
+                isRecording = false;
+                els.micBtn.classList.remove('active');
+                els.statusBadge.textContent = "Idle";
+                els.statusBadge.style.color = "var(--text-secondary)";
+            };
+        } else {
+            alert("Speech API not supported in this browser.");
         }
 
-        // Event Listeners with enhanced interactions
-        document.getElementById('generateQuestionsBtn').addEventListener('click', generateQuestions);
-        document.getElementById('recordBtn').addEventListener('click', startRecording);
-        document.getElementById('stopRecordBtn').addEventListener('click', stopRecording);
-        document.getElementById('nextQuestionBtn').addEventListener('click', nextQuestion);
-        document.getElementById('analyzeBtn').addEventListener('click', analyzeResponse);
-        document.getElementById('startCameraBtn').addEventListener('click', startCamera);
-        document.getElementById('stopCameraBtn').addEventListener('click', stopCamera);
+        // --- ACTIONS ---
 
-        // Enhanced question generation
-        async function generateQuestions() {
-            const role = document.getElementById('role').value;
-            const seniority = document.getElementById('seniority').value;
-            
-            if (!role || !seniority) {
-                showRealTimeFeedback('Please fill in both role and seniority level.', 'error');
-                return;
-            }
+        els.startBtn.addEventListener('click', async () => {
+            const role = els.role.value;
+            const seniority = els.seniority.value;
 
-            // Show loading state
-            const btn = document.getElementById('generateQuestionsBtn');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
-            btn.disabled = true;
+            els.startBtn.disabled = true;
+            els.startBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
 
             try {
-                const response = await fetch('/interview/questions', {
+                const res = await fetch('/interview/questions', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ role, seniority })
                 });
+                const data = await res.json();
 
-                const data = await response.json();
-                
                 if (data.success) {
-                    displayQuestions(data.questions);
-                    document.getElementById('questionsContainer').style.display = 'block';
-                    showRealTimeFeedback('Questions generated successfully!', 'success');
-                    updateProgress(25);
+                    questions = data.questions;
+                    currentIndex = 0;
+                    startInterviewMode();
                 } else {
-                    showRealTimeFeedback('Failed to generate questions: ' + data.error, 'error');
+                    alert("Error: " + data.error);
                 }
-            } catch (error) {
-                console.error('Error:', error);
-                showRealTimeFeedback('Failed to generate questions. Please try again.', 'error');
-            } finally {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
+            } catch (e) { console.error(e); alert("Network Error"); }
+
+            els.startBtn.disabled = false;
+            els.startBtn.innerHTML = '<i class="fas fa-magic"></i> Start Interview';
+        });
+
+        function startInterviewMode() {
+            els.progressSection.classList.remove('hidden');
+            els.controls.classList.remove('hidden');
+            els.totalQ.textContent = questions.length;
+            loadQuestion(0);
+        }
+
+        function loadQuestion(index) {
+            currentIndex = index;
+            const q = questions[index];
+            els.aiText.textContent = q;
+            els.userText.textContent = "";
+            els.currentQ.textContent = index + 1;
+            els.progressBar.style.width = ((index / questions.length) * 100) + "%";
+
+            // Hide Feedback
+            els.feedbackPanel.classList.remove('show');
+
+            // Reset buttons
+            els.analyzeBtn.style.display = 'flex';
+            els.nextBtn.style.display = 'none';
+
+            speak(q);
+        }
+
+        function toggleRecording() {
+            if (!recognition) return;
+            if (isRecording) recognition.stop();
+            else {
+                els.userText.textContent = ""; // clear previous
+                recognition.start();
             }
         }
 
-        // Enhanced question display with animations
-        function displayQuestions(questions) {
-            const questionsList = document.getElementById('questionsList');
-            questionsList.innerHTML = '';
-            
-            // Limit to 15 questions maximum
-            const maxQuestions = Math.min(questions.length, 15);
-            const questionsToShow = questions.slice(0, maxQuestions);
-            
-            // Update question counter
-            document.getElementById('totalQuestions').textContent = maxQuestions;
-            document.getElementById('currentQuestion').textContent = '0';
-            
-            questionsToShow.forEach((question, index) => {
-                const questionDiv = document.createElement('div');
-                questionDiv.className = 'question-item';
-                questionDiv.style.transform = 'translateX(-20px)';
-                questionDiv.style.opacity = '0';
-                questionDiv.innerHTML = `
-                    <div class="question-number">Question ${index + 1}</div>
-                    <div class="question-text">${question}</div>
-                `;
-                questionsList.appendChild(questionDiv);
-                
-                // Staggered animation
-                setTimeout(() => {
-                    questionDiv.style.transform = 'translateX(0)';
-                    questionDiv.style.opacity = '1';
-                }, index * 200);
-            });
-            
-            // Show success message with question count
-            showRealTimeFeedback(`Generated ${maxQuestions} interview questions!`, 'success');
-        }
+        async function submitAnswer() {
+            if (isRecording) recognition.stop();
 
-        // Track current question being answered
-        function updateCurrentQuestion() {
-            const currentQuestionElement = document.getElementById('currentQuestion');
-            const currentValue = parseInt(currentQuestionElement.textContent);
-            const totalQuestions = parseInt(document.getElementById('totalQuestions').textContent);
-            
-            if (currentValue < totalQuestions) {
-                currentQuestionElement.textContent = currentValue + 1;
-                showRealTimeFeedback(`Now answering question ${currentValue + 1}`, 'info');
-            }
-        }
+            const transcript = els.userText.textContent;
+            if (!transcript) { alert("Please speak an answer first."); return; }
 
-        // Navigate to next question
-        function nextQuestion() {
-            const currentQuestionElement = document.getElementById('currentQuestion');
-            const totalQuestions = parseInt(document.getElementById('totalQuestions').textContent);
-            const currentValue = parseInt(currentQuestionElement.textContent);
-            
-            if (currentValue < totalQuestions) {
-                // Clear previous response
-                document.getElementById('transcript').value = '';
-                
-                // Update question counter
-                currentQuestionElement.textContent = currentValue + 1;
-                
-                // Show next question message
-                showRealTimeFeedback(`Now answering question ${currentValue + 1}`, 'info');
-                
-                // Hide next question button if it's the last question
-                if (currentValue + 1 >= totalQuestions) {
-                    document.getElementById('nextQuestionBtn').style.display = 'none';
-                    showRealTimeFeedback('This is the final question!', 'success');
-                }
-                
-                // Reset recording buttons
-                document.getElementById('recordBtn').style.display = 'inline-block';
-                document.getElementById('stopRecordBtn').style.display = 'none';
-            }
-        }
+            els.analyzeBtn.disabled = true;
+            els.statusBadge.textContent = "Analyzing w/ Ollama...";
 
-        // Enhanced recording functions
-        function startRecording() {
-            if (!recognition) {
-                showRealTimeFeedback('Speech recognition is not supported in your browser.', 'error');
-                return;
-            }
-
-            // Update current question counter
-            updateCurrentQuestion();
-
-            recognition.start();
-            isRecording = true;
-            document.getElementById('recordBtn').style.display = 'none';
-            document.getElementById('stopRecordBtn').style.display = 'inline-block';
-            showRealTimeFeedback('Recording started! Speak clearly...', 'success');
-            updateProgress(50);
-        }
-
-        function stopRecording() {
-            if (recognition) {
-                recognition.stop();
-            }
-            isRecording = false;
-            document.getElementById('recordBtn').style.display = 'inline-block';
-            document.getElementById('stopRecordBtn').style.display = 'none';
-            
-            // Show Next Question button if not on the last question
-            const currentQuestion = parseInt(document.getElementById('currentQuestion').textContent);
-            const totalQuestions = parseInt(document.getElementById('totalQuestions').textContent);
-            
-            if (currentQuestion < totalQuestions) {
-                document.getElementById('nextQuestionBtn').style.display = 'inline-block';
-            }
-            
-            showRealTimeFeedback('Recording stopped. Ready for next question or analysis!', 'success');
-            updateProgress(75);
-        }
-
-        // Enhanced analysis with progress tracking
-        async function analyzeResponse() {
-            const role = document.getElementById('role').value;
-            const seniority = document.getElementById('seniority').value;
-            const transcript = document.getElementById('transcript').value;
-            
-            if (!transcript.trim()) {
-                showRealTimeFeedback('Please provide a response to analyze.', 'error');
-                return;
-            }
-
-            showAnalyzing();
-            updateProgress(90);
-            
             try {
-                const response = await fetch('/interview/analyze', {
+                const res = await fetch('/interview/analyze', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ role, seniority, transcript })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        role: els.role.value,
+                        seniority: els.seniority.value,
+                        transcript: transcript
+                    })
                 });
+                const data = await res.json();
 
-                const data = await response.json();
-                
                 if (data.success) {
-                    renderFeedback(data.analysis);
-                    updateProgress(100);
-                    showRealTimeFeedback('Analysis complete! Check your results.', 'success');
-                } else {
-                    showRealTimeFeedback('Failed to analyze response: ' + data.error, 'error');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                showRealTimeFeedback('Failed to analyze response. Please try again.', 'error');
-            }
-        }
+                    showFeedback(data.analysis);
+                    speak(data.analysis.summary);
 
-        // Enhanced loading state
-        function showAnalyzing() {
-            document.getElementById('loadingSection').style.display = 'block';
-            document.getElementById('feedbackContainer').style.display = 'none';
-        }
-
-        // Enhanced feedback rendering with animations
-        function renderFeedback(analysis) {
-            document.getElementById('loadingSection').style.display = 'none';
-            document.getElementById('feedbackContainer').style.display = 'block';
-
-            // Animate sentiment badge
-            const sentimentBadge = document.getElementById('sentimentBadge');
-            sentimentBadge.textContent = analysis.sentiment.charAt(0).toUpperCase() + analysis.sentiment.slice(1);
-            sentimentBadge.className = `sentiment-badge sentiment-${analysis.sentiment}`;
-            sentimentBadge.style.animation = 'none';
-            sentimentBadge.offsetHeight; // Trigger reflow
-            sentimentBadge.style.animation = 'badgePulse 2s ease-in-out infinite';
-
-            // Animate confidence bar
-            setConfidence(analysis.confidence);
-
-            // Animate content sections
-            const sections = ['summaryText', 'strengthsList', 'gapsList', 'recommendationsList', 'followUpQuestion'];
-            sections.forEach((sectionId, index) => {
-                setTimeout(() => {
-                    const element = document.getElementById(sectionId);
-                    if (element) {
-                        element.style.opacity = '0';
-                        element.style.transform = 'translateY(20px)';
-                        element.style.transition = 'all 0.5s ease';
-                        
-                        setTimeout(() => {
-                            if (sectionId === 'summaryText') {
-                                element.textContent = analysis.summary;
-                            } else if (sectionId === 'followUpQuestion') {
-                                element.textContent = analysis.followUpQuestion;
-                            } else {
-                                setList(sectionId, analysis[sectionId.replace('List', '')]);
-                            }
-                            
-                            element.style.opacity = '1';
-                            element.style.transform = 'translateY(0)';
-                        }, 100);
+                    els.analyzeBtn.style.display = 'none';
+                    if (currentIndex < questions.length - 1) {
+                        els.nextBtn.style.display = 'flex';
+                    } else {
+                        els.aiText.textContent += " [Interview Finished]";
                     }
-                }, index * 200);
-            });
+
+                }
+            } catch (e) { console.error(e); }
+
+            els.analyzeBtn.disabled = false;
+            els.statusBadge.textContent = "Idle";
         }
 
-        // Enhanced confidence visualization
-        function setConfidence(confidence) {
-            const confidenceFill = document.getElementById('confidenceFill');
-            const confidenceText = document.getElementById('confidenceText');
-            
-            // Animate confidence bar
-            setTimeout(() => {
-                confidenceFill.style.width = confidence + '%';
-            }, 500);
-            
-            confidenceText.textContent = `${confidence}% - ${getConfidenceLabel(confidence)}`;
+        function showFeedback(analysis) {
+            els.fbScore.innerHTML = `${analysis.confidence} <span>/ 100</span>`;
+            els.fbContent.innerHTML = `
+                <div class="feedback-item">${analysis.summary}</div>
+                <div style="margin-top:10px; font-weight:bold; color:var(--accent);">Strengths</div>
+                ${analysis.strengths.map(s => `<div class="feedback-item"><i class="fas fa-check"></i> ${s}</div>`).join('')}
+             `;
+            els.feedbackPanel.classList.add('show');
         }
 
-        function getConfidenceLabel(confidence) {
-            if (confidence >= 80) return 'Very High';
-            if (confidence >= 60) return 'High';
-            if (confidence >= 40) return 'Medium';
-            if (confidence >= 20) return 'Low';
-            return 'Very Low';
-        }
-
-        // Enhanced list rendering with animations
-        function setList(listId, items) {
-            const list = document.getElementById(listId);
-            list.innerHTML = '';
-            
-            items.forEach((item, index) => {
-                const li = document.createElement('li');
-                li.textContent = item;
-                li.style.opacity = '0';
-                li.style.transform = 'translateX(-20px)';
-                list.appendChild(li);
-                
-                // Staggered animation
-                setTimeout(() => {
-                    li.style.transition = 'all 0.5s ease';
-                    li.style.opacity = '1';
-                    li.style.transform = 'translateX(0)';
-                }, index * 150);
-            });
-        }
-
-        // Enhanced camera functions
-        async function startCamera() {
-            try {
-                stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                document.getElementById('video').srcObject = stream;
-                document.getElementById('startCameraBtn').style.display = 'none';
-                document.getElementById('stopCameraBtn').style.display = 'inline-block';
-                showRealTimeFeedback('Camera started! Facial analysis active.', 'success');
-            } catch (error) {
-                console.error('Error accessing camera:', error);
-                showRealTimeFeedback('Unable to access camera. Please check permissions.', 'error');
+        function nextQuestion() {
+            if (currentIndex < questions.length - 1) {
+                loadQuestion(currentIndex + 1);
             }
         }
 
-        function stopCamera() {
-            if (stream) {
-                stream.getTracks().forEach(track => track.stop());
-                document.getElementById('video').srcObject = null;
-                document.getElementById('startCameraBtn').style.display = 'inline-block';
-                document.getElementById('stopCameraBtn').style.display = 'none';
-                showRealTimeFeedback('Camera stopped.', 'info');
-            }
+        // --- TTS ---
+        function speak(text) {
+            window.speechSynthesis.cancel();
+            const u = new SpeechSynthesisUtterance(text);
+            const voices = window.speechSynthesis.getVoices();
+            u.voice = voices.find(v => v.name.includes("Google US English")) || voices[0];
+
+            u.onstart = () => els.avatar.classList.add('speaking');
+            u.onend = () => {
+                els.avatar.classList.remove('speaking');
+                // Auto-start mic after question, but not after feedback
+                if (!els.analyzeBtn.style.display.includes('none')) {
+                    // small delay
+                    setTimeout(() => { if (!isRecording) toggleRecording(); }, 500);
+                }
+            };
+            window.speechSynthesis.speak(u);
         }
 
-        // Initialize face-api models
-        async function loadFaceApiModels() {
-            try {
-                await faceapi.nets.tinyFaceDetector.loadFromUri('/models');
-                await faceapi.nets.faceExpressionNet.loadFromUri('/models');
-            } catch (error) {
-                console.log('Face-api models not available, facial analysis disabled');
-            }
-        }
-
-        // Enhanced initialization
-        document.addEventListener('DOMContentLoaded', function() {
-            loadFaceApiModels();
-            updateProgress(0);
-            
-            // Add entrance animations
-            const elements = document.querySelectorAll('.form-section, .results-section, .camera-section');
-            elements.forEach((el, index) => {
-                setTimeout(() => {
-                    el.style.opacity = '0';
-                    el.style.transform = 'translateY(30px)';
-                    el.style.transition = 'all 0.8s ease';
-                    
-                    setTimeout(() => {
-                        el.style.opacity = '1';
-                        el.style.transform = 'translateY(0)';
-                    }, 100);
-                }, index * 200);
-            });
-        });
-
-        // Enhanced scroll effects
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            const parallaxElements = document.querySelectorAll('.bg-element');
-            
-            parallaxElements.forEach((el, index) => {
-                const speed = (index + 1) * 0.5;
-                el.style.transform = `translateY(${scrolled * speed}px) rotate(${scrolled * 0.1}deg)`;
-            });
-        });
     </script>
 </body>
+
 </html>

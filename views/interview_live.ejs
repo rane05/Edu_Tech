@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Interview Live - EduNavigator</title>
+    <%- include('layouts/header'); %>
+        <style>
+            body {
+                background: #0f172a;
+                color: white;
+                font-family: 'Inter', sans-serif;
+                height: 100vh;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+            }
+
+            /* --- IMMERSIVE CONTAINER --- */
+            .interview-container {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            }
+
+            /* --- VISUALIZER CIRCLE --- */
+            .ai-avatar {
+                width: 200px;
+                height: 200px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, #6366f1, #8b5cf6);
+                box-shadow: 0 0 50px rgba(99, 102, 241, 0.4);
+                position: relative;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.3s ease;
+                margin-bottom: 50px;
+            }
+
+            .ai-avatar::after {
+                content: '';
+                position: absolute;
+                top: -10px;
+                left: -10px;
+                right: -10px;
+                bottom: -10px;
+                border-radius: 50%;
+                border: 2px solid rgba(99, 102, 241, 0.3);
+                animation: pulse 2s infinite;
+            }
+
+            .ai-avatar.speaking {
+                animation: breathe 3s ease-in-out infinite;
+                box-shadow: 0 0 80px rgba(139, 92, 246, 0.6);
+            }
+
+            .mic-status {
+                font-size: 3rem;
+                color: white;
+            }
+
+            /* --- CONTROLS --- */
+            .controls {
+                display: flex;
+                gap: 20px;
+                z-index: 10;
+            }
+
+            .btn-control {
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+                border: none;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.5rem;
+                transition: all 0.2s;
+            }
+
+            .btn-mic {
+                background: #ef4444;
+                color: white;
+            }
+
+            .btn-mic.active {
+                background: #22c55e;
+                animation: pulse-green 1.5s infinite;
+            }
+
+            .btn-end {
+                background: rgba(255, 255, 255, 0.1);
+                color: #cbd5e1;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+            }
+
+            .btn-end:hover {
+                background: rgba(255, 255, 255, 0.2);
+            }
+
+            /* --- TRANSCRIPT AREA --- */
+            .transcript-area {
+                position: absolute;
+                bottom: 40px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 80%;
+                max-width: 800px;
+                text-align: center;
+                min-height: 80px;
+            }
+
+            .subtitle {
+                font-size: 1.5rem;
+                font-weight: 500;
+                color: rgba(255, 255, 255, 0.9);
+                text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+                margin-bottom: 10px;
+                transition: opacity 0.3s;
+            }
+
+            .user-subtitle {
+                color: #818cf8;
+                font-size: 1.2rem;
+                font-style: italic;
+            }
+
+            .status-badge {
+                position: absolute;
+                top: 20px;
+                padding: 8px 16px;
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 20px;
+                font-size: 0.9rem;
+                color: #94a3b8;
+                backdrop-filter: blur(5px);
+            }
+
+            /* --- ANIMATIONS --- */
+            @keyframes pulse {
+                0% {
+                    transform: scale(1);
+                    opacity: 1;
+                }
+
+                100% {
+                    transform: scale(1.2);
+                    opacity: 0;
+                }
+            }
+
+            @keyframes pulse-green {
+                0% {
+                    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
+                }
+
+                70% {
+                    box-shadow: 0 0 0 15px rgba(34, 197, 94, 0);
+                }
+
+                100% {
+                    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+                }
+            }
+
+            @keyframes breathe {
+
+                0%,
+                100% {
+                    transform: scale(1);
+                }
+
+                50% {
+                    transform: scale(1.05);
+                }
+            }
+        </style>
+</head>
+
+<body>
+    <div class="interview-container">
+        <div class="status-badge" id="status-text">Connecting...</div>
+
+        <div class="ai-avatar" id="avatar">
+            <i class="fas fa-brain mic-status"></i>
+        </div>
+
+        <div class="controls">
+            <button class="btn-control btn-mic" id="mic-btn" onclick="toggleMic()">
+                <i class="fas fa-microphone-slash" id="mic-icon"></i>
+            </button>
+            <button class="btn-control btn-end" onclick="endInterview()">
+                <i class="fas fa-phone-slash"></i>
+            </button>
+        </div>
+
+        <div class="transcript-area">
+            <div class="subtitle" id="ai-subtitle">...</div>
+            <div class="subtitle user-subtitle" id="user-subtitle"></div>
+        </div>
+    </div>
+
+    <script>
+        const avatar = document.getElementById('avatar');
+        const micBtn = document.getElementById('mic-btn');
+        const micIcon = document.getElementById('mic-icon');
+        const statusText = document.getElementById('status-text');
+        const aiSubtitle = document.getElementById('ai-subtitle');
+        const userSubtitle = document.getElementById('user-subtitle');
+
+        let recognition;
+        let isListening = false;
+        let isSpeaking = false;
+        const conversationId = '<%= conversationId %>'; // Passed from backend
+
+        // --- SPEECH SYNTHESIS (TTS) ---
+        function speak(text) {
+            return new Promise((resolve) => {
+                const utterance = new SpeechSynthesisUtterance(text);
+                const voices = speechSynthesis.getVoices();
+                // Try to find a good voice
+                utterance.voice = voices.find(v => v.name.includes("Google US English")) || voices[0];
+                utterance.rate = 1.0;
+                utterance.pitch = 1.0;
+
+                utterance.onstart = () => {
+                    isSpeaking = true;
+                    avatar.classList.add('speaking');
+                    statusText.textContent = "Interviewer is speaking...";
+                    aiSubtitle.textContent = text;
+                    aiSubtitle.style.opacity = 1;
+                    stopListening(); // Ensure we don't listen to ourselves
+                };
+
+                utterance.onend = () => {
+                    isSpeaking = false;
+                    avatar.classList.remove('speaking');
+                    setTimeout(() => {
+                        startListening(); // Auto-listen after speaking
+                    }, 500);
+                    resolve();
+                };
+
+                window.speechSynthesis.speak(utterance);
+            });
+        }
+
+        // --- SPEECH RECOGNITION (STT) ---
+        function initRecognition() {
+            if ('webkitSpeechRecognition' in window) {
+                recognition = new webkitSpeechRecognition();
+                recognition.continuous = false; // Stop after one sentence/pause
+                recognition.interimResults = true;
+                recognition.lang = 'en-US';
+
+                recognition.onstart = () => {
+                    isListening = true;
+                    updateMicUI(true);
+                    statusText.textContent = "Listening to you...";
+                    userSubtitle.textContent = "";
+                };
+
+                recognition.onresult = (event) => {
+                    let interimTranscript = '';
+                    let finalTranscript = '';
+
+                    for (let i = event.resultIndex; i < event.results.length; ++i) {
+                        if (event.results[i].isFinal) {
+                            finalTranscript += event.results[i][0].transcript;
+                        } else {
+                            interimTranscript += event.results[i][0].transcript;
+                        }
+                    }
+                    userSubtitle.textContent = finalTranscript || interimTranscript;
+
+                    if (finalTranscript) {
+                        sendAnswerToBackend(finalTranscript);
+                    }
+                };
+
+                recognition.onend = () => {
+                    if (isListening) {
+                        // If it stopped but we didn't intend to stop (e.g. silence), restart if not submitting
+                        // But here we rely on isFinal to trigger submission
+                        isListening = false;
+                        updateMicUI(false);
+                    }
+                };
+
+                recognition.onerror = (event) => {
+                    console.error(event.error);
+                    isListening = false;
+                    updateMicUI(false);
+                    statusText.textContent = "Error: " + event.error;
+                };
+            } else {
+                alert("Web Speech API not supported. Please use Chrome.");
+            }
+        }
+
+        function startListening() {
+            if (isSpeaking) return;
+            if (recognition && !isListening) {
+                try { recognition.start(); } catch (e) { }
+            }
+        }
+
+        function stopListening() {
+            if (recognition && isListening) {
+                try { recognition.stop(); } catch (e) { }
+            }
+        }
+
+        function toggleMic() {
+            if (isListening) stopListening();
+            else startListening();
+        }
+
+        function updateMicUI(active) {
+            if (active) {
+                micBtn.classList.add('active');
+                micIcon.className = 'fas fa-microphone';
+            } else {
+                micBtn.classList.remove('active');
+                micIcon.className = 'fas fa-microphone-slash';
+            }
+        }
+
+        // --- BACKEND COMMUNICATION ---
+        async function sendAnswerToBackend(text) {
+            stopListening();
+            statusText.textContent = "Thinking...";
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message: text,
+                        conversationId: conversationId
+                    })
+                });
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let fullResponse = "";
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    const chunk = decoder.decode(value);
+                    // Filter raw JSON chunks if any, usually backend sends tokens
+                    // The backend sends {"response":"word"} lines
+                    const lines = chunk.split('\n').filter(l => l.trim());
+                    for (const line of lines) {
+                        try {
+                            const json = JSON.parse(line);
+                            if (json.response) fullResponse += json.response;
+                        } catch (e) {
+                            // If raw text
+                            if (!line.trim().startsWith('{')) fullResponse += line;
+                        }
+                    }
+                }
+
+                // AI Speaks the response
+                speak(fullResponse);
+
+            } catch (error) {
+                console.error(error);
+                statusText.textContent = "Connection Error";
+            }
+        }
+
+        function endInterview() {
+            window.location.href = '/dashboard';
+        }
+
+        // --- INITIALIZATION ---
+        window.addEventListener('load', () => {
+            initRecognition();
+
+            // Start the interview cycle
+            setTimeout(() => {
+                speak("Hello! I am your AI Interviewer. I have reviewed your details. are you ready to begin?");
+            }, 1000);
+        });
+
+    </script>
+</body>
+
+</html>

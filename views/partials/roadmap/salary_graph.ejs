@@ -1,0 +1,140 @@
+<!-- views/partials/roadmap/salary_graph.ejs -->
+<div class="glass-card p-6">
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <h3 class="text-xl font-bold text-slate-800 flex items-center">
+                <i class="fas fa-money-bill-trend-up text-indigo-500 mr-2"></i> Salary Projection
+            </h3>
+        </div>
+        <div class="bg-slate-100 p-1 rounded-lg flex text-xs font-bold">
+            <button id="btnGlobal" onclick="toggleSalaryRegion('Global')"
+                class="px-3 py-1 bg-white shadow-sm rounded-md text-slate-800">Global</button>
+            <button id="btnIndia" onclick="toggleSalaryRegion('India')"
+                class="px-3 py-1 text-slate-500 hover:text-slate-800 cursor-pointer">India</button>
+        </div>
+    </div>
+
+    <!-- Chart Container -->
+    <div class="relative w-full h-48 box-border">
+        <canvas id="salaryGraph"></canvas>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const ctx = document.getElementById('salaryGraph').getContext('2d');
+
+        // Help parse "$60k - $80k" into a numeric average
+        function parseSalary(str) {
+            if (!str) return 0;
+            let matches = str.match(/\d+/g);
+            if (!matches || matches.length === 0) return 0;
+            if (matches.length === 1) return parseInt(matches[0]) * 1000;
+            return ((parseInt(matches[0]) + parseInt(matches[1])) / 2) * 1000;
+        }
+
+        const entryUSD = parseSalary("<%= roadmap.overview.salaryRangeEntry || '$50k' %>");
+        const midUSD = parseSalary("<%= roadmap.overview.salaryRangeMid || '$90k' %>");
+        const seniorUSD = parseSalary("<%= roadmap.overview.salaryRangeSenior || '$130k' %>");
+
+        // Create a curved progression over 7 years
+        const globalData = [
+            entryUSD * 0.9,
+            entryUSD,
+            midUSD * 0.8,
+            midUSD,
+            seniorUSD
+        ];
+
+        // Estimate India salaries (Roughly divide by 4 for tech PPP, then convert to INR)
+        const exchangeRate = 83;
+        const pppFactor = 3.5;
+        const indiaData = globalData.map(val => Math.round((val / pppFactor) * exchangeRate));
+
+        const labels = ['Year 0', 'Year 1', 'Year 3', 'Year 5', 'Year 7+'];
+
+        // Create gradient fill
+        const gradient = ctx.createLinearGradient(0, 0, 0, 180);
+        gradient.addColorStop(0, 'rgba(99, 102, 241, 0.3)');
+        gradient.addColorStop(1, 'rgba(99, 102, 241, 0)');
+
+        let currentRegion = 'Global'; // or 'India'
+
+        const salaryChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Avg Salary',
+                    data: globalData,
+                    borderColor: '#6366f1',
+                    borderWidth: 3,
+                    backgroundColor: gradient,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#6366f1',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        grid: { display: false, drawBorder: false },
+                        ticks: { font: { family: "'Inter', sans-serif", size: 10 }, color: '#94a3b8' }
+                    },
+                    y: {
+                        grid: { color: 'rgba(0,0,0,0.03)', drawBorder: false, borderDash: [5, 5] },
+                        ticks: {
+                            font: { family: "'Inter', sans-serif", size: 10 },
+                            color: '#94a3b8',
+                            callback: function (value) {
+                                if (currentRegion === 'Global') return '$' + (value / 1000) + 'k';
+                                return '₹' + (value / 100000).toFixed(1) + 'L';
+                            }
+                        },
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        backgroundColor: '#1e293b',
+                        padding: 10,
+                        titleFont: { family: "'Inter', sans-serif", size: 13 },
+                        bodyFont: { family: "'Inter', sans-serif", size: 12 },
+                        displayColors: false,
+                        callbacks: {
+                            label: function (context) {
+                                if (currentRegion === 'Global') return '$' + context.parsed.y.toLocaleString();
+                                return '₹' + context.parsed.y.toLocaleString();
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Toggle Logic
+        const btnGlobal = document.getElementById('btnGlobal');
+        const btnIndia = document.getElementById('btnIndia');
+
+        window.toggleSalaryRegion = function (region) {
+            currentRegion = region;
+            if (region === 'Global') {
+                btnGlobal.className = "px-3 py-1 bg-white shadow-sm rounded-md text-slate-800";
+                btnIndia.className = "px-3 py-1 text-slate-500 hover:text-slate-800 cursor-pointer";
+                salaryChart.data.datasets[0].data = globalData;
+            } else {
+                btnIndia.className = "px-3 py-1 bg-white shadow-sm rounded-md text-slate-800";
+                btnGlobal.className = "px-3 py-1 text-slate-500 hover:text-slate-800 cursor-pointer";
+                salaryChart.data.datasets[0].data = indiaData;
+            }
+            salaryChart.update();
+        }
+    });
+</script>

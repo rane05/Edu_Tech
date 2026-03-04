@@ -1,326 +1,602 @@
 <%- include('layouts/header'); %>
-<%- include('layouts/navbar'); %>
-
   <style>
+    /* Clean SaaS Design Variables */
     :root {
-      --color-primary: #FFB800;
-      --color-secondary: #00A8FF;
-      --color-dark: #1A1A2E;
-      --color-text: #2D3748;
-      --color-bg-light: #F7FAFC;
-      --space-16: 60px;
-      --space-5: 20px;
-      --text-5xl: 3rem;
-      --text-xl: 1.25rem;
-      --font-extrabold: 800;
-      --leading-relaxed: 1.6;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+      --bg-color: #F8FAFC;
+      /* slate-50 */
+      --card-bg: #FFFFFF;
+      --text-main: #0F172A;
+      /* slate-900 */
+      --text-muted: #64748B;
+      /* slate-500 */
+      --primary: #4F46E5;
+      /* indigo-600 */
+      --primary-hover: #4338CA;
+      /* indigo-700 */
+      --border-color: #E2E8F0;
+      /* slate-200 */
+      --border-focus: #818CF8;
+      /* indigo-400 */
+      --error-color: #EF4444;
+      /* red-500 */
+      --success-color: #10B981;
+      /* emerald-500 */
     }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-      overflow-x: hidden;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
     }
 
-    .login-container {
-      display: flex;
+    .font-heading {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      font-weight: 600;
+      letter-spacing: -0.025em;
+    }
+
+    /* Layout & Card */
+    .auth-container {
       min-height: 100vh;
-    }
-
-    /* Left Panel - Gradient */
-    .login-left {
-      flex: 1;
-      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: var(--space-16);
+      padding: 1rem;
       position: relative;
       overflow: hidden;
+      background: radial-gradient(circle at 50% 0%, #EEF2FF 0%, transparent 60%);
     }
 
-    .login-left::before {
+    /* Ambient slow-moving highlight */
+    .auth-container::before {
       content: '';
       position: absolute;
-      width: 400px;
-      height: 400px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 50%;
-      top: -100px;
-      right: -100px;
-      animation: float 6s ease-in-out infinite;
+      width: 150vw;
+      height: 150vh;
+      background: radial-gradient(circle at center, rgba(99, 102, 241, 0.03) 0%, transparent 50%);
+      top: -25vh;
+      left: -25vw;
+      animation: ambient-drift 20s infinite alternate ease-in-out;
+      pointer-events: none;
+      z-index: 0;
     }
 
-    .login-left::after {
-      content: '';
-      position: absolute;
-      width: 300px;
-      height: 300px;
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 50%;
-      bottom: -80px;
-      left: -80px;
-      animation: float 8s ease-in-out infinite reverse;
-    }
+    @keyframes ambient-drift {
+      0% {
+        transform: translate(0, 0) scale(1);
+      }
 
-    @keyframes float {
-      0%,
       100% {
-        transform: translateY(0px);
-      }
-
-      50% {
-        transform: translateY(-20px);
+        transform: translate(-5%, 5%) scale(1.05);
       }
     }
 
-    .login-welcome {
-      position: relative;
-      z-index: 1;
-      color: white;
-      text-align: center;
-    }
-
-    .login-welcome h1 {
-      font-size: var(--text-5xl);
-      font-weight: var(--font-extrabold);
-      margin-bottom: var(--space-5);
-      text-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-      animation: fadeIn 0.8s ease-out;
-    }
-
-    .login-welcome p {
-      font-size: var(--text-xl);
-      opacity: 0.95;
-      line-height: var(--leading-relaxed);
-      animation: fadeIn 1s ease-out 0.2s both;
-    }
-
-    /* Right Panel - Form */
-    .login-right {
-      flex: 1;
-      background: var(--color-bg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: var(--space-16);
-    }
-
-    .login-form-container {
+    .auth-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(16px);
       width: 100%;
-      max-width: 450px;
+      max-width: 28rem;
+      border-radius: 1.25rem;
+      /* Premium multi-layered shadow curve */
+      box-shadow:
+        0 30px 60px -12px rgba(15, 23, 42, 0.1),
+        0 18px 36px -18px rgba(15, 23, 42, 0.08),
+        0 4px 6px -2px rgba(15, 23, 42, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      /* Inset shadow ring for glass edge */
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5), 0 30px 60px -12px rgba(15, 23, 42, 0.1), 0 18px 36px -18px rgba(15, 23, 42, 0.08);
+      padding: 2.5rem 2rem;
+      position: relative;
+      z-index: 10;
+
+      /* Entrance Animation */
+      opacity: 0;
+      transform: translateY(15px);
+      animation: fade-slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
-    .login-logo {
-      text-align: center;
-      margin-bottom: 40px;
+    @keyframes fade-slide-up {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    .login-logo h2 {
-      font-size: 2rem;
-      font-weight: 800;
-      color: var(--color-dark);
+    /* Floating Label Inputs */
+    .input-group {
+      position: relative;
+      margin-bottom: 1.25rem;
     }
 
-    .login-logo h2 span {
-      color: var(--color-secondary);
-    }
-
-    .login-header {
-      text-align: center;
-      margin-bottom: 40px;
-    }
-
-    .login-header h3 {
-      font-size: 1.75rem;
-      font-weight: 700;
-      color: var(--color-dark);
-      margin-bottom: 10px;
-    }
-
-    .login-header p {
-      color: #718096;
+    .form-input {
+      width: 100%;
+      background: transparent;
+      border: 1px solid var(--border-color);
+      border-radius: 0.5rem;
+      color: var(--text-main);
+      padding: 1.25rem 1rem 0.5rem;
+      /* Space for floating label */
       font-size: 0.95rem;
+      transition: all 0.2s ease;
     }
 
-    .form-group {
-      margin-bottom: var(--space-6);
+    .form-input:focus {
+      outline: none;
+      border-color: var(--border-focus);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+
+    .form-input.has-error {
+      border-color: var(--error-color);
+    }
+
+    .form-input.has-error:focus {
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
     }
 
     .form-label {
-      display: block;
-      font-weight: var(--font-semibold);
-      color: var(--color-text);
-      margin-bottom: var(--space-2);
-      font-size: var(--text-sm);
+      position: absolute;
+      left: 1rem;
+      top: 1rem;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      pointer-events: none;
+      transition: all 0.2s ease;
+      transform-origin: left top;
     }
 
-    .form-input,
-    .form-select {
+    /* Floating state */
+    .form-input:focus~.form-label,
+    .form-input:not(:placeholder-shown)~.form-label {
+      transform: translateY(-0.55rem) scale(0.75);
+      color: var(--text-muted);
+    }
+
+    .form-input:focus~.form-label {
+      color: var(--primary);
+    }
+
+    /* Buttons */
+    .btn-primary {
       width: 100%;
-      padding: var(--space-4) var(--space-5);
-      border: 2px solid var(--gray-200);
-      border-radius: var(--radius-lg);
-      font-size: var(--text-base);
-      transition: all var(--transition-normal);
-      background: var(--color-bg);
+      background-color: var(--primary);
+      color: white;
+      font-weight: 500;
+      padding: 0.8rem 1rem;
+      border-radius: 0.6rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      position: relative;
     }
 
-    .form-input:focus,
-    .form-select:focus {
+    .btn-primary:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.25), 0 4px 6px -2px rgba(79, 70, 229, 0.1);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+    }
+
+    .btn-social {
+      width: 100%;
+      background-color: #FFFFFF;
+      color: var(--text-main);
+      font-weight: 500;
+      padding: 0.7rem 1rem;
+      border-radius: 0.6rem;
+      border: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.75rem;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+    }
+
+    .btn-social:hover {
+      background-color: #F8FAFC;
+      border-color: #CBD5E1;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Custom Checkbox */
+    .custom-checkbox {
+      width: 1rem;
+      height: 1rem;
+      border-radius: 0.25rem;
+      border: 1px solid var(--border-color);
+      appearance: none;
+      -webkit-appearance: none;
       outline: none;
-      border-color: var(--color-secondary);
-      box-shadow: 0 0 0 3px rgba(0, 168, 255, 0.1);
+      cursor: pointer;
+      position: relative;
+      background: white;
+      transition: all 0.2s ease;
     }
 
-    .form-checkbox {
+    .custom-checkbox:checked {
+      background-color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .custom-checkbox:checked::after {
+      content: '';
+      position: absolute;
+      left: 4px;
+      top: 1px;
+      width: 4px;
+      height: 8px;
+      border: solid white;
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+
+    /* Role Selector Styling - Consistency with Register */
+    .role-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .role-card {
+      border: 1px solid var(--border-color);
+      border-radius: 0.6rem;
+      padding: 1rem 0.5rem;
+      text-align: center;
+      cursor: pointer;
+      background-color: white;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.01);
+    }
+
+    .role-card:hover {
+      border-color: #CBD5E1;
+      background-color: #F8FAFC;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    .role-input:checked+.role-card {
+      border-color: var(--primary);
+      background-color: #EEF2FF;
+      color: var(--primary);
+      box-shadow: 0 0 0 1px var(--primary), 0 4px 6px -1px rgba(79, 70, 229, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .role-input:checked+.role-card i {
+      color: var(--primary);
+      transform: scale(1.1);
+    }
+
+    .role-input:checked+.role-card .role-title {
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .role-icon {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: block;
+    }
+
+    .role-title {
+      font-size: 0.85rem;
+      color: var(--text-main);
+      transition: all 0.2s ease;
+    }
+
+    /* Sr-only for accessibility/visually hidden radios */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+
+    /* Alert Banners */
+    .alert-banner {
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      overflow: hidden;
+      /* Animation for height */
+      max-height: 200px;
+      animation: expand-alert 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes expand-alert {
+      from {
+        max-height: 0;
+        opacity: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+        margin-bottom: 0;
+      }
+
+      to {
+        max-height: 200px;
+        opacity: 1;
+      }
+    }
+
+    .alert-error {
+      background-color: #FEF2F2;
+      color: #991B1B;
+      border: 1px solid #F87171;
+    }
+
+    .alert-success {
+      background-color: #ECFDF5;
+      color: #065F46;
+      border: 1px solid #34D399;
+    }
+
+    /* Divider */
+    .divider {
       display: flex;
       align-items: center;
-      gap: 8px;
-      margin-bottom: var(--space-6);
-      margin-bottom: 24px;
-    }
-
-    .form-checkbox input {
-      width: 18px;
-      height: 18px;
-      cursor: pointer;
-    }
-
-    .form-checkbox label {
-      font-size: 0.9rem;
-      color: #718096;
-      cursor: pointer;
-    }
-
-    .btn-login {
-      width: 100%;
-      padding: 16px;
-      background: var(--color-primary);
-      color: var(--color-dark);
-      border: none;
-      border-radius: 10px;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.3s;
-      box-shadow: 0 4px 15px rgba(255, 184, 0, 0.3);
-    }
-
-    .btn-login:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(255, 184, 0, 0.4);
-      background: #FFC024;
-    }
-
-    .login-footer {
       text-align: center;
-      margin-top: 30px;
+      margin: 1.5rem 0;
+      color: var(--text-muted);
+      font-size: 0.875rem;
     }
 
-    .login-footer a {
-      color: var(--color-secondary);
-      text-decoration: none;
-      font-weight: 600;
-      transition: color 0.2s;
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid var(--border-color);
     }
 
-    .login-footer a:hover {
-      color: var(--color-primary);
+    .divider:not(:empty)::before {
+      margin-right: 0.75rem;
     }
 
-    .divider {
-      text-align: center;
-      margin: 20px 0;
-      color: #A0AEC0;
-      font-size: 0.85rem;
+    .divider:not(:empty)::after {
+      margin-left: 0.75rem;
     }
 
-    @media (max-width: 968px) {
-      .login-container {
-        flex-direction: column;
+    /* Loading Spinner */
+    .spinner {
+      width: 1.25rem;
+      height: 1.25rem;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 0.8s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .is-loading .spinner {
+      display: block;
+    }
+
+    .is-loading .btn-text {
+      display: none;
+    }
+
+    /* Error Shake Animation */
+    @keyframes shake {
+
+      0%,
+      100% {
+        transform: translateX(0);
       }
 
-      .login-left {
-        min-height: 40vh;
-        padding: 40px 20px;
+      20%,
+      60% {
+        transform: translateX(-4px);
       }
 
-      .login-welcome h1 {
-        font-size: 2rem;
+      40%,
+      80% {
+        transform: translateX(4px);
       }
+    }
 
-      .login-right {
-        padding: 40px 20px;
-      }
+    .shake {
+      animation: shake 0.4s ease-in-out;
     }
   </style>
 
-  <div class="login-container">
-    <!-- Left Panel -->
-    <div class="login-left">
-      <div class="login-welcome">
-        <h1>Welcome Back!</h1>
-        <p>Your journey to academic excellence<br>continues here.</p>
+  <div class="auth-container">
+    <div class="auth-card" id="auth-card">
+      <div class="text-center mb-8">
+        <!-- Optional Brand Logo -->
+        <div
+          class="inline-flex justify-center items-center w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 mb-4 shadow-sm border border-indigo-100">
+          <i class="fas fa-cube text-xl"></i>
+        </div>
+        <h1 class="font-heading text-2xl text-slate-900 mb-2">Welcome back to Edu_Tech</h1>
+        <p class="text-sm text-slate-500">Please enter your details to sign in.</p>
       </div>
-    </div>
 
-    <!-- Right Panel -->
-    <div class="login-right">
-      <div class="login-form-container">
-        <div class="login-logo">
-          <h2>Edu<span>Navigator</span></h2>
+      <% if (locals.error && locals.error.length> 0) { %>
+        <div class="alert-banner alert-error" id="error-banner">
+          <i class="fas fa-exclamation-circle mt-0.5"></i>
+          <div><%- locals.error %></div>
         </div>
+        <% } %>
 
-        <div class="login-header">
-          <h3>Sign In</h3>
-          <p>Enter your credentials to access your account</p>
-        </div>
+          <% if (locals.success && locals.success.length> 0) { %>
+            <div class="alert-banner alert-success">
+              <i class="fas fa-check-circle mt-0.5"></i>
+              <div><%- locals.success %></div>
+            </div>
+            <% } %>
 
-        <form action="/login" method="POST">
-          <div class="form-group">
-            <label for="username" class="form-label">Username</label>
-            <input type="text" class="form-input" name="username" id="username" placeholder="Enter your username"
-              required>
-          </div>
+              <form id="loginForm" action="/login" method="POST" autocomplete="on" novalidate>
+                <!-- Role Selection -->
+                <div class="mb-6">
+                  <label class="block text-sm font-medium text-slate-700 mb-2">Sign in as...</label>
+                  <div class="role-grid">
+                    <label class="relative">
+                      <input type="radio" name="role" value="student" class="role-input sr-only" checked>
+                      <div class="role-card">
+                        <i class="fas fa-user-graduate role-icon"></i>
+                        <div class="role-title">Student</div>
+                      </div>
+                    </label>
+                    <label class="relative">
+                      <input type="radio" name="role" value="teacher" class="role-input sr-only">
+                      <div class="role-card">
+                        <i class="fas fa-chalkboard-teacher role-icon"></i>
+                        <div class="role-title">Teacher</div>
+                      </div>
+                    </label>
+                    <label class="relative">
+                      <input type="radio" name="role" value="parent" class="role-input sr-only">
+                      <div class="role-card">
+                        <i class="fas fa-users role-icon"></i>
+                        <div class="role-title">Parent</div>
+                      </div>
+                    </label>
+                  </div>
+                </div>
 
-          <div class="form-group">
-            <label for="password" class="form-label">Password</label>
-            <input type="password" class="form-input" name="password" id="password" placeholder="Enter your password"
-              required>
-          </div>
+                <div class="input-group">
+                  <input type="text" id="username" name="username"
+                    class="form-input <%= (locals.error && locals.error.length > 0) ? 'has-error' : '' %>"
+                    placeholder=" " required autofocus>
+                  <label class="form-label" for="username">Email</label>
+                </div>
 
-          <div class="form-group">
-            <label for="role" class="form-label">Select Role</label>
-            <select class="form-select" name="role" id="role" required>
-              <option value="student">Student</option>
-              <option value="teacher">Teacher</option>
-              <option value="parent">Parent</option>
-            </select>
-          </div>
+                <div class="input-group">
+                  <input type="password" id="password" name="password"
+                    class="form-input <%= (locals.error && locals.error.length > 0) ? 'has-error' : '' %>"
+                    placeholder=" " required>
+                  <label class="form-label" for="password">Password</label>
+                  <button type="button" onclick="togglePassword()"
+                    class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors pt-2 focus:outline-none">
+                    <i id="eye-icon" class="far fa-eye"></i>
+                  </button>
+                </div>
 
-          <div class="form-checkbox">
-            <input type="checkbox" name="remember_me" id="remember_me">
-            <label for="remember_me">Keep me logged in</label>
-          </div>
+                <div class="flex items-center justify-between mb-6">
+                  <label
+                    class="flex items-center gap-2 cursor-pointer text-sm text-slate-600 hover:text-slate-900 transition-colors">
+                    <input type="checkbox" name="remember_me" class="custom-checkbox">
+                    <span>Remember me</span>
+                  </label>
+                  <a href="#" class="text-sm font-medium text-indigo-600 hover:text-indigo-700 transition-colors">Forgot
+                    password?</a>
+                </div>
 
-          <button type="submit" class="btn-login">Log In</button>
-        </form>
+                <button type="submit" id="submitBtn" class="btn-primary">
+                  <span class="btn-text">Sign in</span>
+                  <div class="spinner"></div>
+                </button>
+              </form>
 
-        <div class="login-footer">
-          <p>Don't have an account? <a href="/register">Create Account</a></p>
-          <div class="divider">or</div>
-          <a href="#!">Forgot Password?</a>
-        </div>
-      </div>
+              <div class="divider">or continue with</div>
+
+              <div class="grid grid-cols-2 gap-3 mb-6">
+                <button type="button" class="btn-social">
+                  <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5" alt="Google">
+                  <span class="text-sm">Google</span>
+                </button>
+                <button type="button" class="btn-social">
+                  <i class="fab fa-github text-lg text-slate-800"></i>
+                  <span class="text-sm">GitHub</span>
+                </button>
+              </div>
+
+              <div class="text-center text-sm text-slate-500">
+                Don't have an account?
+                <a href="/register"
+                  class="font-medium text-indigo-600 hover:text-indigo-700 transition-colors ml-1">Sign up</a>
+              </div>
     </div>
   </div>
 
+  <script>
+    // Password visibility toggle
+    function togglePassword() {
+      const pwdInput = document.getElementById('password');
+      const icon = document.getElementById('eye-icon');
+
+      if (pwdInput.type === 'password') {
+        pwdInput.type = 'text';
+        icon.className = 'far fa-eye-slash';
+      } else {
+        pwdInput.type = 'password';
+        icon.className = 'far fa-eye';
+      }
+    }
+
+    // Form validation and loading state
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
+      const email = document.getElementById('username');
+      const pass = document.getElementById('password');
+      let isValid = true;
+
+      // Basic client-side validation
+      if (!email.value.trim()) {
+        email.classList.add('has-error', 'shake');
+        setTimeout(() => email.classList.remove('shake'), 400);
+        isValid = false;
+      } else {
+        email.classList.remove('has-error');
+      }
+
+      if (!pass.value) {
+        pass.classList.add('has-error', 'shake');
+        setTimeout(() => pass.classList.remove('shake'), 400);
+        isValid = false;
+      } else {
+        pass.classList.remove('has-error');
+      }
+
+      if (!isValid) {
+        e.preventDefault();
+        return;
+      }
+
+      // Apply loading state
+      const btn = document.getElementById('submitBtn');
+      btn.classList.add('is-loading');
+      btn.classList.add('opacity-90', 'cursor-not-allowed');
+    });
+
+    // Handle shaking card on server error load
+    window.addEventListener('DOMContentLoaded', () => {
+      if (document.getElementById('error-banner')) {
+        const card = document.getElementById('auth-card');
+        card.classList.add('shake');
+        setTimeout(() => card.classList.remove('shake'), 400);
+      }
+    });
+  </script>
   </body>
 
   </html>
