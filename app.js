@@ -23,13 +23,7 @@ const WebSocket = require('ws');
 const nodemailer = require('nodemailer');
 
 const axios = require('axios');
-// API Key has been revoked
 require('dotenv').config();
-// console.log("Loaded MONGODB_URI:", process.env.MONGODB_URI);
-
-
-
-
 
 
 const homeRoutes = require('./routes/homeRoute.js');
