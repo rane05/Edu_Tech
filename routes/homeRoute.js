@@ -1,4 +1,7 @@
-
+/**
+ * Home Routes
+ * Handles landing page rendering and demo request emails.
+ */
 const express = require('express');
 const router = express.Router();
 const nodemailer = require('nodemailer')
@@ -13,16 +16,16 @@ router.post('/send-email', (req, res) => {
     const { name, email, mobile, education, language, careerGoals, date, time } = req.body;
 
     // Set up Nodemailer
- 
+
     let transporter = nodemailer.createTransport({
         host: 'smtp.mail.yahoo.com',
         port: 465, // For SSL
         secure: true, // Use true for 465 and false for 587
         auth: {
             user: 'pranavrane030105@yahoo.com', // Your email
-          pass: 'msaoyjbaussjoeor' // The generated app password from Yahoo
+            pass: 'msaoyjbaussjoeor' // The generated app password from Yahoo
         }
-      });
+    });
     // Email options
     let mailOptions = {
         from: 'pranavrane030105@yahoo.com', // sender address
@@ -64,7 +67,7 @@ router.post('/send-email', (req, res) => {
             `);
         }
     });
-    
+
 });
 
 
