@@ -26,7 +26,7 @@ router.get('/book-advisor', isLoggedIn, (req, res) => {
     });
 });
 
-// POST /book-advisor - Handle the booking
+// POST /book-advisor - Handle the booking and save to DB
 router.post('/book-advisor', isLoggedIn, async (req, res) => {
     try {
         const { name, email, phone, country, course, intake, gpa } = req.body;
