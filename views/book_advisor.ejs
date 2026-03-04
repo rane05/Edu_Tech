@@ -1,0 +1,165 @@
+<%- include('layouts/header') %>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap');
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            --glass-bg: rgba(255, 255, 255, 0.9);
+            --glass-border: rgba(255, 255, 255, 0.4);
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: radial-gradient(circle at 10% 20%, #f1f5f9 0%, #e2e8f0 100%);
+            color: #1e293b;
+            min-height: 100vh;
+            padding-top: 100px;
+        }
+
+        .booking-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 2.5rem;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.1);
+            padding: 4rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .form-label {
+            font-weight: 700;
+            color: #475569;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+        }
+
+        .form-control,
+        .form-select {
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 1rem;
+            padding: 1rem 1.25rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #6366f1;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            background: white;
+        }
+
+        .btn-premium {
+            background: var(--primary-gradient);
+            border: none;
+            color: white;
+            padding: 1.25rem;
+            border-radius: 1.25rem;
+            font-weight: 800;
+            width: 100%;
+            font-size: 1.1rem;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-premium:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 30px 60px rgba(99, 102, 241, 0.4);
+        }
+
+        .header-pill {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: #eef2ff;
+            color: #6366f1;
+            border-radius: 99px;
+            font-weight: 800;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1.5rem;
+        }
+    </style>
+
+    <body>
+        <%- include('layouts/navbar') %>
+
+            <div class="container py-10">
+                <div class="booking-card animate-fade-up">
+                    <div class="text-center mb-10">
+                        <span class="header-pill">Priority Counseling</span>
+                        <h1 class="text-4xl font-black mb-4">Book your <span class="text-indigo-600">Global
+                                Strategy</span> Session</h1>
+                        <p class="text-slate-500 max-w-lg mx-auto">Get a personalized 1-on-1 session with our certified
+                            global education consultants the next step toward your dream degree starts here.</p>
+                    </div>
+
+                    <form action="/book-advisor" method="POST">
+                        <div class="row g-4 mb-4">
+                            <!-- Basic Info -->
+                            <div class="col-md-6">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" name="name" class="form-control" placeholder="John Doe" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Email Address</label>
+                                <input type="email" name="email" class="form-control" placeholder="john@example.com"
+                                    required>
+                            </div>
+
+                            <!-- Interest Info -->
+                            <div class="col-md-6">
+                                <label class="form-label">Contact Number (WhatsApp)</label>
+                                <input type="text" name="phone" class="form-control" placeholder="+91" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label"> ड्रीम Destination</label>
+                                <select name="country" class="form-select" required>
+                                    <option value="">Select Dream Country</option>
+                                    <option value="USA">United States (USA)</option>
+                                    <option value="UK">United Kingdom (UK)</option>
+                                    <option value="Canada">Canada</option>
+                                    <option value="Germany">Germany</option>
+                                    <option value="Australia">Australia</option>
+                                </select>
+                            </div>
+
+                            <!-- Education -->
+                            <div class="col-md-6">
+                                <label class="form-label">Proposed Course / Major</label>
+                                <input type="text" name="course" class="form-control" placeholder="e.g. Master's in CS"
+                                    required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Target Intake</label>
+                                <select name="intake" class="form-select" required>
+                                    <option value="Fall 2025">Fall 2025 (Sept)</option>
+                                    <option value="Spring 2026">Spring 2026 (Jan)</option>
+                                    <option value="Fall 2026">Fall 2026 (Sept)</option>
+                                </select>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label">Current / Most Recent GPA (Optional)</label>
+                                <input type="text" name="gpa" class="form-control" placeholder="e.g. 3.8/4.0 or 85%">
+                            </div>
+                        </div>
+
+                        <div class="text-center mt-10">
+                            <button type="submit" class="btn-premium">Confirm Free Strategic Session <i
+                                    class="fas fa-calendar-check ml-2"></i></button>
+                            <p class="text-xs text-slate-400 mt-6">By booking, you agree to receive a one-time reach-out
+                                from our global advisor squad via email or mobile.</p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <%- include('layouts/footer') %>
+    </body>
+
+    </html>

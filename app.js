@@ -67,6 +67,7 @@ const Cert = require('./routes/cert_validator.js')
 const interview = require('./routes/Ai_Interview.js')
 const integrations = require('./routes/integrations.js')
 const careerTrendsPredictor = require('./routes/career_trends_predictor.js')
+const studyAbroadRoute = require('./routes/studyAbroadRoute.js');
 const ollamaChat = require('./routes/ollamaChat.js');
 const smartQuiz = require('./routes/smart_quiz.js');
 const leaderboard = require('./routes/leaderboard.js');
@@ -179,6 +180,7 @@ app.use(Cert)
 app.use(interview)
 app.use(integrations)
 app.use(careerTrendsPredictor)
+app.use(studyAbroadRoute);
 app.use(ollamaChat);
 app.use(smartQuiz);
 app.use(leaderboard);
