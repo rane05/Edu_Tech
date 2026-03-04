@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const AdvisorBooking = require('../model/advisorBooking');
 
-// Middleware to check if user is logged in (optional, but good for student section)
+// Middleware to check if user is logged in
 function isLoggedIn(req, res, next) {
     if (req.session.userId) {
         return next();
@@ -10,6 +10,7 @@ function isLoggedIn(req, res, next) {
     res.redirect('/login');
 }
 
+// GET /study-abroad - Main landing page for global studies
 router.get('/study-abroad', isLoggedIn, (req, res) => {
     res.render('study_abroad', {
         title: 'Global Opportunities & Study Abroad',
@@ -17,16 +18,16 @@ router.get('/study-abroad', isLoggedIn, (req, res) => {
     });
 });
 
-// GET /book-advisor - Render the booking form
+// GET /book-advisor - Render the booking form for 1-on-1 counseling
 router.get('/book-advisor', isLoggedIn, (req, res) => {
     res.render('book_advisor', {
         title: 'Book Global Advisor Session',
         userId: req.session.userId,
-        username: req.session.username // Assuming this is set on login
+        username: req.session.username
     });
 });
 
-// POST /book-advisor - Handle the booking and save to DB
+// POST /book-advisor - Process booking request and save to MongoDB
 router.post('/book-advisor', isLoggedIn, async (req, res) => {
     try {
         const { name, email, phone, country, course, intake, gpa } = req.body;
@@ -44,7 +45,7 @@ router.post('/book-advisor', isLoggedIn, async (req, res) => {
 
         await newBooking.save();
 
-        // Redirect to a success page that gives a personal AI-like "Path Preview"
+        // Render success view with personalized pathway preview
         res.render('booking_success', {
             name,
             country,
@@ -53,8 +54,8 @@ router.post('/book-advisor', isLoggedIn, async (req, res) => {
             userId: req.session.userId
         });
     } catch (err) {
-        console.error(err);
-        res.status(500).send("Error saving your booking. Please try again.");
+        console.error("Advisor Booking Error:", err);
+        res.status(500).send("Error saving your booking. Please try again later.");
     }
 });
 
