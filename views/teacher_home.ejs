@@ -3,31 +3,36 @@
 
         <!-- Custom Tailwind Configuration & Scoped Styles -->
         <style>
-            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
             :root {
-                --sidebar-width: 280px;
+                --glass-bg: rgba(255, 255, 255, 0.7);
+                --glass-border: rgba(255, 255, 255, 0.2);
+                --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+            }
+
+            .dark {
+                --glass-bg: rgba(15, 23, 42, 0.6);
+                --glass-border: rgba(255, 255, 255, 0.05);
+                --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
             }
 
             body {
-                font-family: 'Inter', sans-serif;
-                transition: background-color 0.3s, color 0.3s;
+                font-family: 'Outfit', sans-serif;
+                background-color: #f8fafc;
+                transition: background-color 0.5s ease;
             }
 
             .dark body {
-                background-color: #0f172a;
-                color: #f1f5f9;
+                background-color: #020617;
             }
 
-            .glass-card {
-                background: rgba(255, 255, 255, 0.95);
-                backdrop-filter: blur(10px);
-                border: 1px solid rgba(255, 255, 255, 0.2);
-            }
-
-            .dark .glass-card {
-                background: rgba(30, 41, 59, 0.7);
-                border: 1px solid rgba(255, 255, 255, 0.05);
+            .glass-morphism {
+                background: var(--glass-bg);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                border: 1px solid var(--glass-border);
+                box-shadow: var(--glass-shadow);
             }
 
             .custom-scrollbar::-webkit-scrollbar {
@@ -40,397 +45,377 @@
             }
 
             .dark .custom-scrollbar::-webkit-scrollbar-thumb {
-                background: #475569;
+                background: #334155;
             }
 
-            @keyframes pulse-custom {
+            .nav-blur {
+                backdrop-filter: blur(8px);
+                background: rgba(255, 255, 255, 0.8);
+            }
+
+            .dark .nav-blur {
+                background: rgba(15, 23, 42, 0.8);
+            }
+
+            @keyframes float {
+                0% {
+                    transform: translateY(0px);
+                }
+
+                50% {
+                    transform: translateY(-10px);
+                }
+
+                100% {
+                    transform: translateY(0px);
+                }
+            }
+
+            .float-animation {
+                animation: float 6s ease-in-out infinite;
+            }
+
+            @keyframes pulse-soft {
 
                 0%,
                 100% {
                     opacity: 1;
-                    transform: scale(1);
                 }
 
                 50% {
-                    opacity: 0.7;
-                    transform: scale(1.05);
+                    opacity: 0.6;
                 }
             }
 
-            .animate-pulse-custom {
-                animation: pulse-custom 2s infinite;
+            .pulse-soft {
+                animation: pulse-soft 2s ease-in-out infinite;
+            }
+
+            .gradient-text {
+                background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+            /* Fix for progress bar widths */
+            .progress-bar-fill {
+                transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
             }
         </style>
 
-        <div class="flex min-h-screen bg-slate-50 dark:bg-slate-900 pt-16">
-            <!-- Sidebar: Fixed Position on Desktop -->
-            <aside
-                class="hidden lg:flex w-72 flex-col fixed left-0 top-16 bottom-0 z-20 bg-indigo-700 dark:bg-slate-800 text-white overflow-y-auto custom-scrollbar shadow-2xl transition-all duration-300">
-                <!-- Sidebar Profile -->
-                <div class="p-6 text-center border-b border-indigo-600 dark:border-slate-700">
-                    <div
-                        class="w-20 h-20 bg-white/20 rounded-full mx-auto mb-3 flex items-center justify-center text-3xl font-bold">
-                        <%= username.charAt(0).toUpperCase() %>
-                    </div>
-                    <h4 class="font-bold text-lg">Prof. <%= username %>
-                    </h4>
-                    <p class="text-indigo-200 dark:text-slate-400 text-xs mt-1 uppercase tracking-widest">
-                        <%= collegeName %>
-                    </p>
-                </div>
+        <div class="min-h-screen pb-20 px-4 md:px-8 pt-8">
+            <div class="max-w-7xl mx-auto space-y-10">
 
-                <!-- Sidebar Insights -->
-                <div class="p-6 space-y-8">
-                    <!-- Syllabus Health -->
-                    <div>
-                        <h5
-                            class="text-xs font-semibold text-indigo-100 dark:text-slate-300 uppercase tracking-widest mb-4">
-                            Syllabus Health</h5>
-                        <div class="flex flex-col items-center">
-                            <div class="relative w-32 h-32">
-                                <canvas id="syllabusDoughnut" width="128" height="128"></canvas>
-                                <div class="absolute inset-0 flex flex-col items-center justify-center">
-                                    <span class="text-xl font-bold">75%</span>
-                                    <span class="text-[10px] opacity-70">COMPLETED</span>
+                <!-- Hero Header Section -->
+                <header
+                    class="relative overflow-hidden rounded-[2.5rem] p-8 md:p-12 glass-morphism border-none shadow-2xl">
+                    <div class="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl">
+                    </div>
+                    <div
+                        class="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl">
+                    </div>
+
+                    <div class="relative flex flex-col md:flex-row justify-between items-center gap-8">
+                        <div class="text-center md:text-left">
+                            <div
+                                class="inline-flex items-center gap-2 px-4 py-1.5 bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 rounded-full text-xs font-bold mb-4 border border-indigo-200 dark:border-indigo-800">
+                                <span class="w-2 h-2 bg-indigo-500 rounded-full pulse-soft"></span>
+                                FACULTY ACCESS GRANTED
+                            </div>
+                            <h1
+                                class="text-4xl md:text-5xl font-extrabold text-slate-800 dark:text-white mb-2 leading-tight">
+                                Welcome, <span class="gradient-text">Prof. <%= username %></span>
+                            </h1>
+                            <p class="text-slate-500 dark:text-slate-400 font-medium">
+                                <i class="fas fa-university mr-2"></i>
+                                <%= collegeName %> | Institutional Dashboard
+                            </p>
+                        </div>
+
+                        <div class="flex items-center gap-4">
+                            <!-- Search & Toggle Group -->
+                            <div
+                                class="flex items-center gap-3 bg-white/50 dark:bg-slate-800/50 p-2 rounded-3xl border border-white/20">
+                                <div class="relative hidden sm:block">
+                                    <i
+                                        class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                                    <input type="text" placeholder="Global search..."
+                                        class="pl-12 pr-4 py-2.5 bg-white dark:bg-slate-900 border-none rounded-2xl w-64 text-sm focus:ring-2 focus:ring-indigo-500 transition-all dark:text-white">
                                 </div>
+                                <button id="darkModeToggle"
+                                    class="p-3 bg-white dark:bg-slate-900 rounded-2xl shadow-sm text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition-all">
+                                    <i class="fas fa-sun block dark:hidden"></i>
+                                    <i class="fas fa-moon hidden dark:block"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
+                </header>
 
-                    <!-- College Toppers -->
-                    <div>
-                        <h5
-                            class="text-xs font-semibold text-indigo-100 dark:text-slate-300 uppercase tracking-widest mb-4">
-                            🏆 College Toppers</h5>
-                        <div class="space-y-3">
-                            <% if(locals.topPerformers && topPerformers.length> 0) { %>
-                                <% topPerformers.forEach((perf, index)=> { %>
-                                    <div
-                                        class="flex items-center justify-between bg-white/10 dark:bg-slate-700/50 p-3 rounded-xl transition-hover hover:bg-white/20">
-                                        <div class="flex items-center gap-3">
-                                            <span class="text-indigo-300 dark:text-slate-500 font-bold text-sm">#<%=
-                                                    index + 1 %></span>
-                                            <div>
-                                                <p class="text-xs font-bold truncate w-24">
-                                                    <%= perf.userId ? perf.userId.username : 'Student' %>
-                                                </p>
-                                                <p class="text-[10px] opacity-60">
-                                                    <%= new Date(perf.date).toLocaleDateString() %>
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <span class="text-xs font-bold text-indigo-200">
-                                            <%= perf.score %> pts
-                                        </span>
-                                    </div>
-                                    <% }); %>
-                                        <% } else { %>
-                                            <p class="text-xs text-indigo-300 italic text-center py-4">Waiting for first
-                                                quiz...</p>
-                                            <% } %>
+                <!-- Insights Row -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Syllabus Card -->
+                    <div class="glass-morphism rounded-[2rem] p-6 flex items-center gap-6">
+                        <div class="relative w-24 h-24 shrink-0">
+                            <canvas id="syllabusDoughnut" width="96" height="96"></canvas>
+                            <div
+                                class="absolute inset-0 flex items-center justify-center font-bold text-lg dark:text-white">
+                                <%= syllabusHealth %>%
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-black text-slate-400 uppercase tracking-widest mb-1">Syllabus Health
+                            </h3>
+                            <p class="text-2xl font-bold dark:text-white">Course 104-A</p>
+                            <span class="text-xs text-emerald-500 font-bold">+12% from last month</span>
                         </div>
                     </div>
-                </div>
-            </aside>
 
-            <!-- Main Content Area -->
-            <main class="flex-1 lg:ml-72 p-6 transition-all duration-300">
-                <!-- Top Toolbar (Unified Search & Dark Mode) -->
-                <div class="flex flex-col md:flex-row gap-4 mb-8 items-center justify-between">
-                    <div class="relative w-full md:w-96 group">
-                        <i
-                            class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-indigo-500 transition-colors"></i>
-                        <input type="text" placeholder="Search students, tasks, or insights..."
-                            class="w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-800 border-none rounded-2xl shadow-sm focus:ring-2 focus:ring-indigo-500 transition-all dark:text-white">
+                    <!-- Leaderboard Card -->
+                    <div class="glass-morphism rounded-[2rem] p-6">
+                        <h3 class="text-sm font-black text-slate-400 uppercase tracking-widest mb-4">🏆 Top Performers
+                        </h3>
+                        <div class="flex -space-x-3 mb-4">
+                            <% if(locals.topPerformers && topPerformers.length> 0) { %>
+                                <% topPerformers.slice(0, 3).forEach((perf, i)=> { %>
+                                    <div
+                                        class="w-10 h-10 rounded-full border-2 border-white dark:border-slate-800 bg-indigo-500 flex items-center justify-center text-white text-xs font-bold ring-2 ring-indigo-500/20">
+                                        <%= perf.userId ? perf.userId.username.charAt(0).toUpperCase() : 'S' %>
+                                    </div>
+                                    <% }); %>
+                                        <div
+                                            class="w-10 h-10 rounded-full border-2 border-white dark:border-slate-800 bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-500 text-xs font-bold">
+                                            +<%= topPerformers.length> 3 ? topPerformers.length - 3 : 0 %>
+                                        </div>
+                                        <% } %>
+                        </div>
+                        <p class="text-xs text-slate-500 dark:text-slate-400">Class average improved to <span
+                                class="text-indigo-500 font-bold">
+                                <%= classAverages.total %> pts
+                            </span> this week.</p>
                     </div>
 
-                    <div class="flex items-center gap-4">
-                        <!-- Dark Mode Toggle -->
-                        <button id="darkModeToggle"
-                            class="p-3 bg-white dark:bg-slate-800 rounded-2xl shadow-sm text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
-                            <i class="fas fa-sun block dark:hidden"></i>
-                            <i class="fas fa-moon hidden dark:block"></i>
-                        </button>
-                        <div
-                            class="flex items-center gap-2 px-4 py-2 bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 rounded-full text-xs font-bold border border-emerald-100 dark:border-emerald-900/50">
-                            <span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
-                            INSTITUTIONAL NODE ACTIVE
+                    <!-- Active Monitor Card -->
+                    <div
+                        class="glass-morphism rounded-[2rem] p-6 relative overflow-hidden bg-gradient-to-br from-indigo-500/10 to-purple-500/10">
+                        <div class="flex justify-between items-start mb-4">
+                            <h3 class="text-sm font-black text-slate-400 uppercase tracking-widest">Live Status</h3>
+                            <span
+                                class="px-3 py-1 bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400 text-[10px] font-black rounded-full">NODAL
+                                ACTIVE</span>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div
+                                class="w-12 h-12 bg-white dark:bg-slate-800 rounded-2xl flex items-center justify-center text-indigo-500 shadow-sm">
+                                <i class="fas fa-users text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="text-2xl font-bold dark:text-white">
+                                    <%= students.length %>
+                                </p>
+                                <p class="text-xs text-slate-500">Connected Students</p>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Content Command Center -->
-                <section class="mb-10">
-                    <div class="flex items-center justify-between mb-6">
-                        <h2 class="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-3">
-                            <i class="fas fa-rocket text-indigo-500"></i> Content Command Center
-                        </h2>
+                <section>
+                    <div class="flex items-center gap-4 mb-8">
+                        <div class="h-1 w-12 bg-indigo-500 rounded-full"></div>
+                        <h2 class="text-2xl font-bold text-slate-800 dark:text-white">Content Command Center</h2>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-6">
-                        <!-- Task Card -->
-                        <div class="glass-card p-6 rounded-3xl shadow-lg border-t-4 border-indigo-500 group">
-                            <div class="flex justify-between items-start mb-4">
-                                <div
-                                    class="w-10 h-10 bg-indigo-100 dark:bg-indigo-900/50 rounded-xl flex items-center justify-center text-indigo-600 dark:text-indigo-400">
-                                    <i class="fas fa-tasks"></i>
-                                </div>
-                                <span
-                                    class="text-[10px] font-bold text-indigo-500 dark:text-indigo-400 uppercase tracking-widest">ASSIGN</span>
-                            </div>
-                            <form action="/addTask" method="POST">
-                                <input type="text" name="title" placeholder="Assignment Topic" required
-                                    class="w-full bg-slate-50 dark:bg-slate-900/50 border-none rounded-xl text-sm p-3 mb-2 focus:ring-1 focus:ring-indigo-500 dark:text-white">
-                                <input type="date" name="dueDate" required
-                                    class="w-full bg-slate-50 dark:bg-slate-900/50 border-none rounded-xl text-sm p-3 mb-4 focus:ring-1 focus:ring-indigo-500 dark:text-white">
-                                <button type="submit"
-                                    class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold shadow-indigo-200 dark:shadow-none transition-all">POST
-                                    TASK</button>
-                            </form>
-                        </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+                        <% const cards=[ { type: 'task' , icon: 'fa-tasks' , color: 'indigo' , title: 'Task' ,
+                            action: '/addTask' , fields: [{ name: 'title' , placeholder: 'Topic' , type: 'text' }, {
+                            name: 'dueDate' , placeholder: 'Due' , type: 'date' }], btn: 'Post' }, { type: 'quiz' ,
+                            icon: 'fa-bolt' , color: 'amber' , title: 'Quiz' , action: '/addQuiz' , fields: [{
+                            name: 'title' , placeholder: 'Name' , type: 'text' }, { name: 'description' ,
+                            placeholder: 'Instructions' , type: 'text' }], btn: 'Launch' }, { type: 'live' ,
+                            icon: 'fa-video' , color: 'rose' , title: 'Live' , action: '/startLiveSession' , fields: [{
+                            name: 'title' , placeholder: 'Title' , type: 'text' }, { name: 'description' ,
+                            placeholder: 'URL' , type: 'url' }], btn: 'Stream' }, { type: 'announcement' ,
+                            icon: 'fa-bullhorn' , color: 'emerald' , title: 'Circlr' , action: '/addAnnouncement' ,
+                            fields: [{ name: 'title' , placeholder: 'News' , type: 'text' }, { name: 'date' ,
+                            placeholder: 'Date' , type: 'date' }], btn: 'Broadcast' }, { type: 'resource' ,
+                            icon: 'fa-book-open' , color: 'cyan' , title: 'Drive' , action: '/addResource' , fields: [{
+                            name: 'title' , placeholder: 'Name' , type: 'text' }, { name: 'description' ,
+                            placeholder: 'Notes/Link' , type: 'textarea' }], btn: 'Share' } ]; %>
 
-                        <!-- Quiz Card -->
-                        <div class="glass-card p-6 rounded-3xl shadow-lg border-t-4 border-amber-500">
-                            <div class="flex justify-between items-start mb-4">
+                            <% cards.forEach(card=> { %>
                                 <div
-                                    class="w-10 h-10 bg-amber-100 dark:bg-amber-900/50 rounded-xl flex items-center justify-center text-amber-600 dark:text-amber-400">
-                                    <i class="fas fa-bolt"></i>
+                                    class="glass-morphism p-6 rounded-[2rem] hover:scale-[1.02] transition-all duration-300 group border-t-4 border-<%= card.color %>-500">
+                                    <div class="flex justify-between items-center mb-6">
+                                        <div
+                                            class="w-10 h-10 bg-<%= card.color %>-100 dark:bg-<%= card.color %>-900/30 text-<%= card.color %>-600 dark:text-<%= card.color %>-400 rounded-xl flex items-center justify-center">
+                                            <i class="fas <%= card.icon %>"></i>
+                                        </div>
+                                        <span
+                                            class="text-[10px] font-black text-<%= card.color %>-500/70 uppercase tracking-widest">
+                                            <%= card.title %>
+                                        </span>
+                                    </div>
+                                    <form action="<%= card.action %>" method="POST" class="space-y-3">
+                                        <% card.fields.forEach(field=> { %>
+                                            <% if (field.type==='textarea' ) { %>
+                                                <textarea name="<%= field.name %>"
+                                                    placeholder="<%= field.placeholder %>" rows="1"
+                                                    class="w-full bg-slate-50 dark:bg-slate-900/50 border-none rounded-xl text-xs p-3 focus:ring-1 focus:ring-<%= card.color %>-500 dark:text-white"></textarea>
+                                                <% } else { %>
+                                                    <input type="<%= field.type %>" name="<%= field.name %>"
+                                                        placeholder="<%= field.placeholder %>" required
+                                                        class="w-full bg-slate-50 dark:bg-slate-900/50 border-none rounded-xl text-xs p-3 focus:ring-1 focus:ring-<%= card.color %>-500 dark:text-white">
+                                                    <% } %>
+                                                        <% }); %>
+                                                            <button type="submit"
+                                                                class="w-full py-3 bg-<%= card.color %>-500 hover:bg-<%= card.color %>-600 text-white rounded-xl text-[10px] font-black uppercase tracking-wider transition-all shadow-lg shadow-<%= card.color %>-500/20">
+                                                                <%= card.btn %>
+                                                            </button>
+                                    </form>
                                 </div>
-                                <span
-                                    class="text-[10px] font-bold text-amber-500 dark:text-amber-400 uppercase tracking-widest">TEST</span>
-                            </div>
-                            <form action="/addQuiz" method="POST">
-                                <input type="text" name="title" placeholder="Quiz Name" required
-                                    class="w-full bg-slate-50 dark:bg-slate-900/50 border-none rounded-xl text-sm p-3 mb-2 focus:ring-1 focus:ring-amber-500 dark:text-white">
-                                <input type="text" name="description" placeholder="Instructions/Link"
-                                    class="w-full bg-slate-50 dark:bg-slate-900/50 border-none rounded-xl text-sm p-3 mb-4 focus:ring-1 focus:ring-amber-500 dark:text-white">
-                                <button type="submit"
-                                    class="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl text-xs font-bold transition-all">LAUNCH
-                                    QUIZ</button>
-                            </form>
-                        </div>
-
-                        <!-- Live Card -->
-                        <div class="glass-card p-6 rounded-3xl shadow-lg border-t-4 border-rose-500">
-                            <div class="flex justify-between items-start mb-4">
-                                <div
-                                    class="w-10 h-10 bg-rose-100 dark:bg-rose-900/50 rounded-xl flex items-center justify-center text-rose-600 dark:text-rose-400">
-                                    <i class="fas fa-video text-xs animate-pulse"></i>
-                                </div>
-                                <span
-                                    class="text-[10px] font-bold text-rose-500 dark:text-rose-400 uppercase tracking-widest">STREAM</span>
-                            </div>
-                            <form action="/startLiveSession" method="POST">
-                                <input type="text" name="title" placeholder="Session Title" required
-                                    class="w-full bg-slate-50 dark:bg-slate-900/50 border-none rounded-xl text-sm p-3 mb-2 focus:ring-1 focus:ring-rose-500 dark:text-white">
-                                <input type="url" name="description" placeholder="Meeting URL" required
-                                    class="w-full bg-slate-50 dark:bg-slate-900/50 border-none rounded-xl text-sm p-3 mb-4 focus:ring-1 focus:ring-rose-500 dark:text-white">
-                                <button type="submit"
-                                    class="w-full py-2.5 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-bold transition-all">START
-                                    LIVE</button>
-                            </form>
-                        </div>
-
-                        <!-- Announcement Card -->
-                        <div class="glass-card p-6 rounded-3xl shadow-lg border-t-4 border-emerald-500">
-                            <div class="flex justify-between items-start mb-4">
-                                <div
-                                    class="w-10 h-10 bg-emerald-100 dark:bg-emerald-900/50 rounded-xl flex items-center justify-center text-emerald-600 dark:text-emerald-400">
-                                    <i class="fas fa-bullhorn"></i>
-                                </div>
-                                <span
-                                    class="text-[10px] font-bold text-emerald-500 dark:text-emerald-400 uppercase tracking-widest">CIRCULAR</span>
-                            </div>
-                            <form action="/addAnnouncement" method="POST">
-                                <input type="text" name="title" placeholder="News Topic" required
-                                    class="w-full bg-slate-50 dark:bg-slate-900/50 border-none rounded-xl text-sm p-3 mb-2 focus:ring-1 focus:ring-emerald-500 dark:text-white">
-                                <input type="date" name="date" required
-                                    class="w-full bg-slate-50 dark:bg-slate-900/50 border-none rounded-xl text-sm p-3 mb-4 focus:ring-1 focus:ring-emerald-500 dark:text-white">
-                                <button type="submit"
-                                    class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all">BROADCAST</button>
-                            </form>
-                        </div>
-
-                        <!-- Resources Card -->
-                        <div class="glass-card p-6 rounded-3xl shadow-lg border-t-4 border-cyan-500">
-                            <div class="flex justify-between items-start mb-4">
-                                <div
-                                    class="w-10 h-10 bg-cyan-100 dark:bg-cyan-900/50 rounded-xl flex items-center justify-center text-cyan-600 dark:text-cyan-400">
-                                    <i class="fas fa-book-open"></i>
-                                </div>
-                                <span
-                                    class="text-[10px] font-bold text-cyan-500 dark:text-cyan-400 uppercase tracking-widest">DRIVE</span>
-                            </div>
-                            <form action="/addResource" method="POST">
-                                <input type="text" name="title" placeholder="Doc Name" required
-                                    class="w-full bg-slate-50 dark:bg-slate-900/50 border-none rounded-xl text-sm p-3 mb-2 focus:ring-1 focus:ring-cyan-500 dark:text-white">
-                                <textarea name="description" placeholder="Notes/Links" rows="1"
-                                    class="w-full bg-slate-50 dark:bg-slate-900/50 border-none rounded-xl text-sm p-3 mb-4 focus:ring-1 focus:ring-cyan-500 dark:text-white"></textarea>
-                                <button type="submit"
-                                    class="w-full py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl text-xs font-bold transition-all">SHARE
-                                    DOCS</button>
-                            </form>
-                        </div>
+                                <% }); %>
                     </div>
                 </section>
 
-                <!-- Monitoring & Analytics Section -->
-                <div class="grid grid-cols-1 xl:grid-cols-3 gap-8 mb-10">
+                <!-- Monitoring & Analytics Row -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <!-- Analytics Chart -->
-                    <div class="xl:col-span-2 glass-card p-8 rounded-3xl shadow-xl">
+                    <div class="lg:col-span-2 glass-morphism p-8 rounded-[2.5rem]">
                         <div class="flex items-center justify-between mb-8">
                             <div>
-                                <h3 class="text-xl font-bold dark:text-white">Average Class Performance</h3>
-                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Institutional Aptitude
-                                    Benchmarks</p>
+                                <h3 class="text-xl font-bold dark:text-white">Class Aptitude Analytics</h3>
+                                <p class="text-xs text-slate-400 mt-1">Institutional benchmarks across standard domains
+                                </p>
+                            </div>
+                            <div class="flex gap-2">
+                                <div class="w-3 h-3 bg-indigo-500 rounded-full"></div>
+                                <div class="w-3 h-3 bg-slate-200 dark:bg-slate-800 rounded-full"></div>
                             </div>
                         </div>
-                        <div class="h-64">
+                        <div class="h-80 w-full">
                             <canvas id="aptitudeChart"></canvas>
                         </div>
                     </div>
 
-                    <!-- Live Session Monitor Panel -->
-                    <div class="glass-card p-8 rounded-3xl shadow-xl flex flex-col justify-center text-center">
-                        <h3
-                            class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em] mb-6">
-                            Active Transmission</h3>
+                    <!-- Live Stream Panel -->
+                    <div
+                        class="glass-morphism p-8 rounded-[2.5rem] flex flex-col items-center justify-center text-center relative overflow-hidden">
                         <% if(locals.liveSessions && liveSessions.length> 0) { %>
-                            <div
-                                class="bg-rose-50 dark:bg-rose-900/20 border border-rose-100 dark:border-rose-900/50 p-6 rounded-3xl">
-                                <div
-                                    class="inline-flex items-center gap-2 px-3 py-1 bg-rose-500 text-white rounded-full text-[10px] font-black animate-pulse-custom mb-4">
-                                    <i class="fas fa-circle text-[6px]"></i> LIVE STREAMING
-                                </div>
-                                <h4 class="font-bold text-lg dark:text-white mb-2 truncate">
-                                    <%= liveSessions[0].title %>
-                                </h4>
-                                <p class="text-xs text-slate-500 dark:text-slate-400 mb-6 truncate">
-                                    <%= liveSessions[0].description %>
-                                </p>
-                                <a href="<%= liveSessions[0].description %>" target="_blank"
-                                    class="inline-block px-8 py-3 bg-rose-600 hover:bg-rose-700 text-white rounded-2xl text-sm font-bold shadow-lg shadow-rose-200 dark:shadow-none transition-all">
-                                    JOIN BROADCAST
-                                </a>
+                            <div class="absolute top-4 right-4 animate-pulse">
+                                <span
+                                    class="px-3 py-1 bg-rose-500 text-white text-[10px] font-black rounded-full shadow-lg shadow-rose-500/50">LIVE
+                                    NOW</span>
                             </div>
+                            <div
+                                class="w-20 h-20 bg-rose-100 dark:bg-rose-900/30 rounded-3xl flex items-center justify-center text-rose-500 mb-6 float-animation">
+                                <i class="fas fa-broadcast-tower text-3xl"></i>
+                            </div>
+                            <h4 class="text-lg font-bold dark:text-white mb-2">
+                                <%= liveSessions[0].title %>
+                            </h4>
+                            <p class="text-xs text-slate-400 mb-8 line-clamp-2">
+                                <%= liveSessions[0].description %>
+                            </p>
+                            <a href="<%= liveSessions[0].description %>" target="_blank"
+                                class="px-8 py-3 bg-rose-500 hover:bg-rose-600 text-white rounded-full text-sm font-bold shadow-xl shadow-rose-500/20 transition-all">
+                                JOIN TRANSMISSION
+                            </a>
                             <% } else { %>
-                                <div class="flex flex-col items-center opacity-40 py-10">
-                                    <i
-                                        class="fas fa-satellite-dish text-6xl text-slate-300 dark:text-slate-600 mb-4"></i>
-                                    <p class="text-sm font-medium">No active broadcasts</p>
-                                </div>
+                                <i class="fas fa-satellite text-6xl text-slate-200 dark:text-slate-800 mb-6"></i>
+                                <h4 class="text-sm font-bold text-slate-400 uppercase tracking-widest">No Active Streams
+                                </h4>
+                                <p class="text-xs text-slate-400 mt-2">Start a live session from the command center.</p>
                                 <% } %>
                     </div>
                 </div>
 
-                <!-- Lists Section: Student Roster & Doubts -->
-                <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
-                    <!-- Student Roster -->
-                    <div
-                        class="glass-card rounded-3xl shadow-xl overflow-hidden border border-slate-200/50 dark:border-slate-800">
-                        <div
-                            class="p-6 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
-                            <h3 class="font-bold dark:text-white flex items-center gap-2">
-                                <i class="fas fa-user-graduate text-indigo-500"></i> Student Roster
-                            </h3>
-                            <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full">
-                                <%= students.length %> Total
+                <!-- Records & Requests Segment -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Roster Table -->
+                    <div class="glass-morphism rounded-[2.5rem] overflow-hidden">
+                        <div class="p-8 border-b border-white/10 flex justify-between items-center">
+                            <h3 class="text-xl font-bold dark:text-white">Student Roster</h3>
+                            <span
+                                class="text-xs font-bold text-indigo-500 bg-indigo-50 dark:bg-indigo-900/40 px-3 py-1 rounded-full">
+                                <%= students.length %> Enrolled
                             </span>
                         </div>
-                        <div class="overflow-y-auto custom-scrollbar" style="max-height: 480px;">
-                            <% if(students.length> 0) { %>
-                                <table class="w-full text-left">
-                                    <thead
-                                        class="bg-slate-50 dark:bg-slate-800 text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                                        <tr>
-                                            <th class="px-6 py-4">Student</th>
-                                            <th class="px-6 py-4 text-center">Progress</th>
-                                            <th class="px-6 py-4 text-right">Actions</th>
+                        <div class="p-4 custom-scrollbar overflow-y-auto max-height-[400px]">
+                            <table class="w-full">
+                                <thead
+                                    class="text-[10px] font-black text-slate-400 uppercase tracking-widest text-left">
+                                    <tr>
+                                        <th class="px-4 py-4">Student</th>
+                                        <th class="px-4 py-4">Learning Velocity</th>
+                                        <th class="px-4 py-4 text-right">Access</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-white/5">
+                                    <% students.forEach(student=> { %>
+                                        <tr class="group hover:bg-white/5 transition-all">
+                                            <td class="px-4 py-4">
+                                                <div class="flex items-center gap-3">
+                                                    <div
+                                                        class="w-10 h-10 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-xl flex items-center justify-center font-bold text-indigo-500">
+                                                        <%= student.fullName.charAt(0) %>
+                                                    </div>
+                                                    <div>
+                                                        <p class="text-sm font-bold dark:text-white">
+                                                            <%= student.fullName %>
+                                                        </p>
+                                                        <p class="text-[10px] text-slate-500">ID: <%=
+                                                                student.userId.toString().slice(-6) %>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="px-4 py-4">
+                                                <div
+                                                    class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                                                    <div class="h-full bg-indigo-500 progress-bar-fill student-progress-bar"
+                                                        data-progress="<%= student.progress || 0 %>"></div>
+                                                </div>
+                                            </td>
+                                            <td class="px-4 py-4 text-right">
+                                                <button
+                                                    class="w-8 h-8 rounded-lg text-slate-400 hover:text-indigo-500 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 transition-all">
+                                                    <i class="fas fa-external-link-alt text-xs"></i>
+                                                </button>
+                                            </td>
                                         </tr>
-                                    </thead>
-                                    <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
-                                        <% students.forEach(student=> { %>
-                                            <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
-                                                <td class="px-6 py-4">
-                                                    <div class="flex items-center gap-3">
-                                                        <div
-                                                            class="w-10 h-10 bg-slate-100 dark:bg-slate-700 rounded-xl flex items-center justify-center text-slate-500">
-                                                            <i class="fas fa-face-smile"></i>
-                                                        </div>
-                                                        <div>
-                                                            <p class="text-sm font-bold dark:text-white">
-                                                                <%= student.fullName %>
-                                                            </p>
-                                                            <p class="text-[10px] text-slate-400">ID: <%=
-                                                                    student.userId.toString().slice(-6) %>
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td class="px-6 py-4">
-                                                    <div class="flex items-center gap-3">
-                                                        <div
-                                                            class="flex-1 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                                                            <div class="h-full bg-indigo-500"
-                                                                style="width: calc(<%= student.progress || 0 %> * 1%)">
-                                                            </div>
-                                                        </div>
-                                                        <span
-                                                            class="text-xs font-bold text-slate-600 dark:text-slate-400">
-                                                            <%= student.progress %>%
-                                                        </span>
-                                                    </div>
-                                                </td>
-                                                <td class="px-6 py-4 text-right">
-                                                    <button class="p-2 text-slate-300 hover:text-indigo-500"><i
-                                                            class="fas fa-ellipsis-v"></i></button>
-                                                </td>
-                                            </tr>
-                                            <% }); %>
-                                    </tbody>
-                                </table>
-                                <% } else { %>
-                                    <div class="p-20 text-center opacity-50">
-                                        <i class="fas fa-user-clock text-4xl mb-3"></i>
-                                        <p class="text-sm">Roster is empty</p>
-                                    </div>
-                                    <% } %>
+                                        <% }); %>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 
-                    <!-- Doubt Management -->
-                    <div
-                        class="glass-card rounded-3xl shadow-xl overflow-hidden border border-slate-200/50 dark:border-slate-800">
-                        <div
-                            class="p-6 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
-                            <h3 class="font-bold dark:text-white flex items-center gap-2">
-                                <i class="fas fa-comment-alt text-amber-500"></i> Knowledge Request Queue
-                            </h3>
+                    <!-- Doubt Queue -->
+                    <div class="glass-morphism rounded-[2.5rem] overflow-hidden flex flex-col">
+                        <div class="p-8 border-b border-white/10 flex justify-between items-center">
+                            <h3 class="text-xl font-bold dark:text-white">Knowledge Sync</h3>
                             <% const pendingCount=doubts.filter(d=> d.status === 'pending').length; %>
-                                <span class="text-xs font-bold text-amber-600 bg-amber-50 px-3 py-1 rounded-full">
-                                    <%= pendingCount %> Urgent
+                                <span
+                                    class="text-xs font-bold text-amber-500 bg-amber-50 dark:bg-amber-900/40 px-3 py-1 rounded-full">
+                                    <%= pendingCount %> Pending
                                 </span>
                         </div>
-                        <div class="p-6 overflow-y-auto custom-scrollbar space-y-4" style="max-height: 480px;">
+                        <div class="p-6 space-y-4 custom-scrollbar overflow-y-auto max-height-[400px]">
                             <% if (doubts && doubts.length> 0) { %>
                                 <% doubts.forEach(doubt=> { %>
                                     <div
-                                        class="p-5 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 <%= doubt.status === 'answered' ? 'opacity-70' : 'ring-1 ring-amber-100 dark:ring-amber-900/30 shadow-md' %>">
-                                        <div class="flex justify-between items-start mb-4">
-                                            <div class="flex items-center gap-2">
-                                                <span
-                                                    class="px-2 py-1 rounded text-[9px] font-black uppercase tracking-tighter <%= doubt.status === 'pending' ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700' %>">
-                                                    <%= doubt.status %>
-                                                </span>
-                                                <span class="text-[10px] text-slate-400">
-                                                    <%= new Date(doubt.createdAt).toLocaleDateString() %>
-                                                </span>
-                                            </div>
-                                            <div class="text-[10px] font-bold text-slate-500">
-                                                FROM: <%= doubt.studentId ? doubt.studentId.username : 'Anonymous' %>
-                                            </div>
+                                        class="p-5 rounded-[1.5rem] <%= doubt.status === 'pending' ? 'bg-amber-500/5 border border-amber-500/20' : 'bg-white/5 border border-transparent opacity-60' %>">
+                                        <div class="flex justify-between items-start mb-2">
+                                            <span
+                                                class="text-[10px] font-black uppercase tracking-tighter text-<%= doubt.status === 'pending' ? 'amber' : 'emerald' %>-500">
+                                                <%= doubt.status %>
+                                            </span>
+                                            <span class="text-[10px] text-slate-500">
+                                                <%= doubt.studentId ? doubt.studentId.username : 'Student' %>
+                                            </span>
                                         </div>
-                                        <h4 class="font-bold text-sm dark:text-white mb-2">
+                                        <h4 class="text-sm font-bold dark:text-white mb-2">
                                             <%= doubt.title %>
                                         </h4>
                                         <p class="text-xs text-slate-500 dark:text-slate-400 mb-4 line-clamp-2">
@@ -438,41 +423,101 @@
                                         </p>
 
                                         <% if (doubt.status==='pending' ) { %>
-                                            <form action="/replyDoubt" method="POST" class="mt-4 flex gap-2">
+                                            <form action="/replyDoubt" method="POST" class="flex gap-2">
                                                 <input type="hidden" name="doubtId" value="<%= doubt._id %>">
-                                                <input type="text" name="reply"
-                                                    placeholder="Write institutional response..." required
-                                                    class="flex-1 bg-slate-50 dark:bg-slate-900 border-none rounded-xl text-xs p-2.5 focus:ring-1 focus:ring-indigo-500 dark:text-white">
+                                                <input type="text" name="reply" placeholder="Write response..." required
+                                                    class="flex-1 bg-white dark:bg-slate-900 border-none rounded-xl text-xs p-2.5 focus:ring-1 focus:ring-indigo-500 dark:text-white">
                                                 <button type="submit"
-                                                    class="px-4 py-2.5 bg-indigo-600 text-white rounded-xl text-xs font-bold hover:bg-indigo-700 transition-all">REPLY</button>
+                                                    class="px-4 py-2.5 bg-indigo-600 text-white rounded-xl text-xs font-bold hover:bg-indigo-700 transition-all">RESOLVE</button>
                                             </form>
                                             <% } else { %>
                                                 <div
-                                                    class="mt-2 pt-2 border-t border-slate-50 dark:border-slate-700 flex items-start gap-2">
-                                                    <i class="fas fa-check-circle text-emerald-500 mt-1 text-xs"></i>
-                                                    <p class="text-xs italic text-slate-500 dark:text-slate-400">
-                                                        <%= doubt.teacherReply %>
-                                                    </p>
+                                                    class="flex items-center gap-2 text-xs text-emerald-500 font-medium italic">
+                                                    <i class="fas fa-check-circle"></i>
+                                                    <%= doubt.teacherReply %>
                                                 </div>
                                                 <% } %>
                                     </div>
                                     <% }); %>
                                         <% } else { %>
                                             <div class="text-center py-20 opacity-30">
-                                                <i class="fas fa-comments text-5xl mb-3"></i>
-                                                <p class="text-sm">Inbox clear!</p>
+                                                <i class="fas fa-check-double text-5xl mb-4"></i>
+                                                <p class="text-sm font-medium">Clear Skies! No pending queries.</p>
                                             </div>
                                             <% } %>
                         </div>
                     </div>
                 </div>
-            </main>
+
+                <!-- Secondary Lists -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Recent Tasks -->
+                    <div class="glass-morphism rounded-[2.5rem] p-8">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="font-bold dark:text-white">Active Assignments</h3>
+                            <i class="fas fa-chevron-right text-slate-400 text-xs"></i>
+                        </div>
+                        <div class="space-y-4">
+                            <% tasks.slice(0, 4).forEach(task=> { %>
+                                <div
+                                    class="flex items-center justify-between p-4 bg-white/40 dark:bg-slate-800/40 rounded-2xl border border-white/10">
+                                    <div class="flex items-center gap-4">
+                                        <div
+                                            class="w-10 h-10 bg-indigo-500/10 text-indigo-500 rounded-xl flex items-center justify-center">
+                                            <i class="fas fa-file-alt"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-bold dark:text-white">
+                                                <%= task.title %>
+                                            </p>
+                                            <p class="text-[10px] text-slate-400">Due: <%= task.dueDate %>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <span
+                                        class="text-[10px] font-black text-indigo-500 <%= new Date(task.dueDate) < new Date() ? 'text-rose-500' : '' %>">
+                                        <%= new Date(task.dueDate) < new Date() ? 'EXPIRED' : 'ACTIVE' %>
+                                    </span>
+                                </div>
+                                <% }); %>
+                        </div>
+                    </div>
+
+                    <!-- Announcements -->
+                    <div class="glass-morphism rounded-[2.5rem] p-8">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="font-bold dark:text-white">Broadcast History</h3>
+                            <i class="fas fa-chevron-right text-slate-400 text-xs"></i>
+                        </div>
+                        <div class="space-y-4">
+                            <% announcements.slice(0, 4).forEach(ann=> { %>
+                                <div
+                                    class="flex items-start gap-4 p-4 bg-white/40 dark:bg-slate-800/40 rounded-2xl border border-white/10">
+                                    <div
+                                        class="w-10 h-10 bg-emerald-500/10 text-emerald-500 rounded-xl flex items-center justify-center shrink-0">
+                                        <i class="fas fa-bell"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-bold dark:text-white">
+                                            <%= ann.title %>
+                                        </p>
+                                        <p class="text-[10px] text-slate-400 mt-1">
+                                            <%= ann.date %>
+                                        </p>
+                                    </div>
+                                </div>
+                                <% }); %>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
 
-        <!-- JS: Charts and Dark Mode Logic -->
+        <!-- JS: Logic for Charts & System States -->
         <script>
             document.addEventListener('DOMContentLoaded', () => {
-                // Dark Mode Logic
+                // System States
                 const darkModeToggle = document.getElementById('darkModeToggle');
                 const setupDarkMode = () => {
                     const isDark = localStorage.getItem('darkMode') === 'true' ||
@@ -481,16 +526,20 @@
                 };
 
                 darkModeToggle.addEventListener('click', () => {
-                    const isDarkNow = document.documentElement.classList.toggle('dark');
-                    localStorage.setItem('darkMode', isDarkNow);
-                    // Redraw charts if needed (to change labels color)
-                    window.location.reload(); // Quickest way to sync chart themes
+                    const isDark = document.documentElement.classList.toggle('dark');
+                    localStorage.setItem('darkMode', isDark);
+                    window.location.reload(); // Re-sync chart colors
                 });
                 setupDarkMode();
 
-                const isDarkTheme = document.documentElement.classList.contains('dark');
-                const labelColor = isDarkTheme ? '#94a3b8' : '#64748b';
-                const gridColor = isDarkTheme ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
+                const isDark = document.documentElement.classList.contains('dark');
+                const labelColor = isDark ? '#94a3b8' : '#64748b';
+                const gridColor = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
+
+                // Set Student Progress Bars
+                document.querySelectorAll('.student-progress-bar').forEach(el => {
+                    el.style.width = (el.dataset.progress || 0) + '%';
+                });
 
                 // Syllabus Doughnut
                 const sCtx = document.getElementById('syllabusDoughnut');
@@ -499,10 +548,11 @@
                         type: 'doughnut',
                         data: {
                             datasets: [{
-                                data: [75, 25],
-                                backgroundColor: ['#fff', 'rgba(255,255,255,0.2)'],
+                                data: [Number('<%= syllabusHealth || 0 %>'), 100 - Number('<%= syllabusHealth || 0 %>')],
+                                backgroundColor: isDark ? ['#6366f1', '#1e293b'] : ['#6366f1', '#f1f5f9'],
                                 borderWidth: 0,
-                                cutout: '80%'
+                                cutout: '80%',
+                                borderRadius: 10
                             }]
                         },
                         options: {
@@ -518,13 +568,17 @@
                     new Chart(aCtx, {
                         type: 'bar',
                         data: {
-                            labels: ['Mathematics', 'Science', 'English', 'Social Studies', 'Reasoning'],
+                            labels: ['Quantitative', 'Verbal', 'Logical', 'Overall'],
                             datasets: [{
-                                label: 'Average Score (%)',
-                                data: [78, 85, 72, 80, 88],
-                                backgroundColor: isDarkTheme ? 'rgba(99, 102, 241, 0.5)' : 'rgba(99, 102, 241, 0.8)',
-                                borderRadius: 8,
-                                borderWidth: 0
+                                data: [
+                                    Number('<%= classAverages.quantitative || 0 %>'),
+                                    Number('<%= classAverages.verbal || 0 %>'),
+                                    Number('<%= classAverages.logical || 0 %>'),
+                                    Number('<%= classAverages.total || 0 %>')
+                                ],
+                                backgroundColor: isDark ? 'rgba(99, 102, 241, 0.5)' : 'rgba(99, 102, 241, 0.8)',
+                                borderRadius: 12,
+                                barThickness: 40
                             }]
                         },
                         options: {
@@ -535,12 +589,12 @@
                                 y: {
                                     beginAtZero: true,
                                     max: 100,
-                                    grid: { color: gridColor },
-                                    ticks: { color: labelColor, font: { size: 10 } }
+                                    grid: { color: gridColor, drawBorder: false },
+                                    ticks: { color: labelColor, font: { family: 'Outfit', size: 10 } }
                                 },
                                 x: {
                                     grid: { display: false },
-                                    ticks: { color: labelColor, font: { size: 10 } }
+                                    ticks: { color: labelColor, font: { family: 'Outfit', size: 10 } }
                                 }
                             }
                         }

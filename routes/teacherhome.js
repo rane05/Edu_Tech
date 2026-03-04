@@ -47,7 +47,16 @@ router.get("/teacher_home", async (req, res) => {
         }
 
         // Fetch students and teacher work data scoped to this college
-        const students = await StudentProfile.find({ collegeName: teacherProfile.collegeName });
+        const rawStudents = await StudentProfile.find({ collegeName: teacherProfile.collegeName });
+
+        // Calculate dynamic progress for each student
+        const students = await Promise.all(rawStudents.map(async (s) => {
+            const quizCount = await QuizResult.countDocuments({ userId: s.userId });
+            // Each quiz contributes 25% to progress, capped at 100%. 
+            // If 0 quizzes, default to a small realistic starting progress.
+            s.progress = quizCount > 0 ? Math.min(quizCount * 25, 100) : 10;
+            return s;
+        }));
         const tasks = await TeacherWork.find({
             type: "task",
             collegeName: teacherProfile.collegeName
@@ -80,6 +89,33 @@ router.get("/teacher_home", async (req, res) => {
             collegeName: teacherProfile.collegeName
         }).sort({ createdAt: -1 }).limit(1);
 
+        // AGGREGATE ANALYTICS: Calculate class-wide averages for aptitude sections
+        const results = await QuizResult.find({ userId: { $in: collegeStudentIds } });
+        let sectionTotals = { quantitative: 0, verbal: 0, logical: 0 };
+        let totalScore = 0;
+        let resultCount = results.length;
+
+        results.forEach(res => {
+            sectionTotals.quantitative += res.sectionScores.quantitative || 0;
+            sectionTotals.verbal += res.sectionScores.verbal || 0;
+            sectionTotals.logical += res.sectionScores.logical || 0;
+            totalScore += res.score;
+        });
+
+        const classAverages = resultCount > 0 ? {
+            quantitative: Math.round(sectionTotals.quantitative / resultCount),
+            verbal: Math.round(sectionTotals.verbal / resultCount),
+            logical: Math.round(sectionTotals.logical / resultCount),
+            total: Math.round(totalScore / resultCount)
+        } : { quantitative: 0, verbal: 0, logical: 0, total: 0 };
+
+        // SYLLABUS HEALTH: Mock calculation based on content depth
+        const contentDensity = await TeacherWork.countDocuments({
+            collegeName: teacherProfile.collegeName,
+            type: { $in: ["task", "resource", "quiz"] }
+        });
+        const syllabusHealth = Math.min(Math.round((contentDensity / 12) * 100), 100) || 5;
+
         res.render("teacher_home", {
             username: user.username,
             collegeName: teacherProfile.collegeName,
@@ -89,7 +125,9 @@ router.get("/teacher_home", async (req, res) => {
             resources,
             doubts,
             topPerformers,
-            liveSessions
+            liveSessions,
+            classAverages,
+            syllabusHealth
         });
 
     } catch (error) {

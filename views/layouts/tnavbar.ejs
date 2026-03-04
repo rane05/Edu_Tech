@@ -1,232 +1,167 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EduNavigator Dashboard</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
+<!-- Modern Glassmorphism Teacher Navbar -->
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
-        nav {
-            background: #ffffff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    :root {
+        --nav-glass-bg: rgba(255, 255, 255, 0.7);
+        --nav-glass-border: rgba(255, 255, 255, 0.2);
+        --nav-glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+    }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
-        }
+    .dark {
+        --nav-glass-bg: rgba(15, 23, 42, 0.6);
+        --nav-glass-border: rgba(255, 255, 255, 0.05);
+        --nav-glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    }
 
-        .logo span:first-child {
-            color: #27ae60; /* Green for Edu */
-        }
+    .t-glass-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 72px;
+        background: var(--nav-glass-bg);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--nav-glass-border);
+        box-shadow: var(--nav-glass-shadow);
+        z-index: 1000;
+        transition: all 0.3s ease;
+    }
 
-        .logo span:last-child {
-            color: #2980b9; /* Blue for Navigator */
-        }
+    .t-nav-content {
+        max-width: 1536px;
+        margin: 0 auto;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 32px;
+    }
 
-        .nav-links {
-            display: flex;
-            gap: 1.5rem;
-            align-items: center;
-        }
+    .t-logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        text-decoration: none;
+        font-weight: 800;
+        font-size: 1.5rem;
+        letter-spacing: -0.5px;
+        color: #1e293b;
+    }
 
-        .nav-links a {
-            text-decoration: none;
-            color: #34495e;
-            position: relative;
-            transition: all 0.3s ease;
-        }
+    .dark .t-logo {
+        color: #f1f5f9;
+    }
 
-        .nav-links a:hover {
-            color: #27ae60;
-            transform: translateY(-3px);
-        }
+    .t-logo-accent {
+        background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
 
-        .dropdown {
-            position: relative;
-        }
+    .t-nav-links {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+    }
 
-        .dropdown-content {
+    .t-nav-link {
+        text-decoration: none;
+        color: #64748b;
+        font-size: 0.875rem;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        position: relative;
+    }
+
+    .t-nav-link:hover {
+        color: #6366f1;
+    }
+
+    .t-nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: #6366f1;
+        transition: width 0.2s ease;
+        border-radius: 2px;
+    }
+
+    .t-nav-link:hover::after {
+        width: 100%;
+    }
+
+    .t-logout-btn {
+        background: rgba(244, 63, 94, 0.1);
+        color: #f43f5e;
+        padding: 8px 20px;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: all 0.2s ease;
+        border: 1px solid rgba(244, 63, 94, 0.2);
+    }
+
+    .t-logout-btn:hover {
+        background: #f43f5e;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(244, 63, 94, 0.3);
+    }
+
+    @media (max-width: 1024px) {
+        .t-nav-links {
             display: none;
-            position: absolute;
-            background: #fff;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-            min-width: 200px;
-            top: 100%;
-            left: 0;
-            z-index: 1;
-            border-radius: 5px;
         }
+    }
+</style>
 
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
+<nav class="t-glass-nav">
+    <div class="t-nav-content">
+        <a href="/teacher_home" class="t-logo">
+            <i class="fas fa-graduation-cap t-logo-accent"></i>
+            <span>Edu<span class="t-logo-accent">Navigator</span> <span
+                    class="text-xs ml-2 py-0.5 px-2 bg-indigo-500/10 text-indigo-500 rounded-full font-black uppercase">Faculty</span></span>
+        </a>
 
-        .dropdown-content a {
-            padding: 12px 16px;
-            display: block;
-            color: #2c3e50;
-            transition: all 0.3s ease;
-        }
+        <div class="t-nav-links">
+            <a href="/teacher_home" class="t-nav-link">Dashboard</a>
+            <a href="/studentlist" class="t-nav-link">Roster Control</a>
+            <a href="/tprofile" class="t-nav-link">Faculty Profile</a>
 
-        .dropdown-content a:hover {
-            background: #f8f9fa;
-            transform: translateX(5px);
-            color: #27ae60;
-        }
-
-        .login-btn {
-            background: #e74c3c;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-        }
-
-        .login-btn:hover {
-            background: #27ae60;
-            transform: translateY(-3px);
-            box-shadow: 0 4px 8px rgba(88, 182, 11, 0.3);
-        }
-
-        .hamburger {
-            display: none;
-            cursor: pointer;
-        }
-
-        .hamburger .line {
-            width: 25px;
-            height: 3px;
-            background: #2c3e50;
-            margin: 5px 0;
-            transition: 0.3s;
-        }
-
-        @media (max-width: 768px) {
-            .hamburger {
-                display: block;
-            }
-
-            .nav-links {
-                position: fixed;
-                top: 70px;
-                left: -100%;
-                width: 100%;
-                height: calc(100vh - 70px);
-                background: #fff;
-                flex-direction: column;
-                gap: 0;
-                transition: 0.3s;
-                padding: 1rem 0;
-            }
-
-            .nav-links.active {
-                left: 0;
-            }
-
-            .nav-links a {
-                padding: 1rem 2rem;
-                width: 100%;
-            }
-
-            .dropdown-content {
-                position: static;
-                box-shadow: none;
-                display: none;
-                background: #f8f9fa;
-            }
-
-            .dropdown:hover .dropdown-content {
-                display: none;
-            }
-
-            .dropdown.active .dropdown-content {
-                display: block;
-            }
-
-            .login-btn {
-                margin: 1rem;
-                text-align: center;
-            }
-        }
-    </style>
-</head>
-<body>
-    <nav>
-        <div class="logo">
-            <span>Edu</span><span>Navigator</span>
+            <% if (userId) { %>
+                <a href="/logout" class="t-logout-btn">Terminate Session</a>
+                <% } else { %>
+                    <a href="/login" class="t-logout-btn"
+                        style="background: rgba(99, 102, 241, 0.1); color: #6366f1; border-color: rgba(99, 102, 241, 0.2);">Faculty
+                        Login</a>
+                    <% } %>
         </div>
-        <div class="hamburger">
-            <div class="line"></div>
-            <div class="line"></div>
-            <div class="line"></div>
-        </div>
-        <div class="nav-links">
-          <a  href="/teacher_home">Home</a>
-          <a  href="/tprofile">Profile</a>
-          <a  href="/studentlist">Students</a>
-            
-          <% if (userId) { %>
-       
-            <li class="nav-item">
-                <a class="nav-link" href="/logout">Logout</a>
-              </li>
-    
-              <% } else { %>
-    
-              <li class="nav-item">
-                <a class="nav-link" href="/login">Login</a>
-             
-            </li>
-            <% }  %>
-  
-        </div>
-    </nav>
 
-    <script>
-        const hamburger = document.querySelector('.hamburger');
-        const navLinks = document.querySelector('.nav-links');
-        const dropdowns = document.querySelectorAll('.dropdown');
+        <button class="lg:hidden p-2 text-slate-500" id="t-mobile-menu-toggle">
+            <i class="fas fa-bars fa-lg"></i>
+        </button>
+    </div>
+</nav>
 
-        hamburger.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-            hamburger.classList.toggle('active');
+<!-- Padding to avoid content overlap -->
+<div class="h-[72px]"></div>
+
+<script>
+    // Simple mobile menu toggle if needed
+    const mobileBtn = document.getElementById('t-mobile-menu-toggle');
+    if (mobileBtn) {
+        mobileBtn.addEventListener('click', () => {
+            // For now, teacher dashboard is mostly used on large screens, 
+            // but we could add a mobile drawer here if requested.
+            alert('Mobile workspace management optimized for desktop. Please use a larger display for full Faculty controls.');
         });
-
-        dropdowns.forEach(dropdown => {
-            const link = dropdown.querySelector('a');
-            link.addEventListener('click', (e) => {
-                if (window.innerWidth <= 768) {
-                    e.preventDefault();
-                    dropdown.classList.toggle('active');
-                }
-            });
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!navLinks.contains(e.target) && !hamburger.contains(e.target)) {
-                navLinks.classList.remove('active');
-                dropdowns.forEach(dropdown => dropdown.classList.remove('active'));
-            }
-        });
-
-        window.addEventListener('resize', () => {
-            if (window.innerWidth > 768) {
-                navLinks.classList.remove('active');
-                dropdowns.forEach(dropdown => dropdown.classList.remove('active'));
-            }
-        });
-    </script>
-</body>
-</html>
-
+    }
+</script>

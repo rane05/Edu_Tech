@@ -18,6 +18,7 @@ const ProfileSchema = new mongoose.Schema({
     // passingYear: { type: Number, required: true },
     skills: { type: String, default: '' },
     careerGoal: { type: String, default: '' },
+    progress: { type: Number, default: 0 }, // New progress field for dashboard tracking
     uniqueCode: { type: String, unique: true, sparse: true }, // Unique code for linking
     parentUsername: { type: String, default: null } // Store parent's username if linked
 
