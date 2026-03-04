@@ -1,949 +1,816 @@
-<%- include('layouts/header'); %>
-    <%- include('layouts/navbar'); %>
-        <style>
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Interview Simulator - EduNavigator</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* 3D Interactive Background */
+        .interactive-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .bg-element {
+            position: absolute;
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(236, 72, 153, 0.1));
+            border-radius: 50%;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .bg-element:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: -150px;
+            left: -150px;
+            animation-delay: 0s;
+        }
+
+        .bg-element:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            top: 50%;
+            right: -100px;
+            animation-delay: 5s;
+        }
+
+        .bg-element:nth-child(3) {
+            width: 250px;
+            height: 250px;
+            bottom: -125px;
+            left: 50%;
+            animation-delay: 10s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 0.1;
             }
 
-            body {
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-                background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
-                color: white;
-                min-height: 100vh;
-                overflow-x: hidden;
-                /* Padding inherited from design-system.css */
+            33% {
+                transform: translate(50px, 50px) rotate(120deg);
+                opacity: 0.2;
             }
 
-            /* 3D Interactive Background */
-            .interactive-bg {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                pointer-events: none;
-                z-index: -1;
+            66% {
+                transform: translate(-30px, 80px) rotate(240deg);
+                opacity: 0.15;
+            }
+        }
+
+        /* Enhanced Header */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 60px 0;
+            position: relative;
+            perspective: 1000px;
+        }
+
+        .header h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px rgba(96, 165, 250, 0.3);
+            animation: glow 2s ease-in-out infinite alternate;
+            transform-style: preserve-3d;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 20px rgba(96, 165, 250, 0.5);
             }
 
-            .bg-element {
-                position: absolute;
-                background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(236, 72, 153, 0.1));
-                border-radius: 50%;
-                animation: float 20s ease-in-out infinite;
+            to {
+                text-shadow: 0 0 30px rgba(236, 72, 153, 0.8), 0 0 40px rgba(96, 165, 250, 0.6);
+            }
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            color: #cbd5e1;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.8;
+            opacity: 0;
+            animation: fadeInUp 0.8s ease 0.3s forwards;
+        }
+
+        /* 3D Main Content */
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+            perspective: 1000px;
+        }
+
+        .form-section,
+        .results-section {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(25px);
+            border-radius: 25px;
+            padding: 35px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-section::before,
+        .results-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(79, 70, 229, 0.05) 0%, rgba(236, 72, 153, 0.05) 100%);
+            opacity: 0;
+            transition: all 0.5s ease;
+            transform: scale(0.8);
+            z-index: -1;
+        }
+
+        .form-section:hover::before,
+        .results-section:hover::before {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .form-section:hover,
+        .results-section:hover {
+            transform: translateY(-10px) translateZ(20px) rotateX(5deg);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            border-color: rgba(79, 70, 229, 0.3);
+        }
+
+        .form-section h2,
+        .results-section h2 {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            color: #fbbf24;
+            text-align: center;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
+        }
+
+        .form-section h2::after,
+        .results-section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            border-radius: 2px;
+        }
+
+        /* Enhanced Form Elements */
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #e2e8f0;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.08);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #60a5fa;
+            box-shadow: 0 0 25px rgba(96, 165, 250, 0.4);
+            transform: translateY(-2px) scale(1.02);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 140px;
+        }
+
+        /* Enhanced Buttons */
+        .btn {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899);
+            color: white;
+            border: none;
+            padding: 18px 35px;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            margin: 12px 8px;
+            position: relative;
+            overflow: hidden;
+            transform-style: preserve-3d;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px) translateZ(10px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(59, 130, 246, 0.5);
+        }
+
+        .btn:active {
+            transform: translateY(-1px) translateZ(5px) scale(1.02);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-group {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        /* Enhanced Loading Animation */
+        .loading {
+            text-align: center;
+            padding: 50px;
+            color: #cbd5e1;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-top: 4px solid #60a5fa;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 25px;
+            position: relative;
+        }
+
+        .spinner::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border: 2px solid transparent;
+            border-top: 2px solid #ec4899;
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite reverse;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
             }
 
-            .bg-element:nth-child(1) {
-                width: 300px;
-                height: 300px;
-                top: -150px;
-                left: -150px;
-                animation-delay: 0s;
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Enhanced Feedback Container */
+        .feedback-container {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 30px;
+            margin-top: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            transition: all 0.3s ease;
+        }
+
+        .feedback-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Enhanced Sentiment Badge */
+        .sentiment-badge {
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: badgePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes badgePulse {
+
+            0%,
+            100% {
+                transform: scale(1);
             }
 
-            .bg-element:nth-child(2) {
-                width: 200px;
-                height: 200px;
-                top: 50%;
-                right: -100px;
-                animation-delay: 5s;
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .sentiment-positive {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
+        }
+
+        .sentiment-negative {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            box-shadow: 0 5px 15px rgba(239, 68, 68, 0.4);
+        }
+
+        .sentiment-neutral {
+            background: linear-gradient(135deg, #6b7280, #4b5563);
+            color: white;
+            box-shadow: 0 5px 15px rgba(107, 114, 128, 0.4);
+        }
+
+        /* Enhanced Confidence Bar */
+        .confidence-bar {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            height: 25px;
+            margin: 20px 0;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981, #3b82f6);
+            border-radius: 15px;
+            transition: width 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .confidence-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
             }
 
-            .bg-element:nth-child(3) {
-                width: 250px;
-                height: 250px;
-                bottom: -125px;
-                left: 50%;
-                animation-delay: 10s;
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        /* Enhanced Feedback Sections */
+        .feedback-section {
+            margin: 25px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border-left: 4px solid #60a5fa;
+            transition: all 0.3s ease;
+        }
+
+        .feedback-section:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(5px);
+        }
+
+        .feedback-section h3 {
+            color: #fbbf24;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feedback-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .feedback-list li {
+            background: rgba(255, 255, 255, 0.08);
+            margin: 10px 0;
+            padding: 15px 18px;
+            border-radius: 10px;
+            border-left: 4px solid #60a5fa;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feedback-list li::before {
+            content: '✨';
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .feedback-list li:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .feedback-list li:hover::before {
+            opacity: 1;
+            transform: translateY(-50%) rotate(360deg);
+        }
+
+        /* Enhanced Camera Section */
+        .camera-section {
+            text-align: center;
+            margin-top: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .camera-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .camera-section h3 {
+            color: #fbbf24;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        #video {
+            width: 100%;
+            max-width: 450px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        #video:hover {
+            transform: scale(1.02);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+
+        .camera-controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Real-time Feedback Indicators */
+        .real-time-feedback {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(16, 185, 129, 0.9);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            transform: translateX(400px);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+        }
+
+        .real-time-feedback.show {
+            transform: translateX(0);
+        }
+
+        /* Enhanced Animations */
+        .fade-in {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
             }
 
-            @keyframes float {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-                0%,
-                100% {
-                    transform: translate(0, 0) rotate(0deg);
-                    opacity: 0.1;
-                }
+        .slide-in-left {
+            animation: slideInLeft 0.8s ease-out;
+        }
 
-                33% {
-                    transform: translate(50px, 50px) rotate(120deg);
-                    opacity: 0.2;
-                }
-
-                66% {
-                    transform: translate(-30px, 80px) rotate(240deg);
-                    opacity: 0.15;
-                }
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-40px);
             }
 
-            /* Enhanced Header */
-            .header {
-                text-align: center;
-                margin-bottom: 40px;
-                padding: 60px 0;
-                position: relative;
-                perspective: 1000px;
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .slide-in-right {
+            animation: slideInRight 0.8s ease-out;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 25px;
             }
 
             .header h1 {
-                font-size: 4rem;
-                font-weight: 800;
-                background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6, #ec4899);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                background-clip: text;
-                margin-bottom: 20px;
-                text-shadow: 0 0 30px rgba(96, 165, 250, 0.3);
-                animation: glow 2s ease-in-out infinite alternate;
-                transform-style: preserve-3d;
+                font-size: 2.8rem;
             }
 
-            @keyframes glow {
-                from {
-                    text-shadow: 0 0 20px rgba(96, 165, 250, 0.5);
-                }
-
-                to {
-                    text-shadow: 0 0 30px rgba(236, 72, 153, 0.8), 0 0 40px rgba(96, 165, 250, 0.6);
-                }
-            }
-
-            .header p {
-                font-size: 1.3rem;
-                color: #cbd5e1;
-                max-width: 700px;
-                margin: 0 auto;
-                line-height: 1.8;
-                opacity: 0;
-                animation: fadeInUp 0.8s ease 0.3s forwards;
-            }
-
-            /* 3D Main Content */
-            .main-content {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 40px;
-                margin-bottom: 40px;
-                perspective: 1000px;
+            .container {
+                padding: 15px;
             }
 
             .form-section,
             .results-section {
-                background: rgba(255, 255, 255, 0.08);
-                backdrop-filter: blur(25px);
-                border-radius: 25px;
-                padding: 35px;
-                border: 1px solid rgba(255, 255, 255, 0.15);
-                transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                transform-style: preserve-3d;
-                position: relative;
-                overflow: hidden;
+                padding: 25px;
             }
 
-            .form-section::before,
-            .results-section::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: linear-gradient(135deg, rgba(79, 70, 229, 0.05) 0%, rgba(236, 72, 153, 0.05) 100%);
-                opacity: 0;
-                transition: all 0.5s ease;
-                transform: scale(0.8);
-                z-index: -1;
-            }
-
-            .form-section:hover::before,
-            .results-section:hover::before {
-                opacity: 1;
-                transform: scale(1);
-            }
-
-            .form-section:hover,
-            .results-section:hover {
-                transform: translateY(-10px) translateZ(20px) rotateX(5deg);
-                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-                border-color: rgba(79, 70, 229, 0.3);
-            }
-
-            .form-section h2,
-            .results-section h2 {
-                font-size: 2rem;
-                margin-bottom: 30px;
-                color: #fbbf24;
-                text-align: center;
-                background: linear-gradient(135deg, #fbbf24, #f59e0b);
-                -webkit-background-clip: text;
-                background-clip: text;
-                -webkit-text-fill-color: transparent;
-                position: relative;
-            }
-
-            .form-section h2::after,
-            .results-section h2::after {
-                content: '';
-                position: absolute;
-                bottom: -8px;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 60px;
-                height: 3px;
-                background: linear-gradient(135deg, #fbbf24, #f59e0b);
-                border-radius: 2px;
-            }
-
-<<<<<<< HEAD
-            /* Enhanced Form Elements */
-            .form-group {
-                margin-bottom: 25px;
-                position: relative;
-            }
-
-            .form-group label {
-                display: block;
-                margin-bottom: 10px;
-                font-weight: 600;
-                color: #e2e8f0;
-                font-size: 1.1rem;
-                transition: all 0.3s ease;
-            }
-
-            .form-group input,
-            .form-group select,
-            .form-group textarea {
-                width: 100%;
-                padding: 18px;
-                border: 2px solid rgba(255, 255, 255, 0.2);
-                border-radius: 15px;
-                background: rgba(255, 255, 255, 0.08);
-                color: white;
-                font-size: 1rem;
-                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                backdrop-filter: blur(10px);
-            }
-
-            .form-group input:focus,
-            .form-group select:focus,
-            .form-group textarea:focus {
-                outline: none;
-                border-color: #60a5fa;
-                box-shadow: 0 0 25px rgba(96, 165, 250, 0.4);
-                transform: translateY(-2px) scale(1.02);
-            }
-
-            .form-group textarea {
-                resize: vertical;
-                min-height: 140px;
-            }
-
-            /* Enhanced Buttons */
             .btn {
-                background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899);
-                color: white;
-                border: none;
-                padding: 18px 35px;
-                border-radius: 15px;
-                font-size: 1.1rem;
-                font-weight: 600;
-                cursor: pointer;
-                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                margin: 12px 8px;
-                position: relative;
-                overflow: hidden;
-                transform-style: preserve-3d;
-            }
-
-            .btn::before {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: -100%;
-                width: 100%;
-                height: 100%;
-                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-                transition: left 0.6s ease;
-            }
-
-            .btn:hover::before {
-                left: 100%;
-            }
-
-            .btn:hover {
-                transform: translateY(-3px) translateZ(10px) scale(1.05);
-                box-shadow: 0 15px 35px rgba(59, 130, 246, 0.5);
-            }
-
-            .btn:active {
-                transform: translateY(-1px) translateZ(5px) scale(1.02);
-            }
-
-            .btn:disabled {
-                opacity: 0.6;
-                cursor: not-allowed;
-                transform: none;
-            }
-
-            .btn-group {
-                text-align: center;
-                margin-top: 25px;
-            }
-
-            /* Enhanced Loading Animation */
-            .loading {
-                text-align: center;
-                padding: 50px;
-                color: #cbd5e1;
-            }
-
-            .spinner {
-                width: 60px;
-                height: 60px;
-                border: 4px solid rgba(255, 255, 255, 0.1);
-                border-top: 4px solid #60a5fa;
-                border-radius: 50%;
-                animation: spin 1s linear infinite;
-                margin: 0 auto 25px;
-                position: relative;
-            }
-
-            .spinner::after {
-                content: '';
-                position: absolute;
-                top: -4px;
-                left: -4px;
-                right: -4px;
-                bottom: -4px;
-                border: 2px solid transparent;
-                border-top: 2px solid #ec4899;
-                border-radius: 50%;
-                animation: spin 1.5s linear infinite reverse;
-            }
-
-            @keyframes spin {
-                0% {
-                    transform: rotate(0deg);
-                }
-
-                100% {
-                    transform: rotate(360deg);
-                }
-            }
-
-            /* Enhanced Feedback Container */
-            .feedback-container {
-                background: rgba(255, 255, 255, 0.08);
-                border-radius: 20px;
-                padding: 30px;
-                margin-top: 25px;
-                border: 1px solid rgba(255, 255, 255, 0.15);
-                backdrop-filter: blur(15px);
-                transition: all 0.3s ease;
-            }
-
-            .feedback-container:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-            }
-
-            /* Enhanced Sentiment Badge */
-            .sentiment-badge {
-                display: inline-block;
-                padding: 12px 24px;
-                border-radius: 25px;
-                font-weight: 700;
+                padding: 15px 25px;
                 font-size: 1rem;
-                margin-bottom: 25px;
-                text-transform: uppercase;
-                letter-spacing: 1px;
-                animation: badgePulse 2s ease-in-out infinite;
             }
+        }
 
-            @keyframes badgePulse {
+        /* Interactive Cursor */
+        .interactive-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: linear-gradient(135deg, #60a5fa, #ec4899);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease;
+            mix-blend-mode: difference;
+        }
 
-                0%,
-                100% {
-                    transform: scale(1);
-                }
+        .interactive-cursor.hover {
+            transform: scale(2);
+        }
 
-                50% {
-                    transform: scale(1.05);
-                }
-            }
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+        }
 
-            .sentiment-positive {
-                background: linear-gradient(135deg, #10b981, #059669);
-                color: white;
-                box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
-            }
+        .modal-content {
+            background: rgba(255, 255, 255, 0.95);
+            margin: auto;
+            padding: 40px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            animation: modalSlideIn 0.4s ease-out;
+        }
 
-            .sentiment-negative {
-                background: linear-gradient(135deg, #ef4444, #dc2626);
-                color: white;
-                box-shadow: 0 5px 15px rgba(239, 68, 68, 0.4);
-            }
-
-            .sentiment-neutral {
-                background: linear-gradient(135deg, #6b7280, #4b5563);
-                color: white;
-                box-shadow: 0 5px 15px rgba(107, 114, 128, 0.4);
-            }
-
-            /* Enhanced Confidence Bar */
-            .confidence-bar {
-                background: rgba(255, 255, 255, 0.15);
-                border-radius: 15px;
-                height: 25px;
-                margin: 20px 0;
-                overflow: hidden;
-                position: relative;
-                box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
-            }
-
-            .confidence-fill {
-                height: 100%;
-                background: linear-gradient(90deg, #ef4444, #f59e0b, #10b981, #3b82f6);
-                border-radius: 15px;
-                transition: width 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                position: relative;
-                overflow: hidden;
-            }
-
-            .confidence-fill::after {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-                animation: shimmer 2s ease-in-out infinite;
-            }
-
-            @keyframes shimmer {
-                0% {
-                    transform: translateX(-100%);
-                }
-
-                100% {
-                    transform: translateX(100%);
-                }
-            }
-
-            /* Enhanced Feedback Sections */
-            .feedback-section {
-                margin: 25px 0;
-                padding: 20px;
-                background: rgba(255, 255, 255, 0.05);
-                border-radius: 15px;
-                border-left: 4px solid #60a5fa;
-                transition: all 0.3s ease;
-            }
-
-            .feedback-section:hover {
-                background: rgba(255, 255, 255, 0.08);
-                transform: translateX(5px);
-            }
-
-            .feedback-section h3 {
-                color: #fbbf24;
-                margin-bottom: 15px;
-                font-size: 1.4rem;
-                display: flex;
-                align-items: center;
-                gap: 10px;
-            }
-
-            .feedback-list {
-                list-style: none;
-                padding-left: 0;
-            }
-
-            .feedback-list li {
-                background: rgba(255, 255, 255, 0.08);
-                margin: 10px 0;
-                padding: 15px 18px;
-                border-radius: 10px;
-                border-left: 4px solid #60a5fa;
-                transition: all 0.3s ease;
-                position: relative;
-                overflow: hidden;
-            }
-
-            .feedback-list li::before {
-                content: '✨';
-                position: absolute;
-                right: 15px;
-                top: 50%;
-                transform: translateY(-50%);
+        @keyframes modalSlideIn {
+            from {
+                transform: translateY(-50px);
                 opacity: 0;
-                transition: all 0.3s ease;
             }
 
-            .feedback-list li:hover {
-                background: rgba(255, 255, 255, 0.12);
-                transform: translateX(5px);
-                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            }
-
-            .feedback-list li:hover::before {
+            to {
+                transform: translateY(0);
                 opacity: 1;
-                transform: translateY(-50%) rotate(360deg);
+            }
+        }
+
+        .modal h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+
+        .modal p {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        .modal-btn {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: 600;
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3);
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            z-index: 2000;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .loading-spinner-large {
+            width: 80px;
+            height: 80px;
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #fbbf24;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-in;
+        }
+
+        /* Progress Indicator */
+        .progress-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            z-index: 1001;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #60a5fa, #8b5cf6, #ec4899);
+            width: 0%;
+            transition: width 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            animation: progressShimmer 2s ease-in-out infinite;
+        }
+
+        @keyframes progressShimmer {
+            0% {
+                transform: translateX(-100%);
             }
 
-            /* Enhanced Camera Section */
-            .camera-section {
-                text-align: center;
-                margin-top: 40px;
-                padding: 30px;
-                background: rgba(255, 255, 255, 0.08);
-                border-radius: 20px;
-                backdrop-filter: blur(20px);
-                border: 1px solid rgba(255, 255, 255, 0.15);
-                transition: all 0.3s ease;
+            100% {
+                transform: translateX(100%);
             }
+        }
+    </style>
+</head>
 
-            .camera-section:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-            }
+<body>
+    <!-- Interactive Background -->
+    <div class="interactive-bg">
+        <div class="bg-element"></div>
+        <div class="bg-element"></div>
+        <div class="bg-element"></div>
+    </div>
 
-            .camera-section h3 {
-                color: #fbbf24;
-                margin-bottom: 20px;
-                font-size: 1.5rem;
-            }
+    <!-- Progress Indicator -->
+    <div class="progress-indicator">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
 
-            #video {
-                width: 100%;
-                max-width: 450px;
-                border-radius: 15px;
-                margin-bottom: 20px;
-                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-                transition: all 0.3s ease;
-            }
-
-            #video:hover {
-                transform: scale(1.02);
-                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
-            }
-
-            .camera-controls {
-                display: flex;
-                gap: 15px;
-                justify-content: center;
-                flex-wrap: wrap;
-            }
-
-            /* Real-time Feedback Indicators */
-            .real-time-feedback {
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: rgba(16, 185, 129, 0.9);
-                color: white;
-                padding: 15px 20px;
-                border-radius: 10px;
-                backdrop-filter: blur(10px);
-                transform: translateX(400px);
-                transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-                z-index: 1000;
-            }
-
-            .real-time-feedback.show {
-                transform: translateX(0);
-            }
-
-            /* Enhanced Animations */
-            .fade-in {
-                animation: fadeInUp 0.8s ease-out;
-            }
-
-            @keyframes fadeInUp {
-                from {
-                    opacity: 0;
-                    transform: translateY(40px);
-                }
-
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-
-            .slide-in-left {
-                animation: slideInLeft 0.8s ease-out;
-            }
-
-            @keyframes slideInLeft {
-                from {
-                    opacity: 0;
-                    transform: translateX(-40px);
-                }
-
-                to {
-                    opacity: 1;
-                    transform: translateX(0);
-                }
-            }
-
-            .slide-in-right {
-                animation: slideInRight 0.8s ease-out;
-            }
-
-            @keyframes slideInRight {
-                from {
-                    opacity: 0;
-                    transform: translateX(40px);
-                }
-
-                to {
-                    opacity: 1;
-                    transform: translateX(0);
-                }
-            }
-
-            /* Responsive Design */
-            @media (max-width: 768px) {
-                .main-content {
-                    grid-template-columns: 1fr;
-                    gap: 25px;
-                }
-
-                .header h1 {
-                    font-size: 2.8rem;
-                }
-
-                .container {
-                    padding: 15px;
-                }
-
-                .form-section,
-                .results-section {
-                    padding: 25px;
-                }
-
-                .btn {
-                    padding: 15px 25px;
-                    font-size: 1rem;
-                }
-            }
-
-            /* Interactive Cursor */
-            .interactive-cursor {
-                position: fixed;
-                width: 20px;
-                height: 20px;
-                background: linear-gradient(135deg, #60a5fa, #ec4899);
-                border-radius: 50%;
-                pointer-events: none;
-                z-index: 9999;
-                transition: transform 0.1s ease;
-                mix-blend-mode: difference;
-            }
-
-            .interactive-cursor.hover {
-                transform: scale(2);
-            }
-
-            /* Modal Styles */
-            .modal {
-                display: none;
-                position: fixed;
-                z-index: 1000;
-                left: 0;
-                top: 0;
-                width: 100%;
-                height: 100%;
-                overflow: auto;
-                background-color: rgba(0, 0, 0, 0.6);
-                backdrop-filter: blur(5px);
-                align-items: center;
-                justify-content: center;
-            }
-
-            .modal-content {
-                background: rgba(255, 255, 255, 0.95);
-                margin: auto;
-                padding: 40px;
-                border-radius: 20px;
-                width: 90%;
-                max-width: 500px;
-                text-align: center;
-                position: relative;
-                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-                animation: modalSlideIn 0.4s ease-out;
-            }
-
-            @keyframes modalSlideIn {
-                from {
-                    transform: translateY(-50px);
-                    opacity: 0;
-                }
-
-                to {
-                    transform: translateY(0);
-                    opacity: 1;
-                }
-            }
-
-            .modal h2 {
-                color: #333;
-                margin-bottom: 20px;
-                font-size: 2rem;
-            }
-
-            .modal p {
-                color: #666;
-                margin-bottom: 30px;
-                font-size: 1.1rem;
-            }
-
-            .modal-btn {
-                background: linear-gradient(135deg, #fbbf24, #f59e0b);
-                color: white;
-                border: none;
-                padding: 15px 40px;
-                font-size: 1.2rem;
-                border-radius: 50px;
-                cursor: pointer;
-                transition: transform 0.2s, box-shadow 0.2s;
-                font-weight: 600;
-            }
-
-            .modal-btn:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 10px 20px rgba(245, 158, 11, 0.3);
-            }
-
-            /* Loading Overlay */
-            .loading-overlay {
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(255, 255, 255, 0.9);
-                z-index: 2000;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-            }
-
-            .loading-content {
-                text-align: center;
-            }
-
-            .loading-spinner-large {
-                width: 80px;
-                height: 80px;
-                border: 8px solid #f3f3f3;
-                border-top: 8px solid #fbbf24;
-                border-radius: 50%;
-                animation: spin 1s linear infinite;
-                margin-bottom: 20px;
-            }
-
-            .fade-in {
-                animation: fadeIn 0.8s ease-in;
-            }
-
-            /* Progress Indicator */
-            .progress-indicator {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 4px;
-                background: rgba(255, 255, 255, 0.1);
-                z-index: 1001;
-            }
-
-            .progress-bar {
-                height: 100%;
-                background: linear-gradient(90deg, #60a5fa, #8b5cf6, #ec4899);
-                width: 0%;
-                transition: width 0.3s ease;
-                position: relative;
-                overflow: hidden;
-            }
-
-            .progress-bar::after {
-                content: '';
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-                animation: progressShimmer 2s ease-in-out infinite;
-            }
-
-            @keyframes progressShimmer {
-                0% {
-                    transform: translateX(-100%);
-                }
-
-                100% {
-                    transform: translateX(100%);
-                }
-            }
-        </style>
-        </head>
-
-        <body>
-            <!-- Interactive Background -->
-            <div class="interactive-bg">
-                <div class="bg-element"></div>
-                <div class="bg-element"></div>
-                <div class="bg-element"></div>
-            </div>
-
-            <!-- Progress Indicator -->
-            <div class="progress-indicator">
-                <div class="progress-bar" id="progressBar"></div>
-            </div>
-
-            <!-- Interactive Cursor -->
-            <div class="interactive-cursor" id="interactiveCursor"></div>
-
-            <!-- Real-time Feedback -->
-            <div class="real-time-feedback" id="realTimeFeedback">
-                <i class="fas fa-check-circle"></i>
-                <span>Great response! Keep going...</span>
-            </div>
-
-            <div class="container">
-                <div class="header fade-in">
-                    <h1><i class="fas fa-microphone-alt"></i> AI Interview Simulator</h1>
-                    <p>Master your interview skills with AI-powered questions, real-time feedback, and personalized
-                        coaching.
-                        Experience the future of interview preparation.</p>
-                </div>
-
-                <div class="main-content">
-                    <div class="form-section slide-in-left">
-                        <h2><i class="fas fa-cog"></i> Interview Setup</h2>
-                        <form id="interviewForm">
-                            <div class="form-group">
-                                <label for="name"><i class="fas fa-user"></i> Full Name:</label>
-                                <input type="text" id="name" name="name" placeholder="Enter your full name" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="background"><i class="fas fa-history"></i> Current Status /
-                                    Background:</label>
-                                <textarea id="background" name="background"
-                                    placeholder="e.g., Final year CS student, Freelance Web Developer"
-                                    style="min-height: 80px;" required></textarea>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="interests"><i class="fas fa-heart"></i> Key Interests:</label>
-                                <input type="text" id="interests" name="interests"
-                                    placeholder="e.g., AI, Cloud Computing, Cyber Security" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="role"><i class="fas fa-briefcase"></i> Job Role:</label>
-                                <input type="text" id="role" name="role"
-                                    placeholder="e.g., Software Developer, Product Manager" required>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="seniority"><i class="fas fa-chart-line"></i> Seniority Level:</label>
-                                <select id="seniority" name="seniority" required>
-                                    <option value="">Select level</option>
-                                    <option value="entry">Entry Level</option>
-                                    <option value="mid">Mid Level</option>
-                                    <option value="senior">Senior Level</option>
-                                </select>
-                            </div>
-
-                            <div class="btn-group">
-                                <button type="button" class="btn" id="generateQuestionsBtn">
-                                    <i class="fas fa-magic"></i> Generate Questions
-                                </button>
-                            </div>
-                        </form>
-
-                        <div id="questionsContainer" style="display: none;">
-                            <h3 style="color: #fbbf24; margin: 25px 0 20px 0;">
-                                <i class="fas fa-list-ul"></i> Interview Questions
-                            </h3>
-                            <div id="questionsList"></div>
-
-                            <div class="form-group" style="margin-top: 30px;">
-                                <label for="transcript"><i class="fas fa-comments"></i> Your Response:</label>
-                                <textarea id="transcript" name="transcript"
-                                    placeholder="Type or speak your interview response here..."></textarea>
-                            </div>
-
-                            <div class="btn-group">
-                                <button type="button" class="btn" id="recordBtn">
-                                    <i class="fas fa-microphone"></i> Start Recording
-                                </button>
-                                <button type="button" class="btn" id="stopRecordBtn" style="display: none;">
-                                    <i class="fas fa-stop"></i> Stop Recording
-                                </button>
-                                <button type="button" class="btn" id="analyzeBtn">
-                                    <i class="fas fa-search"></i> Analyze Response
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="results-section slide-in-right">
-                        <h2><i class="fas fa-chart-bar"></i> AI Analysis</h2>
-                        <div id="loadingSection" class="loading" style="display: none;">
-                            <div class="spinner"></div>
-                            <p>Analyzing your response with AI...</p>
-                        </div>
-
-                        <div id="feedbackContainer" style="display: none;">
-                            <div class="feedback-container">
-                                <div id="sentimentBadge" class="sentiment-badge"></div>
-
-                                <div class="feedback-section">
-                                    <h3><i class="fas fa-tachometer-alt"></i> Confidence Level</h3>
-                                    <div class="confidence-bar">
-                                        <div id="confidenceFill" class="confidence-fill" style="width: 0%"></div>
-                                    </div>
-                                    <p id="confidenceText"></p>
-                                </div>
-
-                                <div class="feedback-section">
-                                    <h3><i class="fas fa-file-alt"></i> Summary</h3>
-                                    <p id="summaryText"></p>
-                                </div>
-
-                                <div class="feedback-section">
-                                    <h3><i class="fas fa-star"></i> Strengths</h3>
-                                    <ul id="strengthsList" class="feedback-list"></ul>
-                                </div>
-
-                                <div class="feedback-section">
-                                    <h3><i class="fas fa-lightbulb"></i> Areas for Improvement</h3>
-                                    <ul id="gapsList" class="feedback-list"></ul>
-                                </div>
-
-                                <div class="feedback-section">
-                                    <h3><i class="fas fa-rocket"></i> Recommendations</h3>
-                                    <ul id="recommendationsList" class="feedback-list"></ul>
-                                </div>
-
-                                <div class="feedback-section">
-                                    <h3><i class="fas fa-question-circle"></i> Follow-up Question</h3>
-                                    <p id="followUpQuestion"
-                                        style="background: rgba(255, 255, 255, 0.1); padding: 18px; border-radius: 10px; border-left: 4px solid #fbbf24;">
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-=======
     <!-- Status Overlay (Thinking/Listening) -->
     <div id="statusOverlay"
         style="display:none; position:fixed; top:20px; left:50%; transform:translateX(-50%); z-index:2000; background:rgba(0,0,0,0.7); padding:10px 20px; border-radius:30px; border: 1px solid rgba(255,255,255,0.2); backdrop-filter:blur(10px);">
@@ -1055,87 +922,9 @@
 
                     <div class="btn-group">
                         <button class="btn" onclick="window.location.reload()">Start New Interview</button>
->>>>>>> smalluichange
-                    </div>
-                </div>
-
-                <div class="camera-section fade-in">
-                    <h3><i class="fas fa-camera"></i> Facial Confidence Detection</h3>
-                    <video id="video" autoplay muted></video>
-                    <div class="camera-controls">
-                        <button class="btn" id="startCameraBtn">
-                            <i class="fas fa-play"></i> Start Camera
-                        </button>
-                        <button class="btn" id="stopCameraBtn" style="display: none;">
-                            <i class="fas fa-stop"></i> Stop Camera
-                        </button>
                     </div>
                 </div>
             </div>
-<<<<<<< HEAD
-
-            <!-- Start Interview Modal -->
-            <div id="startInterviewModal" class="modal">
-                <div class="modal-content">
-                    <i class="fas fa-check-circle" style="font-size: 5rem; color: #10b981; margin-bottom: 20px;"></i>
-                    <h2>Questions Ready!</h2>
-                    <p>Your personalized interview session is prepared. <br>Are you ready to begin?</p>
-                    <button class="modal-btn" onclick="startInterviewSession()">
-                        <i class="fas fa-play"></i> Start Interview
-                    </button>
-                </div>
-            </div>
-
-            <!-- Full Screen Loading Overlay -->
-            <div id="fullScreenLoader" class="loading-overlay">
-                <div class="loading-content">
-                    <div class="loading-spinner-large"></div>
-                    <h2 style="color: #333;">Generating Layout...</h2>
-                    <p style="color: #666;">Crafting your interview experience</p>
-                </div>
-            </div>
-            </div>
-
-            <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
-            <script>
-                // Enhanced Interactive Features
-                let recognition;
-                let isRecording = false;
-                let stream = null;
-                let currentQuestionIndex = 0;
-                let interviewProgress = 0;
-
-                // Initialize interactive cursor
-                const cursor = document.getElementById('interactiveCursor');
-                document.addEventListener('mousemove', (e) => {
-                    cursor.style.left = e.clientX + 'px';
-                    cursor.style.top = e.clientY + 'px';
-                });
-
-                // Add hover effects to interactive elements
-                const interactiveElements = document.querySelectorAll('.btn, .form-section, .results-section, .camera-section');
-                interactiveElements.forEach(el => {
-                    el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
-                    el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
-                });
-
-                // Progress bar animation
-                function updateProgress(progress) {
-                    const progressBar = document.getElementById('progressBar');
-                    progressBar.style.width = progress + '%';
-                }
-
-                // Real-time feedback system
-                function showRealTimeFeedback(message, type = 'success') {
-                    const feedback = document.getElementById('realTimeFeedback');
-                    feedback.querySelector('span').textContent = message;
-                    feedback.className = `real-time-feedback ${type}`;
-                    feedback.classList.add('show');
-
-                    setTimeout(() => {
-                        feedback.classList.remove('show');
-                    }, 3000);
-=======
         </div>
     </div>
 
@@ -1473,599 +1262,162 @@
                     // Add to the main text area? Or submitting directly?
                     // For now, let's just create a bridge to existing flow
                     console.log("Speech captured: ", transcript);
->>>>>>> smalluichange
                 }
+            };
 
-                // Enhanced speech recognition
-                if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-                    recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-                    recognition.continuous = true;
-                    recognition.interimResults = true;
+            recognition.onresult = (event) => {
+                let interimTranscript = '';
+                let finalTranscript = '';
 
-                    recognition.onresult = function (event) {
-                        let finalTranscript = '';
-                        for (let i = event.resultIndex; i < event.results.length; i++) {
-                            if (event.results[i].isFinal) {
-                                finalTranscript += event.results[i].transcript;
-                            }
-                        }
-                        if (finalTranscript) {
-                            const transcript = document.getElementById('transcript');
-                            transcript.value += finalTranscript + ' ';
-
-                            // Show real-time feedback
-                            showRealTimeFeedback('Great! Keep speaking...', 'success');
-
-                            // Update progress
-                            interviewProgress += 10;
-                            updateProgress(Math.min(interviewProgress, 100));
-                        }
-                    };
-
-                    recognition.onerror = function (event) {
-                        showRealTimeFeedback('Speech recognition error. Please try again.', 'error');
-                    };
-                }
-
-                // Event Listeners with enhanced interactions
-                document.getElementById('generateQuestionsBtn').addEventListener('click', generateQuestions);
-                document.getElementById('recordBtn').addEventListener('click', startRecording);
-                document.getElementById('stopRecordBtn').addEventListener('click', stopRecording);
-                document.getElementById('analyzeBtn').addEventListener('click', analyzeResponse);
-                document.getElementById('startCameraBtn').addEventListener('click', startCamera);
-                document.getElementById('stopCameraBtn').addEventListener('click', stopCamera);
-
-                // Enhanced question display with animations and TTS
-                let currentQuestions = []; // Store questions globally
-
-                async function generateQuestions() {
-                    const role = document.getElementById('role').value;
-                    const seniority = document.getElementById('seniority').value;
-                    const name = document.getElementById('name').value;
-                    const background = document.getElementById('background').value;
-                    const interests = document.getElementById('interests').value;
-
-                    if (!role || !seniority || !name || !background || !interests) {
-                        showRealTimeFeedback('Please fill in all fields.', 'error');
-                        return;
-                    }
-
-                    // Show full screen loader
-                    document.getElementById('fullScreenLoader').style.display = 'flex';
-
-                    try {
-                        const response = await fetch('/interview/questions', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({ role, seniority, name, background, interests })
-                        });
-
-                        const data = await response.json();
-
-                        if (data.success) {
-                            currentQuestions = data.questions;
-                            // Hide loader and show modal
-                            document.getElementById('fullScreenLoader').style.display = 'none';
-                            document.getElementById('startInterviewModal').style.display = 'flex';
-                        } else {
-                            document.getElementById('fullScreenLoader').style.display = 'none';
-                            showRealTimeFeedback('Failed to generate questions: ' + data.error, 'error');
-                        }
-                    } catch (error) {
-                        console.error('Error:', error);
-                        document.getElementById('fullScreenLoader').style.display = 'none';
-                        showRealTimeFeedback('Failed to generate questions. Please try again.', 'error');
-                    }
-                }
-
-                function startInterviewSession() {
-                    document.getElementById('startInterviewModal').style.display = 'none';
-                    document.getElementById('questionsContainer').style.display = 'block';
-                    displayQuestions(currentQuestions);
-
-                    // Scroll to questions
-                    document.getElementById('questionsContainer').scrollIntoView({ behavior: 'smooth' });
-                }
-
-                function displayQuestions(questions) {
-                    const questionsList = document.getElementById('questionsList');
-                    questionsList.innerHTML = '';
-
-                    questions.forEach((question, index) => {
-                        const questionDiv = document.createElement('div');
-                        questionDiv.style.cssText = 'background: rgba(255, 255, 255, 0.1); padding: 18px; margin: 12px 0; border-radius: 10px; border-left: 4px solid #60a5fa; transform: translateX(-20px); opacity: 0; transition: all 0.5s ease; display: flex; align-items: start; justify-content: space-between; gap: 10px;';
-
-                        const questionText = document.createElement('div');
-                        questionText.innerHTML = `<strong>Q${index + 1}:</strong> ${question}`;
-
-                        const speakBtn = document.createElement('button');
-                        speakBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
-                        speakBtn.className = 'btn';
-                        speakBtn.style.padding = '8px 12px';
-                        speakBtn.style.margin = '0';
-                        speakBtn.style.fontSize = '0.9rem';
-                        speakBtn.onclick = () => speakText(question);
-
-                        questionDiv.appendChild(questionText);
-                        questionDiv.appendChild(speakBtn);
-                        questionsList.appendChild(questionDiv);
-
-                        // Staggered animation
-                        setTimeout(() => {
-                            questionDiv.style.transform = 'translateX(0)';
-                            questionDiv.style.opacity = '1';
-                        }, index * 200);
-                    });
-
-                    // Auto-speak the first question
-                    if (questions.length > 0) {
-                        setTimeout(() => speakText("Your interview is starting. Question 1. " + questions[0]), 1500);
-                    }
-                }
-
-                // Text-to-Speech Function
-                function speakText(text) {
-                    if ('speechSynthesis' in window) {
-                        window.speechSynthesis.cancel(); // Stop any current speech
-                        const utterance = new SpeechSynthesisUtterance(text);
-                        utterance.rate = 1;
-                        utterance.pitch = 1;
-                        utterance.volume = 1;
-                        window.speechSynthesis.speak(utterance);
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) {
+                        finalTranscript += event.results[i][0].transcript;
+                        handleVoiceInput(finalTranscript); // Trigger AI
                     } else {
-                        showRealTimeFeedback('Text-to-speech not supported in this browser.', 'error');
+                        interimTranscript += event.results[i][0].transcript;
                     }
                 }
-
-                // Enhanced recording functions
-                function startRecording() {
-                    if (!recognition) {
-                        showRealTimeFeedback('Speech recognition is not supported in your browser.', 'error');
-                        return;
-                    }
-
-                    recognition.start();
-                    isRecording = true;
-                    document.getElementById('recordBtn').style.display = 'none';
-                    document.getElementById('stopRecordBtn').style.display = 'inline-block';
-                    showRealTimeFeedback('Recording started! Speak clearly...', 'success');
-                    updateProgress(50);
-                }
-
-                function stopRecording() {
-                    if (recognition) {
-                        recognition.stop();
-                    }
-                    isRecording = false;
-                    document.getElementById('recordBtn').style.display = 'inline-block';
-                    document.getElementById('stopRecordBtn').style.display = 'none';
-                    showRealTimeFeedback('Recording stopped. Ready to analyze!', 'success');
-                    updateProgress(75);
-                }
-
-                // Enhanced analysis with progress tracking
-                async function analyzeResponse() {
-                    const role = document.getElementById('role').value;
-                    const seniority = document.getElementById('seniority').value;
-                    const transcript = document.getElementById('transcript').value;
-
-                    if (!transcript.trim()) {
-                        showRealTimeFeedback('Please provide a response to analyze.', 'error');
-                        return;
-                    }
-
-                    showAnalyzing();
-                    updateProgress(90);
-
-                    try {
-                        const response = await fetch('/interview/analyze', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({ role, seniority, transcript })
-                        });
-
-                        const data = await response.json();
-
-                        if (data.success) {
-                            renderFeedback(data.analysis);
-                            updateProgress(100);
-                            showRealTimeFeedback('Analysis complete! Check your results.', 'success');
-                        } else {
-                            showRealTimeFeedback('Failed to analyze response: ' + data.error, 'error');
-                        }
-                    } catch (error) {
-                        console.error('Error:', error);
-                        showRealTimeFeedback('Failed to analyze response. Please try again.', 'error');
-                    }
-                }
-
-                // Enhanced loading state
-                function showAnalyzing() {
-                    document.getElementById('loadingSection').style.display = 'block';
-                    document.getElementById('feedbackContainer').style.display = 'none';
-                }
-
-                // Enhanced feedback rendering with animations
-                function renderFeedback(analysis) {
-                    document.getElementById('loadingSection').style.display = 'none';
-                    document.getElementById('feedbackContainer').style.display = 'block';
-
-                    // Animate sentiment badge
-                    const sentimentBadge = document.getElementById('sentimentBadge');
-                    sentimentBadge.textContent = analysis.sentiment.charAt(0).toUpperCase() + analysis.sentiment.slice(1);
-                    sentimentBadge.className = `sentiment-badge sentiment-${analysis.sentiment}`;
-                    sentimentBadge.style.animation = 'none';
-                    sentimentBadge.offsetHeight; // Trigger reflow
-                    sentimentBadge.style.animation = 'badgePulse 2s ease-in-out infinite';
-
-                    // Animate confidence bar
-                    setConfidence(analysis.confidence);
-
-                    // Animate content sections
-                    const sections = ['summaryText', 'strengthsList', 'gapsList', 'recommendationsList', 'followUpQuestion'];
-                    sections.forEach((sectionId, index) => {
-                        setTimeout(() => {
-                            const element = document.getElementById(sectionId);
-                            if (element) {
-                                element.style.opacity = '0';
-                                element.style.transform = 'translateY(20px)';
-                                element.style.transition = 'all 0.5s ease';
-
-                                setTimeout(() => {
-                                    if (sectionId === 'summaryText') {
-                                        element.textContent = analysis.summary;
-                                    } else if (sectionId === 'followUpQuestion') {
-                                        element.textContent = analysis.followUpQuestion;
-                                    } else {
-                                        setList(sectionId, analysis[sectionId.replace('List', '')]);
-                                    }
-
-                                    element.style.opacity = '1';
-                                    element.style.transform = 'translateY(0)';
-                                }, 100);
-                            }
-                        }, index * 200);
-                    });
-                }
-
-                // Enhanced confidence visualization
-                function setConfidence(confidence) {
-                    const confidenceFill = document.getElementById('confidenceFill');
-                    const confidenceText = document.getElementById('confidenceText');
-
-                    // Animate confidence bar
-                    setTimeout(() => {
-                        confidenceFill.style.width = confidence + '%';
-                    }, 500);
-
-                    confidenceText.textContent = `${confidence}% - ${getConfidenceLabel(confidence)}`;
-                }
-
-                function getConfidenceLabel(confidence) {
-                    if (confidence >= 80) return 'Very High';
-                    if (confidence >= 60) return 'High';
-                    if (confidence >= 40) return 'Medium';
-                    if (confidence >= 20) return 'Low';
-                    return 'Very Low';
-                }
-
-                // Enhanced list rendering with animations
-                function setList(listId, items) {
-                    const list = document.getElementById(listId);
-                    list.innerHTML = '';
-
-                    items.forEach((item, index) => {
-                        const li = document.createElement('li');
-                        li.textContent = item;
-                        li.style.opacity = '0';
-                        li.style.transform = 'translateX(-20px)';
-                        list.appendChild(li);
-
-                        // Staggered animation
-                        setTimeout(() => {
-                            li.style.transition = 'all 0.5s ease';
-                            li.style.opacity = '1';
-                            li.style.transform = 'translateX(0)';
-                        }, index * 150);
-                    });
-                }
-
-                // Enhanced camera functions
-                async function startCamera() {
-                    try {
-                        stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                        document.getElementById('video').srcObject = stream;
-                        document.getElementById('startCameraBtn').style.display = 'none';
-                        document.getElementById('stopCameraBtn').style.display = 'inline-block';
-                        showRealTimeFeedback('Camera started! Facial analysis active.', 'success');
-                    } catch (error) {
-                        console.error('Error accessing camera:', error);
-                        showRealTimeFeedback('Unable to access camera. Please check permissions.', 'error');
-                    }
-                }
-
-                function stopCamera() {
-                    if (stream) {
-                        stream.getTracks().forEach(track => track.stop());
-                        document.getElementById('video').srcObject = null;
-                        document.getElementById('startCameraBtn').style.display = 'inline-block';
-                        document.getElementById('stopCameraBtn').style.display = 'none';
-                        showRealTimeFeedback('Camera stopped.', 'info');
-                    }
-                }
-
-                // Initialize face-api models
-                async function loadFaceApiModels() {
-                    try {
-                        await faceapi.nets.tinyFaceDetector.loadFromUri('/models');
-                        await faceapi.nets.faceExpressionNet.loadFromUri('/models');
-                    } catch (error) {
-                        console.log('Face-api models not available, facial analysis disabled');
-                    }
-                }
-
-                // Enhanced initialization
-                document.addEventListener('DOMContentLoaded', function () {
-                    loadFaceApiModels();
-                    updateProgress(0);
-
-                    // Add entrance animations
-                    const elements = document.querySelectorAll('.form-section, .results-section, .camera-section');
-                    elements.forEach((el, index) => {
-                        setTimeout(() => {
-                            el.style.opacity = '0';
-                            el.style.transform = 'translateY(30px)';
-                            el.style.transition = 'all 0.8s ease';
-
-                            setTimeout(() => {
-                                el.style.opacity = '1';
-                                el.style.transform = 'translateY(0)';
-                            }, 100);
-                        }, index * 200);
-                    });
-                });
-
-                // Enhanced scroll effects
-                window.addEventListener('scroll', () => {
-                    const scrolled = window.pageYOffset;
-                    const parallaxElements = document.querySelectorAll('.bg-element');
-
-                    parallaxElements.forEach((el, index) => {
-                        const speed = (index + 1) * 0.5;
-                        el.style.transform = `translateY(${scrolled * speed}px) rotate(${scrolled * 0.1}deg)`;
-                    });
-                });
-            </script>
-            <!-- Voice Interaction Modal -->
-            <div id="voiceModal" class="modal" style="display:none;">
-                <div class="modal-content">
-                    <h2 style="margin-bottom: 20px;">🎙️ Voice Interface</h2>
-                    <div id="visualizer-container"
-                        style="height: 100px; background: #000; margin-bottom: 20px; border-radius: 10px; position: relative; overflow: hidden;">
-                        <canvas id="visualizer" width="400" height="100"></canvas>
-                    </div>
-
-                    <p id="voiceStatus" style="font-size: 1.1rem; color: #4b5563; min-height: 30px;">
-                        Ready to speak...
-                    </p>
-
-                    <div style="display: flex; gap: 15px; justify-content: center; margin-top: 20px;">
-                        <button id="micBtn" class="modal-btn" onclick="toggleMic()"
-                            style="border-radius: 50%; width: 60px; height: 60px; padding: 0; display: flex; align-items: center; justify-content: center;">
-                            <i class="fas fa-microphone" style="font-size: 1.5rem;"></i>
-                        </button>
-                        <button id="speakBtn" class="modal-btn" onclick="speakLastResponse()"
-                            style="border-radius: 50%; width: 60px; height: 60px; padding: 0; display: flex; align-items: center; justify-content: center; background: #6366f1;">
-                            <i class="fas fa-volume-up" style="font-size: 1.5rem;"></i>
-                        </button>
-                    </div>
-                    <button class="btn"
-                        style="margin-top: 20px; background: transparent; color: #666; box-shadow: none;"
-                        onclick="closeVoiceModal()">Close Voice Mode</button>
-                </div>
-            </div>
-
-            <!-- Floating Action Button for Voice -->
-            <button onclick="openVoiceModal()"
-                style="position: fixed; bottom: 30px; right: 30px; width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #f59e0b, #ec4899); border: none; color: white; font-size: 1.5rem; cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,0.3); z-index: 999; transition: transform 0.3s;"
-                onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
-                <i class="fas fa-microphone-alt"></i>
-            </button>
-
-            <script>
-                // --- VOICE LOGIC ---
-                let recognition;
-                let isListening = false;
-                let synthesis = window.speechSynthesis;
-                let lastAIResponse = "Welcome to the AI Interview Simulator. I am ready to begin.";
-
-                // Initialize Speech Recognition
-                if ('webkitSpeechRecognition' in window) {
-                    recognition = new webkitSpeechRecognition();
-                    recognition.continuous = false;
-                    recognition.interimResults = true;
-                    recognition.lang = 'en-US';
-
-                    recognition.onstart = () => {
-                        isListening = true;
-                        document.getElementById('micBtn').style.background = '#ef4444';
-                        document.getElementById('micBtn').innerHTML = '<i class="fas fa-stop"></i>';
-                        document.getElementById('voiceStatus').innerText = "Listening...";
-                        startVisualizer();
-                    };
-
-                    recognition.onend = () => {
-                        isListening = false;
-                        document.getElementById('micBtn').style.background = 'linear-gradient(135deg, #fbbf24, #f59e0b)';
-                        document.getElementById('micBtn').innerHTML = '<i class="fas fa-microphone"></i>';
-                        stopVisualizer();
-
-                        // If we have a final transcript, treating it as "done"
-                        const transcript = document.getElementById('voiceStatus').innerText;
-                        if (!transcript.includes("Listening...") && !transcript.includes("Processing...")) {
-                            // Add to the main text area? Or submitting directly?
-                            // For now, let's just create a bridge to existing flow
-                            console.log("Speech captured: ", transcript);
-                        }
-                    };
-
-                    recognition.onresult = (event) => {
-                        let interimTranscript = '';
-                        let finalTranscript = '';
-
-                        for (let i = event.resultIndex; i < event.results.length; ++i) {
-                            if (event.results[i].isFinal) {
-                                finalTranscript += event.results[i][0].transcript;
-                                handleVoiceInput(finalTranscript); // Trigger AI
-                            } else {
-                                interimTranscript += event.results[i][0].transcript;
-                            }
-                        }
-                        document.getElementById('voiceStatus').innerText = finalTranscript || interimTranscript;
-                    };
-
-                    recognition.onerror = (event) => {
-                        console.error("Speech Rec Error:", event.error);
-                        document.getElementById('voiceStatus').innerText = "Error: " + event.error;
-                        stopVisualizer();
-                    };
-                } else {
-                    alert("Your browser does not support Voice Recognition. Please use Chrome.");
-                }
-
-                function toggleMic() {
-                    if (isListening) {
-                        recognition.stop();
-                    } else {
-                        recognition.start();
-                    }
-                }
-
-                function speakLastResponse() {
-                    if (synthesis.speaking) {
-                        synthesis.cancel();
-                    } else {
-                        const utterance = new SpeechSynthesisUtterance(lastAIResponse);
-                        // Try to find a good voice
-                        const voices = synthesis.getVoices();
-                        const preferredVoice = voices.find(v => v.name.includes('Google US English')) || voices[0];
-                        if (preferredVoice) utterance.voice = preferredVoice;
-
-                        utterance.rate = 1;
-                        utterance.pitch = 1;
-                        synthesis.speak(utterance);
-
-                        // Animate visualizer while speaking
-                        startVisualizer();
-                        utterance.onend = stopVisualizer;
-                    }
-                }
-
-                function openVoiceModal() {
-                    document.getElementById('voiceModal').style.display = 'flex';
-                }
-
-                function closeVoiceModal() {
-                    document.getElementById('voiceModal').style.display = 'none';
-                    synthesis.cancel();
-                }
-
-                // Bridge to existing logic
-                async function handleVoiceInput(text) {
-                    // 1. Put text in current context (if relevant)
-                    // Ideally, we find the active question and simulate answering it
-
-                    document.getElementById('voiceStatus').innerText = "Processing...";
-
-                    // Note: Efficiently integrating with the existing complex flow requires determining STATE.
-                    // For MVP: We will simply read out the text we captured to confirm.
-
-                    // REAL INTEGRATION:
-                    // We need to call the backend analyze endpoint.
-                    // Assuming variables from existing script are accessible (scope issue in EJS often).
-                    // Let's rely on the existing global vars if possible.
-
-                    // Hack: Trigger the existing "Stop Recording" logic but with text injection?
-                    // Actually, let's just use the analyze flow directly.
-
-                    // Find current active question
-                    const currentQ = document.querySelector('.question-card.active')?.innerText || "General Context";
-
-                    try {
-                        const response = await fetch('/interview/analyze', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                role: document.getElementById('role').value,
-                                seniority: document.getElementById('seniority').value,
-                                question: currentQ,
-                                transcript: text
-                            })
-                        });
-                        const data = await response.json();
-
-                        if (data.success) {
-                            const analysis = data.analysis;
-                            lastAIResponse = `Here is my feedback. ${analysis.summary}. A follow up question: ${analysis.followUpQuestion}`;
-                            speakLastResponse();
-                            document.getElementById('voiceStatus').innerText = "AI: " + analysis.summary;
-                        }
-                    } catch (e) {
-                        console.error(e);
-                        document.getElementById('voiceStatus').innerText = "Error processing response.";
-                    }
-                }
-
-                // --- VISUALIZER ---
-                const canvas = document.getElementById('visualizer');
-                const ctx = canvas.getContext('2d');
-                let animationId;
-
-                function startVisualizer() {
-                    function draw() {
-                        ctx.fillStyle = '#000';
-                        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                        const time = Date.now() / 100;
-                        const centerY = canvas.height / 2;
-
-                        ctx.beginPath();
-                        ctx.strokeStyle = '#ec4899';
-                        ctx.lineWidth = 2;
-
-                        for (let x = 0; x < canvas.width; x++) {
-                            const y = centerY + Math.sin(x * 0.05 + time) * 20 * Math.sin(x * 0.01 + time * 0.5);
-                            if (x === 0) ctx.moveTo(x, y);
-                            else ctx.lineTo(x, y);
-                        }
-                        ctx.stroke();
-
-                        animationId = requestAnimationFrame(draw);
-                    }
-                    draw();
-                }
-
-                function stopVisualizer() {
-                    cancelAnimationFrame(animationId);
-                    ctx.fillStyle = '#000';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                    // Draw flat line
-                    ctx.beginPath();
-                    ctx.strokeStyle = '#333';
-                    ctx.moveTo(0, canvas.height / 2);
-                    ctx.lineTo(canvas.width, canvas.height / 2);
-                    ctx.stroke();
-                }
-
-                // Initial Draw
+                document.getElementById('voiceStatus').innerText = finalTranscript || interimTranscript;
+            };
+
+            recognition.onerror = (event) => {
+                console.error("Speech Rec Error:", event.error);
+                document.getElementById('voiceStatus').innerText = "Error: " + event.error;
                 stopVisualizer();
+            };
+        } else {
+            alert("Your browser does not support Voice Recognition. Please use Chrome.");
+        }
 
-            </script>
-        </body>
+        function toggleMic() {
+            if (isListening) {
+                recognition.stop();
+            } else {
+                recognition.start();
+            }
+        }
 
-        </html>
+        function speakLastResponse() {
+            if (synthesis.speaking) {
+                synthesis.cancel();
+            } else {
+                const utterance = new SpeechSynthesisUtterance(lastAIResponse);
+                // Try to find a good voice
+                const voices = synthesis.getVoices();
+                const preferredVoice = voices.find(v => v.name.includes('Google US English')) || voices[0];
+                if (preferredVoice) utterance.voice = preferredVoice;
+
+                utterance.rate = 1;
+                utterance.pitch = 1;
+                synthesis.speak(utterance);
+
+                // Animate visualizer while speaking
+                startVisualizer();
+                utterance.onend = stopVisualizer;
+            }
+        }
+
+        function openVoiceModal() {
+            document.getElementById('voiceModal').style.display = 'flex';
+        }
+
+        function closeVoiceModal() {
+            document.getElementById('voiceModal').style.display = 'none';
+            synthesis.cancel();
+        }
+
+        // Bridge to existing logic
+        async function handleVoiceInput(text) {
+            // 1. Put text in current context (if relevant)
+            // Ideally, we find the active question and simulate answering it
+
+            document.getElementById('voiceStatus').innerText = "Processing...";
+
+            // Note: Efficiently integrating with the existing complex flow requires determining STATE.
+            // For MVP: We will simply read out the text we captured to confirm.
+
+            // REAL INTEGRATION:
+            // We need to call the backend analyze endpoint.
+            // Assuming variables from existing script are accessible (scope issue in EJS often).
+            // Let's rely on the existing global vars if possible.
+
+            // Hack: Trigger the existing "Stop Recording" logic but with text injection?
+            // Actually, let's just use the analyze flow directly.
+
+            // Find current active question
+            const currentQ = document.querySelector('.question-card.active')?.innerText || "General Context";
+
+            try {
+                const response = await fetch('/interview/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        role: document.getElementById('role').value,
+                        seniority: document.getElementById('seniority').value,
+                        question: currentQ,
+                        transcript: text
+                    })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    const analysis = data.analysis;
+                    lastAIResponse = `Here is my feedback. ${analysis.summary}. A follow up question: ${analysis.followUpQuestion}`;
+                    speakLastResponse();
+                    document.getElementById('voiceStatus').innerText = "AI: " + analysis.summary;
+                }
+            } catch (e) {
+                console.error(e);
+                document.getElementById('voiceStatus').innerText = "Error processing response.";
+            }
+        }
+
+        // --- VISUALIZER ---
+        const canvas = document.getElementById('visualizer');
+        const ctx = canvas.getContext('2d');
+        let animationId;
+
+        function startVisualizer() {
+            function draw() {
+                ctx.fillStyle = '#000';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                const time = Date.now() / 100;
+                const centerY = canvas.height / 2;
+
+                ctx.beginPath();
+                ctx.strokeStyle = '#ec4899';
+                ctx.lineWidth = 2;
+
+                for (let x = 0; x < canvas.width; x++) {
+                    const y = centerY + Math.sin(x * 0.05 + time) * 20 * Math.sin(x * 0.01 + time * 0.5);
+                    if (x === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+
+                animationId = requestAnimationFrame(draw);
+            }
+            draw();
+        }
+
+        function stopVisualizer() {
+            cancelAnimationFrame(animationId);
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Draw flat line
+            ctx.beginPath();
+            ctx.strokeStyle = '#333';
+            ctx.moveTo(0, canvas.height / 2);
+            ctx.lineTo(canvas.width, canvas.height / 2);
+            ctx.stroke();
+        }
+
+        // Initial Draw
+        stopVisualizer();
+
+    </script>
+</body>
+
+</html>
