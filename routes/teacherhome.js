@@ -81,6 +81,7 @@ router.get("/teacher_home", isAuthenticated, async (req, res) => {
         const tasks = await TeacherWork.find({ collegeName: teacherProfile.collegeName, type: "task" });
         const announcements = await TeacherWork.find({ collegeName: teacherProfile.collegeName, type: "announcement" });
         const resources = await TeacherWork.find({ collegeName: teacherProfile.collegeName, type: "resource" });
+        const doubtSessions = await TeacherWork.find({ collegeName: teacherProfile.collegeName, type: "doubt_session" });
 
         // Fetch unresolved doubts in THIS college
         const doubts = await Doubt.find({ collegeName: teacherProfile.collegeName, status: "pending" });
@@ -93,6 +94,7 @@ router.get("/teacher_home", isAuthenticated, async (req, res) => {
             tasks,
             announcements,
             resources,
+            doubtSessions,
             doubts,
             analytics: {
                 avgProgress,
@@ -189,5 +191,31 @@ router.post("/answerDoubt", isAuthenticated, async (req, res) => {
     }
 });
 
+// POST: Add Doubt Session
+router.post("/addDoubtSession", isAuthenticated, async (req, res) => {
+    try {
+        const { title, date, sessionTime, sessionDuration, sessionLink } = req.body;
+        const userId = req.session.userId;
+        const teacherProfile = await TeacherProfile.findOne({ userId });
+
+        if (!title || !date || !sessionTime || !teacherProfile) return res.redirect("/teacher_home");
+
+        await TeacherWork.create({
+            type: "doubt_session",
+            title,
+            date,
+            sessionTime,
+            sessionDuration,
+            link: sessionLink,
+            teacherId: userId,
+            collegeName: teacherProfile.collegeName
+        });
+
+        res.redirect("/teacher_home");
+    } catch (error) {
+        console.error("Error adding doubt session:", error);
+        res.status(500).send("Error adding doubt session");
+    }
+});
 
 module.exports = router;

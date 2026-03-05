@@ -1,376 +1,594 @@
 <%- include('layouts/header'); -%>
     <%- include('layouts/tnavbar'); -%>
-        <!-- <body class="bg-gray-50 dark:bg-gray-900"> -->
-        <!-- Main Container -->
-        <div class="min-h-screen p-15">
-            <!-- Header Section -->
-            <header class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-10">
-                <div class="flex justify-between items-center">
-                    <div>
-                        <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-800">
-                            <%= collegeName %> Dashboard
-                        </h1>
-                        <p class="text-gray-600 dark:text-gray-400">Welcome, <%= username %> | Senior Instructional
-                                Officer</p>
-                        <div class="mt-4 flex flex-wrap gap-2">
-                            <span
-                                class="inline-flex items-center px-4 py-1.5 rounded-full bg-blue-100 text-blue-800 text-sm font-semibold">
-                                <i class="fas fa-university mr-2"></i> Institutional Connection Active
-                            </span>
-                            <span
-                                class="inline-flex items-center px-4 py-1.5 rounded-full bg-indigo-100 text-indigo-800 text-sm font-semibold">
-                                <i class="fas fa-key mr-2"></i> Code: <%= teacherCode %>
-                            </span>
-                        </div>
+
+        <!-- Custom Premium Styles -->
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+            :root {
+                --primary: #4f46e5;
+                --primary-light: #818cf8;
+                --secondary: #ec4899;
+                --accent: #f59e0b;
+                --bg-main: #f8fafc;
+                --glass-bg: rgba(255, 255, 255, 0.7);
+                --glass-border: rgba(255, 255, 255, 0.2);
+            }
+
+            body {
+                font-family: 'Outfit', sans-serif;
+                background: var(--bg-main);
+                color: #1e293b;
+                overflow-x: hidden;
+            }
+
+            .glass-card {
+                background: var(--glass-bg);
+                backdrop-filter: blur(12px);
+                -webkit-backdrop-filter: blur(12px);
+                border: 1px solid var(--glass-border);
+                box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+                border-radius: 24px;
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            .glass-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.12);
+            }
+
+            .gradient-text {
+                background: linear-gradient(135deg, var(--primary), var(--secondary));
+                -webkit-background-clip: text;
+                background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+            .btn-premium {
+                background: linear-gradient(135deg, var(--primary), var(--primary-light));
+                color: white;
+                border-radius: 12px;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+            }
+
+            .btn-premium:hover {
+                transform: scale(1.02);
+                box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+            }
+
+            .stat-icon {
+                width: 48px;
+                height: 48px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 14px;
+                font-size: 20px;
+            }
+
+            .custom-scrollbar::-webkit-scrollbar {
+                width: 6px;
+            }
+
+            .custom-scrollbar::-webkit-scrollbar-track {
+                background: transparent;
+            }
+
+            .custom-scrollbar::-webkit-scrollbar-thumb {
+                background: #cbd5e1;
+                border-radius: 10px;
+            }
+
+            /* Modal Styles */
+            .modal-backdrop {
+                background: rgba(0, 0, 0, 0.4);
+                backdrop-filter: blur(4px);
+            }
+
+            .animate-in {
+                animation: fadeInScale 0.4s ease forwards;
+            }
+
+            @keyframes fadeInScale {
+                from {
+                    opacity: 0;
+                    transform: scale(0.95);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+            }
+
+            .nav-pill {
+                padding: 8px 16px;
+                border-radius: 99px;
+                font-weight: 600;
+                font-size: 14px;
+                transition: all 0.3s ease;
+            }
+
+            .nav-pill.active {
+                background: var(--primary);
+                color: white;
+            }
+
+            .dashboard-grid {
+                display: grid;
+                grid-template-columns: repeat(12, 1fr);
+                gap: 24px;
+            }
+
+            .col-span-12 {
+                grid-column: span 12;
+            }
+
+            .col-span-8 {
+                grid-column: span 8;
+            }
+
+            .col-span-4 {
+                grid-column: span 4;
+            }
+
+            .col-span-6 {
+                grid-column: span 6;
+            }
+
+            @media (max-width: 1024px) {
+
+                .col-span-8,
+                .col-span-4,
+                .col-span-6 {
+                    grid-column: span 12;
+                }
+            }
+        </style>
+
+        <div class="min-h-screen p-6 md:p-10 max-w-7xl mx-auto">
+            <!-- Header Area -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
+                <div>
+                    <h1 class="text-4xl font-extrabold tracking-tight text-slate-900 mb-2">
+                        Hello, <span class="gradient-text">
+                            <%= username %>
+                        </span>! 👋
+                    </h1>
+                    <p class="text-slate-500 font-medium flex items-center gap-2">
+                        <i class="fas fa-university text-primary"></i>
+                        <%= collegeName %> | Faculty Dashboard
+                    </p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="glass-card px-4 py-2 flex items-center gap-3">
+                        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Invite Code</span>
+                        <span class="text-lg font-black text-primary">
+                            <%= teacherCode %>
+                        </span>
+                        <button onclick="navigator.clipboard.writeText('<%= teacherCode %>')"
+                            class="text-slate-400 hover:text-primary transition-colors">
+                            <i class="far fa-copy"></i>
+                        </button>
                     </div>
-                    <!-- Dark Mode Toggle -->
-                    <button id="darkModeToggle" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700">
-                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                            <path class="dark:hidden"
-                                d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z">
-                            </path>
-                            <path class="hidden dark:block"
-                                d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
-                        </svg>
+                    <button id="darkModeToggle" class="glass-card p-3 text-slate-600 hover:text-primary">
+                        <i class="fas fa-moon"></i>
                     </button>
                 </div>
-            </header>
-
-            <!-- Search and Filter Section -->
-            <div class="bg-white dark:bg-white-200 rounded-lg shadow-lg p-6 mb-6">
-                <div class="flex flex-col md:flex-row gap-4">
-                    <input type="text" placeholder="Search Students..."
-                        class="flex-1 px-4 py-2 rounded-lg border dark:bg-gray-700 dark:border-gray-600">
-                    <select class="px-4 py-2 rounded-lg border dark:bg-gray-700 dark:border-gray-600">
-                        <option>All Subjects</option>
-                        <option>Mathematics</option>
-                        <option>Science</option>
-                        <option>English</option>
-                    </select>
-                    <select class="px-4 py-2 rounded-lg border dark:bg-gray-700 dark:border-gray-600">
-                        <option>All Status</option>
-                        <option>In Progress</option>
-                        <option>Completed</option>
-                    </select>
-                </div>
             </div>
 
-            <!-- Main Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-                <!-- Institutional Analytics -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-                    <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-800">Class Analysis</h2>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div class="text-center p-3 bg-blue-50 rounded-xl">
-                            <span class="block text-2xl font-bold text-blue-600">
-                                <%= analytics.avgProgress %>%
-                            </span>
-                            <span class="text-xs text-blue-500 uppercase font-semibold">Avg Progress</span>
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+                <div class="glass-card p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="stat-icon bg-blue-100 text-blue-600">
+                            <i class="fas fa-users"></i>
                         </div>
-                        <div class="text-center p-3 bg-purple-50 rounded-xl">
-                            <span class="block text-2xl font-bold text-purple-600">
-                                <%= analytics.studentCount %>
-                            </span>
-                            <span class="text-xs text-purple-500 uppercase font-semibold">Enrolled</span>
-                        </div>
+                        <span class="text-xs font-bold text-green-500 bg-green-50 px-2 py-1 rounded-full">+12%</span>
                     </div>
-                    <div class="mt-6">
-                        <h4 class="text-sm font-medium text-gray-500 mb-2">College Ecosystem Health</h4>
-                        <div class="w-full bg-gray-100 rounded-full h-4 overflow-hidden">
-                            <div class="bg-gradient-to-r from-blue-400 to-indigo-600 h-full transition-all duration-1000"
-                                style="width: <%= analytics.avgProgress %>%"></div>
-                        </div>
-                    </div>
+                    <h3 class="text-slate-500 font-semibold text-sm">Total Students</h3>
+                    <p class="text-2xl font-black text-slate-900">
+                        <%= analytics.studentCount %>
+                    </p>
                 </div>
-
-                <!-- Student Progress -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-                    <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-800">Student Progress</h2>
-                    <div class="space-y-4 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
-                        <% if (students.length> 0) { %>
-                            <% students.slice(0, 10).forEach(student=> { %>
-                                <div
-                                    class="group flex items-center justify-between p-2 hover:bg-gray-50 rounded-lg transition-colors">
-                                    <div class="flex items-center gap-3">
-                                        <div
-                                            class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 text-xs font-bold">
-                                            <%= student.fullName.charAt(0) %>
-                                        </div>
-                                        <span class="text-sm font-medium text-gray-700">
-                                            <%= student.fullName %>
-                                        </span>
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <span class="text-xs font-semibold text-blue-600">
-                                            <%= student.progress %>%
-                                        </span>
-                                        <div class="w-12 bg-gray-200 rounded-full h-1">
-                                            <div class="bg-blue-500 h-1 rounded-full"
-                                                style="width: <%= student.progress %>%"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <% }); %>
-                                    <% } else { %>
-                                        <p class="text-center text-gray-500 py-10">No students found for this college
-                                            yet.</p>
-                                        <% } %>
-                    </div>
-                    <% if (students.length> 10) { %>
-                        <div class="mt-4 text-center">
-                            <a href="/studentlist"
-                                class="text-sm font-semibold text-indigo-600 hover:text-indigo-800">View All <%=
-                                    students.length %> Students →</a>
+                <div class="glass-card p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="stat-icon bg-indigo-100 text-indigo-600">
+                            <i class="fas fa-chart-line"></i>
                         </div>
-                        <% } %>
-                </div>
-
-                <!-- Tasks and Assignments -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 flex flex-col">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-xl font-bold text-gray-800">Assign Tasks</h2>
-                        <button onclick="toggleForm('taskForm')" class="text-blue-600 font-bold text-sm">+ New</button>
+                        <span class="text-xs font-bold text-blue-500 bg-blue-50 px-2 py-1 rounded-full">Optimal</span>
                     </div>
-
-                    <form id="taskForm" action="/addTask" method="POST"
-                        class="hidden mb-6 p-4 bg-blue-50 rounded-xl space-y-3">
-                        <input type="text" name="title" placeholder="What needs to be done?"
-                            class="w-full px-3 py-2 rounded-lg border focus:ring-2 focus:ring-blue-400 outline-none"
-                            required>
-                        <input type="date" name="dueDate" class="w-full px-3 py-2 rounded-lg border outline-none"
-                            required>
-                        <button type="submit"
-                            class="w-full py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition-colors">Assign
-                            to Class</button>
-                    </form>
-
-                    <div class="space-y-3 overflow-y-auto max-h-64 pr-2 custom-scrollbar">
-                        <% if (tasks.length> 0) { %>
-                            <% tasks.forEach(task=> { %>
-                                <div
-                                    class="p-3 border border-gray-100 rounded-xl hover:border-blue-200 transition-colors">
-                                    <h3 class="text-sm font-bold text-gray-800">
-                                        <%= task.title %>
-                                    </h3>
-                                    <p class="text-[10px] text-gray-400 mt-1 uppercase tracking-wider font-bold">Due:
-                                        <%= task.dueDate %>
-                                    </p>
-                                </div>
-                                <% }); %>
-                                    <% } else { %>
-                                        <p class="text-xs text-gray-400 text-center py-10">No active tasks</p>
-                                        <% } %>
-                    </div>
+                    <h3 class="text-slate-500 font-semibold text-sm">Avg. Progress</h3>
+                    <p class="text-2xl font-black text-slate-900">
+                        <%= analytics.avgProgress %>%
+                    </p>
                 </div>
-            </div>
-
-            <!-- Interaction Row: Doubts & Resources -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
-                <!-- Doubts Section -->
-                <div class="bg-white rounded-2xl shadow-xl p-8 border border-red-50">
-                    <div class="flex justify-between items-center mb-8">
-                        <h2 class="text-2xl font-black text-gray-900 flex items-center gap-3">
-                            <span class="w-3 h-3 bg-red-500 rounded-full animate-pulse"></span>
-                            Student Doubts
-                        </h2>
-                        <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-black uppercase">
-                            <%= doubts.length %> Pending
+                <div class="glass-card p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="stat-icon bg-amber-100 text-amber-600">
+                            <i class="fas fa-question-circle"></i>
+                        </div>
+                        <span class="text-xs font-bold text-amber-500 bg-amber-50 px-2 py-1 rounded-full">
+                            <%= doubts.length %> New
                         </span>
                     </div>
+                    <h3 class="text-slate-500 font-semibold text-sm">Pending Doubts</h3>
+                    <p class="text-2xl font-black text-slate-900">
+                        <%= doubts.length %>
+                    </p>
+                </div>
+                <div class="glass-card p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="stat-icon bg-rose-100 text-rose-600">
+                            <i class="fas fa-video"></i>
+                        </div>
+                        <span class="text-xs font-bold text-rose-500 bg-rose-50 px-2 py-1 rounded-full">Next 2h</span>
+                    </div>
+                    <h3 class="text-slate-500 font-semibold text-sm">Active Sessions</h3>
+                    <p class="text-2xl font-black text-slate-900">
+                        <%= doubtSessions.length %>
+                    </p>
+                </div>
+            </div>
 
-                    <div class="space-y-6">
-                        <% if (doubts.length> 0) { %>
-                            <% doubts.forEach(doubt=> { %>
+            <!-- Main Dashboard Grid -->
+            <div class="dashboard-grid">
+
+                <!-- Doubt Sessions Management -->
+                <div class="col-span-8 glass-card p-8">
+                    <div class="flex justify-between items-center mb-8">
+                        <h2 class="text-2xl font-bold text-slate-900">Live Doubt Sessions</h2>
+                        <button onclick="toggleModal('sessionModal')"
+                            class="btn-premium px-6 py-2.5 flex items-center gap-2">
+                            <i class="fas fa-plus"></i> Schedule Session
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <% if (doubtSessions && doubtSessions.length> 0) { %>
+                            <% doubtSessions.forEach(session=> { %>
                                 <div
-                                    class="p-6 bg-slate-50 rounded-2xl border border-slate-100 relative overflow-hidden group">
-                                    <div class="absolute top-0 left-0 w-1 h-full bg-red-400"></div>
+                                    class="p-6 border border-slate-100 rounded-3xl hover:border-primary/30 transition-all group bg-white/50">
                                     <div class="flex justify-between items-start mb-4">
-                                        <div>
-                                            <span
-                                                class="text-[10px] font-black uppercase text-slate-400 tracking-tighter">
-                                                <%= doubt.subject %>
-                                            </span>
-                                            <h3 class="font-bold text-slate-900 mt-1 text-lg">"<%= doubt.question %>"
-                                            </h3>
+                                        <div
+                                            class="bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-black uppercase">
+                                            <%= session.date %>
                                         </div>
-                                        <div class="text-right">
-                                            <p class="text-xs font-bold text-slate-600">
+                                        <span class="text-slate-400 group-hover:text-primary transition-colors">
+                                            <i class="fas fa-ellipsis-h"></i>
+                                        </span>
+                                    </div>
+                                    <h3 class="text-lg font-bold text-slate-900 mb-1">
+                                        <%= session.title %>
+                                    </h3>
+                                    <p class="text-slate-500 text-sm mb-4 flex items-center gap-2">
+                                        <i class="far fa-clock"></i>
+                                        <%= session.sessionTime %> (<%= session.sessionDuration %>)
+                                    </p>
+                                    <a href="<%= session.link %>" target="_blank"
+                                        class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-900 text-white rounded-xl text-sm font-semibold hover:bg-primary transition-all">
+                                        <i class="fas fa-external-link-alt"></i> Join Room
+                                    </a>
+                                </div>
+                                <% }); %>
+                                    <% } else { %>
+                                        <div
+                                            class="col-span-2 text-center py-12 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200">
+                                            <div class="text-4xl mb-3 text-slate-300">📅</div>
+                                            <p class="text-slate-500 font-medium">No sessions scheduled yet.</p>
+                                        </div>
+                                        <% } %>
+                    </div>
+                </div>
+
+                <!-- Assignments & Tasks -->
+                <div class="col-span-4 glass-card p-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold text-slate-900">Task Center</h2>
+                        <button onclick="toggleModal('taskModal')"
+                            class="text-primary font-bold text-sm hover:underline">+ New</button>
+                    </div>
+
+                    <div class="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                        <% if (tasks && tasks.length> 0) { %>
+                            <% tasks.forEach(task=> { %>
+                                <div
+                                    class="flex items-center gap-4 p-4 rounded-2xl bg-white/40 border border-slate-100 group">
+                                    <div
+                                        class="w-2 h-10 bg-indigo-500 rounded-full group-hover:scale-y-110 transition-transform">
+                                    </div>
+                                    <div class="flex-1">
+                                        <h4 class="text-sm font-bold text-slate-800">
+                                            <%= task.title %>
+                                        </h4>
+                                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">
+                                            <i class="far fa-calendar-alt"></i> Due: <%= task.dueDate %>
+                                        </p>
+                                    </div>
+                                </div>
+                                <% }); %>
+                                    <% } else { %>
+                                        <p class="text-center text-slate-400 py-10 text-sm">All tasks cleared!</p>
+                                        <% } %>
+                    </div>
+                </div>
+
+                <!-- Student Doubts Section -->
+                <div class="col-span-12 glass-card p-8">
+                    <div class="flex justify-between items-center mb-8">
+                        <div>
+                            <h2 class="text-2xl font-bold text-slate-900">Instant Doubt Solver</h2>
+                            <p class="text-slate-500 text-sm">Help your students overcome their challenges</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button class="nav-pill active">Pending</button>
+                            <button class="nav-pill text-slate-400 hover:bg-slate-100">Resolved</button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <% if (doubts && doubts.length> 0) { %>
+                            <% doubts.forEach(doubt=> { %>
+                                <div class="glass-card p-6 border-l-4 border-rose-500 bg-white/40">
+                                    <div class="flex items-center gap-3 mb-4">
+                                        <div
+                                            class="w-10 h-10 rounded-full bg-slate-200 border-2 border-white shadow-sm flex items-center justify-center font-bold text-slate-600">
+                                            <%= doubt.studentName.charAt(0) %>
+                                        </div>
+                                        <div>
+                                            <h4 class="text-sm font-bold text-slate-900">
                                                 <%= doubt.studentName %>
+                                            </h4>
+                                            <p class="text-[10px] text-slate-400 font-bold uppercase">
+                                                <%= doubt.subject %>
                                             </p>
-                                            <p class="text-[10px] text-slate-400 font-medium">Just now</p>
                                         </div>
                                     </div>
+                                    <p class="text-slate-800 font-medium mb-6 text-sm line-clamp-3">"<%= doubt.question
+                                            %>"</p>
 
-                                    <form action="/answerDoubt" method="POST" class="mt-4 flex gap-2">
+                                    <form action="/answerDoubt" method="POST" class="space-y-3">
                                         <input type="hidden" name="doubtId" value="<%= doubt._id %>">
-                                        <input type="text" name="answer" placeholder="Type your expert solution..."
-                                            class="flex-1 bg-white border-2 border-slate-200 rounded-xl px-4 py-2 text-sm focus:border-blue-500 outline-none transition-all"
-                                            required>
+                                        <textarea name="answer" placeholder="Your expert solution..."
+                                            class="w-full bg-white/70 border-none rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary outline-none min-h-[80px]"
+                                            required></textarea>
                                         <button type="submit"
-                                            class="bg-blue-600 text-white px-6 py-2 rounded-xl text-sm font-black hover:scale-105 active:scale-95 transition-all">Reply</button>
+                                            class="w-full py-2.5 bg-slate-900 text-white rounded-xl text-sm font-bold hover:bg-primary transition-all">
+                                            Send Solution
+                                        </button>
                                     </form>
                                 </div>
                                 <% }); %>
                                     <% } else { %>
-                                        <div class="text-center py-16">
-                                            <i class="fas fa-check-circle text-green-400 text-4xl mb-4"></i>
-                                            <p class="text-slate-400 font-bold">Inbox is clear! All doubts resolved.</p>
+                                        <div class="col-span-full text-center py-20">
+                                            <div class="text-6xl mb-4">✨</div>
+                                            <h3 class="text-xl font-bold text-slate-900">Clear Skies!</h3>
+                                            <p class="text-slate-500">All students are on the right track for now.</p>
                                         </div>
                                         <% } %>
                     </div>
                 </div>
 
-                <!-- Learning Resources Section -->
-                <div class="bg-white rounded-2xl shadow-xl p-8 border border-emerald-50">
+                <!-- Learning Resources (Study Vault) -->
+                <div class="col-span-8 glass-card p-8">
                     <div class="flex justify-between items-center mb-8">
-                        <h2 class="text-2xl font-black text-gray-900 flex items-center gap-3">
-                            📚 Study Vault
-                        </h2>
-                        <button onclick="toggleForm('resourceForm')"
-                            class="text-emerald-600 font-black text-sm hover:underline">+ Share Material</button>
+                        <div>
+                            <h2 class="text-2xl font-bold text-slate-900">Campus Study Vault</h2>
+                            <p class="text-slate-500 text-sm">Shared learning materials and research papers</p>
+                        </div>
+                        <button onclick="toggleModal('resourceModal')"
+                            class="text-primary font-bold text-sm bg-primary/10 px-4 py-2 rounded-xl hover:bg-primary hover:text-white transition-all">
+                            + Share Material
+                        </button>
                     </div>
 
-                    <form id="resourceForm" action="/addResource" method="POST"
-                        class="hidden mb-10 p-6 bg-emerald-50 rounded-2xl space-y-4 border border-emerald-100">
-                        <div>
-                            <label
-                                class="text-[10px] font-black uppercase text-emerald-600 tracking-widest pl-1">Title</label>
-                            <input type="text" name="title" placeholder="e.g., Quantum Mechanics Notes"
-                                class="w-full bg-white border-none rounded-xl px-4 py-3 text-sm shadow-sm outline-none focus:ring-2 focus:ring-emerald-400"
-                                required>
-                        </div>
-                        <div>
-                            <label class="text-[10px] font-black uppercase text-emerald-600 tracking-widest pl-1">Link
-                                (Drive/PDF/YouTube)</label>
-                            <input type="url" name="link" placeholder="https://..."
-                                class="w-full bg-white border-none rounded-xl px-4 py-3 text-sm shadow-sm outline-none focus:ring-2 focus:ring-emerald-400"
-                                required>
-                        </div>
-                        <button type="submit"
-                            class="w-full py-4 bg-emerald-600 text-white font-black rounded-xl hover:bg-emerald-700 shadow-lg shadow-emerald-200 transition-all">Publish
-                            Resource</button>
-                    </form>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <% if (resources.length> 0) { %>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <% if (resources && resources.length> 0) { %>
                             <% resources.forEach(res=> { %>
-                                <a href="<%= res.link %>" target="_blank"
-                                    class="p-6 bg-white border border-slate-100 rounded-2xl hover:border-emerald-300 hover:shadow-lg transition-all flex flex-col justify-between group">
-                                    <div
-                                        class="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600 mb-4 group-hover:scale-110 transition-transform">
-                                        <i class="fas fa-file-alt"></i>
+                                <div
+                                    class="p-5 bg-white border border-slate-100 rounded-3xl hover:shadow-xl hover:-translate-y-1 transition-all group">
+                                    <div class="flex items-center gap-4 mb-4">
+                                        <div
+                                            class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center font-xl group-hover:bg-emerald-600 group-hover:text-white transition-all">
+                                            <% if(res.link && (res.link.includes('youtube') ||
+                                                res.link.includes('youtu.be'))) { %>
+                                                <i class="fab fa-youtube"></i>
+                                                <% } else if(res.link && res.link.includes('drive.google')) { %>
+                                                    <i class="fab fa-google-drive"></i>
+                                                    <% } else { %>
+                                                        <i class="fas fa-file-alt"></i>
+                                                        <% } %>
+                                        </div>
+                                        <div class="overflow-hidden">
+                                            <h3 class="font-bold text-slate-900 text-sm truncate">
+                                                <%= res.title %>
+                                            </h3>
+                                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
+                                                Resource</p>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <h3 class="font-black text-slate-900 text-sm leading-tight">
-                                            <%= res.title %>
-                                        </h3>
-                                        <p class="text-[10px] text-slate-400 mt-2 font-bold tracking-widest uppercase">
-                                            Click to open</p>
-                                    </div>
-                                </a>
+                                    <a href="<%= res.link %>" target="_blank"
+                                        class="text-xs font-bold text-emerald-600 hover:text-emerald-700 flex items-center gap-1">
+                                        Accessibility Link <i class="fas fa-arrow-right ml-1"></i>
+                                    </a>
+                                </div>
                                 <% }); %>
                                     <% } else { %>
                                         <div
-                                            class="col-span-full text-center py-16 bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
-                                            <p class="text-slate-400 text-sm font-bold">No resources shared yet.</p>
+                                            class="col-span-3 text-center py-12 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200">
+                                            <p class="text-slate-400 font-medium italic">Vault is empty. Be the first to
+                                                share!</p>
                                         </div>
                                         <% } %>
                     </div>
                 </div>
-            </div>
 
-            <!-- Aptitude Test Analytics -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
-                    <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-white">Aptitude Test Results</h2>
-                    <canvas id="aptitudeChart" class="w-full"></canvas>
-                </div>
-
-                <!-- Announcements -->
-                <div class="bg-white rounded-2xl shadow-lg p-8 mb-10 border border-slate-100">
-                    <div class="flex justify-between items-center mb-8">
-                        <h2 class="text-xl font-black text-slate-900">Campus Announcements</h2>
-                        <form action="/addAnnouncement" method="POST" class="flex gap-2">
-                            <input type="text" name="title" placeholder="Blast announcement..."
-                                class="px-4 py-2 bg-slate-50 rounded-xl border-none outline-none focus:ring-2 focus:ring-indigo-400 text-sm w-64"
-                                required>
-                            <input type="date" name="date" class="bg-slate-50 rounded-xl border-none text-sm px-4"
-                                required>
-                            <button type="submit"
-                                class="bg-indigo-600 text-white px-6 py-2 rounded-xl text-sm font-black hover:bg-indigo-700">Post</button>
-                        </form>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Announcements Feed -->
+                <div class="col-span-4 glass-card p-8">
+                    <h2 class="text-xl font-bold text-slate-900 mb-6">Campus Feed</h2>
+                    <div class="space-y-6">
                         <% announcements.forEach(announcement=> { %>
-                            <div class="p-5 bg-indigo-50/50 rounded-2xl border border-indigo-100">
-                                <span class="text-[9px] font-black uppercase text-indigo-400 tracking-widest">Posted on
+                            <div class="relative pl-6 border-l-2 border-slate-200">
+                                <div class="absolute -left-[5px] top-0 w-2 h-2 rounded-full bg-primary"></div>
+                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">
                                     <%= announcement.date %>
-                                </span>
-                                <h3 class="font-bold text-slate-800 mt-2">
+                                </p>
+                                <h4 class="text-sm font-bold text-slate-800 leading-tight">
                                     <%= announcement.title %>
-                                </h3>
+                                </h4>
                             </div>
                             <% }); %>
+
+                                <form action="/addAnnouncement" method="POST"
+                                    class="mt-8 pt-6 border-t border-slate-100">
+                                    <p class="text-xs font-bold text-slate-500 mb-3 uppercase">Post New Feed</p>
+                                    <input type="text" name="title" placeholder="What's happening?"
+                                        class="w-full bg-slate-50 border-none rounded-xl px-4 py-2.5 text-sm mb-3 outline-none focus:ring-2 focus:ring-primary"
+                                        required>
+                                    <div class="flex gap-2">
+                                        <input type="date" name="date"
+                                            class="flex-1 bg-slate-50 border-none rounded-xl px-3 text-xs outline-none"
+                                            required>
+                                        <button type="submit"
+                                            class="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-bold">Post</button>
+                                    </div>
+                                </form>
                     </div>
                 </div>
-
             </div>
         </div>
+
+        <!-- Modals -->
+        <!-- Session Modal -->
+        <div id="sessionModal" class="fixed inset-0 z-50 hidden modal-backdrop flex items-center justify-center p-4">
+            <div class="glass-card w-full max-w-lg p-8 animate-in bg-white shadow-2xl">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold text-slate-900">Schedule Doubt Session</h3>
+                    <button onclick="toggleModal('sessionModal')" class="text-slate-400 hover:text-rose-500"><i
+                            class="fas fa-times"></i></button>
+                </div>
+                <form action="/addDoubtSession" method="POST" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Session Title</label>
+                        <input type="text" name="title" placeholder="e.g., Final Physics Exam Prep"
+                            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary"
+                            required>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Date</label>
+                            <input type="date" name="date"
+                                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none"
+                                required>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Time</label>
+                            <input type="time" name="sessionTime"
+                                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none"
+                                required>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Duration</label>
+                            <select name="sessionDuration"
+                                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none">
+                                <option value="30 mins">30 mins</option>
+                                <option value="45 mins" selected>45 mins</option>
+                                <option value="1 hour">1 hour</option>
+                                <option value="1.5 hours">1.5 hours</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Meeting Link</label>
+                            <input type="url" name="sessionLink" placeholder="Zoom/Meet link"
+                                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none"
+                                required>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full btn-premium py-4 mt-4">Broadcast to Students</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Resource Modal -->
+        <div id="resourceModal" class="fixed inset-0 z-50 hidden modal-backdrop flex items-center justify-center p-4">
+            <div class="glass-card w-full max-w-md p-8 animate-in bg-white shadow-2xl">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold text-slate-900">Share Study Material</h3>
+                    <button onclick="toggleModal('resourceModal')" class="text-slate-400 hover:text-rose-500"><i
+                            class="fas fa-times"></i></button>
+                </div>
+                <form action="/addResource" method="POST" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Material Title</label>
+                        <input type="text" name="title" placeholder="Notes title"
+                            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-emerald-500"
+                            required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Link
+                            (Drive/PDF/Video)</label>
+                        <input type="url" name="link" placeholder="https://..."
+                            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-emerald-500"
+                            required>
+                    </div>
+                    <button type="submit"
+                        class="w-full bg-emerald-600 text-white font-bold rounded-xl py-4 mt-4 hover:bg-emerald-700 shadow-lg shadow-emerald-100 transition-all">Publish
+                        Resource</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Task Modal -->
+        <div id="taskModal" class="fixed inset-0 z-50 hidden modal-backdrop flex items-center justify-center p-4">
+            <div class="glass-card w-full max-w-md p-8 animate-in bg-white shadow-2xl">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-bold text-slate-900">New Assignment</h3>
+                    <button onclick="toggleModal('taskModal')" class="text-slate-400 hover:text-rose-500"><i
+                            class="fas fa-times"></i></button>
+                </div>
+                <form action="/addTask" method="POST" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Task Description</label>
+                        <input type="text" name="title" placeholder="Assignment name"
+                            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500"
+                            required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Due Date</label>
+                        <input type="date" name="dueDate"
+                            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none"
+                            required>
+                    </div>
+                    <button type="submit"
+                        class="w-full bg-indigo-600 text-white font-bold rounded-xl py-4 mt-4 hover:bg-indigo-700 transition-all">Assign
+                        Task</button>
+                </form>
+            </div>
+        </div>
+
         <%- include('layouts/footer'); -%>
 
             <script>
-                // Toggle Forms
-                function toggleForm(id) {
-                    const form = document.getElementById(id);
-                    form.classList.toggle('hidden');
+                function toggleModal(id) {
+                    const modal = document.getElementById(id);
+                    modal.classList.toggle('hidden');
                 }
 
-                // Dark Mode Toggle
+                // Close modals on clicking backdrop
+                window.onclick = function (event) {
+                    if (event.target.classList.contains('modal-backdrop')) {
+                        event.target.classList.add('hidden');
+                    }
+                }
+
+                // Dark Mode (Simplified)
                 const darkModeToggle = document.getElementById('darkModeToggle');
                 darkModeToggle.addEventListener('click', () => {
-                    document.documentElement.classList.toggle('dark');
-                    localStorage.setItem('darkMode', document.documentElement.classList.contains('dark'));
-                });
-
-                // Check Dark Mode Preference
-                if (localStorage.getItem('darkMode') === 'true' ||
-                    (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                    document.documentElement.classList.add('dark');
-                }
-
-                // Aptitude Chart
-                const ctx = document.getElementById('aptitudeChart').getContext('2d');
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Mathematics', 'Science', 'English', 'General Knowledge'],
-                        datasets: [{
-                            label: 'Class Average (%)',
-                            data: [75, 82, 65, 78],
-                            backgroundColor: [
-                                'rgba(59, 130, 246, 0.5)',
-                                'rgba(16, 185, 129, 0.5)',
-                                'rgba(239, 68, 68, 0.5)',
-                                'rgba(139, 92, 246, 0.5)'
-                            ],
-                            borderColor: [
-                                'rgb(59, 130, 246)',
-                                'rgb(16, 185, 129)',
-                                'rgb(239, 68, 68)',
-                                'rgb(139, 92, 246)'
-                            ],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                max: 100
-                            }
-                        }
-                    }
+                    document.body.classList.toggle('dark-mode');
+                    // Add dark mode specific logic if needed
                 });
             </script>
-            <!-- </body> -->

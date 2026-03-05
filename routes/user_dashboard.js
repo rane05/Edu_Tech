@@ -24,6 +24,7 @@ router.get('/dashboard', async (req, res) => {
 
         let teacherUpdates = [];
         let resources = [];
+        let doubtSessions = [];
         let myDoubts = [];
 
         if (studentProfile && studentProfile.collegeName) {
@@ -34,6 +35,9 @@ router.get('/dashboard', async (req, res) => {
 
             resources = await TeacherWork.find({ collegeName: studentProfile.collegeName, type: "resource" })
                 .sort({ createdAt: -1 });
+
+            doubtSessions = await TeacherWork.find({ collegeName: studentProfile.collegeName, type: "doubt_session" })
+                .sort({ date: 1 });
 
             myDoubts = await Doubt.find({ studentId: userId }).sort({ createdAt: -1 });
         }
@@ -46,6 +50,7 @@ router.get('/dashboard', async (req, res) => {
             results, // Added back
             teacherUpdates,
             resources,
+            doubtSessions,
             myDoubts
         });
     } catch (err) {

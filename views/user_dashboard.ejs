@@ -33,7 +33,8 @@
             }
 
             .gradient-text {
-                background: var(--primary-gradient);
+                background: linear-gradient(135deg, #6366f1, #a855f7);
+                /* Changed to direct gradient using primary colors */
                 -webkit-background-clip: text;
                 background-clip: text;
                 -webkit-text-fill-color: transparent;
@@ -223,7 +224,14 @@
                                                 class="flex items-center p-4 bg-gradient-to-r from-emerald-50 to-white rounded-3xl border border-emerald-100 group hover:shadow-lg transition-all">
                                                 <div
                                                     class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center text-emerald-50 shadow-inner group-hover:scale-110 transition-transform">
-                                                    <i class="fas fa-file-pdf text-emerald-500"></i>
+                                                    <% if(res.link && (res.link.includes('youtube') ||
+                                                        res.link.includes('youtu.be'))) { %>
+                                                        <i class="fab fa-youtube text-rose-500"></i>
+                                                        <% } else if(res.link && res.link.includes('drive.google')) { %>
+                                                            <i class="fab fa-google-drive text-emerald-500"></i>
+                                                            <% } else { %>
+                                                                <i class="fas fa-file-pdf text-indigo-500"></i>
+                                                                <% } %>
                                                 </div>
                                                 <div class="ml-4 flex-1">
                                                     <h5 class="text-xs font-black text-slate-900 truncate">
@@ -245,6 +253,56 @@
                                                     <% } %>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Doubt Sessions (NEW) -->
+                    <div class="glass-card rounded-[2.5rem] p-8">
+                        <div class="flex items-center justify-between mb-8">
+                            <div>
+                                <h2 class="text-2xl font-black text-slate-900 tracking-tight">Interactive Sessions</h2>
+                                <p class="text-slate-400 text-sm font-medium">Join live doubt solving rooms</p>
+                            </div>
+                            <div
+                                class="w-12 h-12 bg-rose-50 text-rose-500 rounded-2xl flex items-center justify-center animate-pulse">
+                                <i class="fas fa-video"></i>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <% if (doubtSessions && doubtSessions.length> 0) { %>
+                                <% doubtSessions.forEach(session=> { %>
+                                    <div
+                                        class="p-6 bg-white rounded-3xl border border-slate-100 shadow-sm hover:border-rose-200 transition-all group">
+                                        <div class="flex justify-between items-start mb-4">
+                                            <span
+                                                class="px-3 py-1 bg-rose-50 text-rose-600 rounded-full text-[10px] font-black uppercase tracking-wider">
+                                                <%= session.date %>
+                                            </span>
+                                            <span class="text-[10px] font-bold text-slate-400">
+                                                <%= session.sessionDuration %>
+                                            </span>
+                                        </div>
+                                        <h4 class="text-md font-bold text-slate-800 mb-2">
+                                            <%= session.title %>
+                                        </h4>
+                                        <div class="flex items-center gap-2 text-slate-500 text-xs mb-5 font-medium">
+                                            <i class="far fa-clock"></i>
+                                            <%= session.sessionTime %>
+                                        </div>
+                                        <a href="<%= session.link %>" target="_blank"
+                                            class="w-full inline-flex items-center justify-center gap-2 px-4 py-3 bg-slate-900 text-white rounded-2xl text-xs font-black hover:bg-rose-600 transition-all">
+                                            <i class="fas fa-sign-in-alt"></i> Enter Session Room
+                                        </a>
+                                    </div>
+                                    <% }); %>
+                                        <% } else { %>
+                                            <div
+                                                class="col-span-2 py-10 text-center bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200">
+                                                <p class="text-slate-400 font-bold italic">No live sessions scheduled
+                                                </p>
+                                            </div>
+                                            <% } %>
                         </div>
                     </div>
 
