@@ -161,6 +161,157 @@
         }
       }
 
+      @keyframes move-forever {
+        0% {
+          transform: translate(-2px, 0)
+        }
+
+        100% {
+          transform: translate(0px, 0)
+        }
+      }
+
+      .waves-use-el {
+        animation: move-forever 15s linear infinite;
+      }
+
+      .waves-use-el:nth-child(2) {
+        animation-duration: 20s;
+        animation-delay: -5s;
+      }
+
+      .waves-use-el:nth-child(1) {
+        animation-duration: 25s;
+      }
+
+      /* Premium Text Animations */
+      @keyframes crystal-shimmer {
+        0% {
+          background-position: -200% center;
+        }
+
+        100% {
+          background-position: 200% center;
+        }
+      }
+
+      @keyframes text-bounce-up {
+        0% {
+          opacity: 0;
+          transform: translateY(40px);
+        }
+
+        60% {
+          opacity: 1;
+          transform: translateY(-10px);
+        }
+
+        80% {
+          transform: translateY(5px);
+        }
+
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .animate-text-crystal {
+        background: linear-gradient(to right,
+            var(--c-navy) 20%,
+            #405f99 30%,
+            var(--c-navy) 70%,
+            var(--c-navy) 80%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-fill-color: transparent;
+        background-size: 500% auto;
+        animation: crystal-shimmer 4s linear infinite;
+      }
+
+      .animate-reveal-up-1,
+      .animate-reveal-up-2,
+      .animate-reveal-up-3 {
+        opacity: 0;
+      }
+
+      .is-revealed.animate-reveal-up-1 {
+        animation: text-bounce-up 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      }
+
+      .is-revealed.animate-reveal-up-2 {
+        animation: text-bounce-up 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        animation-delay: 0.15s;
+      }
+
+      .is-revealed.animate-reveal-up-3 {
+        animation: text-bounce-up 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        animation-delay: 0.3s;
+      }
+
+      /* High-End Electric Jagged Border */
+      .electric-card-wrapper {
+        position: relative;
+        background: rgba(255, 255, 255, 0.45) !important;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: none !important;
+        box-shadow: 0 8px 32px rgba(15, 23, 42, 0.04) !important;
+      }
+
+      .electric-card-wrapper::before,
+      .electric-card-wrapper::after {
+        content: '';
+        position: absolute;
+        inset: 0px;
+        border-radius: inherit;
+        border: 2px solid transparent;
+        pointer-events: none;
+        z-index: 10;
+        transition: opacity 0.3s ease;
+      }
+
+      .electric-card-wrapper::before {
+        border-color: #FFB800;
+        /* Yellow */
+        filter: url(#lightning-filter) drop-shadow(0 0 5px #FFB800) drop-shadow(0 0 10px #FFB800);
+        opacity: 0.8;
+      }
+
+      .electric-card-wrapper::after {
+        border-color: #ffffff;
+        filter: url(#lightning-filter) drop-shadow(0 0 2px #ffffff);
+        opacity: 0.9;
+      }
+
+      .electric-card-wrapper:hover::before {
+        opacity: 1;
+        filter: url(#lightning-filter) drop-shadow(0 0 8px #FFB800) drop-shadow(0 0 15px rgba(255, 184, 0, 0.8));
+      }
+
+      .electric-card-wrapper:hover::after {
+        opacity: 1;
+        filter: url(#lightning-filter) drop-shadow(0 0 4px #ffffff);
+      }
+
+      .electric-card-wrapper .text-h3,
+      .electric-card-wrapper .text-body {
+        color: var(--c-navy) !important;
+      }
+
+      .electric-card-wrapper .pc-list-item {
+        color: var(--c-navy) !important;
+      }
+
+      .electric-card-wrapper .pc-list-item i {
+        color: var(--c-slate-light) !important;
+      }
+
+      .electric-card-wrapper:hover .pc-list-item i {
+        color: var(--c-navy) !important;
+      }
+
       /* Typography Hierarchy */
       .text-display {
         font-size: clamp(3.5rem, 6.5vw, 6.2rem);
@@ -581,42 +732,78 @@
         z-index: 1;
       }
 
-      /* V6 Elevated Cards */
+      /* V10 Elevated SaaS Glass Cards */
       .pillar-card {
-        background: var(--c-base);
-        /* Not pure white */
+        background: rgba(255, 255, 255, 0.45);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
         border-radius: 24px;
         padding: var(--card-pad);
-        border: 1px solid rgba(15, 23, 42, 0.03);
-        border-top: 1px solid rgba(255, 255, 255, 0.9);
-        border-left: 1px solid rgba(255, 255, 255, 0.9);
-        box-shadow: var(--shadow-soft);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        box-shadow: 0 8px 32px rgba(15, 23, 42, 0.04);
         position: relative;
         overflow: hidden;
-        transition: all var(--dur-hover) var(--ease-out-smooth);
         display: flex;
         flex-direction: column;
         gap: 1.5rem;
+        --mouse-x: 50%;
+        --mouse-y: 50%;
+        transform-style: preserve-3d;
+
+        /* Pre-reveal state */
+        opacity: 0;
+        transform: translateY(40px);
+        transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
       }
 
-      /* Hover Interaction for Cards adds a soft wash based on section */
+      .pillar-card.revealed {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .pillar-card.revealed:hover {
+        transform: translateY(-4px) perspective(1000px) rotateX(var(--rotate-x, 0deg)) rotateY(var(--rotate-y, 0deg));
+        box-shadow: 0 24px 48px rgba(15, 23, 42, 0.08), 0 4px 12px rgba(15, 23, 42, 0.04);
+        /* Fast transition for smooth mouse tracking */
+        transition: transform 0.1s ease-out, box-shadow 0.3s ease;
+      }
+
+      /* Inner Hover Glow */
       .pillar-card::before {
         content: '';
         position: absolute;
         inset: 0;
-        background: linear-gradient(180deg, transparent, rgba(13, 148, 136, 0.03));
+        background: radial-gradient(600px circle at var(--mouse-x) var(--mouse-y),
+            rgba(255, 255, 255, 0.8),
+            transparent 40%);
         opacity: 0;
-        transition: opacity var(--dur-hover) ease;
+        transition: opacity 0.3s ease;
         z-index: 0;
         pointer-events: none;
       }
 
-      .pillar-card:hover {
-        transform: translateY(-4px);
-        box-shadow: var(--shadow-float);
+      /* Shine Border Effect using pseudo-element */
+      .pillar-card::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        padding: 1px;
+        background: radial-gradient(400px circle at var(--mouse-x) var(--mouse-y),
+            rgba(255, 255, 255, 1),
+            transparent 40%);
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+        z-index: 2;
       }
 
-      .pillar-card:hover::before {
+      .pillar-card:hover::before,
+      .pillar-card:hover::after {
         opacity: 1;
       }
 
@@ -627,27 +814,31 @@
 
       /* Spot Colors for Hierarchy */
       .pc-features .pc-icon-wrap {
-        background: var(--c-indigo-soft);
+        background: linear-gradient(135deg, var(--c-indigo-soft), rgba(255, 184, 0, 0.2));
         color: var(--c-indigo);
-        border: 1px solid rgba(99, 102, 241, 0.1);
+        border: 1px solid rgba(255, 184, 0, 0.3);
+        box-shadow: 0 4px 16px var(--c-indigo-glow);
       }
 
       .pc-tools .pc-icon-wrap {
-        background: var(--c-teal-soft);
+        background: linear-gradient(135deg, var(--c-teal-soft), rgba(0, 168, 255, 0.2));
         color: var(--c-teal);
-        border: 1px solid rgba(13, 148, 136, 0.1);
+        border: 1px solid rgba(0, 168, 255, 0.3);
+        box-shadow: 0 4px 16px var(--c-teal-glow);
       }
 
       .pc-assess .pc-icon-wrap {
-        background: var(--c-amber-soft);
+        background: linear-gradient(135deg, var(--c-amber-soft), rgba(108, 99, 255, 0.2));
         color: var(--c-amber);
-        border: 1px solid rgba(245, 158, 11, 0.1);
+        border: 1px solid rgba(108, 99, 255, 0.3);
+        box-shadow: 0 4px 16px var(--c-amber-glow);
       }
 
       .pc-resources .pc-icon-wrap {
-        background: var(--c-coral-soft);
+        background: linear-gradient(135deg, var(--c-coral-soft), rgba(16, 185, 129, 0.2));
         color: var(--c-coral);
-        border: 1px solid rgba(225, 29, 72, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        box-shadow: 0 4px 16px var(--c-coral-glow);
       }
 
       .pc-header {
@@ -657,14 +848,21 @@
       }
 
       .pc-icon-wrap {
-        width: 48px;
-        height: 48px;
-        border-radius: 12px;
+        width: 56px;
+        height: 56px;
+        border-radius: 16px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.25rem;
+        font-size: 1.5rem;
         flex-shrink: 0;
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .pillar-card:hover .pc-icon-wrap {
+        transform: scale(1.1) rotate(5deg);
       }
 
       .pc-list {
@@ -681,11 +879,21 @@
         color: var(--c-navy);
         font-weight: 500;
         font-size: 0.95rem;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .pillar-card:hover .pc-list-item {
+        transform: translateX(6px);
       }
 
       .pc-list-item i {
         color: var(--c-slate-light);
         font-size: 0.8rem;
+        transition: color 0.3s ease;
+      }
+
+      .pillar-card:hover .pc-list-item i {
+        color: var(--c-navy);
       }
 
       /* Pillar Subtle Connectors */
@@ -693,13 +901,32 @@
         position: absolute;
         inset: 0;
         pointer-events: none;
-        opacity: 0.3;
+        z-index: 0;
+        opacity: 0.6;
       }
 
-      .hub-connectors svg line {
-        stroke: var(--c-slate-light);
-        stroke-width: 1;
-        stroke-dasharray: 4 4;
+      .hub-connectors svg {
+        width: 100%;
+        height: 100%;
+      }
+
+      .animated-path {
+        fill: none;
+        stroke: url(#network-gradient);
+        stroke-width: 1.5;
+        stroke-dasharray: 12 12;
+        animation: dashMove 30s linear infinite;
+        opacity: 0.4;
+      }
+
+      @keyframes dashMove {
+        from {
+          stroke-dashoffset: 0;
+        }
+
+        to {
+          stroke-dashoffset: -1000;
+        }
       }
 
       /* ================== V5/V6: 3. FEATURE STORYTELLING ================== */
@@ -1541,9 +1768,262 @@
       .hero h1.text-display {
         color: var(--c-navy) !important;
       }
+
+      /* ULTRA PREMIUM SAAS CSS */
+      .blueprint-grid {
+        position: absolute;
+        inset: -20%;
+        background-image:
+          linear-gradient(rgba(15, 23, 42, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(15, 23, 42, 0.03) 1px, transparent 1px);
+        background-size: 40px 40px;
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      .card-ambient-glow {
+        position: absolute;
+        inset: 10%;
+        background: radial-gradient(circle, rgba(100, 116, 139, 0.15), transparent 70%);
+        filter: blur(40px);
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      .premium-glass-card {
+        position: relative;
+        background: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(12px) saturate(180%);
+        -webkit-backdrop-filter: blur(12px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        border-radius: 18px;
+        padding: 24px;
+        box-shadow:
+          0 20px 40px -10px rgba(15, 23, 42, 0.08),
+          0 10px 20px -5px rgba(15, 23, 42, 0.04),
+          inset 0 1px 0 rgba(255, 255, 255, 1);
+        z-index: 2;
+        width: 100%;
+        transform-style: preserve-3d;
+        animation: slowFloat 6s ease-in-out infinite alternate;
+      }
+
+      @keyframes slowFloat {
+        0% {
+          transform: translateY(0px);
+        }
+
+        100% {
+          transform: translateY(-12px);
+        }
+      }
+
+      .edge-light {
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        padding: 1px;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), transparent 40%, rgba(255, 255, 255, 0.2));
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
+        transition: background 0.3s;
+      }
+
+      .premium-glass-card:hover .edge-light {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 1), rgba(167, 139, 250, 0.4) 50%, rgba(255, 255, 255, 0.2));
+      }
+
+      .tilt-container {
+        transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(var(--ty, 0px));
+        transition: transform 0.1s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.3s ease;
+      }
+
+      .tilt-container:hover {
+        animation: none;
+        box-shadow:
+          0 30px 60px -15px rgba(15, 23, 42, 0.12),
+          0 15px 25px -5px rgba(15, 23, 42, 0.06),
+          inset 0 1px 0 rgba(255, 255, 255, 1);
+      }
+
+      .parallax-inner {
+        transform: translateZ(30px);
+        transform-style: preserve-3d;
+      }
+
+      .offset-layer {
+        transform: translateZ(50px);
+      }
+
+      .cinematic-img {
+        width: 105%;
+        height: 105%;
+        object-fit: cover;
+        position: absolute;
+        top: -2.5%;
+        left: -2.5%;
+        transition: transform 0.1s ease;
+        transform: translate(var(--px, 0px), var(--py, 0px));
+      }
+
+      .cinematic-mask {
+        position: absolute;
+        inset: 0;
+        box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.3);
+        pointer-events: none;
+        border-radius: 12px;
+      }
+
+      .probability-wrap {
+        background: rgba(15, 23, 42, 0.04);
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-family: 'Inter', sans-serif;
+        color: var(--c-navy);
+        display: flex;
+        align-items: baseline;
+        gap: 2px;
+        border: 1px solid rgba(15, 23, 42, 0.05);
+        transition: box-shadow 0.3s, background 0.3s;
+      }
+
+      .probability-wrap.glow-pulse {
+        background: rgba(16, 185, 129, 0.1);
+        border-color: rgba(16, 185, 129, 0.2);
+        box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+        color: rgba(6, 95, 70, 1);
+      }
+
+      .prob-num {
+        font-weight: 800;
+        font-size: 1.25rem;
+        letter-spacing: -0.03em;
+      }
+
+      .prob-symbol {
+        font-weight: 600;
+        font-size: 0.9rem;
+      }
+
+      .btn-magnetic {
+        position: relative;
+        overflow: hidden;
+        background: #0F172A;
+        color: white;
+        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.2);
+      }
+
+      .btn-magnetic::before {
+        display: none;
+      }
+
+      .btn-magnetic .btn-text {
+        position: relative;
+        z-index: 2;
+      }
+
+      .btn-glow-sweep {
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 50%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transform: skewX(-20deg);
+        z-index: 1;
+        transition: left 0.5s ease;
+      }
+
+      .btn-magnetic:hover .btn-glow-sweep {
+        left: 150%;
+      }
+
+      .story-pill {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(15, 23, 42, 0.08);
+        background: rgba(255, 255, 255, 0.8);
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.03);
+      }
+
+      .story-pill>* {
+        position: relative;
+        z-index: 2;
+      }
+
+      .pill-shimmer {
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 50%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+        animation: pillShimmer 3s infinite;
+        z-index: 1;
+      }
+
+      @keyframes pillShimmer {
+        100% {
+          left: 200%;
+        }
+      }
+
+      .animate-sp-reveal {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.8s cubic-bezier(0.2, 0, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0, 0.2, 1);
+      }
+
+      .animate-sp-reveal.is-revealed {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .animate-sp-scale {
+        opacity: 0;
+        transform: scale(0.96);
+        filter: blur(4px);
+        transition: opacity 1s cubic-bezier(0.2, 0, 0.2, 1), transform 1s cubic-bezier(0.2, 0, 0.2, 1), filter 1s ease;
+      }
+
+      .animate-sp-scale.is-revealed {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0);
+      }
+
+      #cursor-orb {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 400px;
+        height: 400px;
+        margin-left: -200px;
+        margin-top: -200px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(139, 92, 246, 0.12) 0%, rgba(56, 189, 248, 0.08) 40%, transparent 70%);
+        pointer-events: none;
+        z-index: 9999;
+        mix-blend-mode: screen;
+        will-change: transform;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+      }
     </style>
 
     <div class="noise-overlay"></div>
+
+    <svg width="0" height="0" class="absolute pointer-events-none" style="position: absolute; z-index: -1;">
+      <filter id="lightning-filter" x="-20%" y="-20%" width="140%" height="140%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="3" result="noise">
+          <animate attributeName="baseFrequency" values="0.03; 0.05; 0.03" dur="0.15s" repeatCount="indefinite" />
+        </feTurbulence>
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+    </svg>
 
     <main>
       <!-- V5/V8 SECTION 1: HERO & PLATFORM OVERVIEW (With Restored Parallax) -->
@@ -1625,19 +2105,52 @@
         </div>
       </section>
 
-      <!-- V5 SECTION 2: CORE PLATFORM PILLARS -->
-      <section class="hub-section section edge-top">
+      <!-- V5/V10 SECTION 2: CORE PLATFORM PILLARS -->
+      <section class="hub-section section edge-top" style="position: relative;">
+        <!-- Animated Pink Waves Layer (User Provided) -->
+        <div class="absolute bottom-[-10px] left-0 w-full h-[600px] z-0 overflow-hidden pointer-events-none"
+          style="mix-blend-mode: multiply;">
+          <svg style="width:100%; height:100%;" viewBox="0 0 2 1" preserveAspectRatio="none">
+            <defs>
+              <path id="custom-wave" d="m0 1v-.5 q.5.5 1 0 t1 0 1 0 1 0 v.5z" />
+            </defs>
+            <g>
+              <use href="#custom-wave" y=".0" fill="rgba(251, 207, 232, 0.4)" class="waves-use-el" />
+              <use href="#custom-wave" y=".1" fill="rgba(249, 168, 212, 0.5)" class="waves-use-el" />
+              <use href="#custom-wave" y=".2" fill="rgba(244, 114, 182, 0.6)" class="waves-use-el" />
+            </g>
+          </svg>
+        </div>
+        <!-- V10 Animated Network Connectors -->
+        <div class="hub-connectors">
+          <svg viewBox="0 0 1200 800" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="network-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="var(--c-indigo)" stop-opacity="0.5" />
+                <stop offset="50%" stop-color="var(--c-teal)" stop-opacity="0.5" />
+                <stop offset="100%" stop-color="var(--c-amber)" stop-opacity="0.5" />
+              </linearGradient>
+            </defs>
+            <path class="animated-path" d="M 100 100 C 400 300, 800 100, 1100 300" />
+            <path class="animated-path" d="M 100 700 C 400 500, 800 700, 1100 500" />
+            <path class="animated-path" d="M 100 100 C 300 400, 300 800, 100 700" />
+            <path class="animated-path" d="M 1100 100 C 900 400, 900 800, 1100 700" />
+            <path class="animated-path" d="M 300 200 C 600 400, 600 600, 900 200" />
+            <path class="animated-path" d="M 300 600 C 600 400, 600 200, 900 600" />
+          </svg>
+        </div>
         <div class="container relative">
           <div class="text-center mb-large" style="max-width:600px; margin:0 auto 4rem auto;">
-            <span class="text-eyebrow">The Hub</span>
-            <h2 class="text-h2 mb-medium">Everything connects.</h2>
-            <p class="text-body" style="margin:0 auto;">Not just independent tools. The platform is organized into four
+            <span class="text-eyebrow animate-reveal-up-1">The Hub</span>
+            <h2 class="text-h2 mb-medium animate-reveal-up-2 animate-text-crystal">Everything connects.</h2>
+            <p class="text-body animate-reveal-up-3" style="margin:0 auto; max-width: 52ch;">Not just independent tools.
+              The platform is organized into four
               interconnected pillars designed to guide you from discovery to placement.</p>
           </div>
 
           <div class="pillar-grid">
             <!-- Features Pillar -->
-            <div class="pillar-card pc-features">
+            <div class="pillar-card electric-card-wrapper pc-features">
               <div class="pc-header">
                 <div class="pc-icon-wrap"><i class="fas fa-compass"></i></div>
                 <div>
@@ -1655,7 +2168,7 @@
             </div>
 
             <!-- Tools Pillar -->
-            <div class="pillar-card pc-tools">
+            <div class="pillar-card electric-card-wrapper pc-tools">
               <div class="pc-header">
                 <div class="pc-icon-wrap"><i class="fas fa-cubes"></i></div>
                 <div>
@@ -1673,7 +2186,7 @@
             </div>
 
             <!-- Assessment Pillar -->
-            <div class="pillar-card pc-assess">
+            <div class="pillar-card electric-card-wrapper pc-assess">
               <div class="pc-header">
                 <div class="pc-icon-wrap"><i class="fas fa-chart-pie"></i></div>
                 <div>
@@ -1690,7 +2203,7 @@
             </div>
 
             <!-- Resources Pillar -->
-            <div class="pillar-card pc-resources">
+            <div class="pillar-card electric-card-wrapper pc-resources">
               <div class="pc-header">
                 <div class="pc-icon-wrap"><i class="fas fa-book"></i></div>
                 <div>
@@ -1714,37 +2227,59 @@
       <section class="story-section section edge-top">
         <div class="container">
 
-          <!-- Spotlight 1: College Predictor -->
-          <div class="story-block">
+          <!-- Spotlight 1: College Predictor (Ultra Premium) -->
+          <div class="story-block ultra-premium-sp">
             <div class="story-text">
-              <div class="story-pill"><i class="fas fa-university" style="color:var(--c-indigo);"></i> Discovery Engine
+              <div class="story-pill animate-sp-reveal" style="animation-delay: 0.1s;">
+                <div class="pill-shimmer"></div>
+                <i class="fas fa-university" style="color:var(--c-indigo);"></i> Discovery Engine
               </div>
-              <h2 class="text-h2 mb-medium">Algorithmically map your acceptance chances.</h2>
-              <p class="text-body mb-medium">Don't rely on guesswork. Our college predictor uses historical admission
+              <h2 class="text-h2 mb-medium animate-sp-reveal" style="animation-delay: 0.2s; letter-spacing: -0.02em;">
+                Algorithmically map your acceptance chances.</h2>
+              <p class="text-body mb-medium animate-sp-reveal" style="animation-delay: 0.35s; max-width: 560px;">Don't
+                rely on guesswork. Our college predictor uses historical admission
                 data for JEE and MHT-CET to instantly calculate your probability of acceptance across top institutions
                 based on your specific percentile and category.</p>
-              <a href="/exam_choice" class="btn btn-outline">Try Predictor</a>
+              <div class="animate-sp-reveal" style="animation-delay: 0.5s;">
+                <a href="/exam_choice" class="btn btn-primary btn-magnetic">
+                  <span class="btn-text">Try Predictor</span>
+                  <div class="btn-glow-sweep"></div>
+                </a>
+              </div>
             </div>
-            <div class="story-visual-wrap">
-              <div class="sv-bg-grid"></div>
-              <div class="ui-mock-form" style="padding: 16px;">
-                <div class="college-carousel">
-                  <img src="/img/colleges/media__1771916962641.jpg" class="carousel-img active" alt="COEP">
-                  <img src="/img/colleges/media__1771916962661.jpg" class="carousel-img" alt="VJTI">
-                  <img src="/img/colleges/media__1771916962727.jpg" class="carousel-img" alt="PICT">
-                  <img src="/img/colleges/media__1771916962745.jpg" class="carousel-img" alt="SPIT">
-                  <div class="carousel-overlay"></div>
+
+            <div class="story-visual-wrap animate-sp-scale"
+              style="animation-delay: 0.2s; background: transparent; border: none; box-shadow: none;">
+              <!-- Subtle blueprint background grid -->
+              <div class="blueprint-grid"></div>
+
+              <!-- Soft radial glow behind card -->
+              <div class="card-ambient-glow"></div>
+
+              <!-- Floating Prediction Card (3D Tilt Container) -->
+              <div class="premium-glass-card tilt-container" id="predictor-card">
+                <!-- Edge Light effect -->
+                <div class="edge-light"></div>
+
+                <div class="college-carousel parallax-inner cinematic-image-wrap"
+                  style="border-radius:12px; overflow:hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.05); aspect-ratio: 16/9; position:relative;">
+                  <img src="/img/colleges/media__1771916962641.jpg" class="carousel-img active cinematic-img"
+                    alt="COEP">
+                  <img src="/img/colleges/media__1771916962661.jpg" class="carousel-img cinematic-img" alt="VJTI">
+                  <img src="/img/colleges/media__1771916962727.jpg" class="carousel-img cinematic-img" alt="PICT">
+                  <img src="/img/colleges/media__1771916962745.jpg" class="carousel-img cinematic-img" alt="SPIT">
+                  <div class="cinematic-mask"></div>
                 </div>
-                <!-- <div class="ui-skeleton-line" style="width:40%;"></div>
-                <div class="ui-skeleton-line" style="width:100%; height:40px; margin-bottom:20px;"></div>
-                <div class="ui-skeleton-line" style="width:30%;"></div>
-                <div class="ui-skeleton-line" style="width:100%; height:40px; margin-bottom:24px;"></div> -->
+
                 <div
-                  style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #E2E8F0; padding-top:16px;">
-                  <div id="predict-name" style="font-weight:600; color:var(--c-teal); transition: opacity 0.3s;">COEP
-                    Tech (CS)</div>
-                  <div id="predict-prob" style="font-weight:800; font-size:1.2rem; transition: opacity 0.3s;">98.4%
-                    Prob.</div>
+                  style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgba(15, 23, 42, 0.06); padding-top:18px; margin-top:20px;"
+                  class="parallax-inner offset-layer">
+                  <div id="predict-name"
+                    style="font-weight:600; color:var(--c-navy); font-size: 1.05rem; font-family: 'Inter', sans-serif;">
+                    COEP Tech (CS)</div>
+                  <div class="probability-wrap" id="predict-prob-wrap">
+                    <span id="predict-prob-num" class="prob-num">0</span><span class="prob-symbol">% Prob.</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2101,44 +2636,212 @@
 
           // V9: College Predictor Carousel Engine
           const collegeData = [
-            { name: "COEP Tech (CS)", prob: "98.4% Prob." },
-            { name: "VJTI Mumbai (IT)", prob: "95.2% Prob." },
-            { name: "PICT Pune (CE)", prob: "92.1% Prob." },
-            { name: "SPIT Mumbai (CS)", prob: "89.7% Prob." }
+            { name: "COEP Tech (CS)", prob: "98.4" },
+            { name: "VJTI Mumbai (IT)", prob: "95.2" },
+            { name: "PICT Pune (CE)", prob: "92.1" },
+            { name: "SPIT Mumbai (CS)", prob: "89.7" }
           ];
           const slides = document.querySelectorAll('.carousel-img');
           const nameEl = document.getElementById('predict-name');
-          const probEl = document.getElementById('predict-prob');
+          const probEl = document.getElementById('predict-prob-num');
 
           if (slides.length > 0 && nameEl && probEl) {
             let currentSlide = 0;
             setInterval(() => {
-              // Fade out text softly
               nameEl.style.opacity = 0;
-              probEl.style.opacity = 0;
+              probEl.parentElement.style.opacity = 0;
 
               setTimeout(() => {
-                // Remove active from old slide
                 slides[currentSlide].classList.remove('active');
-
-                // Next slide
                 currentSlide = (currentSlide + 1) % slides.length;
                 slides[currentSlide].classList.add('active');
 
-                // Update text
                 nameEl.innerText = collegeData[currentSlide].name;
                 probEl.innerText = collegeData[currentSlide].prob;
 
-                // Fade in text
                 nameEl.style.opacity = 1;
-                probEl.style.opacity = 1;
-              }, 300); // Wait for text fade before changing image
-
-            }, 3500); // Cycle every 3.5 seconds
+                probEl.parentElement.style.opacity = 1;
+              }, 300);
+            }, 3500);
           }
+
+          // ULTRA SASS PREMIUM JS 
+          // 1. Cursor Orb
+          const orb = document.getElementById('cursor-orb');
+          let mouseX = window.innerWidth / 2;
+          let mouseY = window.innerHeight / 2;
+          let orbX = mouseX;
+          let orbY = mouseY;
+
+          window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            if (orb && orb.style.opacity == 0) orb.style.opacity = 1;
+          });
+
+          function renderOrb() {
+            orbX += (mouseX - orbX) * 0.1;
+            orbY += (mouseY - orbY) * 0.1;
+            if (orb) orb.style.transform = `translate3d(${orbX}px, ${orbY}px, 0)`;
+            requestAnimationFrame(renderOrb);
+          }
+          if (orb) renderOrb();
+
+          // 2. 3D Tilt Card Component
+          const tiltCard = document.getElementById('predictor-card');
+          if (tiltCard) {
+            tiltCard.addEventListener('mousemove', (e) => {
+              const rect = tiltCard.getBoundingClientRect();
+              const x = e.clientX - rect.left;
+              const y = e.clientY - rect.top;
+
+              const centerX = rect.width / 2;
+              const centerY = rect.height / 2;
+
+              const rotateX = ((y - centerY) / centerY) * -6;
+              const rotateY = ((x - centerX) / centerX) * 6;
+
+              tiltCard.style.setProperty('--rx', `${rotateX}deg`);
+              tiltCard.style.setProperty('--ry', `${rotateY}deg`);
+
+              const px = ((x - centerX) / centerX) * -8;
+              const py = ((y - centerY) / centerY) * -8;
+              tiltCard.querySelectorAll('.cinematic-img').forEach(img => {
+                img.style.setProperty('--px', `${px}px`);
+                img.style.setProperty('--py', `${py}px`);
+              });
+            });
+
+            tiltCard.addEventListener('mouseleave', () => {
+              tiltCard.style.setProperty('--rx', `0deg`);
+              tiltCard.style.setProperty('--ry', `0deg`);
+              tiltCard.querySelectorAll('.cinematic-img').forEach(img => {
+                img.style.setProperty('--px', `0px`);
+                img.style.setProperty('--py', `0px`);
+              });
+            });
+          }
+
+          // 3. Number Counter & Scroll Reveal
+          const spRevealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-revealed');
+
+                if (entry.target.classList.contains('story-visual-wrap')) {
+                  const probEl2 = document.getElementById('predict-prob-num');
+                  const wrap = document.getElementById('predict-prob-wrap');
+                  if (probEl2 && wrap && probEl2.innerText == '0') {
+                    setTimeout(() => {
+                      let current = 0;
+                      const target = 98.4;
+                      const duration = 1200;
+                      const startTime = performance.now();
+
+                      function animateCounter(currentTime) {
+                        const elapsed = currentTime - startTime;
+                        const progress = Math.min(elapsed / duration, 1);
+                        const easeOut = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+                        current = target * easeOut;
+                        probEl2.innerText = current.toFixed(1);
+
+                        if (progress < 1) {
+                          requestAnimationFrame(animateCounter);
+                        } else {
+                          wrap.classList.add('glow-pulse');
+                        }
+                      }
+                      requestAnimationFrame(animateCounter);
+                    }, 600);
+                  }
+                }
+
+                spRevealObserver.unobserve(entry.target);
+              }
+            });
+          }, { threshold: 0.15 });
+
+          document.querySelectorAll('.animate-sp-reveal, .animate-sp-scale').forEach(el => {
+            spRevealObserver.observe(el);
+          });
+
+          // 4. Magnetic Buttons
+          document.querySelectorAll('.btn-magnetic').forEach(btn => {
+            btn.addEventListener('mousemove', (e) => {
+              const rect = btn.getBoundingClientRect();
+              const x = e.clientX - rect.left - rect.width / 2;
+              const y = e.clientY - rect.top - rect.height / 2;
+              btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
+            });
+            btn.addEventListener('mouseleave', () => {
+              btn.style.transform = `translate(0px, 0px)`;
+              btn.style.transition = 'transform 0.5s cubic-bezier(0.2, 0, 0.2, 1)';
+            });
+            btn.addEventListener('mouseenter', () => {
+              btn.style.transition = 'none'; // remove transition for smooth tracking
+            });
+          });
+
+          // V10: High-End Mouse Tracking Spotlight & 3D Tilt for Hub Cards
+          const hubCards = document.querySelectorAll('.pillar-card');
+          if (hubCards.length > 0) {
+            hubCards.forEach(card => {
+              card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = ((y - centerY) / centerY) * -5;
+                const rotateY = ((x - centerX) / centerX) * 5;
+                card.style.setProperty('--rotate-x', `${rotateX}deg`);
+                card.style.setProperty('--rotate-y', `${rotateY}deg`);
+              });
+              card.addEventListener('mouseleave', () => {
+                card.style.setProperty('--rotate-x', `0deg`);
+                card.style.setProperty('--rotate-y', `0deg`);
+              });
+            });
+
+            // IntersectionObserver setup
+            const hubObserver = new IntersectionObserver((entries) => {
+              entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                  entry.target.classList.add('revealed');
+                  hubObserver.unobserve(entry.target);
+                  // Remove transition delay after animation completes to avoid hover lag
+                  setTimeout(() => {
+                    entry.target.style.transitionDelay = '0s';
+                  }, 800);
+                }
+              });
+            }, { threshold: 0.15 });
+
+            hubCards.forEach((card, index) => {
+              card.style.transitionDelay = `${index * 0.15}s`;
+              hubObserver.observe(card);
+            });
+          }
+
+          // Scroll Bounce Observer for Hub Text
+          const bounceTextObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-revealed');
+                bounceTextObserver.unobserve(entry.target);
+              }
+            });
+          }, { threshold: 0.1 });
+
+          document.querySelectorAll('.animate-reveal-up-1, .animate-reveal-up-2, .animate-reveal-up-3').forEach(el => {
+            bounceTextObserver.observe(el);
+          });
 
         });
       </script>
+      <div id="cursor-orb"></div>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
       </body>
 

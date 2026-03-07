@@ -1,0 +1,1022 @@
+[
+  {
+    "name": "Shradha Khapra",
+    "headline": "Co-founder at Apna College | Ex-Microsoft",
+    "students": "2M+",
+    "exp": "8+",
+    "sessions": "500+",
+    "bio": "Renowned math and tech educator known for Apna College.",
+    "tags": [
+      "DSA",
+      "System Design",
+      "Java"
+    ],
+    "img": "https://pbs.twimg.com/profile_images/1828452192107253760/LgHYdkkd_400x400.jpg",
+    "status": "Available this week",
+    "rating": "4.7",
+    "reviews": 1792
+  },
+  {
+    "name": "Hitesh Choudhary",
+    "headline": "CTO at LCO | Full Stack Developer",
+    "students": "800K+",
+    "exp": "12+",
+    "sessions": "1.2K+",
+    "bio": "Specializes in modern JavaScript, backend architectures, and AWS cloud.",
+    "tags": [
+      "JavaScript",
+      "React",
+      "AWS"
+    ],
+    "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSThDPynNXgfcfqRvxsHlE4Rp7ffDdiYPZPrA&s",
+    "status": "Next available Monday",
+    "rating": "4.9",
+    "reviews": 224
+  },
+  {
+    "name": "Love Babbar",
+    "headline": "Founder at CodeHelp | Ex-Amazon",
+    "students": "1M+",
+    "exp": "6+",
+    "sessions": "800+",
+    "bio": "Expert in C++ and DSA. Master of interview preparation strategies for FAANG companies.",
+    "tags": [
+      "C++",
+      "DSA",
+      "FAANG Prep"
+    ],
+    "img": "https://avatars.githubusercontent.com/u/29489915?v=4",
+    "status": "Available this week",
+    "rating": "4.7",
+    "reviews": 1618
+  },
+  {
+    "name": "Kunal Kushwaha",
+    "headline": "DevRel at Civo | Open Source Advocate",
+    "students": "500K+",
+    "exp": "5+",
+    "sessions": "600+",
+    "bio": "Leading figure in DevOps and open source. Helps students break into cloud native technologies.",
+    "tags": [
+      "DevOps",
+      "Java",
+      "Open Source"
+    ],
+    "img": "https://avatars.githubusercontent.com/u/42698533?v=4",
+    "status": "Booking closing soon",
+    "rating": "4.7",
+    "reviews": 230
+  },
+  {
+    "name": "Harkirat Singh",
+    "headline": "Founder at 100xDevs | Ex-Goldman Sachs",
+    "students": "300K+",
+    "exp": "7+",
+    "sessions": "400+",
+    "bio": "Focuses on deep engineering knowledge, system design, and advanced web development.",
+    "tags": [
+      "MERN",
+      "System Design",
+      "Web3"
+    ],
+    "img": "https://avatars.githubusercontent.com/u/8079861?v=4",
+    "status": "Available this week",
+    "rating": "4.7",
+    "reviews": 1686
+  },
+  {
+    "name": "Take U Forward (Striver)",
+    "headline": "SDE at Google | DSA Expert",
+    "students": "1.5M+",
+    "exp": "5+",
+    "sessions": "900+",
+    "bio": "Creator of the legendary Striver's SDE Sheet. The ultimate guide for competitive programming.",
+    "tags": [
+      "Competitive Programming",
+      "DSA",
+      "C++"
+    ],
+    "img": "https://yt3.googleusercontent.com/ytc/AIdro_nbwIFtK-iW28YwP0tQ_sF-7u-l-A4a0v9R6gX8Qw=s900-c-k-c0x00ffffff-no-rj",
+    "status": "Next available Friday",
+    "rating": "4.7",
+    "reviews": 1045
+  },
+  {
+    "name": "Pooja Sen",
+    "headline": "Senior Engineer at Microsoft | Cloud Native Expert",
+    "students": "196K+",
+    "exp": "4+",
+    "sessions": "168+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Cloud Native",
+      "Java",
+      "Architecture"
+    ],
+    "img": "https://i.pravatar.cc/300?img=70",
+    "status": "Available this week",
+    "rating": "4.9",
+    "reviews": 1562
+  },
+  {
+    "name": "Vikram Kumar",
+    "headline": "Senior Engineer at Apple | Mobile Dev Expert",
+    "students": "82K+",
+    "exp": "10+",
+    "sessions": "73+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "AI/ML",
+      "Java",
+      "Architecture"
+    ],
+    "img": "https://i.pravatar.cc/300?img=48",
+    "status": "Booking closing soon",
+    "rating": "4.9",
+    "reviews": 1546
+  },
+  {
+    "name": "Meera Iyer",
+    "headline": "Senior Engineer at Meta | System Design Expert",
+    "students": "155K+",
+    "exp": "9+",
+    "sessions": "430+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "AI/ML",
+      "Java",
+      "Career Guidance"
+    ],
+    "img": "https://i.pravatar.cc/300?img=6",
+    "status": "Booking closing soon",
+    "rating": "4.9",
+    "reviews": 768
+  },
+  {
+    "name": "Nikhil Gupta",
+    "headline": "Senior Engineer at Apple | Data Science Expert",
+    "students": "23K+",
+    "exp": "5+",
+    "sessions": "149+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Cybersecurity",
+      "C++",
+      "Career Guidance"
+    ],
+    "img": "https://i.pravatar.cc/300?img=45",
+    "status": "Booking closing soon",
+    "rating": "4.7",
+    "reviews": 286
+  },
+  {
+    "name": "Siddharth Desai",
+    "headline": "Senior Engineer at Airbnb | Web Development Expert",
+    "students": "72K+",
+    "exp": "6+",
+    "sessions": "284+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Cybersecurity",
+      "Python",
+      "Career Guidance"
+    ],
+    "img": "https://i.pravatar.cc/300?img=11",
+    "status": "Next available Monday",
+    "rating": "4.6",
+    "reviews": 850
+  },
+  {
+    "name": "Neha Rao",
+    "headline": "Senior Engineer at Airbnb | Data Science Expert",
+    "students": "138K+",
+    "exp": "10+",
+    "sessions": "52+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Blockchain",
+      "Go",
+      "Architecture"
+    ],
+    "img": "https://i.pravatar.cc/300?img=39",
+    "status": "Next available Monday",
+    "rating": "4.7",
+    "reviews": 768
+  },
+  {
+    "name": "Neha Das",
+    "headline": "Senior Engineer at Stripe | AI/ML Expert",
+    "students": "47K+",
+    "exp": "10+",
+    "sessions": "82+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "System Design",
+      "C++",
+      "Career Guidance"
+    ],
+    "img": "https://i.pravatar.cc/300?img=35",
+    "status": "Booking closing soon",
+    "rating": "4.8",
+    "reviews": 1108
+  },
+  {
+    "name": "Rahul Iyer",
+    "headline": "Senior Engineer at Uber | Cloud Native Expert",
+    "students": "167K+",
+    "exp": "6+",
+    "sessions": "357+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Data Science",
+      "Java",
+      "Career Guidance"
+    ],
+    "img": "https://i.pravatar.cc/300?img=42",
+    "status": "Next available Monday",
+    "rating": "4.6",
+    "reviews": 1440
+  },
+  {
+    "name": "Pooja Sharma",
+    "headline": "Senior Engineer at Netflix | Data Science Expert",
+    "students": "47K+",
+    "exp": "14+",
+    "sessions": "444+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Data Science",
+      "C++",
+      "Career Guidance"
+    ],
+    "img": "https://i.pravatar.cc/300?img=59",
+    "status": "Limited Slots",
+    "rating": "4.9",
+    "reviews": 809
+  },
+  {
+    "name": "Arjun Sharma",
+    "headline": "Senior Engineer at Google | Cloud Native Expert",
+    "students": "36K+",
+    "exp": "9+",
+    "sessions": "121+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Blockchain",
+      "C++",
+      "Interview Prep"
+    ],
+    "img": "https://i.pravatar.cc/300?img=65",
+    "status": "Booking closing soon",
+    "rating": "4.7",
+    "reviews": 610
+  },
+  {
+    "name": "Kriti Bhatt",
+    "headline": "Senior Engineer at Netflix | Cybersecurity Expert",
+    "students": "99K+",
+    "exp": "12+",
+    "sessions": "167+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "System Design",
+      "Go",
+      "Career Guidance"
+    ],
+    "img": "https://i.pravatar.cc/300?img=39",
+    "status": "Available this week",
+    "rating": "4.9",
+    "reviews": 1029
+  },
+  {
+    "name": "Aditya Kumar",
+    "headline": "Senior Engineer at Airbnb | Data Science Expert",
+    "students": "73K+",
+    "exp": "12+",
+    "sessions": "474+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Cybersecurity",
+      "Node.js",
+      "Architecture"
+    ],
+    "img": "https://i.pravatar.cc/300?img=32",
+    "status": "Limited Slots",
+    "rating": "5.0",
+    "reviews": 633
+  },
+  {
+    "name": "Riya Chatterjee",
+    "headline": "Senior Engineer at Amazon | Blockchain Expert",
+    "students": "48K+",
+    "exp": "4+",
+    "sessions": "59+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Mobile Dev",
+      "React",
+      "Architecture"
+    ],
+    "img": "https://i.pravatar.cc/300?img=64",
+    "status": "Available this week",
+    "rating": "4.9",
+    "reviews": 1014
+  },
+  {
+    "name": "Aditya Chatterjee",
+    "headline": "Senior Engineer at Stripe | Cybersecurity Expert",
+    "students": "65K+",
+    "exp": "13+",
+    "sessions": "353+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Mobile Dev",
+      "Python",
+      "Career Guidance"
+    ],
+    "img": "https://i.pravatar.cc/300?img=48",
+    "status": "Next available Monday",
+    "rating": "4.9",
+    "reviews": 1722
+  },
+  {
+    "name": "Aditya Sharma",
+    "headline": "Senior Engineer at Amazon | System Design Expert",
+    "students": "100K+",
+    "exp": "11+",
+    "sessions": "323+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Mobile Dev",
+      "C++",
+      "Career Guidance"
+    ],
+    "img": "https://i.pravatar.cc/300?img=3",
+    "status": "Next available Monday",
+    "rating": "4.9",
+    "reviews": 1849
+  },
+  {
+    "name": "Aryan Reddy",
+    "headline": "Senior Engineer at Google | Cybersecurity Expert",
+    "students": "132K+",
+    "exp": "3+",
+    "sessions": "181+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Data Science",
+      "Java",
+      "Interview Prep"
+    ],
+    "img": "https://i.pravatar.cc/300?img=4",
+    "status": "Booking closing soon",
+    "rating": "4.9",
+    "reviews": 855
+  },
+  {
+    "name": "Karan Das",
+    "headline": "Senior Engineer at Amazon | Data Science Expert",
+    "students": "37K+",
+    "exp": "8+",
+    "sessions": "409+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Cybersecurity",
+      "Node.js",
+      "Interview Prep"
+    ],
+    "img": "https://i.pravatar.cc/300?img=40",
+    "status": "Next available Monday",
+    "rating": "4.9",
+    "reviews": 1182
+  },
+  {
+    "name": "Varun Mehta",
+    "headline": "Senior Engineer at Apple | Data Science Expert",
+    "students": "108K+",
+    "exp": "8+",
+    "sessions": "378+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Blockchain",
+      "AWS",
+      "Interview Prep"
+    ],
+    "img": "https://i.pravatar.cc/300?img=38",
+    "status": "Available this week",
+    "rating": "5.0",
+    "reviews": 117
+  },
+  {
+    "name": "Rishabh Kumar",
+    "headline": "Senior Engineer at Amazon | Web Development Expert",
+    "students": "62K+",
+    "exp": "8+",
+    "sessions": "153+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Blockchain",
+      "AWS",
+      "Career Guidance"
+    ],
+    "img": "https://i.pravatar.cc/300?img=38",
+    "status": "Available this week",
+    "rating": "5.0",
+    "reviews": 612
+  },
+  {
+    "name": "Priya Iyer",
+    "headline": "Senior Engineer at Uber | Cybersecurity Expert",
+    "students": "90K+",
+    "exp": "13+",
+    "sessions": "430+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Web Development",
+      "Node.js",
+      "Architecture"
+    ],
+    "img": "https://i.pravatar.cc/300?img=52",
+    "status": "Next available Monday",
+    "rating": "4.6",
+    "reviews": 1072
+  },
+  {
+    "name": "Akash Singh",
+    "headline": "Senior Engineer at Stripe | Web Development Expert",
+    "students": "179K+",
+    "exp": "8+",
+    "sessions": "249+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Web Development",
+      "React",
+      "Career Guidance"
+    ],
+    "img": "https://i.pravatar.cc/300?img=40",
+    "status": "Booking closing soon",
+    "rating": "4.9",
+    "reviews": 1717
+  },
+  {
+    "name": "Pooja Chopra",
+    "headline": "Senior Engineer at Airbnb | System Design Expert",
+    "students": "46K+",
+    "exp": "5+",
+    "sessions": "178+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Mobile Dev",
+      "Java",
+      "Career Guidance"
+    ],
+    "img": "https://i.pravatar.cc/300?img=41",
+    "status": "Available this week",
+    "rating": "4.6",
+    "reviews": 215
+  },
+  {
+    "name": "Anjali Chatterjee",
+    "headline": "Senior Engineer at Google | Cybersecurity Expert",
+    "students": "173K+",
+    "exp": "14+",
+    "sessions": "360+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Cloud Native",
+      "Node.js",
+      "Career Guidance"
+    ],
+    "img": "https://i.pravatar.cc/300?img=52",
+    "status": "Next available Monday",
+    "rating": "4.8",
+    "reviews": 806
+  },
+  {
+    "name": "Vikram Singh",
+    "headline": "Senior Engineer at Meta | System Design Expert",
+    "students": "22K+",
+    "exp": "4+",
+    "sessions": "293+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Cybersecurity",
+      "Python",
+      "Career Guidance"
+    ],
+    "img": "https://i.pravatar.cc/300?img=39",
+    "status": "Limited Slots",
+    "rating": "5.0",
+    "reviews": 456
+  },
+  {
+    "name": "Arjun Kapoor",
+    "headline": "Senior Engineer at Netflix | Mobile Dev Expert",
+    "students": "10K+",
+    "exp": "12+",
+    "sessions": "151+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Mobile Dev",
+      "C++",
+      "Architecture"
+    ],
+    "img": "https://i.pravatar.cc/300?img=49",
+    "status": "Next available Monday",
+    "rating": "4.8",
+    "reviews": 322
+  },
+  {
+    "name": "Akash Das",
+    "headline": "Senior Engineer at Microsoft | System Design Expert",
+    "students": "171K+",
+    "exp": "14+",
+    "sessions": "445+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Cloud Native",
+      "Go",
+      "Interview Prep"
+    ],
+    "img": "https://i.pravatar.cc/300?img=48",
+    "status": "Limited Slots",
+    "rating": "4.7",
+    "reviews": 124
+  },
+  {
+    "name": "Sneha Malhotra",
+    "headline": "Senior Engineer at Stripe | Web Development Expert",
+    "students": "23K+",
+    "exp": "10+",
+    "sessions": "98+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Blockchain",
+      "C++",
+      "Career Guidance"
+    ],
+    "img": "https://i.pravatar.cc/300?img=28",
+    "status": "Limited Slots",
+    "rating": "4.7",
+    "reviews": 379
+  },
+  {
+    "name": "Aditya Rao",
+    "headline": "Senior Engineer at Meta | AI/ML Expert",
+    "students": "160K+",
+    "exp": "12+",
+    "sessions": "118+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Blockchain",
+      "C++",
+      "Interview Prep"
+    ],
+    "img": "https://i.pravatar.cc/300?img=35",
+    "status": "Next available Monday",
+    "rating": "4.7",
+    "reviews": 1641
+  },
+  {
+    "name": "Neha Das",
+    "headline": "Senior Engineer at Amazon | Web Development Expert",
+    "students": "47K+",
+    "exp": "9+",
+    "sessions": "348+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Web Development",
+      "Python",
+      "Career Guidance"
+    ],
+    "img": "https://i.pravatar.cc/300?img=13",
+    "status": "Limited Slots",
+    "rating": "5.0",
+    "reviews": 423
+  },
+  {
+    "name": "Divya Rao",
+    "headline": "Senior Engineer at Google | Web Development Expert",
+    "students": "185K+",
+    "exp": "14+",
+    "sessions": "405+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Cloud Native",
+      "Go",
+      "Career Guidance"
+    ],
+    "img": "https://i.pravatar.cc/300?img=9",
+    "status": "Next available Monday",
+    "rating": "4.6",
+    "reviews": 705
+  },
+  {
+    "name": "Riya Verma",
+    "headline": "Senior Engineer at Google | Cybersecurity Expert",
+    "students": "39K+",
+    "exp": "15+",
+    "sessions": "433+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "System Design",
+      "C++",
+      "Career Guidance"
+    ],
+    "img": "https://i.pravatar.cc/300?img=68",
+    "status": "Booking closing soon",
+    "rating": "5.0",
+    "reviews": 1664
+  },
+  {
+    "name": "Pooja Chatterjee",
+    "headline": "Senior Engineer at Google | Cybersecurity Expert",
+    "students": "12K+",
+    "exp": "9+",
+    "sessions": "99+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Data Science",
+      "C++",
+      "Architecture"
+    ],
+    "img": "https://i.pravatar.cc/300?img=4",
+    "status": "Booking closing soon",
+    "rating": "4.6",
+    "reviews": 433
+  },
+  {
+    "name": "Karan Desai",
+    "headline": "Senior Engineer at Meta | Data Science Expert",
+    "students": "27K+",
+    "exp": "9+",
+    "sessions": "163+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "System Design",
+      "Python",
+      "Career Guidance"
+    ],
+    "img": "https://i.pravatar.cc/300?img=53",
+    "status": "Limited Slots",
+    "rating": "4.8",
+    "reviews": 719
+  },
+  {
+    "name": "Divya Mehta",
+    "headline": "Senior Engineer at Airbnb | Mobile Dev Expert",
+    "students": "110K+",
+    "exp": "7+",
+    "sessions": "433+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Web Development",
+      "Java",
+      "Career Guidance"
+    ],
+    "img": "https://i.pravatar.cc/300?img=32",
+    "status": "Limited Slots",
+    "rating": "4.7",
+    "reviews": 378
+  },
+  {
+    "name": "Rohan Joshi",
+    "headline": "Senior Engineer at Microsoft | Cloud Native Expert",
+    "students": "83K+",
+    "exp": "8+",
+    "sessions": "150+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Web Development",
+      "C++",
+      "Career Guidance"
+    ],
+    "img": "https://i.pravatar.cc/300?img=11",
+    "status": "Available this week",
+    "rating": "4.6",
+    "reviews": 1132
+  },
+  {
+    "name": "Vikram Sharma",
+    "headline": "Senior Engineer at Uber | Cybersecurity Expert",
+    "students": "82K+",
+    "exp": "15+",
+    "sessions": "333+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Web Development",
+      "C++",
+      "Architecture"
+    ],
+    "img": "https://i.pravatar.cc/300?img=69",
+    "status": "Limited Slots",
+    "rating": "4.8",
+    "reviews": 222
+  },
+  {
+    "name": "Siddharth Iyer",
+    "headline": "Senior Engineer at Netflix | Web Development Expert",
+    "students": "20K+",
+    "exp": "3+",
+    "sessions": "409+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Cloud Native",
+      "Node.js",
+      "Career Guidance"
+    ],
+    "img": "https://i.pravatar.cc/300?img=10",
+    "status": "Limited Slots",
+    "rating": "4.6",
+    "reviews": 1034
+  },
+  {
+    "name": "Arjun Reddy",
+    "headline": "Senior Engineer at Stripe | Cloud Native Expert",
+    "students": "82K+",
+    "exp": "3+",
+    "sessions": "265+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Mobile Dev",
+      "Node.js",
+      "Interview Prep"
+    ],
+    "img": "https://i.pravatar.cc/300?img=53",
+    "status": "Limited Slots",
+    "rating": "4.8",
+    "reviews": 595
+  },
+  {
+    "name": "Akash Das",
+    "headline": "Senior Engineer at Stripe | System Design Expert",
+    "students": "157K+",
+    "exp": "15+",
+    "sessions": "471+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Data Science",
+      "Go",
+      "Interview Prep"
+    ],
+    "img": "https://i.pravatar.cc/300?img=11",
+    "status": "Booking closing soon",
+    "rating": "4.7",
+    "reviews": 393
+  },
+  {
+    "name": "Isha Kumar",
+    "headline": "Senior Engineer at Microsoft | Mobile Dev Expert",
+    "students": "86K+",
+    "exp": "14+",
+    "sessions": "256+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "System Design",
+      "Python",
+      "Architecture"
+    ],
+    "img": "https://i.pravatar.cc/300?img=69",
+    "status": "Limited Slots",
+    "rating": "4.9",
+    "reviews": 1462
+  },
+  {
+    "name": "Pooja Iyer",
+    "headline": "Senior Engineer at Uber | Web Development Expert",
+    "students": "76K+",
+    "exp": "13+",
+    "sessions": "92+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Web Development",
+      "React",
+      "Architecture"
+    ],
+    "img": "https://i.pravatar.cc/300?img=24",
+    "status": "Booking closing soon",
+    "rating": "4.7",
+    "reviews": 312
+  },
+  {
+    "name": "Rishabh Gupta",
+    "headline": "Senior Engineer at Apple | Web Development Expert",
+    "students": "149K+",
+    "exp": "9+",
+    "sessions": "109+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "AI/ML",
+      "Go",
+      "Architecture"
+    ],
+    "img": "https://i.pravatar.cc/300?img=30",
+    "status": "Next available Monday",
+    "rating": "4.8",
+    "reviews": 871
+  },
+  {
+    "name": "Neha Iyer",
+    "headline": "Senior Engineer at Uber | Cloud Native Expert",
+    "students": "120K+",
+    "exp": "7+",
+    "sessions": "434+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Blockchain",
+      "Go",
+      "Career Guidance"
+    ],
+    "img": "https://i.pravatar.cc/300?img=18",
+    "status": "Limited Slots",
+    "rating": "4.9",
+    "reviews": 1953
+  },
+  {
+    "name": "Varun Malhotra",
+    "headline": "Senior Engineer at Uber | Mobile Dev Expert",
+    "students": "121K+",
+    "exp": "8+",
+    "sessions": "194+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Blockchain",
+      "C++",
+      "Architecture"
+    ],
+    "img": "https://i.pravatar.cc/300?img=46",
+    "status": "Limited Slots",
+    "rating": "4.7",
+    "reviews": 273
+  },
+  {
+    "name": "Tanvi Chatterjee",
+    "headline": "Senior Engineer at Meta | System Design Expert",
+    "students": "40K+",
+    "exp": "13+",
+    "sessions": "119+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "System Design",
+      "React",
+      "Architecture"
+    ],
+    "img": "https://i.pravatar.cc/300?img=35",
+    "status": "Booking closing soon",
+    "rating": "4.8",
+    "reviews": 439
+  },
+  {
+    "name": "Pooja Chatterjee",
+    "headline": "Senior Engineer at Stripe | System Design Expert",
+    "students": "159K+",
+    "exp": "9+",
+    "sessions": "132+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Cybersecurity",
+      "Go",
+      "Architecture"
+    ],
+    "img": "https://i.pravatar.cc/300?img=38",
+    "status": "Limited Slots",
+    "rating": "4.8",
+    "reviews": 1761
+  },
+  {
+    "name": "Nikhil Sharma",
+    "headline": "Senior Engineer at Amazon | Cybersecurity Expert",
+    "students": "199K+",
+    "exp": "14+",
+    "sessions": "128+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "System Design",
+      "AWS",
+      "Career Guidance"
+    ],
+    "img": "https://i.pravatar.cc/300?img=68",
+    "status": "Limited Slots",
+    "rating": "4.6",
+    "reviews": 1337
+  },
+  {
+    "name": "Priya Mehta",
+    "headline": "Senior Engineer at Microsoft | Web Development Expert",
+    "students": "79K+",
+    "exp": "11+",
+    "sessions": "434+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "System Design",
+      "Go",
+      "Career Guidance"
+    ],
+    "img": "https://i.pravatar.cc/300?img=67",
+    "status": "Available this week",
+    "rating": "4.8",
+    "reviews": 1896
+  },
+  {
+    "name": "Aryan Singh",
+    "headline": "Senior Engineer at Meta | Mobile Dev Expert",
+    "students": "57K+",
+    "exp": "10+",
+    "sessions": "246+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Cloud Native",
+      "Java",
+      "Interview Prep"
+    ],
+    "img": "https://i.pravatar.cc/300?img=30",
+    "status": "Limited Slots",
+    "rating": "4.8",
+    "reviews": 689
+  },
+  {
+    "name": "Vikram Joshi",
+    "headline": "Senior Engineer at Microsoft | Web Development Expert",
+    "students": "45K+",
+    "exp": "9+",
+    "sessions": "321+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Blockchain",
+      "Java",
+      "Career Guidance"
+    ],
+    "img": "https://i.pravatar.cc/300?img=49",
+    "status": "Next available Monday",
+    "rating": "4.8",
+    "reviews": 1618
+  },
+  {
+    "name": "Aditya Bose",
+    "headline": "Senior Engineer at Google | Cloud Native Expert",
+    "students": "179K+",
+    "exp": "11+",
+    "sessions": "376+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "AI/ML",
+      "Node.js",
+      "Career Guidance"
+    ],
+    "img": "https://i.pravatar.cc/300?img=36",
+    "status": "Next available Monday",
+    "rating": "4.9",
+    "reviews": 1677
+  },
+  {
+    "name": "Neha Gupta",
+    "headline": "Senior Engineer at Google | Mobile Dev Expert",
+    "students": "101K+",
+    "exp": "8+",
+    "sessions": "70+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Blockchain",
+      "Go",
+      "Interview Prep"
+    ],
+    "img": "https://i.pravatar.cc/300?img=30",
+    "status": "Available this week",
+    "rating": "4.8",
+    "reviews": 1149
+  },
+  {
+    "name": "Karan Mehta",
+    "headline": "Senior Engineer at Netflix | Cybersecurity Expert",
+    "students": "144K+",
+    "exp": "8+",
+    "sessions": "178+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Mobile Dev",
+      "Go",
+      "Interview Prep"
+    ],
+    "img": "https://i.pravatar.cc/300?img=52",
+    "status": "Next available Monday",
+    "rating": "5.0",
+    "reviews": 370
+  },
+  {
+    "name": "Rahul Rao",
+    "headline": "Senior Engineer at Microsoft | Web Development Expert",
+    "students": "37K+",
+    "exp": "4+",
+    "sessions": "284+",
+    "bio": "Passionate engineer creating technical content to bridge the gap between academia and industry. Mentored thousands of students into top tech roles.",
+    "tags": [
+      "Cybersecurity",
+      "AWS",
+      "Interview Prep"
+    ],
+    "img": "https://i.pravatar.cc/300?img=40",
+    "status": "Available this week",
+    "rating": "4.6",
+    "reviews": 1419
+  }
+]

@@ -231,8 +231,9 @@ app.get('/resources', (req, res) => {
     res.render('resources')
 });
 
+const mentorsData = require('./data/mentors.json');
 app.get('/mentor', (req, res) => {
-    res.render('mentor');
+    res.render('mentor', { mentors: mentorsData });
 });
 
 app.get('/an', (req, res) => {

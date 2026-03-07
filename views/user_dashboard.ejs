@@ -1,387 +1,605 @@
 <%- include('layouts/header'); %>
     <%- include('layouts/navbar'); %>
 
-        <!-- Custom Style Overrides for "Next Level" UI -->
         <style>
-            @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap');
+            @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
             :root {
-                --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-                --secondary-gradient: linear-gradient(135deg, #3b82f6 0%, #2dd4bf 100%);
-                --accent-gradient: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+                --primary-gradient: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+                --accent: #6366F1;
+                --secondary-accent: #22C55E;
+                --warning: #F59E0B;
+                --bg-main: #F7F9FC;
+                --card-bg: #FFFFFF;
+                --text-primary: #0F172A;
+                --text-secondary: #64748B;
+                --text-muted: #94A3B8;
             }
 
             body {
-                font-family: 'Outfit', sans-serif;
-                background-color: #f8fafc;
+                font-family: 'Inter', sans-serif !important;
+                background-color: var(--bg-main) !important;
+                background-image:
+                    radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.06), transparent 40%),
+                    radial-gradient(circle at 80% 0%, rgba(139, 92, 246, 0.06), transparent 40%) !important;
+                background-attachment: fixed;
+                color: var(--text-primary);
             }
 
+            h1,
+            h2,
+            h3,
+            h4,
+            h5,
+            h6 {
+                font-weight: 600 !important;
+                letter-spacing: -0.02em !important;
+                color: var(--text-primary) !important;
+            }
+
+            /* Typography - Numbers */
+            h3.text-3xl.font-black {
+                font-size: 28px !important;
+                font-weight: 800 !important;
+            }
+
+            /* Typography - Labels */
+            .text-xs.tracking-widest.uppercase,
+            .text-\[10px\].tracking-\[0\.2em\].uppercase {
+                font-size: 11px !important;
+                text-transform: uppercase !important;
+                letter-spacing: 0.1em !important;
+                color: var(--text-secondary) !important;
+                font-weight: 700 !important;
+            }
+
+            .text-slate-500,
+            .text-slate-400 {
+                color: var(--text-secondary) !important;
+            }
+
+            /* Cards Enhancement */
             .glass-card {
-                background: rgba(255, 255, 255, 0.8);
-                backdrop-filter: blur(12px);
-                -webkit-backdrop-filter: blur(12px);
-                border: 1px solid rgba(255, 255, 255, 0.3);
-                box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+                background: rgba(255, 255, 255, 0.7) !important;
+                border-radius: 2rem !important;
+                border: 1px solid rgba(255, 255, 255, 0.8) !important;
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04) !important;
+                transition: all 0.4s cubic-bezier(.4, 0, .2, 1) !important;
+                backdrop-filter: blur(20px) !important;
+                -webkit-backdrop-filter: blur(20px) !important;
+                position: relative;
+                overflow: hidden !important;
             }
 
-            .stat-card {
-                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            .glass-card::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                border-radius: inherit;
+                background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 100%);
+                opacity: 0;
+                transition: opacity 0.4s ease;
+                pointer-events: none;
+                z-index: -1;
             }
 
-            .stat-card:hover {
-                transform: translateY(-5px);
+            .glass-card:hover {
+                transform: translateY(-4px) !important;
+                box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08) !important;
+                border-color: rgba(255, 255, 255, 1) !important;
             }
 
+            .glass-card:hover::after {
+                opacity: 1;
+            }
+
+            /* Gradient Text */
             .gradient-text {
                 background: var(--primary-gradient);
                 -webkit-background-clip: text;
                 background-clip: text;
                 -webkit-text-fill-color: transparent;
+                position: relative;
+                display: inline-block;
+                padding-bottom: 2px;
             }
 
+            .gradient-text::after {
+                content: '';
+                position: absolute;
+                left: 0;
+                bottom: 0;
+                width: 100%;
+                height: 3px;
+                background: var(--primary-gradient);
+                border-radius: 2px;
+                opacity: 0.5;
+                animation: pulse-underline 2s infinite ease-in-out;
+            }
+
+            @keyframes pulse-underline {
+
+                0%,
+                100% {
+                    opacity: 0.3;
+                    transform: scaleX(0.95);
+                }
+
+                50% {
+                    opacity: 0.8;
+                    transform: scaleX(1);
+                }
+            }
+
+            /* Animated Emoji Wave */
+            .emoji-wave {
+                display: inline-block;
+                animation: wave 2.5s infinite;
+                transform-origin: 70% 70%;
+            }
+
+            @keyframes wave {
+                0% {
+                    transform: rotate(0deg);
+                }
+
+                10% {
+                    transform: rotate(14deg);
+                }
+
+                20% {
+                    transform: rotate(-8deg);
+                }
+
+                30% {
+                    transform: rotate(14deg);
+                }
+
+                40% {
+                    transform: rotate(-4deg);
+                }
+
+                50% {
+                    transform: rotate(10deg);
+                }
+
+                60%,
+                100% {
+                    transform: rotate(0deg);
+                }
+            }
+
+            /* Primary Button */
+            .btn-premium {
+                background: var(--primary-gradient) !important;
+                border-radius: 12px !important;
+                box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35) !important;
+                color: white !important;
+                transition: all 0.3s cubic-bezier(.4, 0, .2, 1) !important;
+                border: none;
+                overflow: hidden;
+                position: relative;
+            }
+
+            .btn-premium::after {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 300%;
+                height: 300%;
+                background: rgba(255, 255, 255, 0.2);
+                transform: translate(-50%, -50%) scale(0);
+                border-radius: 50%;
+                transition: transform 0.6s ease, opacity 0.6s ease;
+                opacity: 0;
+            }
+
+            .btn-premium:active::after {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+                transition: 0s;
+            }
+
+            .btn-premium:hover {
+                box-shadow: 0 12px 30px rgba(99, 102, 241, 0.45) !important;
+                color: white !important;
+            }
+
+            /* Growth Analytics */
+            #scoreChart {
+                background: transparent;
+                position: relative;
+                z-index: 5;
+            }
+
+            /* Ask Anonymously Panel */
+            .bg-slate-900 {
+                background: linear-gradient(145deg, #020617, #0F172A) !important;
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+            }
+
+            .bg-slate-900 input,
+            .bg-slate-900 textarea {
+                color: white !important;
+                transition: all 0.3s cubic-bezier(.4, 0, .2, 1) !important;
+            }
+
+            .bg-slate-900 input:focus,
+            .bg-slate-900 textarea:focus {
+                border-color: #6366F1 !important;
+                box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15) !important;
+                transform: translateY(-1px);
+            }
+
+            /* Scrollbar */
             .custom-scrollbar::-webkit-scrollbar {
                 width: 4px;
             }
 
             .custom-scrollbar::-webkit-scrollbar-track {
-                background: #f1f1f1;
+                background: transparent;
             }
 
             .custom-scrollbar::-webkit-scrollbar-thumb {
-                background: #cbd5e1;
+                background: rgba(148, 163, 184, 0.2);
                 border-radius: 10px;
             }
 
-            .btn-premium {
-                background: var(--primary-gradient);
-                color: white;
-                transition: all 0.3s ease;
-                box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+            .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                background: rgba(148, 163, 184, 0.4);
             }
 
-            .btn-premium:hover {
-                box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
-                transform: scale(1.02);
-                color: white;
+            /* Entrance Animations */
+            .fade-in-up {
+                opacity: 0;
+                transform: translateY(30px);
+                transition: opacity 0.7s cubic-bezier(.2, 0.8, .2, 1), transform 0.7s cubic-bezier(.2, 0.8, .2, 1);
+            }
+
+            .fade-in-up.visible {
+                opacity: 1;
+                transform: translateY(0);
             }
         </style>
 
         <div class="min-h-screen pb-12">
             <div style="height: 120px; width: 100%;"></div> <!-- Fixed spacer to clear the navbar -->
-            <div class="container mx-auto px-4">
-                <!-- Header Section with Glass Enhancement -->
-                <div
-                    class="glass-card rounded-[2.5rem] p-8 mb-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-                    <div class="max-w-full overflow-hidden">
-                        <h1
-                            class="text-3xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-2 flex flex-wrap items-center gap-3">
-                            Hello, <span class="gradient-text truncate block max-w-[280px] md:max-w-xl">
-                                <%= username.split('@')[0] %>
-                            </span> 👋
-                        </h1>
-                        <p class="text-slate-500 font-medium tracking-wide">Ready to conquer your career goals today?
-                        </p>
-                    </div>
-                    <div class="flex-shrink-0">
-                        <a href="/smart-quiz"
-                            class="btn-premium px-8 py-4 rounded-2xl font-bold flex items-center gap-3">
-                            <i class="fas fa-rocket"></i> Take New Quiz
-                        </a>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Global Stats Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                <!-- Best Score Card -->
-                <div class="glass-card stat-card rounded-3xl p-6 relative overflow-hidden group">
+            <div class="container mx-auto px-4 max-w-7xl">
+
+                <!-- BENTO GRID SYSTEM -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-6 relative">
+
+                    <!-- 1. PANORAMIC WELCOME HERO (Spans 12 columns) -->
                     <div
-                        class="absolute -right-4 -top-4 w-24 h-24 bg-indigo-50 rounded-full opacity-50 group-hover:scale-150 transition-transform duration-700">
-                    </div>
-                    <div class="flex items-center gap-4 mb-4">
+                        class="md:col-span-12 glass-card rounded-[2.5rem] p-8 mb-2 flex flex-col lg:flex-row justify-between items-center gap-8 relative overflow-hidden group">
+                        <!-- Abstract Background Decoration -->
                         <div
-                            class="w-12 h-12 bg-indigo-100 rounded-2xl flex items-center justify-center text-indigo-600 shadow-sm">
-                            <i class="fas fa-trophy text-xl"></i>
+                            class="absolute -right-20 -top-20 w-64 h-64 bg-indigo-500 rounded-full blur-[100px] opacity-10 group-hover:opacity-20 transition-opacity duration-1000">
                         </div>
-                        <span class="text-slate-500 font-bold uppercase text-xs tracking-widest">Peak
-                            Performance</span>
-                    </div>
-                    <h3 class="text-4xl font-black text-slate-900 mb-1">
-                        <%= bestScore || 0 %><span class="text-lg text-slate-400 font-bold"> / 60</span>
-                    </h3>
-                    <p class="text-sm text-slate-400 font-semibold">Your all-time high score</p>
-                </div>
-
-                <!-- Average Card -->
-                <div class="glass-card stat-card rounded-3xl p-6 relative overflow-hidden group">
-                    <div
-                        class="absolute -right-4 -top-4 w-24 h-24 bg-emerald-50 rounded-full opacity-50 group-hover:scale-150 transition-transform duration-700">
-                    </div>
-                    <div class="flex items-center gap-4 mb-4">
                         <div
-                            class="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-600 shadow-sm">
-                            <i class="fas fa-chart-line text-xl"></i>
+                            class="absolute -left-20 -bottom-20 w-64 h-64 bg-emerald-500 rounded-full blur-[100px] opacity-10 group-hover:opacity-20 transition-opacity duration-1000">
                         </div>
-                        <span class="text-slate-500 font-bold uppercase text-xs tracking-widest">Consistency</span>
-                    </div>
-                    <h3 class="text-4xl font-black text-slate-900 mb-1">
-                        <%= avgScore || 0 %>
-                    </h3>
-                    <p class="text-sm text-slate-400 font-semibold">Average assessment rating</p>
-                </div>
 
-                <!-- Total Quizzes Card -->
-                <div class="glass-card stat-card rounded-3xl p-6 relative overflow-hidden group">
-                    <div
-                        class="absolute -right-4 -top-4 w-24 h-24 bg-amber-50 rounded-full opacity-50 group-hover:scale-150 transition-transform duration-700">
-                    </div>
-                    <div class="flex items-center gap-4 mb-4">
-                        <div
-                            class="w-12 h-12 bg-amber-100 rounded-2xl flex items-center justify-center text-amber-600 shadow-sm">
-                            <i class="fas fa-fire-alt text-xl"></i>
+                        <!-- Left: Greeting & Action -->
+                        <div class="relative z-10 w-full lg:w-1/2">
+                            <h1
+                                class="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-3 flex flex-wrap items-center gap-3">
+                                Hello, <span class="gradient-text truncate block max-w-[280px] md:max-w-xl">
+                                    <%= username.split('@')[0] %>
+                                </span> <span class="emoji-wave">👋</span>
+                            </h1>
+                            <p class="text-slate-500 font-medium tracking-wide mb-8 text-lg">Ready to conquer your
+                                career goals today?</p>
+
+                            <a href="/smart-quiz"
+                                class="btn-premium inline-flex px-8 py-4 rounded-2xl font-bold items-center gap-3 transform hover:-translate-y-1 transition-transform">
+                                <i class="fas fa-rocket"></i> Take Knowledge Checkpoint
+                            </a>
                         </div>
-                        <span class="text-slate-500 font-bold uppercase text-xs tracking-widest">Global
-                            Activity</span>
-                    </div>
-                    <h3 class="text-4xl font-black text-slate-900 mb-1">
-                        <%= totalAttempts %>
-                    </h3>
-                    <p class="text-sm text-slate-400 font-semibold">Total knowledge checkpoints</p>
-                </div>
-            </div>
 
-            <!-- Major Section Grid -->
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-12">
-
-                <!-- Left Column: Updates & Vault -->
-                <div class="lg:col-span-8 space-y-8">
-
-                    <!-- Institutional Feed -->
-                    <div class="glass-card rounded-[2.5rem] p-8">
-                        <div class="flex items-center justify-between mb-8">
-                            <div>
-                                <h2 class="text-2xl font-black text-slate-900 tracking-tight">Institutional Feed
-                                </h2>
-                                <p class="text-slate-400 text-sm font-medium">Direct updates from your mentors</p>
+                        <!-- Right: Integrated Stats -->
+                        <div class="relative z-10 w-full lg:w-1/2 grid grid-cols-3 gap-4">
+                            <!-- Stat 1: Peak -->
+                            <div
+                                class="bg-white/50 rounded-3xl p-5 border border-white/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-md hover:-translate-y-1 transition-transform duration-300">
+                                <div
+                                    class="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center text-indigo-600 mb-3">
+                                    <i class="fas fa-trophy"></i>
+                                </div>
+                                <h3 class="text-3xl font-black text-slate-900 mb-1">
+                                    <%= bestScore || 0 %><span class="text-xs text-slate-400 font-bold ml-1">/ 60</span>
+                                </h3>
+                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Peak</p>
                             </div>
-                            <div class="flex -space-x-3 overflow-hidden">
+                            <!-- Stat 2: Consistency -->
+                            <div
+                                class="bg-white/50 rounded-3xl p-5 border border-white/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-md hover:-translate-y-1 transition-transform duration-300">
                                 <div
-                                    class="w-10 h-10 rounded-full bg-indigo-500 border-2 border-white flex items-center justify-center text-white text-xs font-bold">
-                                    A</div>
+                                    class="w-10 h-10 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600 mb-3">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <h3 class="text-3xl font-black text-slate-900 mb-1">
+                                    <%= avgScore || 0 %>
+                                </h3>
+                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Average</p>
+                            </div>
+                            <!-- Stat 3: Total -->
+                            <div
+                                class="bg-white/50 rounded-3xl p-5 border border-white/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-md hover:-translate-y-1 transition-transform duration-300">
                                 <div
-                                    class="w-10 h-10 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center text-white text-xs font-bold">
-                                    S</div>
+                                    class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center text-amber-600 mb-3">
+                                    <i class="fas fa-fire-alt"></i>
+                                </div>
+                                <h3 class="text-3xl font-black text-slate-900 mb-1">
+                                    <%= totalAttempts %>
+                                </h3>
+                                <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Quizzes</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. ANALYTICS & HUB (Spans 8 columns) -->
+                    <div class="md:col-span-8 flex flex-col gap-6">
+
+                        <!-- Chart Block -->
+                        <div class="glass-card rounded-[2.5rem] p-8 h-[400px] flex flex-col">
+                            <div class="flex items-center justify-between mb-6">
+                                <div>
+                                    <h2 class="text-xl font-bold flex items-center gap-2">
+                                        <i class="fas fa-wave-square text-indigo-500"></i> Growth Analytics
+                                    </h2>
+                                    <p class="text-xs text-slate-400 font-medium">Trajectory of your assessment scores
+                                    </p>
+                                </div>
                                 <div
-                                    class="w-10 h-10 rounded-full bg-amber-500 border-2 border-white flex items-center justify-center text-white text-xs font-bold">
-                                    K</div>
+                                    class="px-3 py-1 bg-indigo-50 text-indigo-600 rounded-full text-[10px] font-black uppercase tracking-widest">
+                                    Max Score: 60
+                                </div>
+                            </div>
+                            <div class="flex-1 w-full relative">
+                                <canvas id="scoreChart"></canvas>
                             </div>
                         </div>
 
+                        <!-- Knowledge Vault + Benchmarks Split -->
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- Update Stream -->
-                            <div class="space-y-4">
-                                <h6 class="text-[10px] font-black uppercase text-slate-300 tracking-[0.2em] mb-4">
-                                    Latest Broadcasts</h6>
-                                <div class="space-y-4 custom-scrollbar max-h-[400px] overflow-y-auto pr-2">
-                                    <% if (teacherUpdates.length> 0) { %>
-                                        <% teacherUpdates.forEach(update=> { %>
+
+                            <!-- Knowledge Vault -->
+                            <div class="glass-card rounded-[2rem] p-6 h-[320px] flex flex-col">
+                                <div class="flex justify-between items-center mb-6">
+                                    <h2 class="text-lg font-bold flex items-center gap-2">
+                                        <i class="fas fa-folder-open text-emerald-500"></i> Intel Vault
+                                    </h2>
+                                </div>
+                                <div class="flex-1 overflow-y-auto custom-scrollbar pr-2 space-y-3">
+                                    <% if (resources.length> 0) { %>
+                                        <% resources.forEach(res=> { %>
+                                            <a href="<%= res.link %>" target="_blank"
+                                                class="block p-4 rounded-2xl border border-slate-100 hover:border-emerald-200 hover:bg-emerald-50/30 transition-all group">
+                                                <div class="flex items-center gap-4">
+                                                    <div
+                                                        class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+                                                        <i class="fas fa-file-alt text-xs"></i>
+                                                    </div>
+                                                    <div class="overflow-hidden">
+                                                        <h5 class="text-sm font-semibold text-slate-800 truncate">
+                                                            <%= res.title %>
+                                                        </h5>
+                                                        <p class="text-[9px] font-bold text-slate-400 uppercase mt-0.5">
+                                                            Resource Link</p>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <% }); %>
+                                                <% } else { %>
+                                                    <div
+                                                        class="h-full flex flex-col items-center justify-center text-center opacity-50">
+                                                        <i class="fas fa-inbox text-3xl mb-3 text-slate-300"></i>
+                                                        <p class="text-xs font-bold text-slate-400">Vault is empty</p>
+                                                    </div>
+                                                    <% } %>
+                                </div>
+                            </div>
+
+                            <!-- Recent Benchmarks -->
+                            <div class="glass-card rounded-[2rem] p-6 h-[320px] flex flex-col">
+                                <h2 class="text-lg font-bold flex items-center gap-2 mb-6">
+                                    <i class="fas fa-history text-slate-700"></i> History
+                                </h2>
+                                <div class="flex-1 overflow-y-auto custom-scrollbar pr-2 space-y-3">
+                                    <% if (results && results.length> 0) { %>
+                                        <% results.slice(-6).reverse().forEach(r=> { %>
                                             <div
-                                                class="p-4 bg-white rounded-3xl border border-slate-100 shadow-sm hover:border-indigo-200 transition-all group">
-                                                <div class="flex justify-between items-start mb-2">
-                                                    <span
-                                                        class="px-3 py-1 bg-<%= update.type === 'task' ? 'indigo' : 'amber' %>-50 text-<%= update.type === 'task' ? 'indigo' : 'amber' %>-600 rounded-full text-[10px] font-black uppercase tracking-wider h-fit">
-                                                        <%= update.type %>
-                                                    </span>
-                                                    <span
-                                                        class="text-[10px] font-bold text-slate-300 group-hover:text-slate-500">
-                                                        <%= update.dueDate || update.date %>
+                                                class="flex items-center justify-between p-3 hover:bg-slate-50 rounded-xl transition-colors border border-transparent hover:border-slate-100">
+                                                <div class="flex items-center gap-3">
+                                                    <div class="w-2 h-2 rounded-full bg-indigo-400"></div>
+                                                    <span class="text-xs font-bold text-slate-600">
+                                                        <%= new Date(r.date).toLocaleDateString() %>
                                                     </span>
                                                 </div>
-                                                <h4 class="text-sm font-bold text-slate-800 leading-tight">
-                                                    <%= update.title %>
-                                                </h4>
+                                                <div
+                                                    class="font-black text-slate-900 border border-slate-200 px-3 py-1 rounded-lg text-sm bg-white shadow-sm">
+                                                    <%= r.score %> <span
+                                                            class="text-[9px] text-slate-400 align-middle uppercase">pts</span>
+                                                </div>
                                             </div>
                                             <% }); %>
                                                 <% } else { %>
                                                     <div
-                                                        class="py-12 text-center bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200">
-                                                        <p class="text-slate-400 font-bold italic">No broadcasts
-                                                            today</p>
+                                                        class="h-full flex flex-col items-center justify-center text-center opacity-50">
+                                                        <i class="fas fa-chart-bar text-3xl mb-3 text-slate-300"></i>
+                                                        <p class="text-xs font-bold text-slate-400">No attempts yet</p>
                                                     </div>
                                                     <% } %>
                                 </div>
                             </div>
+                        </div>
+                    </div>
 
-                            <!-- Study Vault (Styled Grid) -->
-                            <div class="space-y-4">
-                                <h6 class="text-[10px] font-black uppercase text-slate-300 tracking-[0.2em] mb-4">
-                                    Knowledge Vault</h6>
-                                <div class="grid grid-cols-1 gap-3">
-                                    <% if (resources.length> 0) { %>
-                                        <% resources.forEach(res=> { %>
-                                            <a href="<%= res.link %>" target="_blank"
-                                                class="flex items-center p-4 bg-gradient-to-r from-emerald-50 to-white rounded-3xl border border-emerald-100 group hover:shadow-lg transition-all">
+                    <!-- 3. FEED & CONCIERGE (Spans 4 columns) -->
+                    <div class="md:col-span-4 flex flex-col gap-6">
+
+                        <!-- Timeline Feed -->
+                        <div class="glass-card rounded-[2.5rem] p-8 flex-1 flex flex-col">
+                            <div class="flex items-center justify-between mb-8">
+                                <h2 class="text-xl font-bold flex items-center gap-2">
+                                    <i class="fas fa-broadcast-tower text-amber-500"></i> Mentor Feed
+                                </h2>
+                            </div>
+
+                            <div class="flex-1 overflow-y-auto custom-scrollbar pr-4 relative">
+                                <% if (teacherUpdates.length> 0) { %>
+                                    <div
+                                        class="absolute left-[15px] top-2 bottom-2 w-0.5 bg-slate-100 rounded-full z-0">
+                                    </div>
+                                    <div class="space-y-6 relative z-10">
+                                        <% teacherUpdates.forEach(update=> { %>
+                                            <div class="flex gap-4 group">
+                                                <!-- Timeline dot -->
+                                                <div class="relative mt-1">
+                                                    <div
+                                                        class="w-8 h-8 rounded-full bg-white border-2 border-<%= update.type === 'task' ? 'indigo' : 'amber' %>-400 flex items-center justify-center shadow-sm z-10 relative group-hover:scale-110 transition-transform">
+                                                        <i
+                                                            class="fas <%= update.type === 'task' ? 'fa-tasks' : 'fa-bullhorn' %> text-[10px] text-<%= update.type === 'task' ? 'indigo' : 'amber' %>-500"></i>
+                                                    </div>
+                                                </div>
+                                                <!-- Card -->
                                                 <div
-                                                    class="w-10 h-10 bg-white rounded-2xl flex items-center justify-center text-emerald-50 shadow-inner group-hover:scale-110 transition-transform">
-                                                    <i class="fas fa-file-pdf text-emerald-500"></i>
-                                                </div>
-                                                <div class="ml-4 flex-1">
-                                                    <h5 class="text-xs font-black text-slate-900 truncate">
-                                                        <%= res.title %>
-                                                    </h5>
-                                                    <p
-                                                        class="text-[9px] font-bold text-emerald-500 uppercase tracking-widest mt-1">
-                                                        Unlock Content</p>
-                                                </div>
-                                                <i
-                                                    class="fas fa-chevron-right text-slate-200 group-hover:text-emerald-300 text-xs"></i>
-                                            </a>
-                                            <% }); %>
-                                                <% } else { %>
-                                                    <div class="py-12 text-center bg-emerald-50 rounded-3xl opacity-50">
-                                                        <p class="text-emerald-400 text-xs font-bold">Vault is
-                                                            currently empty</p>
+                                                    class="flex-1 bg-white p-4 rounded-2xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
+                                                    <div class="flex justify-between items-center mb-1.5">
+                                                        <span
+                                                            class="text-[9px] font-black uppercase text-slate-400 tracking-wider">
+                                                            <%= update.type %>
+                                                        </span>
+                                                        <span class="text-[9px] font-bold text-slate-300">
+                                                            <%= update.dueDate || update.date %>
+                                                        </span>
                                                     </div>
-                                                    <% } %>
-                                </div>
+                                                    <h4 class="text-sm font-bold text-slate-800 leading-tight">
+                                                        <%= update.title %>
+                                                    </h4>
+                                                </div>
+                                            </div>
+                                            <% }); %>
+                                    </div>
+                                    <% } else { %>
+                                        <div
+                                            class="h-full flex flex-col items-center justify-center text-center opacity-50 py-10">
+                                            <div
+                                                class="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mb-4">
+                                                <i class="fas fa-check text-xl text-slate-400"></i>
+                                            </div>
+                                            <p class="text-xs font-bold text-slate-500">You're all caught up!</p>
+                                        </div>
+                                        <% } %>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Performance Chart Container -->
-                    <div class="glass-card rounded-[2.5rem] p-8">
-                        <div class="flex items-center justify-between mb-10">
-                            <div>
-                                <h2 class="text-2xl font-black text-slate-900 tracking-tight">Growth Analytics</h2>
-                                <p class="text-slate-400 text-sm font-medium">Your score trajectory over time</p>
-                            </div>
-                            <div class="px-4 py-2 bg-indigo-50 text-indigo-600 rounded-2xl text-xs font-black">Score
-                                Axis: 0-60</div>
-                        </div>
-                        <div class="w-full h-[300px]">
-                            <canvas id="scoreChart"></canvas>
-                        </div>
                     </div>
+                </div> <!-- End Main Grid -->
+            </div>
+        </div>
+
+        <!-- 4. FLOATING CONCIERGE BUTTON / MODAL APPROACH -->
+        <!-- For structural beauty, we'll keep the Dark Card, but stretch it full width below the grid -->
+        <div class="container mx-auto px-4 max-w-7xl pb-12">
+            <!-- Doubt Hub Footer Card -->
+            <div
+                class="bg-slate-900 rounded-[2.5rem] p-8 md:p-12 text-white relative overflow-hidden shadow-2xl flex flex-col md:flex-row gap-10">
+                <!-- BG Glow -->
+                <div
+                    class="absolute -left-32 top-0 w-64 h-64 bg-indigo-500 rounded-full blur-[120px] opacity-20 pointer-events-none">
+                </div>
+                <div
+                    class="absolute -right-32 bottom-0 w-64 h-64 bg-pink-500 rounded-full blur-[120px] opacity-10 pointer-events-none">
                 </div>
 
-                <!-- Right Column: Doubts & History -->
-                <div class="lg:col-span-4 space-y-8">
-
-                    <!-- Doubt Hub -->
-                    <div class="bg-slate-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden shadow-2xl">
-                        <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-500 rounded-full blur-[80px] opacity-20">
-                        </div>
-
-                        <div class="flex flex-col h-full relative z-10">
-                            <div class="mb-8">
-                                <h2 class="text-2xl font-black tracking-tight mb-2">Expert Concierge</h2>
-                                <p class="text-slate-400 text-xs font-bold tracking-widest uppercase">Ask anything
-                                    anonymously</p>
-                            </div>
-
-                            <form action="/submitDoubt" method="POST" class="space-y-4 mb-10">
-                                <input type="text" name="subject" placeholder="Subject"
-                                    class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-sm focus:bg-white/10 focus:border-indigo-400 outline-none transition-all placeholder:text-white/20"
-                                    required>
-                                <textarea name="question" placeholder="Your specific question..." rows="4"
-                                    class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-sm focus:bg-white/10 focus:border-indigo-400 outline-none transition-all placeholder:text-white/20 resize-none"
-                                    required></textarea>
-                                <button type="submit"
-                                    class="w-full bg-white text-slate-900 font-black py-4 rounded-2xl hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-indigo-500/20">Shoot
-                                    Message</button>
-                            </form>
-
-                            <div class="flex-1">
-                                <h6 class="text-[10px] font-black uppercase text-white/30 tracking-[0.2em] mb-6">
-                                    Expert Responses</h6>
-                                <div class="space-y-4 custom-scrollbar max-h-[300px] overflow-y-auto pr-2">
-                                    <% if (myDoubts.length> 0) { %>
-                                        <% myDoubts.forEach(doubt=> { %>
-                                            <div
-                                                class="p-5 rounded-3xl <%= doubt.status === 'resolved' ? 'bg-indigo-500/20 border border-indigo-400/30' : 'bg-white/5 border border-white/10' %>">
-                                                <div class="flex justify-between items-center mb-3">
-                                                    <span
-                                                        class="text-[9px] font-black uppercase tracking-widest <%= doubt.status === 'resolved' ? 'text-indigo-400' : 'text-slate-500' %>">
-                                                        <%= doubt.subject %>
-                                                    </span>
-                                                    <span
-                                                        class="w-2 h-2 rounded-full <%= doubt.status === 'resolved' ? 'bg-indigo-400 animate-pulse' : 'bg-slate-700' %>"></span>
-                                                </div>
-                                                <p class="text-xs font-bold leading-relaxed opacity-90 mb-3">
-                                                    <%= doubt.question %>
-                                                </p>
-                                                <% if (doubt.status==='resolved' ) { %>
-                                                    <div class="mt-4 pt-4 border-t border-white/10">
-                                                        <p
-                                                            class="text-[10px] text-indigo-400 font-black tracking-widest uppercase mb-1">
-                                                            Response</p>
-                                                        <p class="text-[11px] italic text-slate-300">
-                                                            <%= doubt.answer %>
-                                                        </p>
-                                                    </div>
-                                                    <% } %>
-                                            </div>
-                                            <% }); %>
-                                                <% } else { %>
-                                                    <p
-                                                        class="text-center text-white/20 text-[10px] font-black uppercase tracking-widest py-8">
-                                                        Inbox is empty</p>
-                                                    <% } %>
-                                </div>
-                            </div>
-                        </div>
+                <div class="w-full md:w-1/3 relative z-10 flex flex-col justify-center">
+                    <div
+                        class="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center backdrop-blur-md border border-white/10 mb-6">
+                        <i class="fas fa-user-secret text-indigo-300 text-xl"></i>
                     </div>
+                    <h2 class="text-3xl font-black tracking-tight mb-3 text-white">Ask Anonymously.</h2>
+                    <p class="text-slate-400 text-sm font-medium leading-relaxed mb-6">Have a question forming in your
+                        mind? Drop it here. Our expert panel will address it directly in your portal.</p>
+                </div>
 
-                    <!-- History Feeds -->
-                    <div class="glass-card rounded-[2.5rem] p-8">
-                        <h2 class="text-xl font-black text-slate-900 mb-8 tracking-tight">Recent Benchmarks</h2>
-                        <div class="space-y-4">
-                            <% if (results && results.length> 0) { %>
-                                <% results.slice(-5).reverse().forEach(r=> { %>
-                                    <div
-                                        class="flex items-center justify-between p-4 hover:bg-slate-50 rounded-2xl transition-colors group">
-                                        <div class="flex items-center gap-4">
-                                            <div
-                                                class="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center text-slate-400 group-hover:bg-indigo-50 group-hover:text-indigo-500 transition-colors">
-                                                <i class="fas fa-calendar-check text-xs"></i>
-                                            </div>
-                                            <div>
-                                                <p class="text-xs font-black text-slate-900">
-                                                    <%= new Date(r.date).toLocaleDateString() %>
-                                                </p>
-                                                <p class="text-[10px] font-bold text-slate-400 uppercase">Automated
-                                                    Test</p>
-                                            </div>
-                                        </div>
-                                        <div class="text-right">
-                                            <span class="text-base font-black text-slate-900">
-                                                <%= r.score %>
-                                            </span>
-                                            <span
-                                                class="text-[9px] font-bold text-slate-300 d-block tracking-tighter">SCORE</span>
-                                        </div>
+                <div class="w-full md:w-1/3 relative z-10">
+                    <form action="/submitDoubt" method="POST" class="space-y-4">
+                        <input type="text" name="subject" placeholder="Question Subject"
+                            class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-sm focus:bg-white/5 focus:border-indigo-400 outline-none transition-all placeholder:text-white/30 text-white"
+                            required>
+                        <textarea name="question" placeholder="Describe your doubt in detail..." rows="3"
+                            class="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-sm focus:bg-white/5 focus:border-indigo-400 outline-none transition-all placeholder:text-white/30 text-white resize-none"
+                            required></textarea>
+                        <button type="submit"
+                            class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white font-bold py-4 rounded-2xl hover:scale-[1.02] active:scale-95 transition-all shadow-lg shadow-indigo-500/25">Send
+                            Securely</button>
+                    </form>
+                </div>
+
+                <div
+                    class="w-full md:w-1/3 relative z-10 flex flex-col pt-4 md:pt-0 md:pl-10 md:border-l border-white/10">
+                    <h6 class="text-[10px] font-black uppercase text-white/30 tracking-[0.2em] mb-4">Concierge Inbox
+                    </h6>
+                    <div class="flex-1 overflow-y-auto custom-scrollbar pr-2 space-y-3 max-h-[220px]">
+                        <% if (myDoubts.length> 0) { %>
+                            <% myDoubts.forEach(doubt=> { %>
+                                <div
+                                    class="p-4 rounded-2xl <%= doubt.status === 'resolved' ? 'bg-indigo-500/20 border border-indigo-400/30' : 'bg-white/5 border border-white/5' %> group">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span
+                                            class="text-[9px] font-black uppercase tracking-widest <%= doubt.status === 'resolved' ? 'text-indigo-300' : 'text-slate-400' %> truncate w-4/5">
+                                            <%= doubt.subject %>
+                                        </span>
+                                        <span
+                                            class="w-2 h-2 rounded-full <%= doubt.status === 'resolved' ? 'bg-indigo-400 shadow-[0_0_10px_#818cf8]' : 'bg-slate-600' %> flex-shrink-0"></span>
                                     </div>
-                                    <% }); %>
-                                        <% } else { %>
-                                            <p class="text-center text-slate-300 text-xs py-10 italic">No history
-                                                recorded yet</p>
-                                            <% } %>
-                        </div>
+                                    <p class="text-xs font-medium text-white/80 line-clamp-2 leading-relaxed">
+                                        <%= doubt.question %>
+                                    </p>
+                                    <% if (doubt.status==='resolved' ) { %>
+                                        <div
+                                            class="mt-3 pt-3 border-t border-white/10 hidden group-hover:block transition-all">
+                                            <p
+                                                class="text-[9px] text-indigo-400 font-bold uppercase tracking-widest mb-1">
+                                                Answer</p>
+                                            <p class="text-[11px] italic text-slate-300">
+                                                <%= doubt.answer %>
+                                            </p>
+                                        </div>
+                                        <% } %>
+                                </div>
+                                <% }); %>
+                                    <% } else { %>
+                                        <div
+                                            class="h-full flex flex-col justify-center items-center text-center opacity-40">
+                                            <i class="fas fa-ghost text-2xl mb-2"></i>
+                                            <span class="text-[10px] font-black uppercase tracking-widest">Inbox
+                                                Zero</span>
+                                        </div>
+                                        <% } %>
                     </div>
-
                 </div>
             </div>
         </div>
-        </div>
+
+        <script id="chart-data" type="application/json">
+            <%- JSON.stringify(results || []) %>
+        </script>
 
         <script>
             document.addEventListener('DOMContentLoaded', () => {
                 const ctx = document.getElementById('scoreChart').getContext('2d');
 
-                // Data parsing
-                const resultsRaw = <% - JSON.stringify(results || []) %>;
+                // Data parsing (Fixed syntax issue here)
+                const resultsRawText = document.getElementById('chart-data').textContent;
+                const resultsRaw = resultsRawText ? JSON.parse(resultsRawText) : [];
                 const dataPoints = resultsRaw.map(r => r.score);
                 const labels = resultsRaw.map((_, i) => `Attempt ${i + 1}`);
+
 
                 // Custom Gradient for Chart
                 const gradient = ctx.createLinearGradient(0, 0, 0, 300);
@@ -435,6 +653,92 @@
                         }
                     }
                 });
+
+                // ======= NEW ANIMATIONS & MICRO-INTERACTIONS ======= //
+
+                // 1. Animated Emoji Wave
+                const h1 = document.querySelector('h1.text-3xl');
+                if (h1 && h1.innerHTML.includes('👋')) {
+                    h1.innerHTML = h1.innerHTML.replace('👋', '<span class="emoji-wave">👋</span>');
+                }
+
+                // 2. Count-Up Animation for Metrics
+                const statNumbers = document.querySelectorAll('h3.text-4xl.font-black');
+
+                const animateValue = (obj, start, end, duration) => {
+                    let startTimestamp = null;
+                    const step = (timestamp) => {
+                        if (!startTimestamp) startTimestamp = timestamp;
+                        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                        const easeOut = 1 - Math.pow(1 - progress, 3); // easeOutCubic
+                        let current = Math.floor(easeOut * (end - start) + start);
+
+                        if (obj.querySelector('span')) {
+                            const spanHtml = obj.querySelector('span').outerHTML;
+                            obj.innerHTML = current + spanHtml;
+                        } else {
+                            obj.innerHTML = current;
+                        }
+
+                        if (progress < 1) {
+                            window.requestAnimationFrame(step);
+                        } else {
+                            if (obj.querySelector('span')) {
+                                const spanHtml = obj.querySelector('span').outerHTML;
+                                obj.innerHTML = end + spanHtml;
+                            } else {
+                                obj.innerHTML = end;
+                            }
+                        }
+                    };
+                    window.requestAnimationFrame(step);
+                };
+
+                const statObserver = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const el = entry.target;
+                            let targetValue = 0;
+
+                            if (el.querySelector('span')) {
+                                targetValue = parseFloat(el.childNodes[0].nodeValue.trim());
+                            } else {
+                                targetValue = parseFloat(el.innerText.trim());
+                            }
+
+                            if (!isNaN(targetValue) && targetValue > 0) {
+                                // For avgScore (which might have a decimal), we will just do integer counting for simplicity or stick to integers if possible, but parseInt is safer for the animation to look clean.
+                                // Actually, let's keep it integer based.
+                                targetValue = Math.floor(targetValue);
+                                animateValue(el, 0, targetValue, 1500);
+                            }
+                            observer.unobserve(el);
+                        }
+                    });
+                }, { threshold: 0.5 });
+
+                statNumbers.forEach(num => statObserver.observe(num));
+
+                // 3. Scroll Reveal Animation for Sections
+                const sections = document.querySelectorAll('.glass-card, .bg-slate-900');
+                sections.forEach((sec, index) => {
+                    sec.classList.add('fade-in-up');
+                    sec.style.transitionDelay = `${(index % 3) * 0.1}s`;
+                });
+
+                const revealObserver = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+                setTimeout(() => {
+                    document.querySelectorAll('.fade-in-up').forEach(sec => revealObserver.observe(sec));
+                }, 100);
+
             });
         </script>
 
