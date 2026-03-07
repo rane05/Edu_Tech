@@ -63,8 +63,6 @@ const integrations = require('./routes/integrations.js')
 const careerTrendsPredictor = require('./routes/career_trends_predictor.js')
 const studyAbroadRoute = require('./routes/studyAbroadRoute.js'); // Global Studies & Advisor Module
 const ollamaChat = require('./routes/ollamaChat.js');
-const smartQuiz = require('./routes/smart_quiz.js');
-const leaderboard = require('./routes/leaderboard.js');
 const userDashboard = require('./routes/user_dashboard.js');
 const resumeBuilder = require('./routes/resume_builder.js');
 const parentDashboard = require('./routes/parent_dashboard.js');
@@ -176,8 +174,6 @@ app.use(integrations)
 app.use(careerTrendsPredictor)
 app.use(studyAbroadRoute);
 app.use(ollamaChat);
-app.use(smartQuiz);
-app.use(leaderboard);
 app.use(userDashboard);
 app.use(resumeBuilder);
 app.use(parentDashboard);
@@ -226,14 +222,6 @@ server.listen(4000, () => {
 });
 app.get('/vid', (req, res) => {
     res.render('vid')
-});
-app.get('/resources', (req, res) => {
-    res.render('resources')
-});
-
-const mentorsData = require('./data/mentors.json');
-app.get('/mentor', (req, res) => {
-    res.render('mentor', { mentors: mentorsData });
 });
 
 app.get('/an', (req, res) => {

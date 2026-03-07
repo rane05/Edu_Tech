@@ -1,594 +1,907 @@
 <%- include('layouts/header'); -%>
-    <%- include('layouts/tnavbar'); -%>
 
-        <!-- Custom Premium Styles -->
-        <style>
-            @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
-            :root {
-                --primary: #4f46e5;
-                --primary-light: #818cf8;
-                --secondary: #ec4899;
-                --accent: #f59e0b;
-                --bg-main: #f8fafc;
-                --glass-bg: rgba(255, 255, 255, 0.7);
-                --glass-border: rgba(255, 255, 255, 0.2);
+        :root {
+            --bg-main: #f4f7fb;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --primary: #5c6bc0;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 4px 15px rgba(0, 0, 0, 0.03);
+            --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.05);
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* Layout */
+        .dashboard-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--bg-main);
+            padding: 32px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            border-right: 1px solid var(--border-color);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 20px;
+            border-radius: var(--radius-sm);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 15px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item i {
+            font-size: 18px;
+            width: 24px;
+            text-align: center;
+        }
+
+        .nav-item.active {
+            background: #eef2ff;
+            color: var(--primary);
+        }
+
+        .nav-item:hover:not(.active) {
+            background: rgba(0, 0, 0, 0.03);
+            color: var(--text-dark);
+        }
+
+        .sidebar-promo {
+            margin-top: auto;
+            background: linear-gradient(135deg, #7c83fd, #5c6bc0);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar-promo-btn {
+            background: #fcd05b;
+            color: #1e293b;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 99px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 16px;
+            width: 100%;
+            transition: transform 0.2s ease;
+        }
+
+        .sidebar-promo-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .school-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            font-size: 18px;
+            margin-top: 24px;
+            justify-content: center;
+            color: var(--text-dark);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Top Header Row */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 8px;
+        }
+
+        .greeting h1 {
+            font-size: 28px;
+            font-weight: 800;
+            margin: 0 0 4px 0;
+            color: var(--text-dark);
+        }
+
+        .greeting p {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .icon-btn:hover {
+            color: var(--text-dark);
+            border-color: #cbd5e1;
+        }
+
+        /* Top Row Cards */
+        .hero-banner {
+            background: linear-gradient(100deg, #93a5cf 0%, #e4efe9 100%);
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            border-radius: var(--radius-lg);
+            padding: 30px 40px;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            flex: 1;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-banner h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin: 0 0 8px 0;
+        }
+
+        .hero-banner p {
+            font-size: 15px;
+            opacity: 0.9;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .profile-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            min-width: 320px;
+        }
+
+        .profile-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: var(--radius-md);
+            background: #eef2ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+        }
+
+        .profile-info h3 {
+            margin: 0 0 4px 0;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .profile-info p {
+            margin: 0 0 12px 0;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 12px;
+        }
+
+        .p-stat {
+            background: #f1f5f9;
+            padding: 6px 12px;
+            border-radius: 99px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .p-stat span {
+            color: var(--text-dark);
+            font-weight: 800;
+        }
+
+        /* Dashboard Grid */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 800;
+            margin: 0;
+        }
+
+        .view-all {
+            background: #f1f5f9;
+            color: var(--primary);
+            padding: 6px 14px;
+            border-radius: 99px;
+            font-size: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+        }
+
+        /* Working Hours (Stats) */
+        .stat-bar-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .stat-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .stat-val {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Group Chats (Doubts) */
+        .chat-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .chat-item:last-child {
+            border-bottom: none;
+        }
+
+        .chat-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-sm);
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .chat-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .chat-info h4 {
+            margin: 0 0 4px 0;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .chat-info p {
+            margin: 0;
+            font-size: 13px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .badge {
+            background: var(--primary);
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+            min-width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        /* Calendar Placeholder */
+        .calendar-widget {
+            text-align: center;
+        }
+
+        /* Student Tests (Tasks) */
+        .col-span-2 {
+            grid-column: span 2;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            text-align: left;
+            padding: 12px 16px;
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table td {
+            padding: 16px;
+            font-size: 14px;
+            font-weight: 500;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .test-name {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-dark);
+            font-weight: 600;
+        }
+
+        .test-name i {
+            color: var(--primary);
+            font-size: 16px;
+            background: #eef2ff;
+            padding: 8px;
+            border-radius: 50%;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 99px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-active {
+            color: var(--primary);
+        }
+
+        .status-reviewed {
+            color: #10b981;
+        }
+
+        .status-pending {
+            color: #f59e0b;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .dot-active {
+            background: var(--primary);
+        }
+
+        .dot-reviewed {
+            background: #10b981;
+        }
+
+        .dot-pending {
+            background: #f59e0b;
+        }
+
+        /* Upcoming Classes */
+        .class-card {
+            background: #f8fafc;
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            border: 1px solid #f1f5f9;
+        }
+
+        .class-time {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--text-dark);
+            background: white;
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .class-info flex {
+            flex: 1;
+        }
+
+        .class-info h4 {
+            margin: 0 0 4px 0;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .class-info p {
+            margin: 0;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .link-btn {
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 1024px) {
+
+            .dashboard-grid,
+            .bento-grid {
+                grid-template-columns: 1fr;
             }
 
-            body {
-                font-family: 'Outfit', sans-serif;
-                background: var(--bg-main);
-                color: #1e293b;
-                overflow-x: hidden;
+            .col-span-2 {
+                grid-column: span 1;
             }
 
-            .glass-card {
-                background: var(--glass-bg);
-                backdrop-filter: blur(12px);
-                -webkit-backdrop-filter: blur(12px);
-                border: 1px solid var(--glass-border);
-                box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
-                border-radius: 24px;
-                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
             }
 
-            .glass-card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.12);
+            .sidebar {
+                display: none;
             }
 
-            .gradient-text {
-                background: linear-gradient(135deg, var(--primary), var(--secondary));
-                -webkit-background-clip: text;
-                background-clip: text;
-                -webkit-text-fill-color: transparent;
+            .top-row {
+                flex-direction: column;
             }
 
-            .btn-premium {
-                background: linear-gradient(135deg, var(--primary), var(--primary-light));
-                color: white;
-                border-radius: 12px;
-                font-weight: 600;
-                transition: all 0.3s ease;
-                box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+            .profile-card {
+                width: 100%;
             }
+        }
+    </style>
 
-            .btn-premium:hover {
-                transform: scale(1.02);
-                box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
-            }
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <a href="/teacher_home" class="nav-item active">
+                <i class="fas fa-border-all"></i> Dashboard
+            </a>
+            <a href="#" onclick="toggleModal('sessionModal')" class="nav-item">
+                <i class="far fa-calendar-alt"></i> Schedule
+            </a>
+            <a href="#" class="nav-item">
+                <i class="far fa-envelope"></i> Inbox
+            </a>
+            <a href="#" class="nav-item">
+                <i class="far fa-user"></i> Students
+            </a>
+            <a href="#" onclick="toggleModal('taskModal')" class="nav-item">
+                <i class="far fa-file-alt"></i> Assignments
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-cog"></i> Settings
+            </a>
 
-            .stat-icon {
-                width: 48px;
-                height: 48px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                border-radius: 14px;
-                font-size: 20px;
-            }
+            <div class="sidebar-promo">
+                <div style="font-size: 24px; margin-bottom: 8px;">✨</div>
+                <p style="font-size: 14px; font-weight: 600; margin: 0 0 8px 0;">Create new class session now</p>
+                <button class="sidebar-promo-btn" onclick="toggleModal('sessionModal')">Create class</button>
+            </div>
 
-            .custom-scrollbar::-webkit-scrollbar {
-                width: 6px;
-            }
+            <div class="school-logo">
+                <a href="/tprofile"
+                    style="color: inherit; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-shield-alt"></i>
+                    <%= collegeName || "Your College" %>
+                </a>
+            </div>
+        </aside>
 
-            .custom-scrollbar::-webkit-scrollbar-track {
-                background: transparent;
-            }
-
-            .custom-scrollbar::-webkit-scrollbar-thumb {
-                background: #cbd5e1;
-                border-radius: 10px;
-            }
-
-            /* Modal Styles */
-            .modal-backdrop {
-                background: rgba(0, 0, 0, 0.4);
-                backdrop-filter: blur(4px);
-            }
-
-            .animate-in {
-                animation: fadeInScale 0.4s ease forwards;
-            }
-
-            @keyframes fadeInScale {
-                from {
-                    opacity: 0;
-                    transform: scale(0.95);
-                }
-
-                to {
-                    opacity: 1;
-                    transform: scale(1);
-                }
-            }
-
-            .nav-pill {
-                padding: 8px 16px;
-                border-radius: 99px;
-                font-weight: 600;
-                font-size: 14px;
-                transition: all 0.3s ease;
-            }
-
-            .nav-pill.active {
-                background: var(--primary);
-                color: white;
-            }
-
-            .dashboard-grid {
-                display: grid;
-                grid-template-columns: repeat(12, 1fr);
-                gap: 24px;
-            }
-
-            .col-span-12 {
-                grid-column: span 12;
-            }
-
-            .col-span-8 {
-                grid-column: span 8;
-            }
-
-            .col-span-4 {
-                grid-column: span 4;
-            }
-
-            .col-span-6 {
-                grid-column: span 6;
-            }
-
-            @media (max-width: 1024px) {
-
-                .col-span-8,
-                .col-span-4,
-                .col-span-6 {
-                    grid-column: span 12;
-                }
-            }
-        </style>
-
-        <div class="min-h-screen p-6 md:p-10 max-w-7xl mx-auto">
-            <!-- Header Area -->
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-6">
-                <div>
-                    <h1 class="text-4xl font-extrabold tracking-tight text-slate-900 mb-2">
-                        Hello, <span class="gradient-text">
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <div class="top-header">
+                <div class="greeting">
+                    <h1>Welcome back, <span style="color: var(--primary)">
                             <%= username %>
-                        </span>! 👋
-                    </h1>
-                    <p class="text-slate-500 font-medium flex items-center gap-2">
-                        <i class="fas fa-university text-primary"></i>
-                        <%= collegeName %> | Faculty Dashboard
+                        </span></h1>
+                    <p>
+                        <%= new Date().toLocaleDateString('en-US', { month: 'long' , day: 'numeric' , weekday: 'long' })
+                            %>
                     </p>
                 </div>
-                <div class="flex items-center gap-4">
-                    <div class="glass-card px-4 py-2 flex items-center gap-3">
-                        <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Invite Code</span>
-                        <span class="text-lg font-black text-primary">
-                            <%= teacherCode %>
-                        </span>
-                        <button onclick="navigator.clipboard.writeText('<%= teacherCode %>')"
-                            class="text-slate-400 hover:text-primary transition-colors">
-                            <i class="far fa-copy"></i>
-                        </button>
-                    </div>
-                    <button id="darkModeToggle" class="glass-card p-3 text-slate-600 hover:text-primary">
-                        <i class="fas fa-moon"></i>
-                    </button>
+                <div class="header-actions">
+                    <button class="icon-btn"><i class="fas fa-search"></i></button>
+                    <button class="icon-btn"><i class="far fa-bell"></i></button>
                 </div>
             </div>
 
-            <!-- Quick Stats -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
-                <div class="glass-card p-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="stat-icon bg-blue-100 text-blue-600">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <span class="text-xs font-bold text-green-500 bg-green-50 px-2 py-1 rounded-full">+12%</span>
+            <!-- Banner & Profile Row -->
+            <div style="display: flex; gap: 24px; flex-wrap: wrap;">
+                <div class="hero-banner">
+                    <div style="font-size: 60px; opacity: 0.2; position: absolute; left: -10px; bottom: -20px;">🎓</div>
+                    <div style="position: relative; z-index: 1;">
+                        <h2>Your students average progress is <%= analytics.avgProgress %>%.</h2>
+                        <p>Level up your students to improve your teacher rank!</p>
                     </div>
-                    <h3 class="text-slate-500 font-semibold text-sm">Total Students</h3>
-                    <p class="text-2xl font-black text-slate-900">
-                        <%= analytics.studentCount %>
-                    </p>
                 </div>
-                <div class="glass-card p-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="stat-icon bg-indigo-100 text-indigo-600">
-                            <i class="fas fa-chart-line"></i>
+
+                <div class="profile-card">
+                    <div class="profile-avatar">👨‍🏫</div>
+                    <div class="profile-info">
+                        <h3>
+                            <%= username %>
+                        </h3>
+                        <p>Invite Code: <strong style="color: var(--primary)">
+                                <%= teacherCode %>
+                            </strong></p>
+                        <div class="profile-stats">
+                            <div class="p-stat">Students: <span>
+                                    <%= analytics.studentCount %>
+                                </span></div>
+                            <div class="p-stat">Classes: <span>
+                                    <%= doubtSessions.length %>
+                                </span></div>
                         </div>
-                        <span class="text-xs font-bold text-blue-500 bg-blue-50 px-2 py-1 rounded-full">Optimal</span>
                     </div>
-                    <h3 class="text-slate-500 font-semibold text-sm">Avg. Progress</h3>
-                    <p class="text-2xl font-black text-slate-900">
-                        <%= analytics.avgProgress %>%
-                    </p>
-                </div>
-                <div class="glass-card p-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="stat-icon bg-amber-100 text-amber-600">
-                            <i class="fas fa-question-circle"></i>
-                        </div>
-                        <span class="text-xs font-bold text-amber-500 bg-amber-50 px-2 py-1 rounded-full">
-                            <%= doubts.length %> New
-                        </span>
-                    </div>
-                    <h3 class="text-slate-500 font-semibold text-sm">Pending Doubts</h3>
-                    <p class="text-2xl font-black text-slate-900">
-                        <%= doubts.length %>
-                    </p>
-                </div>
-                <div class="glass-card p-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="stat-icon bg-rose-100 text-rose-600">
-                            <i class="fas fa-video"></i>
-                        </div>
-                        <span class="text-xs font-bold text-rose-500 bg-rose-50 px-2 py-1 rounded-full">Next 2h</span>
-                    </div>
-                    <h3 class="text-slate-500 font-semibold text-sm">Active Sessions</h3>
-                    <p class="text-2xl font-black text-slate-900">
-                        <%= doubtSessions.length %>
-                    </p>
                 </div>
             </div>
 
-            <!-- Main Dashboard Grid -->
-            <div class="dashboard-grid">
+            <!-- 3-Col Grid -->
+            <div class="bento-grid">
 
-                <!-- Doubt Sessions Management -->
-                <div class="col-span-8 glass-card p-8">
-                    <div class="flex justify-between items-center mb-8">
-                        <h2 class="text-2xl font-bold text-slate-900">Live Doubt Sessions</h2>
-                        <button onclick="toggleModal('sessionModal')"
-                            class="btn-premium px-6 py-2.5 flex items-center gap-2">
-                            <i class="fas fa-plus"></i> Schedule Session
-                        </button>
+                <!-- Quick Stats (Working Hours Eqv) -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Overview Stats</h3>
                     </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <% if (doubtSessions && doubtSessions.length> 0) { %>
-                            <% doubtSessions.forEach(session=> { %>
-                                <div
-                                    class="p-6 border border-slate-100 rounded-3xl hover:border-primary/30 transition-all group bg-white/50">
-                                    <div class="flex justify-between items-start mb-4">
-                                        <div
-                                            class="bg-primary/10 text-primary px-3 py-1 rounded-full text-[10px] font-black uppercase">
-                                            <%= session.date %>
-                                        </div>
-                                        <span class="text-slate-400 group-hover:text-primary transition-colors">
-                                            <i class="fas fa-ellipsis-h"></i>
-                                        </span>
-                                    </div>
-                                    <h3 class="text-lg font-bold text-slate-900 mb-1">
-                                        <%= session.title %>
-                                    </h3>
-                                    <p class="text-slate-500 text-sm mb-4 flex items-center gap-2">
-                                        <i class="far fa-clock"></i>
-                                        <%= session.sessionTime %> (<%= session.sessionDuration %>)
-                                    </p>
-                                    <a href="<%= session.link %>" target="_blank"
-                                        class="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-900 text-white rounded-xl text-sm font-semibold hover:bg-primary transition-all">
-                                        <i class="fas fa-external-link-alt"></i> Join Room
-                                    </a>
+                    <div class="stat-bar-container">
+                        <div class="stat-row">
+                            <div>
+                                <div class="stat-label">Total Enrolled</div>
+                                <div class="stat-val">
+                                    <%= analytics.studentCount %>
                                 </div>
-                                <% }); %>
-                                    <% } else { %>
-                                        <div
-                                            class="col-span-2 text-center py-12 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200">
-                                            <div class="text-4xl mb-3 text-slate-300">📅</div>
-                                            <p class="text-slate-500 font-medium">No sessions scheduled yet.</p>
-                                        </div>
-                                        <% } %>
-                    </div>
-                </div>
-
-                <!-- Assignments & Tasks -->
-                <div class="col-span-4 glass-card p-8">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-xl font-bold text-slate-900">Task Center</h2>
-                        <button onclick="toggleModal('taskModal')"
-                            class="text-primary font-bold text-sm hover:underline">+ New</button>
-                    </div>
-
-                    <div class="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-                        <% if (tasks && tasks.length> 0) { %>
-                            <% tasks.forEach(task=> { %>
-                                <div
-                                    class="flex items-center gap-4 p-4 rounded-2xl bg-white/40 border border-slate-100 group">
-                                    <div
-                                        class="w-2 h-10 bg-indigo-500 rounded-full group-hover:scale-y-110 transition-transform">
-                                    </div>
-                                    <div class="flex-1">
-                                        <h4 class="text-sm font-bold text-slate-800">
-                                            <%= task.title %>
-                                        </h4>
-                                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">
-                                            <i class="far fa-calendar-alt"></i> Due: <%= task.dueDate %>
-                                        </p>
-                                    </div>
-                                </div>
-                                <% }); %>
-                                    <% } else { %>
-                                        <p class="text-center text-slate-400 py-10 text-sm">All tasks cleared!</p>
-                                        <% } %>
-                    </div>
-                </div>
-
-                <!-- Student Doubts Section -->
-                <div class="col-span-12 glass-card p-8">
-                    <div class="flex justify-between items-center mb-8">
-                        <div>
-                            <h2 class="text-2xl font-bold text-slate-900">Instant Doubt Solver</h2>
-                            <p class="text-slate-500 text-sm">Help your students overcome their challenges</p>
-                        </div>
-                        <div class="flex gap-2">
-                            <button class="nav-pill active">Pending</button>
-                            <button class="nav-pill text-slate-400 hover:bg-slate-100">Resolved</button>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <% if (doubts && doubts.length> 0) { %>
-                            <% doubts.forEach(doubt=> { %>
-                                <div class="glass-card p-6 border-l-4 border-rose-500 bg-white/40">
-                                    <div class="flex items-center gap-3 mb-4">
-                                        <div
-                                            class="w-10 h-10 rounded-full bg-slate-200 border-2 border-white shadow-sm flex items-center justify-center font-bold text-slate-600">
-                                            <%= doubt.studentName.charAt(0) %>
-                                        </div>
-                                        <div>
-                                            <h4 class="text-sm font-bold text-slate-900">
-                                                <%= doubt.studentName %>
-                                            </h4>
-                                            <p class="text-[10px] text-slate-400 font-bold uppercase">
-                                                <%= doubt.subject %>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <p class="text-slate-800 font-medium mb-6 text-sm line-clamp-3">"<%= doubt.question
-                                            %>"</p>
-
-                                    <form action="/answerDoubt" method="POST" class="space-y-3">
-                                        <input type="hidden" name="doubtId" value="<%= doubt._id %>">
-                                        <textarea name="answer" placeholder="Your expert solution..."
-                                            class="w-full bg-white/70 border-none rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-primary outline-none min-h-[80px]"
-                                            required></textarea>
-                                        <button type="submit"
-                                            class="w-full py-2.5 bg-slate-900 text-white rounded-xl text-sm font-bold hover:bg-primary transition-all">
-                                            Send Solution
-                                        </button>
-                                    </form>
-                                </div>
-                                <% }); %>
-                                    <% } else { %>
-                                        <div class="col-span-full text-center py-20">
-                                            <div class="text-6xl mb-4">✨</div>
-                                            <h3 class="text-xl font-bold text-slate-900">Clear Skies!</h3>
-                                            <p class="text-slate-500">All students are on the right track for now.</p>
-                                        </div>
-                                        <% } %>
-                    </div>
-                </div>
-
-                <!-- Learning Resources (Study Vault) -->
-                <div class="col-span-8 glass-card p-8">
-                    <div class="flex justify-between items-center mb-8">
-                        <div>
-                            <h2 class="text-2xl font-bold text-slate-900">Campus Study Vault</h2>
-                            <p class="text-slate-500 text-sm">Shared learning materials and research papers</p>
-                        </div>
-                        <button onclick="toggleModal('resourceModal')"
-                            class="text-primary font-bold text-sm bg-primary/10 px-4 py-2 rounded-xl hover:bg-primary hover:text-white transition-all">
-                            + Share Material
-                        </button>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                        <% if (resources && resources.length> 0) { %>
-                            <% resources.forEach(res=> { %>
-                                <div
-                                    class="p-5 bg-white border border-slate-100 rounded-3xl hover:shadow-xl hover:-translate-y-1 transition-all group">
-                                    <div class="flex items-center gap-4 mb-4">
-                                        <div
-                                            class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center font-xl group-hover:bg-emerald-600 group-hover:text-white transition-all">
-                                            <% if(res.link && (res.link.includes('youtube') ||
-                                                res.link.includes('youtu.be'))) { %>
-                                                <i class="fab fa-youtube"></i>
-                                                <% } else if(res.link && res.link.includes('drive.google')) { %>
-                                                    <i class="fab fa-google-drive"></i>
-                                                    <% } else { %>
-                                                        <i class="fas fa-file-alt"></i>
-                                                        <% } %>
-                                        </div>
-                                        <div class="overflow-hidden">
-                                            <h3 class="font-bold text-slate-900 text-sm truncate">
-                                                <%= res.title %>
-                                            </h3>
-                                            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">
-                                                Resource</p>
-                                        </div>
-                                    </div>
-                                    <a href="<%= res.link %>" target="_blank"
-                                        class="text-xs font-bold text-emerald-600 hover:text-emerald-700 flex items-center gap-1">
-                                        Accessibility Link <i class="fas fa-arrow-right ml-1"></i>
-                                    </a>
-                                </div>
-                                <% }); %>
-                                    <% } else { %>
-                                        <div
-                                            class="col-span-3 text-center py-12 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200">
-                                            <p class="text-slate-400 font-medium italic">Vault is empty. Be the first to
-                                                share!</p>
-                                        </div>
-                                        <% } %>
-                    </div>
-                </div>
-
-                <!-- Announcements Feed -->
-                <div class="col-span-4 glass-card p-8">
-                    <h2 class="text-xl font-bold text-slate-900 mb-6">Campus Feed</h2>
-                    <div class="space-y-6">
-                        <% announcements.forEach(announcement=> { %>
-                            <div class="relative pl-6 border-l-2 border-slate-200">
-                                <div class="absolute -left-[5px] top-0 w-2 h-2 rounded-full bg-primary"></div>
-                                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">
-                                    <%= announcement.date %>
-                                </p>
-                                <h4 class="text-sm font-bold text-slate-800 leading-tight">
-                                    <%= announcement.title %>
-                                </h4>
                             </div>
-                            <% }); %>
+                            <i class="fas fa-users" style="color: #64748b; font-size: 20px;"></i>
+                        </div>
+                        <div class="stat-row">
+                            <div>
+                                <div class="stat-label">Pending Doubts</div>
+                                <div class="stat-val">
+                                    <%= doubts.length %>
+                                </div>
+                            </div>
+                            <i class="fas fa-question-circle" style="color: #f59e0b; font-size: 20px;"></i>
+                        </div>
+                        <div class="stat-row">
+                            <div>
+                                <div class="stat-label">Active Tasks</div>
+                                <div class="stat-val">
+                                    <%= tasks.length %>
+                                </div>
+                            </div>
+                            <i class="far fa-file-alt" style="color: #10b981; font-size: 20px;"></i>
+                        </div>
+                    </div>
+                </div>
 
-                                <form action="/addAnnouncement" method="POST"
-                                    class="mt-8 pt-6 border-t border-slate-100">
-                                    <p class="text-xs font-bold text-slate-500 mb-3 uppercase">Post New Feed</p>
-                                    <input type="text" name="title" placeholder="What's happening?"
-                                        class="w-full bg-slate-50 border-none rounded-xl px-4 py-2.5 text-sm mb-3 outline-none focus:ring-2 focus:ring-primary"
-                                        required>
-                                    <div class="flex gap-2">
-                                        <input type="date" name="date"
-                                            class="flex-1 bg-slate-50 border-none rounded-xl px-3 text-xs outline-none"
-                                            required>
-                                        <button type="submit"
-                                            class="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-bold">Post</button>
+                <!-- Pending Doubts (Group Chats Eqv) -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Pending Doubts</h3>
+                        <span class="view-all">
+                            <%= doubts.length %> Total
+                        </span>
+                    </div>
+
+                    <% if(doubts.length> 0) { %>
+                        <% doubts.slice(0, 4).forEach(doubt=> { %>
+                            <div class="chat-item">
+                                <div class="chat-icon">
+                                    <%= doubt.studentName.charAt(0) %>
+                                </div>
+                                <div class="chat-info">
+                                    <h4>
+                                        <%= doubt.studentName %>
+                                    </h4>
+                                    <p>
+                                        <%= doubt.question %>
+                                    </p>
+                                </div>
+                                <div class="badge">1</div>
+                            </div>
+                            <% }) %>
+                                <% } else { %>
+                                    <div
+                                        style="text-align: center; padding: 30px 0; color: var(--text-muted); font-size: 14px;">
+                                        No pending doubts. Great job!
                                     </div>
-                                </form>
-                    </div>
+                                    <% } %>
                 </div>
-            </div>
-        </div>
 
-        <!-- Modals -->
-        <!-- Session Modal -->
-        <div id="sessionModal" class="fixed inset-0 z-50 hidden modal-backdrop flex items-center justify-center p-4">
-            <div class="glass-card w-full max-w-lg p-8 animate-in bg-white shadow-2xl">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-2xl font-bold text-slate-900">Schedule Doubt Session</h3>
-                    <button onclick="toggleModal('sessionModal')" class="text-slate-400 hover:text-rose-500"><i
-                            class="fas fa-times"></i></button>
+                <!-- Minimal Calendar Placeholder -->
+                <div class="card calendar-widget">
+                    <div class="card-header">
+                        <i class="fas fa-chevron-left" style="color: var(--text-muted); cursor: pointer;"></i>
+                        <h3 class="card-title" style="font-size: 15px;">
+                            <%= new Date().toLocaleString('default', { month: 'long' , year: 'numeric' }) %>
+                        </h3>
+                        <i class="fas fa-chevron-right" style="color: var(--text-muted); cursor: pointer;"></i>
+                    </div>
+                    <!-- Simple static mock grid for visual parity with the design -->
+                    <div
+                        style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; font-size: 13px; font-weight: 600; color: var(--text-muted); margin-bottom: 12px;">
+                        <div>S</div>
+                        <div>M</div>
+                        <div>T</div>
+                        <div>W</div>
+                        <div>T</div>
+                        <div>F</div>
+                        <div>S</div>
+                    </div>
+                    <div
+                        style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; font-size: 13px; font-weight: 500; color: var(--text-dark);">
+                        <div style="color: #cbd5e1">29</div>
+                        <div style="color: #cbd5e1">30</div>
+                        <div style="color: #cbd5e1">31</div>
+                        <div>1</div>
+                        <div>2</div>
+                        <div>3</div>
+                        <div>4</div>
+                        <div>5</div>
+                        <div>6</div>
+                        <div
+                            style="background: var(--primary); color: white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                            7</div>
+                        <div>8</div>
+                        <div>9</div>
+                        <div>10</div>
+                        <div>11</div>
+                    </div>
                 </div>
-                <form action="/addDoubtSession" method="POST" class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Session Title</label>
-                        <input type="text" name="title" placeholder="e.g., Final Physics Exam Prep"
-                            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-primary"
-                            required>
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Date</label>
-                            <input type="date" name="date"
-                                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none"
-                                required>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Time</label>
-                            <input type="time" name="sessionTime"
-                                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none"
-                                required>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Duration</label>
-                            <select name="sessionDuration"
-                                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none">
-                                <option value="30 mins">30 mins</option>
-                                <option value="45 mins" selected>45 mins</option>
-                                <option value="1 hour">1 hour</option>
-                                <option value="1.5 hours">1.5 hours</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Meeting Link</label>
-                            <input type="url" name="sessionLink" placeholder="Zoom/Meet link"
-                                class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none"
-                                required>
-                        </div>
-                    </div>
-                    <button type="submit" class="w-full btn-premium py-4 mt-4">Broadcast to Students</button>
-                </form>
-            </div>
-        </div>
 
-        <!-- Resource Modal -->
-        <div id="resourceModal" class="fixed inset-0 z-50 hidden modal-backdrop flex items-center justify-center p-4">
-            <div class="glass-card w-full max-w-md p-8 animate-in bg-white shadow-2xl">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-2xl font-bold text-slate-900">Share Study Material</h3>
-                    <button onclick="toggleModal('resourceModal')" class="text-slate-400 hover:text-rose-500"><i
-                            class="fas fa-times"></i></button>
+                <!-- Student Tests (Tasks) -->
+                <div class="card col-span-2">
+                    <div class="card-header">
+                        <h3 class="card-title">Manage Tasks</h3>
+                        <button class="view-all" onclick="toggleModal('taskModal')">New Task</button>
+                    </div>
+
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Task Name</th>
+                                <th>Deadline</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if(tasks.length> 0) { %>
+                                <% tasks.forEach(task=> { %>
+                                    <tr>
+                                        <td>
+                                            <div class="test-name">
+                                                <i class="fas fa-link"></i>
+                                                <%= task.title %>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <%= task.dueDate %>
+                                        </td>
+                                        <td>
+                                            <div class="status-pill">
+                                                <div class="status-dot dot-active"></div>
+                                                <span class="status-active">Active</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                                        <% } else { %>
+                                            <tr>
+                                                <td colspan="3" style="text-align: center;">No active tasks assigned
+                                                    yet.</td>
+                                            </tr>
+                                            <% } %>
+                        </tbody>
+                    </table>
                 </div>
-                <form action="/addResource" method="POST" class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Material Title</label>
-                        <input type="text" name="title" placeholder="Notes title"
-                            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-emerald-500"
-                            required>
+
+                <!-- Upcoming Classes (Sessions) -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Live Sessions</h3>
+                        <button class="view-all" onclick="toggleModal('sessionModal')">New</button>
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Link
-                            (Drive/PDF/Video)</label>
-                        <input type="url" name="link" placeholder="https://..."
-                            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-emerald-500"
-                            required>
-                    </div>
+
+                    <% if(doubtSessions.length> 0) { %>
+                        <% doubtSessions.forEach(session=> { %>
+                            <div class="class-card">
+                                <div class="class-time">
+                                    <%= session.sessionTime %>
+                                </div>
+                                <div class="class-info">
+                                    <h4>
+                                        <%= session.title %>
+                                    </h4>
+                                    <p>
+                                        <%= session.date %> • <%= session.sessionDuration %>
+                                    </p>
+                                </div>
+                                <a href="<%= session.link %>" target="_blank" class="link-btn">
+                                    <i class="fas fa-video"></i>
+                                </a>
+                            </div>
+                            <% }) %>
+                                <% } else { %>
+                                    <div
+                                        style="text-align: center; padding: 20px 0; font-size: 13px; color: var(--text-muted);">
+                                        No upcoming sessions
+                                    </div>
+                                    <% } %>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Keep Existing Modals but simply styled them slightly to avoid conflicts -->
+    <div id="sessionModal"
+        style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; align-items: center; justify-content: center;">
+        <div
+            style="background: white; padding: 32px; border-radius: 24px; width: 100%; max-width: 400px; margin: auto; margin-top: 10vh;">
+            <h3 style="margin-top: 0;">Schedule Class</h3>
+            <form action="/addDoubtSession" method="POST">
+                <input type="text" name="title" placeholder="Session Title" required
+                    style="width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                <input type="date" name="date" required
+                    style="width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                <input type="time" name="sessionTime" required
+                    style="width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                <select name="sessionDuration" required
+                    style="width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                    <option value="45 mins">45 mins</option>
+                    <option value="1 hour">1 hour</option>
+                </select>
+                <input type="url" name="sessionLink" placeholder="Zoom/Meet Link" required
+                    style="width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                <div style="display: flex; gap: 12px; margin-top: 16px;">
                     <button type="submit"
-                        class="w-full bg-emerald-600 text-white font-bold rounded-xl py-4 mt-4 hover:bg-emerald-700 shadow-lg shadow-emerald-100 transition-all">Publish
-                        Resource</button>
-                </form>
-            </div>
-        </div>
-
-        <!-- Task Modal -->
-        <div id="taskModal" class="fixed inset-0 z-50 hidden modal-backdrop flex items-center justify-center p-4">
-            <div class="glass-card w-full max-w-md p-8 animate-in bg-white shadow-2xl">
-                <div class="flex justify-between items-center mb-6">
-                    <h3 class="text-2xl font-bold text-slate-900">New Assignment</h3>
-                    <button onclick="toggleModal('taskModal')" class="text-slate-400 hover:text-rose-500"><i
-                            class="fas fa-times"></i></button>
+                        style="flex: 1; background: var(--primary); color: white; padding: 12px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold;">Schedule</button>
+                    <button type="button" onclick="toggleModal('sessionModal')"
+                        style="flex: 1; background: #e2e8f0; color: #1e293b; padding: 12px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold;">Cancel</button>
                 </div>
-                <form action="/addTask" method="POST" class="space-y-4">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Task Description</label>
-                        <input type="text" name="title" placeholder="Assignment name"
-                            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-indigo-500"
-                            required>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-500 uppercase mb-1">Due Date</label>
-                        <input type="date" name="dueDate"
-                            class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 outline-none"
-                            required>
-                    </div>
-                    <button type="submit"
-                        class="w-full bg-indigo-600 text-white font-bold rounded-xl py-4 mt-4 hover:bg-indigo-700 transition-all">Assign
-                        Task</button>
-                </form>
-            </div>
+            </form>
         </div>
+    </div>
 
-        <%- include('layouts/footer'); -%>
+    <div id="taskModal"
+        style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; align-items: center; justify-content: center;">
+        <div
+            style="background: white; padding: 32px; border-radius: 24px; width: 100%; max-width: 400px; margin: auto; margin-top: 10vh;">
+            <h3 style="margin-top: 0;">New Task</h3>
+            <form action="/addTask" method="POST">
+                <input type="text" name="title" placeholder="Task Name" required
+                    style="width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                <input type="date" name="dueDate" required
+                    style="width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                <div style="display: flex; gap: 12px; margin-top: 16px;">
+                    <button type="submit"
+                        style="flex: 1; background: var(--primary); color: white; padding: 12px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold;">Assign</button>
+                    <button type="button" onclick="toggleModal('taskModal')"
+                        style="flex: 1; background: #e2e8f0; color: #1e293b; padding: 12px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold;">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
-            <script>
-                function toggleModal(id) {
-                    const modal = document.getElementById(id);
-                    modal.classList.toggle('hidden');
-                }
-
-                // Close modals on clicking backdrop
-                window.onclick = function (event) {
-                    if (event.target.classList.contains('modal-backdrop')) {
-                        event.target.classList.add('hidden');
-                    }
-                }
-
-                // Dark Mode (Simplified)
-                const darkModeToggle = document.getElementById('darkModeToggle');
-                darkModeToggle.addEventListener('click', () => {
-                    document.body.classList.toggle('dark-mode');
-                    // Add dark mode specific logic if needed
-                });
-            </script>
+    <script>
+        function toggleModal(id) {
+            const modal = document.getElementById(id);
+            if (modal.style.display === 'none' || modal.style.display === '') {
+                modal.style.display = 'flex';
+            } else {
+                modal.style.display = 'none';
+            }
+        }
+    </script>

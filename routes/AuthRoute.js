@@ -79,6 +79,8 @@ router.post('/login', async (req, res, next) => {
             req.login(authedUser, (err) => {
                 if (err) return next(err);
 
+                console.log("LOGIN SUCCESS:", authedUser.username);
+                console.log("AUTHED USER ID TYPE:", typeof authedUser._id, "VALUE:", authedUser._id);
                 // Set custom session data for legacy route checks
                 req.session.userId = authedUser._id;
                 req.session.role = authedUser.role;
@@ -87,7 +89,7 @@ router.post('/login', async (req, res, next) => {
 
                 // Redirect based on role
                 if (authedUser.role === 'student') {
-                    return res.redirect('/');
+                    return res.redirect('/dashboard'); // Fix redirect to dashboard for student
                 } else if (authedUser.role === 'parent') {
                     return res.redirect('/parentprofile'); // Consistent with parent dashboard
                 } else if (authedUser.role === 'teacher') {
