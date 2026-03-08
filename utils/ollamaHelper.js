@@ -1,19 +1,20 @@
-const axios = require('axios');
-
-const OLLAMA_API_URL = 'http://localhost:11434/api/generate';
-const MODEL_NAME = 'llama3'; // User mentioned "our ollama", usually implies default or specific model. Safe to default to llama3 or 'mistral'.
+const Groq = require('groq-sdk');
 
 async function generateJSON(prompt) {
     try {
-        const response = await axios.post(OLLAMA_API_URL, {
-            model: MODEL_NAME,
-            prompt: prompt,
-            format: "json",
-            stream: false
+        if (!process.env.GROQ_API_KEY) throw new Error("Missing GROQ_API_KEY");
+        const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+
+        const response = await groq.chat.completions.create({
+            messages: [{ role: "user", content: prompt }],
+            model: "llama-3.1-8b-instant",
+            temperature: 0.5,
+            response_format: { type: "json_object" }
         });
-        return JSON.parse(response.data.response);
+
+        return JSON.parse(response.choices[0]?.message?.content || "{}");
     } catch (error) {
-        console.error("Ollama Generation Error:", error.message);
+        console.error("Groq Generation Error:", error.message);
         throw error;
     }
 }

@@ -294,6 +294,34 @@
                 transform: translateY(0);
             }
         }
+
+        /* Suggestions */
+        .suggestion-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            padding-top: 15px;
+        }
+
+        .suggestion-chip {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--accent-color);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .suggestion-chip:hover {
+            background: var(--accent-color);
+            color: white;
+            box-shadow: 0 4px 6px rgba(99, 102, 241, 0.2);
+        }
     </style>
 
     <!-- Left Sidebar -->
@@ -507,26 +535,71 @@
 
 
         function formatAIResponse(text) {
-            let formatted = text
+            // Protect mermaid blocks by extracting them first
+            const mermaidBlocks = [];
+            let processed = text.replace(/```mermaid([\s\S]*?)```/g, (match, p1) => {
+                mermaidBlocks.push(p1);
+                return `__MERMAID_BLOCK_${mermaidBlocks.length - 1}__`;
+            });
+
+            // Extract suggestions
+            let suggestionHtml = '';
+            processed = processed.replace(/\[SUGGESTION\]\s*(.*?)(?:\n|<br>|$)/g, (match, p1) => {
+                let textContent = p1.trim().replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                suggestionHtml += `<button class="suggestion-chip" onclick="document.getElementById('chat-input').value='${textContent}'; document.getElementById('send-btn').click();">${p1.trim()}</button>`;
+                return '';
+            });
+
+            // Format standard text
+            processed = processed
                 .replace(/\n/g, '<br>')
                 .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            // Wrap mermaid blocks
-            formatted = formatted.replace(/```mermaid([\s\S]*?)```/g, '<div class="mermaid">$1</div>');
-            return formatted;
+
+            // Restore mermaid blocks directly
+            mermaidBlocks.forEach((block, index) => {
+                processed = processed.replace(`__MERMAID_BLOCK_${index}__`, `<div class="mermaid">${block}</div>`);
+            });
+
+            if (suggestionHtml) {
+                processed += `<div class="suggestion-chips">${suggestionHtml}</div>`;
+            }
+
+            return processed;
         }
 
         function renderDiagrams(container) {
             const diagrams = container.querySelectorAll('.mermaid');
             diagrams.forEach((el) => {
-                const graphDefinition = el.textContent.replace(/<br>/g, '\n').trim(); // Fix <br> back to \n for mermaid
+                // Get textContent to naturally reverse UI entity escaping (like &gt; -> >)
+                let graphDefinition = el.textContent.trim();
                 if (!graphDefinition) return;
+
+                // Fix potential invisible characters
+                graphDefinition = graphDefinition.replace(/&#39;/g, "'").replace(/&quot;/g, '"');
+
+                // CRITICAL FIX: Wrap all node text inside [] with double quotes 
+                // Mermaid allows special characters like (), :, - only if they are quoted.
+                // e.g. A[Learn Math (Basic)] -> A["Learn Math (Basic)"]
+                graphDefinition = graphDefinition.replace(/\[([^\]]+)\]/g, (match, innerText) => {
+                    const clean = innerText.replace(/"/g, '').trim(); // Remove existing quotes to avoid duplicates
+                    return `["${clean}"]`;
+                });
 
                 try {
                     const id = 'mermaid-' + Math.random().toString(36).substr(2, 9);
-                    mermaid.render(id, graphDefinition).then(({ svg }) => {
-                        el.innerHTML = svg;
-                    });
-                } catch (e) { console.error(e); }
+                    mermaid.render(id, graphDefinition)
+                        .then(({ svg }) => {
+                            el.innerHTML = svg;
+                        })
+                        .catch((err) => {
+                            console.error("Mermaid Render Promise Error:", err);
+                            // Catch and hide the ugly "Syntax error in text" bomb SVG that Mermaid appends
+                            const errElement = document.getElementById('d' + id);
+                            if (errElement) errElement.style.display = 'none';
+                        });
+                } catch (e) {
+                    console.error("Mermaid Render Catch Error:", e);
+                }
             });
         }
 

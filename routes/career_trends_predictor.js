@@ -1,19 +1,15 @@
 const express = require('express');
 const router = express.Router();
+const Groq = require('groq-sdk');
 
-// AI Career Trend Predictor - Main page
 router.get('/career-trends-predictor', (req, res) => {
     res.render('career_trends_predictor');
 });
 
-// API endpoint for career trend analysis
-const axios = require('axios');
-
 async function analyzeCareerTrends(interests, skills, location, educationLevel, timeHorizon) {
-    // Construct the AI Prompt
     const prompt = `
-    Role: Expert Labor Market Analyst.
-    Task: specific career trend prediction.
+    Role: Expert AI Career Analytics Predictor.
+    Task: predict sequential career progression and market data.
     Input Data:
     - Interests: ${interests}
     - Skills: ${skills}
@@ -23,103 +19,77 @@ async function analyzeCareerTrends(interests, skills, location, educationLevel, 
 
     Output Requirement: Provide a JSON object with this EXACT structure (no markdown, just JSON):
     {
-        "emergingCareers": [
-            { "title": "Job Title", "growthRate": Number, "salaryRange": "String", "demand": "String", "skills": ["Skill1", "Skill2"] }
+        "careerPath": [
+            { "stage": "e.g. Student", "role": "Job Title", "salaryRange": "e.g. $80k - $100k", "demandScore": "90/100", "keySkills": ["Skill1", "Skill2"] }
         ],
-        "decliningCareers": [
-             { "title": "Job Title", "declineRate": Number, "reason": "Short string", "alternatives": ["Alt1", "Alt2"] }
-        ],
-        "skillDemand": [
-            { "skill": "Skill Name", "demand": "High/Critical", "growth": "Percentage String" }
-        ],
-        "growthRate": Number (Overall sector growth),
-        "riskLevel": "Low/Medium/High",
-        "marketInsights": {
-           "localMarket": "String",
-           "regionalTrends": "String",
-           "futurePrediction": "String"
+        "skillGapAnalysis": {
+            "missingSkills": [
+                { "skill": "React", "currentProgress": 20 }
+            ],
+            "recommendedLearning": ["Concept 1", "Concept 2"]
         },
-        "recommendations": [
-            { "type": "Career Path", "title": "String", "description": "String", "action": "String", "priority": "High" }
-        ]
+        "salaryTrends": {
+            "labels": ["2025", "2027", "2030"],
+            "data": [80000, 110000, 150000]
+        },
+        "demandForecast": {
+            "labels": ["2025", "2027", "2030"],
+            "data": [82, 90, 95]
+        }
     }
-    Make predictions realistic based on 2024-2030 trends.
+    The careerPath must show a sequential progression of 3-5 roles.
     `;
 
     try {
-        const response = await axios.post('http://localhost:11434/api/generate', {
-            model: "llama3",
-            prompt: prompt,
-            stream: false,
-            format: "json"
+        if (!process.env.GROQ_API_KEY) throw new Error("Missing GROQ_API_KEY");
+        const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+
+        const response = await groq.chat.completions.create({
+            messages: [{ role: "user", content: prompt }],
+            model: "llama-3.1-8b-instant",
+            temperature: 0.5,
+            response_format: { type: "json_object" }
         });
 
-        // Parse the JSON response
-        let aiData = JSON.parse(response.data.response);
-        return aiData;
-
+        return JSON.parse(response.choices[0]?.message?.content || "{}");
     } catch (e) {
         console.error("AI Prediction Error:", e);
-        // Fallback to basic data if AI fails
+        // Fallback
         return {
-            emergingCareers: [{ title: "AI Specialist (Fallback)", growthRate: 20, salaryRange: "$80k+", demand: "High", skills: ["AI"] }],
-            decliningCareers: [],
-            skillDemand: [],
-            growthRate: 5,
-            riskLevel: "Medium",
-            recommendations: [],
-            marketInsights: {}
+            careerPath: [
+                { stage: "Stage 1", role: "Junior Developer", salaryRange: "$70k - $90k", demandScore: "80/100", keySkills: ["HTML", "CSS", "JS"] },
+                { stage: "Stage 2", role: "Software Engineer", salaryRange: "$100k - $130k", demandScore: "85/100", keySkills: ["React", "Node.js"] },
+                { stage: "Stage 3", role: "Senior Engineer", salaryRange: "$140k - $180k", demandScore: "92/100", keySkills: ["System Design", "Cloud"] },
+                { stage: "Stage 4", role: "AI Architect", salaryRange: "$180k - $250k", demandScore: "98/100", keySkills: ["AI/ML", "Architecture"] }
+            ],
+            skillGapAnalysis: {
+                missingSkills: [
+                    { skill: "Machine Learning", currentProgress: 15 },
+                    { skill: "Cloud Architecture", currentProgress: 30 }
+                ],
+                recommendedLearning: ["Advanced Algorithms", "AWS/GCP Basics", "System Design patterns"]
+            },
+            salaryTrends: {
+                labels: ["2024", "2026", "2028", "2030"],
+                data: [75000, 115000, 160000, 215000]
+            },
+            demandForecast: {
+                labels: ["2024", "2026", "2028", "2030"],
+                data: [78, 85, 92, 97]
+            }
         };
     }
 }
 
-// Routes
 router.post('/api/career-trends/analyze', async (req, res) => {
     try {
         const { interests, skills, location, educationLevel, timeHorizon } = req.body;
-
-        // Real AI Analysis
-        const trends = await analyzeCareerTrends(interests, skills, location, educationLevel, timeHorizon);
-
-        // Structure for Frontend (merging insights/recs into root if needed, but the AI returns them inside)
-        // The frontend expects: { success: true, trends: ..., recommendations: ..., marketInsights: ... }
-
-        res.json({
-            success: true,
-            trends: trends, // The AI object contains all the nested lists
-            recommendations: trends.recommendations || [],
-            marketInsights: trends.marketInsights || {}
-        });
+        const analysis = await analyzeCareerTrends(interests, skills, location, educationLevel, timeHorizon);
+        res.json({ success: true, ...analysis });
     } catch (error) {
         console.error(error);
-        res.status(500).json({
-            success: false,
-            error: 'Failed to analyze career trends'
-        });
+        res.status(500).json({ success: false, error: 'Failed to analyze career trends' });
     }
 });
-
-// Get market insights based on location and time horizon
-function getMarketInsights(location, timeHorizon) {
-    const insights = {
-        localMarket: 'Strong technology sector growth',
-        regionalTrends: 'Healthcare and renewable energy expanding',
-        nationalOutlook: 'Digital transformation driving job creation',
-        globalPerspective: 'Remote work increasing global opportunities'
-    };
-
-    if (location && location.toLowerCase().includes('tech')) {
-        insights.localMarket = 'Leading technology innovation hub';
-        insights.regionalTrends = 'AI and software development booming';
-    }
-
-    if (timeHorizon === '5-10 years') {
-        insights.futurePrediction = 'AI will create more jobs than it replaces';
-    } else if (timeHorizon === '1-3 years') {
-        insights.futurePrediction = 'Digital skills will be essential for all careers';
-    }
-
-    return insights;
-}
 
 module.exports = router;
