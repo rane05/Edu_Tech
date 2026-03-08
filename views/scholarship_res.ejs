@@ -1,238 +1,350 @@
 <%- include('layouts/header'); -%>
 
-    <body
-        class="bg-[#f8fafc] text-slate-800 font-sans antialiased overflow-x-hidden selection:bg-indigo-500 selection:text-white relative min-h-screen flex flex-col">
+    <style>
+        :root {
+            --bg-color: #FFFDF6;
+            --primary-accent: #FFE66D;
+            --secondary-accent: #F4D03F;
+            --text-main: #1F2937;
+            --text-muted: #6B7280;
+            --card-bg: #FFFFFF;
+            --border-color: #F2E8C9;
+            --focus-ring: rgba(244, 208, 63, 0.2);
+        }
 
-        <!-- Animated SVG Noise Texture Overlay -->
-        <div class="fixed inset-0 z-0 opacity-[0.03] pointer-events-none"
-            style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E');">
-        </div>
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
 
-        <!-- Soft Mesh Gradient Blobs -->
-        <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
-            <div
-                class="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-indigo-300 blur-[120px] opacity-30 animate-[float_10s_infinite_ease-in-out]">
-            </div>
-            <div
-                class="absolute top-[20%] -right-[10%] w-[40%] h-[60%] rounded-full bg-blue-300 blur-[120px] opacity-20 animate-[float-delay_12s_infinite_ease-in-out]">
-            </div>
-            <div
-                class="absolute -bottom-[20%] left-[20%] w-[60%] h-[50%] rounded-full bg-teal-200 blur-[150px] opacity-20 animate-[float_14s_infinite_ease-in-out]">
-            </div>
-        </div>
+        /* Subtle top radial gradient */
+        .bg-gradient-top {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 600px;
+            background: radial-gradient(circle at 50% -20%, rgba(255, 230, 109, 0.15), transparent 70%);
+            pointer-events: none;
+            z-index: -1;
+        }
 
-        <%- include('layouts/navbar'); -%>
+        /* Page Layout Container */
+        .page-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 60px 24px 100px;
+            flex-grow: 1;
+            width: 100%;
+        }
 
-            <style>
-                /* Modern Micro-animations & Aesthetics */
-                @keyframes float {
+        /* Header */
+        .page-header {
+            margin-bottom: 40px;
+            text-align: center;
+            position: relative;
+        }
 
-                    0%,
-                    100% {
-                        transform: translateY(0) scale(1);
-                    }
+        .modify-search-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            margin-bottom: 24px;
+            transition: all 0.2s ease;
+        }
 
-                    50% {
-                        transform: translateY(-20px) scale(1.05);
-                    }
-                }
+        .modify-search-link:hover {
+            color: var(--text-main);
+            border-color: #D1D5DB;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
 
-                @keyframes float-delay {
+        .page-title {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: -0.02em;
+            margin-bottom: 24px;
+        }
 
-                    0%,
-                    100% {
-                        transform: translateY(0) scale(1);
-                    }
+        /* Filter Chips */
+        .filter-chips {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
 
-                    50% {
-                        transform: translateY(20px) scale(0.95);
-                    }
-                }
+        .filter-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 6px 14px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-main);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+        }
 
-                @keyframes fade-in-up {
-                    0% {
-                        opacity: 0;
-                        transform: translateY(30px) scale(0.98);
-                    }
+        .filter-chip i {
+            color: var(--secondary-accent);
+        }
 
-                    100% {
-                        opacity: 1;
-                        transform: translateY(0) scale(1);
-                    }
-                }
+        /* Grid for results */
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+            margin-top: 40px;
+        }
 
-                .animate-fade-in-up {
-                    animation: fade-in-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-                }
+        @media (min-width: 768px) {
+            .results-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
 
-                .result-card {
-                    background: rgba(255, 255, 255, 0.82);
-                    backdrop-filter: blur(20px);
-                    -webkit-backdrop-filter: blur(20px);
-                    border: 1px solid rgba(255, 255, 255, 1);
-                    box-shadow:
-                        0 4px 6px -1px rgba(0, 0, 0, 0.02),
-                        0 10px 20px -5px rgba(99, 102, 241, 0.05),
-                        inset 0 1px 0 rgba(255, 255, 255, 1);
-                    border-radius: 24px;
-                    transition: all 0.4s cubic-bezier(0.3, 0.8, 0.2, 1);
-                }
+        @media (min-width: 1024px) {
+            .results-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
 
-                .result-card:hover {
-                    transform: translateY(-4px);
-                    box-shadow:
-                        0 10px 15px -3px rgba(0, 0, 0, 0.03),
-                        0 25px 50px -12px rgba(99, 102, 241, 0.15),
-                        inset 0 1px 0 rgba(255, 255, 255, 1);
-                    border-color: rgba(99, 102, 241, 0.2);
-                }
+        /* Result Card */
+        .result-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+            transition: all 0.3s ease;
+        }
 
-                /* Button Enhancements */
-                .btn-apply {
-                    position: relative;
-                    overflow: hidden;
-                    background: linear-gradient(135deg, #4f46e5 0%, #3b82f6 100%);
-                    border: none;
-                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                    display: inline-flex;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 8px;
-                    text-decoration: none;
-                }
+        .result-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04), 0 4px 6px -2px rgba(0, 0, 0, 0.02);
+            border-color: #E5E7EB;
+        }
 
-                .btn-apply::before {
-                    content: '';
-                    position: absolute;
-                    top: 0;
-                    left: -100%;
-                    width: 50%;
-                    height: 100%;
-                    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-                    transform: skewX(-20deg);
-                }
+        .result-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
 
-                .btn-apply:hover {
-                    transform: translateY(-2px);
-                    box-shadow: 0 10px 20px -5px rgba(79, 70, 229, 0.4);
-                    color: white;
-                }
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(244, 208, 63, 0.1);
+            color: var(--secondary-accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
 
-                .btn-apply:hover::before {
-                    animation: shine 1.5s ease-out;
-                }
+        .eligible-badge {
+            background: #F0FDF4;
+            color: #166534;
+            border: 1px solid #DCFCE7;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
 
-                .btn-apply:active {
-                    transform: translateY(1px) scale(0.98);
-                }
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 16px;
+            line-height: 1.4;
+        }
 
-                @keyframes shine {
-                    0% {
-                        left: -100%;
-                    }
+        .card-details {
+            background: #FAFAFA;
+            border: 1px solid #F3F4F6;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 24px;
+            flex-grow: 1;
+        }
 
-                    100% {
-                        left: 200%;
-                    }
-                }
+        .card-details-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
 
-                /* Custom Header Underline */
-                .title-underline {
-                    position: relative;
-                    display: inline-block;
-                }
+        .card-details-title i {
+            color: var(--secondary-accent);
+        }
 
-                .title-underline::after {
-                    content: '';
-                    position: absolute;
-                    bottom: -6px;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    width: 40px;
-                    height: 4px;
-                    background: #4f46e5;
-                    border-radius: 2px;
-                    transition: width 0.3s ease;
-                }
+        .card-details-text {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
 
-                .title-underline:hover::after {
-                    width: 100%;
-                }
-            </style>
+        .card-footer {
+            margin-top: auto;
+        }
 
-            <div class="flex-grow pt-32 pb-20 px-4 sm:px-6 lg:px-8 relative z-10 w-full max-w-7xl mx-auto">
+        .btn-apply {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary-accent), var(--secondary-accent));
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(244, 208, 63, 0.15);
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .btn-apply:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(244, 208, 63, 0.25);
+        }
+
+        /* Empty State */
+        .empty-state {
+            max-width: 500px;
+            margin: 60px auto 0;
+            text-align: center;
+            padding: 40px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+        }
+
+        .empty-icon {
+            width: 64px;
+            height: 64px;
+            background: #FAFAFA;
+            border: 1px solid #F3F4F6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            color: #9CA3AF;
+            font-size: 1.5rem;
+        }
+
+        .empty-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 12px;
+        }
+
+        .empty-text {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 32px;
+        }
+    </style>
+
+    <%- include('layouts/navbar'); -%>
+
+        <main style="padding-top: 80px; flex-grow: 1;">
+            <div class="bg-gradient-top"></div>
+
+            <div class="page-container">
 
                 <!-- Header Section -->
-                <div class="text-center mb-12 opacity-0 animate-fade-in-up">
-                    <a href="/scholarship"
-                        class="inline-flex items-center text-sm font-semibold text-indigo-600 hover:text-indigo-800 transition-colors mb-6 bg-white/60 backdrop-blur-sm px-4 py-2 rounded-full border border-indigo-100 shadow-sm no-underline">
-                        <i class="fas fa-arrow-left mr-2"></i> Modify Search
+                <header class="page-header">
+                    <a href="/scholarship" class="modify-search-link">
+                        <i class="fas fa-arrow-left"></i> Modify Search
                     </a>
 
-                    <h1 class="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight mb-6 title-underline">
-                        Matched Scholarships
-                    </h1>
+                    <h1 class="page-title">Matched Scholarships</h1>
 
-                    <div class="flex flex-wrap items-center justify-center gap-2 max-w-3xl mx-auto mt-8">
-                        <span
-                            class="px-3 py-1.5 bg-white/80 backdrop-blur-sm border border-slate-200 rounded-lg text-sm font-medium text-slate-600 shadow-sm">
-                            <i class="fas fa-graduation-cap text-indigo-500 mr-2"></i>
+                    <!-- Filter Chips -->
+                    <div class="filter-chips">
+                        <span class="filter-chip">
+                            <i class="fas fa-graduation-cap"></i>
                             <%= typeof selectedCourse !=='undefined' ? selectedCourse : 'N/A' %>
                         </span>
-                        <span
-                            class="px-3 py-1.5 bg-white/80 backdrop-blur-sm border border-slate-200 rounded-lg text-sm font-medium text-slate-600 shadow-sm">
-                            <i class="fas fa-map-marker-alt text-rose-500 mr-2"></i>
+                        <span class="filter-chip">
+                            <i class="fas fa-map-marker-alt" style="color: #EF4444;"></i>
                             <%= typeof selectedState !=='undefined' ? selectedState : 'N/A' %>
                         </span>
-                        <span
-                            class="px-3 py-1.5 bg-white/80 backdrop-blur-sm border border-slate-200 rounded-lg text-sm font-medium text-slate-600 shadow-sm">
-                            <i class="fas fa-users text-teal-500 mr-2"></i>
+                        <span class="filter-chip">
+                            <i class="fas fa-users" style="color: #10B981;"></i>
                             <%= typeof selectedCaste !=='undefined' ? selectedCaste : 'N/A' %>
                         </span>
                     </div>
-                </div>
+                </header>
 
-                <!-- Results Section -->
+                <!-- Results Check -->
                 <% if (scholarships && scholarships.length> 0) { %>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div class="results-grid">
                         <% scholarships.forEach((scholarship, index)=> { %>
-                            <div class="result-card p-8 flex flex-col h-full opacity-0 animate-[fade-in-up_0.6s_ease-out_forwards]"
-                                style="animation-delay: <%= index * 0.1 %>s">
-
-                                <div class="mb-6 flex-grow">
-                                    <div class="flex items-start justify-between mb-4 gap-4">
-                                        <div
-                                            class="w-12 h-12 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-600 shadow-inner flex-shrink-0">
-                                            <i class="fas fa-award text-xl"></i>
-                                        </div>
-                                        <span
-                                            class="bg-teal-50 text-teal-700 border border-teal-100 px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase shadow-sm whitespace-nowrap">
-                                            Eligible Match
-                                        </span>
+                            <!-- Result Card -->
+                            <div class="result-card">
+                                <div class="result-card-header">
+                                    <div class="card-icon">
+                                        <i class="fas fa-award"></i>
                                     </div>
-
-                                    <h3
-                                        class="text-xl font-bold text-slate-900 mb-3 leading-tight group-hover:text-indigo-600 transition-colors">
-                                        <%= scholarship.name %>
-                                    </h3>
-
-                                    <div
-                                        class="flex items-start gap-3 text-sm text-slate-600 mt-4 bg-slate-50/50 p-4 rounded-xl border border-slate-100/50">
-                                        <i
-                                            class="fas fa-check-circle text-indigo-400 mt-1 flex-shrink-0 relative top-px"></i>
-                                        <div>
-                                            <strong class="block text-slate-800 mb-1">Eligibility Criteria</strong>
-                                            <p class="leading-relaxed">
-                                                <%= scholarship.eligibility %>
-                                            </p>
-                                        </div>
-                                    </div>
+                                    <span class="eligible-badge">Eligible Match</span>
                                 </div>
 
-                                <div class="pt-6 border-t border-slate-100 mt-auto">
-                                    <a href="<%= scholarship.link %>" target="_blank"
-                                        class="btn-apply w-full px-6 py-3.5 rounded-xl text-white font-bold tracking-wide shadow-md">
-                                        Apply Now <i class="fas fa-external-link-alt text-sm opacity-80 ml-1"></i>
+                                <h3 class="card-title">
+                                    <%= scholarship.name %>
+                                </h3>
+
+                                <div class="card-details">
+                                    <div class="card-details-title">
+                                        <i class="fas fa-check-circle"></i> Eligibility Criteria
+                                    </div>
+                                    <p class="card-details-text">
+                                        <%= scholarship.eligibility %>
+                                    </p>
+                                </div>
+
+                                <div class="card-footer">
+                                    <a href="<%= scholarship.link %>" target="_blank" class="btn-apply">
+                                        Apply Now <i class="fas fa-external-link-alt"
+                                            style="font-size: 0.8rem; margin-top: 1px;"></i>
                                     </a>
                                 </div>
                             </div>
@@ -240,25 +352,26 @@
                     </div>
                     <% } else { %>
                         <!-- Empty State -->
-                        <div
-                            class="w-full max-w-2xl mx-auto glass-card p-12 text-center opacity-0 animate-[fade-in-up_0.6s_ease-out_forwards]">
-                            <div
-                                class="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6 text-slate-300 shadow-inner">
-                                <i class="fas fa-search-minus text-4xl"></i>
+                        <div class="empty-state">
+                            <div class="empty-icon">
+                                <i class="fas fa-search-minus"></i>
                             </div>
-                            <h3 class="text-2xl font-bold text-slate-800 mb-3">No matching scholarships found</h3>
-                            <p class="text-slate-500 text-lg mb-8 max-w-md mx-auto">
+                            <h3 class="empty-title">No matching scholarships found</h3>
+                            <p class="empty-text">
                                 We couldn't find any financial aid programs matching these exact filters. Try broadening
                                 your criteria or selecting a different category.
                             </p>
-                            <a href="/scholarship"
-                                class="btn-apply px-8 py-3 rounded-xl text-white font-bold inline-flex items-center shadow-md">
-                                <i class="fas fa-sync-alt mr-2"></i> Modify Search
+                            <a href="/scholarship" class="btn-apply"
+                                style="display: inline-flex; width: auto; padding: 12px 32px;">
+                                <i class="fas fa-sync-alt" style="margin-right: 4px;"></i> Modify Search
                             </a>
                         </div>
                         <% } %>
 
             </div>
+        </main>
 
-            <%- include('layouts/footer'); -%>
-    </body>
+        <%- include('layouts/footer'); -%>
+            </body>
+
+            </html>

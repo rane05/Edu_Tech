@@ -1,38 +1,13 @@
-# Dependencies
 node_modules/
-
-# Environment variables
 .env
-
-# System Files
+*.log
 .DS_Store
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-
-# Logs
+dist/
+build/
+.vscode/
+.idea/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-logs
-*.log
-
-# Editor Directories
-.idea/
-.vscode/
-
-# Build/Dist
-dist/
-build/
-
-# Temporary Data
-*.pdf
-*.txt
-temp/
-
-# Large Data Files
-*.csv
-all_colleges_data.json
-
-# Temporary backups
-old_*.ejs
+.npm
+.history
