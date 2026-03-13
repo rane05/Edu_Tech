@@ -206,18 +206,24 @@ router.post("/addAnnouncement", isAuthenticated, async (req, res) => {
 // POST: Add Resource
 router.post("/addResource", isAuthenticated, async (req, res) => {
     try {
-        const { title, link } = req.body;
-        const userId = req.session.userId;
-        const teacherProfile = await TeacherProfile.findOne({ userId });
+        const { title, description, link } = req.body;
+        const userId = req.session.userId || (req.user && req.user._id);
 
+        const teacherProfile = await TeacherProfile.findOne({ userId });
         if (!title || !link || !teacherProfile) return res.redirect("/teacher_home");
 
         await TeacherWork.create({
-            type: "resource", title, link, teacherId: userId, collegeName: teacherProfile.collegeName
+            type: "resource",
+            title,
+            description: description || "",
+            link,
+            teacherId: userId,
+            collegeName: teacherProfile.collegeName
         });
 
         res.redirect("/teacher_home");
     } catch (error) {
+        console.error("Error adding resource:", error);
         res.status(500).send("Error adding resource");
     }
 });
@@ -267,30 +273,6 @@ router.post("/addDoubtSession", isAuthenticated, async (req, res) => {
     }
 });
 
-// POST: Add Resource
-router.post("/addResource", async (req, res) => {
-    try {
-        const { title, description } = req.body;
-        if (!title) return res.status(400).send("Title is required");
-
-        const userId = req.session.userId;
-        const teacherProfile = await TeacherProfile.findOne({ userId });
-        if (!teacherProfile) return res.status(403).send("Profile required");
-
-        await TeacherWork.create({
-            type: "resource",
-            title,
-            description,
-            teacherId: userId,
-            collegeName: teacherProfile.collegeName
-        });
-
-        res.redirect("/teacher_home");
-    } catch (error) {
-        console.error("Error adding resource:", error);
-        res.status(500).send("Internal Server Error");
-    }
-});
 
 // POST: Reply to Doubt
 router.post("/replyDoubt", async (req, res) => {

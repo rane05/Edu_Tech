@@ -578,6 +578,9 @@
             <a href="#" onclick="toggleModal('taskModal')" class="nav-item">
                 <i class="far fa-file-alt"></i> Assignments
             </a>
+            <a href="#" onclick="toggleModal('resourceModal')" class="nav-item">
+                <i class="far fa-folder-open"></i> Share Resource
+            </a>
             <a href="#" class="nav-item">
                 <i class="fas fa-cog"></i> Settings
             </a>
@@ -895,6 +898,29 @@
         </div>
     </div>
 
+    <!-- Resource Modal -->
+    <div id="resourceModal"
+        style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; align-items: center; justify-content: center;">
+        <div
+            style="background: white; padding: 32px; border-radius: 24px; width: 100%; max-width: 400px; margin: auto; margin-top: 10vh;">
+            <h3 style="margin-top: 0;">Share Resource</h3>
+            <form action="/addResource" method="POST">
+                <input type="text" name="title" placeholder="Resource Title" required
+                    style="width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                <input type="text" name="description" placeholder="Description (Optional)"
+                    style="width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                <input type="url" name="link" placeholder="Link (PDF, Drive, Video)" required
+                    style="width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #e2e8f0;">
+                <div style="display: flex; gap: 12px; margin-top: 16px;">
+                    <button type="submit"
+                        style="flex: 1; background: var(--primary); color: white; padding: 12px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold;">Share
+                        Resource</button>
+                    <button type="button" onclick="toggleModal('resourceModal')"
+                        style="flex: 1; background: #e2e8f0; color: #1e293b; padding: 12px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold;">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
     <script>
         function toggleModal(id) {
             const modal = document.getElementById(id);
