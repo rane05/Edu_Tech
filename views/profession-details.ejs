@@ -1,129 +1,139 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= profession.name %> Details</title>
-    <link rel="stylesheet" href="/css/carr_style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <nav class="navbar">
-        <div class="logo">Edu<span>Navigator</span></div>
-        <ul class="nav-links">
-            <li><a href="/">Home</a></li>
-            <li class="dropdown">
-                <a href="#">Services</a>
-                <ul class="dropdown-menu">
-                    <li><a href="/career-recommendation">Skills and Interest</a></li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/Ai_Insights">AI Career</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/Career_Trends">Trending Careers</a>
-                    </li>
-                    
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="#">Resources</a>
-                <ul class="dropdown-menu">
-                    <li><a href="/career-bank">Career Bank</a></li>
-                    <li><a href="/videos">Videos</a></li>
-                </ul>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/exam_choice">College</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/scholarship">Scholarship</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/Certificate_Validator">Certificate</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/resume">Resume</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/profile">Profile</a>
-            </li>
-            <li><a href="/contact">Contact Us</a></li>
-        </ul>
-        <a href="#login" class="login-btn">Log In / Sign Up</a>
-    </nav>
-    
+<%- include('layouts/header'); -%>
 
-    <div class="profession-details">
+<body class="bg-light">
+    <%- include('layouts/navbar'); -%>
+
+    <!-- Enhanced Header Section -->
+    <header class="profession-details-header">
         <div class="container">
             <div class="row">
-                <div class="col-md-8">
-                    <h1 class="mb-4"><%= profession.name %></h1>
-                    <p class="lead"><%= profession.description %></p>
+                <div class="col-lg-10">
+                    <nav aria-label="breadcrumb" class="mb-4 animate-fade-in">
+                        <ol class="breadcrumb" style="background: transparent; padding: 0;">
+                            <li class="breadcrumb-item"><a href="/career-bank" class="text-primary text-decoration-none">Career Bank</a></li>
+                            <li class="breadcrumb-item active text-white-50" aria-current="page"><%= profession.name %></li>
+                        </ol>
+                    </nav>
+                    <h1 class="animate-fade-in"><%= profession.name %></h1>
+                    <p class="lead animate-fade-in" style="animation-delay: 0.1s;"><%= profession.description %></p>
+                </div>
+            </div>
+        </div>
+    </header>
 
-                    <div class="details-section">
-                        <h3>Overview</h3>
-                        <div class="row">
+    <main class="profession-details">
+        <div class="container">
+            <div class="row g-4">
+                <!-- Main Content -->
+                <div class="col-lg-8">
+                    <!-- Overview Card -->
+                    <div class="details-section animate-fade-in" style="animation-delay: 0.2s;">
+                        <h3><i class="fas fa-info-circle"></i> Professional Roadmap</h3>
+                        <div class="pe-lg-4">
+                            <p class="text-muted" style="line-height: 1.8;"><%= profession.careerPath %></p>
+                        </div>
+                        
+                        <div class="row g-3 mt-4">
                             <div class="col-md-6">
-                                <p><strong>Category:</strong> <%= profession.category %></p>
-                                <p><strong>Salary:</strong> <%= profession.salary %></p>
-                                <p><strong>Education Required:</strong> <%= profession.education %></p>
+                                <div class="p-4 bg-light rounded-3 border-start border-4 border-primary">
+                                    <h6 class="text-uppercase small fw-bold text-muted mb-2">Education Requirement</h6>
+                                    <p class="mb-0 fw-bold h5"><%= profession.education %></p>
+                                </div>
                             </div>
                             <div class="col-md-6">
-                                <p><strong>Job Outlook:</strong> <%= profession.jobOutlook %></p>
-                                <p><strong>Work Environment:</strong> <%= profession.workEnvironment %></p>
+                                <div class="p-4 bg-light rounded-3 border-start border-4 border-secondary">
+                                    <h6 class="text-uppercase small fw-bold text-muted mb-2">Work Environment</h6>
+                                    <p class="mb-0 fw-bold h5"><%= profession.workEnvironment %></p>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="details-section">
-                        <h3>Skills Required</h3>
+                    <!-- Skills Card -->
+                    <div class="details-section animate-fade-in" style="animation-delay: 0.3s;">
+                        <h3><i class="fas fa-bolt"></i> Essential Expertise</h3>
+                        <p class="text-muted mb-4">Mastering these core skills will give you a competitive edge in this field.</p>
                         <ul class="skills-list">
                             <% profession.skills.forEach(skill => { %>
-                                <li><i class="fas fa-check-circle"></i> <%= skill %></li>
+                                <li>
+                                    <span class="icon-circle bg-primary-soft text-primary">
+                                        <i class="fas fa-check"></i>
+                                    </span>
+                                    <span><%= skill %></span>
+                                </li>
                             <% }) %>
                         </ul>
                     </div>
 
-                    <div class="details-section">
-                        <h3>Top Companies</h3>
+                    <!-- Industry Card -->
+                    <div class="details-section animate-fade-in" style="animation-delay: 0.4s;">
+                        <h3><i class="fas fa-building"></i> Premier Employers</h3>
+                        <p class="text-muted mb-4">Top-tier organizations consistently seeking talent in this specialization.</p>
                         <ul class="companies-list">
                             <% if (profession.topCompanies && profession.topCompanies.length > 0) { %>
                                 <% profession.topCompanies.forEach(company => { %>
                                     <li><i class="fas fa-building"></i> <%= company %></li>
                                 <% }) %>
                             <% } else { %>
-                                <li>No top companies listed.</li>
+                                <li class="text-muted">No specific employers listed for this path.</li>
                             <% } %>
                         </ul>
                     </div>
-
-                    <div class="details-section">
-                        <h3>Career Path</h3>
-                        <p><%= profession.careerPath %></p>
-                    </div>
                 </div>
 
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Quick Facts</h5>
-                            <ul class="quick-facts">
-                                <li><strong>Salary:</strong> <%= profession.salary %></li>
-                                <li><strong>Education:</strong> <%= profession.education %></li>
-                                <li><strong>Job Outlook:</strong> <%= profession.jobOutlook %></li>
-                            </ul>
+                <!-- Sidebar Content -->
+                <div class="col-lg-4">
+                    <div class="quick-facts-card animate-fade-in" style="animation-delay: 0.5s;">
+                        <h5 class="mb-4">Career Economics</h5>
+                        <ul class="quick-facts">
+                            <li class="mb-4 p-3 bg-light rounded-3">
+                                <strong>Average Compensation</strong>
+                                <span class="h4 text-primary mb-0"><%= profession.salary %></span>
+                            </li>
+                            <li class="mb-4 p-3 bg-light rounded-3">
+                                <strong>Growth Prospect</strong>
+                                <span class="h5 mb-0"><%= profession.jobOutlook %></span>
+                            </li>
+                            <li class="mb-4 p-3 bg-light rounded-3">
+                                <strong>Industry vertical</strong>
+                                <span class="h5 mb-0 text-capitalize"><%= profession.category %></span>
+                            </li>
+                        </ul>
+                        <hr class="my-4">
+                        <div class="d-grid gap-2">
+                            <a href="/career-bank" class="btn btn-outline-dark">
+                                <i class="fas fa-arrow-left me-2"></i> Browse Other Path
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <div class="text-center mt-4">
-                <a href="/career-bank" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to Career Bank</a>
-            </div>
         </div>
-    </div>
+    </main>
 
     <%- include('layouts/footer') %>
+
+    <style>
+        .bg-primary-soft { background-color: rgba(255, 184, 0, 0.1); }
+        .icon-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .breadcrumb-item + .breadcrumb-item::before {
+            color: rgba(255, 255, 255, 0.5);
+            content: "/";
+        }
+        .details-section p.text-muted {
+            color: #2D3748 !important; /* Darker slate for body text readability */
+        }
+        .details-section h3 {
+            color: #1A1A2E; /* Solid navy for headings */
+        }
+    </style>
 </body>
 </html>
