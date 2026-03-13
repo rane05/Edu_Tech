@@ -28,7 +28,7 @@ const upload = multer({ storage });
 // Route to render the profile page
 router.get("/tprofile", async (req, res) => {
     try {
-        const userId = req.session.userId;
+        const userId = req.session.userId || (req.user && req.user._id);
         if (!userId) {
             return res.redirect("/login");
         }
@@ -55,7 +55,7 @@ router.get("/tprofile", async (req, res) => {
 
 router.post("/tprofile", upload.single("profileImage"), async (req, res) => {
     try {
-        const userId = req.session.userId;
+        const userId = req.session.userId || (req.user && req.user._id);
         if (!userId) {
             return res.status(401).send("Unauthorized");
         }
@@ -92,6 +92,19 @@ router.post("/tprofile", upload.single("profileImage"), async (req, res) => {
             // Generate uniqueCode for new profile
             profileData.uniqueCode = 'TECH-' + Math.random().toString(36).substr(2, 9).toUpperCase();
             await new TeacherProfile(profileData).save();
+        }
+
+        const studentProfileModel = require("../model/profile");
+        const studentsInCollege = await studentProfileModel.find({
+            collegeName: { $regex: new RegExp("^" + collegeName?.trim() + "$", "i") }
+        });
+
+        // Link this teacher to all these students
+        for (const student of studentsInCollege) {
+            if (!student.linkedTeachers.includes(userId)) {
+                student.linkedTeachers.push(userId);
+                await student.save();
+            }
         }
 
         res.redirect("/tprofile");

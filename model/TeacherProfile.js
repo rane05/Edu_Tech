@@ -9,7 +9,7 @@ const TeacherProfileSchema = new mongoose.Schema({
     state: { type: String, required: true },
     district: { type: String, required: true },
     collegeName: { type: String, required: true }, // College affiliation
-    uniqueCode: { type: String, unique: true } // Unique code for student linking
+    uniqueCode: { type: String, unique: true, sparse: true } // Unique code for student linking (sparse)
 });
 
 module.exports = mongoose.model('TeacherProfile', TeacherProfileSchema);
