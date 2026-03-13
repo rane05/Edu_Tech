@@ -1894,110 +1894,54 @@
                                         border: { display: false },
                                         ticks: { font: { family: 'Outfit', size: 12, weight: 600 }, color: '#94a3b8', stepSize: 2 }
                                     }
-
-                if(dataPoints.length > 0) {
-                            const isDark = document.documentElement.classList.contains('dark');
-                            scoreChart = new Chart(ctx, {
-                                type: 'line',
-                                data: {
-                                    labels: labels,
-                                    datasets: [{
-                                        label: 'Performance Score',
-                                        data: dataPoints,
-                                        borderColor: '#4f46e5',
-                                        backgroundColor: 'rgba(79, 70, 229, 0.08)',
-                                        tension: 0.4,
-                                        fill: true,
-                                        pointBackgroundColor: '#4f46e5',
-                                        pointBorderColor: '#fff',
-                                        pointHoverRadius: 6,
-                                        pointRadius: 4,
-                                        borderWidth: 3
-                                    }]
-                                },
-                                options: {
-                                    responsive: true,
-                                    maintainAspectRatio: false,
-                                    plugins: {
-                                        legend: { display: false },
-                                        tooltip: {
-                                            backgroundColor: isDark ? '#1e293b' : '#fff',
-                                            titleColor: isDark ? '#fff' : '#1e293b',
-                                            bodyColor: isDark ? '#cbd5e1' : '#64748b',
-                                            padding: 12,
-                                            borderRadius: 12,
-                                            borderColor: 'rgba(0,0,0,0.05)',
-                                            borderWidth: 1
-                                        }
-                                    },
-                                    scales: {
-                                        y: {
-                                            beginAtZero: true,
-                                            max: 60,
-                                            grid: { color: 'rgba(0,0,0,0.05)', drawBorder: false },
-                                            ticks: { color: '#64748b', font: { family: 'Outfit', size: 10 } }
-                                        },
-                                        x: {
-                                            grid: { display: false },
-                                            ticks: { color: '#64748b', font: { family: 'Outfit', size: 10 } }
-                                        }
-                                    }
-                                }
-                            });
-                            updateChartColors();
-                        } else {
-                            // Fallback for empty state
-                            ctx.font = '14px Outfit';
-                            ctx.fillStyle = '#64748b';
-                            ctx.textAlign = 'center';
-                            ctx.fillText('Complete your first assessment to see analytics.', ctx.canvas.width / 2, ctx.canvas.height / 2);
-                        }
-                    });
-
-                    // 2. Line Chart (Performance)
-                    const ctxLine = document.getElementById('performanceChart').getContext('2d');
-                    const secondaryData = dataPoints.map(v => v * 0.8 + 1); // Fake 2nd line for visual flair
-
-                    new Chart(ctxLine, {
-                        type: 'line',
-                        data: {
-                            labels: labels,
-                            datasets: [
-                                {
-                                    data: dataPoints,
-                                    borderColor: '#6366f1',
-                                    borderWidth: 2,
-                                    tension: 0.4,
-                                    pointRadius: 0
-                                },
-                                {
-                                    data: secondaryData,
-                                    borderColor: '#94a3b8',
-                                    borderWidth: 2,
-                                    tension: 0.4,
-                                    borderDash: [5, 5],
-                                    pointRadius: 0
-                                }
-                            ]
-                        },
-                        options: {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            plugins: { legend: { display: false } },
-                            scales: {
-                                x: {
-                                    display: true,
-                                    grid: { display: false },
-                                    border: { display: false },
-                                    ticks: { font: { family: 'Outfit', size: 10, weight: 600 }, color: '#94a3b8' }
-                                },
-                                y: {
-                                    display: false
                                 }
                             }
-                        }
+                        });
+
+                        // 2. Line Chart (Performance)
+                        const ctxLine = document.getElementById('performanceChart').getContext('2d');
+                        const secondaryData = dataPoints.map(v => v * 0.8 + 1); // Fake 2nd line for visual flair
+
+                        new Chart(ctxLine, {
+                            type: 'line',
+                            data: {
+                                labels: labels,
+                                datasets: [
+                                    {
+                                        data: dataPoints,
+                                        borderColor: '#6366f1',
+                                        borderWidth: 2,
+                                        tension: 0.4,
+                                        pointRadius: 0
+                                    },
+                                    {
+                                        data: secondaryData,
+                                        borderColor: '#94a3b8',
+                                        borderWidth: 2,
+                                        tension: 0.4,
+                                        borderDash: [5, 5],
+                                        pointRadius: 0
+                                    }
+                                ]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: { legend: { display: false } },
+                                scales: {
+                                    x: {
+                                        display: true,
+                                        grid: { display: false },
+                                        border: { display: false },
+                                        ticks: { font: { family: 'Outfit', size: 10, weight: 600 }, color: '#94a3b8' }
+                                    },
+                                    y: {
+                                        display: false
+                                    }
+                                }
+                            }
+                        });
                     });
-        });
                 </script>
 
                 <%- include('layouts/footer'); %>
