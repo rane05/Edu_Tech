@@ -1,5 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const Groq = require('groq-sdk');
+
+// Initialize Groq client
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 // Integrations/Analyzer - Main page
 router.get('/integrations', (req, res) => {
@@ -114,29 +118,55 @@ router.post('/api/certifications/verify', async (req, res) => {
     }
 });
 
-// Mock LinkedIn profile analysis
+// Real AI LinkedIn profile analysis using Groq
 async function analyzeLinkedInProfile(profileUrl) {
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    const prompt = `You are a professional HR Specialist and Technical Recruiter. Analyze the LinkedIn profile at this URL: ${profileUrl}
 
-    return {
-        profileStrength: 85,
-        keySkills: ['JavaScript', 'React', 'Node.js', 'Leadership', 'Project Management'],
-        experienceLevel: 'Mid-Senior',
-        industryFit: 'Technology',
-        recommendations: [
-            'Add more quantifiable achievements',
-            'Include certifications and courses',
-            'Optimize headline for better visibility'
-        ],
-        growthAreas: [
-            'Data Science',
-            'Cloud Computing',
-            'AI/ML Fundamentals'
-        ]
-    };
+Critically evaluate the profile strength and provide a technical summary.
+You MUST output your response as a pure, valid JSON object matching EXACTLY this structure:
+{
+    "profileStrength": (integer from 0-100),
+    "keySkills": ["(string)", "(string)", "(string)", "(string)", "(string)"],
+    "experienceLevel": "(string: Junior, Mid, Senior, or Executive)",
+    "industryFit": "(string)",
+    "recommendations": ["(string)", "(string)", "(string)"],
+    "growthAreas": ["(string)", "(string)", "(string)"]
 }
 
-// Connect to local Ollama instance for real GitHub repository analysis
+Output ONLY the raw JSON object. Do not include markdown blocks or any other text.`;
+
+    try {
+        const response = await groq.chat.completions.create({
+            messages: [{ role: "user", content: prompt }],
+            model: "llama-3.1-8b-instant",
+            response_format: { type: "json_object" }
+        });
+
+        const content = response.choices[0]?.message?.content || "{}";
+        const parsedAnalysis = JSON.parse(content);
+
+        return {
+            profileStrength: parsedAnalysis.profileStrength || 70,
+            keySkills: parsedAnalysis.keySkills || ['General Skills'],
+            experienceLevel: parsedAnalysis.experienceLevel || 'Mid-Level',
+            industryFit: parsedAnalysis.industryFit || 'Technology',
+            recommendations: parsedAnalysis.recommendations || ['Complete your profile for better analysis'],
+            growthAreas: parsedAnalysis.growthAreas || ['Upskilling in new technologies']
+        };
+    } catch (error) {
+        console.error("LinkedIn Groq Analysis Error:", error);
+        return {
+            profileStrength: 50,
+            keySkills: ['Profile Analysis Failed'],
+            experienceLevel: 'Unknown',
+            industryFit: 'Unknown',
+            recommendations: ['Check API connectivity', 'Ensure URL is valid'],
+            growthAreas: ['Error processing request']
+        };
+    }
+}
+
+// Real AI GitHub repository analysis using Groq
 async function analyzeGitHubRepository(repositoryUrl) {
     const prompt = `You are a Senior Principal Staff Engineer evaluating a candidate's GitHub repository at the following URL:
 ${repositoryUrl}
@@ -154,39 +184,18 @@ You MUST output your response as a pure, valid JSON object matching EXACTLY this
     "complexity": "(string: Basic, Intermediate, Advanced, or Expert)"
 }
 
-Do NOT wrap the JSON in markdown formatting blocks like \`\`\`json. Output ONLY the raw JSON object. Do not include any other text or explanations.`;
+Output ONLY the raw JSON object. Do not include markdown blocks or any other text.`;
 
     try {
-        const response = await fetch('http://localhost:11434/api/generate', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                model: 'llama3',
-                prompt: prompt,
-                stream: false,
-                format: 'json' // Force Ollama to output JSON
-            })
+        const response = await groq.chat.completions.create({
+            messages: [{ role: "user", content: prompt }],
+            model: "llama-3.1-8b-instant",
+            response_format: { type: "json_object" }
         });
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        const content = response.choices[0]?.message?.content || "{}";
+        const parsedAnalysis = JSON.parse(content);
 
-        const data = await response.json();
-
-        // Sometimes LLMs still add text around the JSON or markdown blocks. Attempt to parse cleanly.
-        let jsonString = data.response.trim();
-
-        // Strip markdown backticks if present
-        if (jsonString.startsWith('\`\`\`')) {
-            jsonString = jsonString.replace(/^\`\`\`(json)?\n?/, '').replace(/\n?\`\`\`$/, '');
-        }
-
-        const parsedAnalysis = JSON.parse(jsonString);
-
-        // Ensure all required fields exist to prevent frontend crash
         return {
             codeQuality: parsedAnalysis.codeQuality || 50,
             documentation: parsedAnalysis.documentation || 50,
@@ -199,57 +208,63 @@ Do NOT wrap the JSON in markdown formatting blocks like \`\`\`json. Output ONLY 
         };
 
     } catch (error) {
-        console.error("Ollama Analysis Error:", error);
-
-        // Safe fallback if the LLM is down or hallucinated bad JSON
+        console.error("GitHub Groq Analysis Error:", error);
         return {
-            codeQuality: 78,
-            documentation: 65,
-            activity: 82,
-            collaboration: 70,
-            strengths: [
-                'Fallback: Could not reach LLM',
-                'Assuming standard repository structure',
-                'Review repository manually'
-            ],
-            improvements: [
-                'Ensure local Ollama (llama3) is running',
-                'Check network connectivity to localhost:11434',
-                'Verify LLM JSON output format'
-            ],
-            technologies: ['Language Detection Failed'],
+            codeQuality: 60,
+            documentation: 60,
+            activity: 60,
+            collaboration: 60,
+            strengths: ['Manual Review Required', 'AI connection error'],
+            improvements: ['Check Groq API key', 'Verify repository access'],
+            technologies: ['Not detected'],
             complexity: 'Unknown'
         };
     }
 }
 
-// Mock research topic analysis
+// Real AI research topic analysis using Groq
 async function analyzeResearchTopic(topic) {
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    const prompt = `You are a high-level Academic Research Advisor. Analyze the scientific or technical relevance of the following topic: ${topic}
 
-    return {
-        relevance: 88,
-        currentTrends: [
-            'AI and Machine Learning integration',
-            'Sustainable technology solutions',
-            'Remote work optimization'
-        ],
-        keyResearchers: [
-            'Dr. Smith - MIT',
-            'Prof. Johnson - Stanford',
-            'Dr. Williams - Harvard'
-        ],
-        fundingOpportunities: [
-            'NSF Grants',
-            'Industry partnerships',
-            'Academic collaborations'
-        ],
-        publicationVenues: [
-            'Nature',
-            'Science',
-            'IEEE Transactions'
-        ]
-    };
+Provide a detailed analysis of trends, researchers, and funding.
+You MUST output your response as a pure, valid JSON object matching EXACTLY this structure:
+{
+    "relevance": (integer from 0-100),
+    "currentTrends": ["(string)", "(string)", "(string)"],
+    "keyResearchers": ["(string)", "(string)", "(string)"],
+    "fundingOpportunities": ["(string)", "(string)", "(string)"],
+    "publicationVenues": ["(string)", "(string)", "(string)"]
+}
+
+Output ONLY the raw JSON object. Do not include markdown blocks or any other text.`;
+
+    try {
+        const response = await groq.chat.completions.create({
+            messages: [{ role: "user", content: prompt }],
+            model: "llama-3.1-8b-instant",
+            response_format: { type: "json_object" }
+        });
+
+        const content = response.choices[0]?.message?.content || "{}";
+        const parsedAnalysis = JSON.parse(content);
+
+        return {
+            relevance: parsedAnalysis.relevance || 75,
+            currentTrends: parsedAnalysis.currentTrends || ['Analysis in progress'],
+            keyResearchers: parsedAnalysis.keyResearchers || ['Topic experts'],
+            fundingOpportunities: parsedAnalysis.fundingOpportunities || ['Academic funding'],
+            publicationVenues: parsedAnalysis.publicationVenues || ['Top journals']
+        };
+    } catch (error) {
+        console.error("Research Groq Analysis Error:", error);
+        return {
+            relevance: 50,
+            currentTrends: ['Error fetching trends'],
+            keyResearchers: ['Error fetching researchers'],
+            fundingOpportunities: ['Check API connectivity'],
+            publicationVenues: ['Connection failed']
+        };
+    }
 }
 
 // Mock certification verification with enhanced details

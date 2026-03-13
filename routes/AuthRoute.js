@@ -87,7 +87,7 @@ router.post('/login', async (req, res, next) => {
 
                 // Redirect based on role
                 if (authedUser.role === 'student') {
-                    return res.redirect('/');
+                    return res.redirect('/'); // Redirect to home page for student
                 } else if (authedUser.role === 'parent') {
                     return res.redirect('/parentprofile'); // Consistent with parent dashboard
                 } else if (authedUser.role === 'teacher') {
