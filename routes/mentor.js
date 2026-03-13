@@ -1,8 +1,14 @@
 const express = require('express');
 const router = express.Router();
+const mentors = require('../data/mentors.json');
 // const nodemailer = require('nodemailer')
 
 
+
+// Main mentorship page
+router.get('/mentor', (req, res) => {
+    res.render('mentor', { mentors });
+});
 
 router.get('/AI_ML', (req, res) => {
     res.render('AI_ML');
