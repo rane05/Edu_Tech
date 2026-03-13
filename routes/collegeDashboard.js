@@ -19,9 +19,18 @@ router.get('/college/dashboard', isCollege, async (req, res) => {
     try {
         let college = await College.findOne({ userId: req.user._id });
 
-        // If profile doesn't exist, redirect to profile creation
+        // If profile doesn't exist, auto-create it using user data
         if (!college) {
-            return res.render('college/create_profile', { user: req.user });
+            college = new College({
+                userId: req.user._id,
+                name: req.user.username.split('@')[0],
+                contactEmail: req.user.username,
+                university: 'Pending Update',
+                location: 'Pending Update',
+                description: 'A newly registered college on EduTech platform.'
+            });
+            await college.save();
+            console.log("Auto-created college profile for:", req.user.username);
         }
 
         const requests = await AdmissionRequest.find({ collegeId: college._id })

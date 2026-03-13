@@ -29,6 +29,20 @@ router.post('/register', async (req, res) => {
 
         await User.register(user, password); // Use `await` instead of callback
 
+        // If registering as a college, immediately create the profile document
+        if (role === 'college') {
+            const College = require('../model/cetCollege');
+            await College.create({
+                userId: user._id,
+                name: username.split('@')[0],
+                contactEmail: username,
+                university: 'Pending Update',
+                location: 'Pending Update',
+                description: 'A newly registered college on EduTech platform.'
+            });
+            console.log("Registered and initialized college profile for:", username);
+        }
+
         // After successful registration, redirect to login page
         req.flash('success', 'Registration successful! Please log in.');
         return res.redirect('/login');
@@ -130,6 +144,22 @@ router.post('/login', async (req, res, next) => {
                 } else if (authedUser.role === 'teacher') {
                     return res.redirect('/teacher_home');
                 } else if (authedUser.role === 'college') {
+                    // Ensure college profile exists in MongoDB
+                    const College = require('../model/cetCollege');
+                    College.findOne({ userId: authedUser._id }).then(college => {
+                        if (!college) {
+                            College.create({
+                                userId: authedUser._id,
+                                name: authedUser.username.split('@')[0], // Default name from email/username
+                                contactEmail: authedUser.username,
+                                university: 'Pending Update',
+                                location: 'Pending Update'
+                            }).then(() => {
+                                console.log("Auto-initialized college profile for:", authedUser.username);
+                            }).catch(err => console.error("Auto-initialization error:", err));
+                        }
+                    }).catch(err => console.error("Profile check error:", err));
+
                     return res.redirect('/college/dashboard');
                 } else if (authedUser.role === 'admin') {
                     return res.redirect('/admin/dashboard');
