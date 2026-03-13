@@ -413,7 +413,7 @@
             <!-- Role Selection -->
             <div class="mb-6">
               <label class="block text-sm font-medium text-slate-700 mb-2">I am signing up as a...</label>
-              <div class="role-grid">
+              <div class="role-grid grid-cols-2 md:grid-cols-5 gap-4">
                 <label class="relative">
                   <input type="radio" name="role" value="student" class="role-input sr-only" checked>
                   <div class="role-card">
@@ -433,6 +433,20 @@
                   <div class="role-card">
                     <i class="fas fa-users role-icon"></i>
                     <div class="role-title">Parent</div>
+                  </div>
+                </label>
+                <label class="relative">
+                  <input type="radio" name="role" value="college" class="role-input sr-only">
+                  <div class="role-card">
+                    <i class="fas fa-university role-icon"></i>
+                    <div class="role-title">College</div>
+                  </div>
+                </label>
+                <label class="relative">
+                  <input type="radio" name="role" value="admin" class="role-input sr-only">
+                  <div class="role-card">
+                    <i class="fas fa-user-shield role-icon"></i>
+                    <div class="role-title">Admin</div>
                   </div>
                 </label>
               </div>

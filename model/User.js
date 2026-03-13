@@ -8,7 +8,7 @@ const passportLocalMongoose = require('passport-local-mongoose');
 var User = new Schema({
     username: String,
     password: String,
-    role: { type: String, enum: ['student', 'teacher', 'parent'], required: true },
+    role: { type: String, enum: ['student', 'teacher', 'parent', 'college', 'admin'], required: true },
     googleId: String,
     email: String,
     education: String,

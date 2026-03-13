@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const axios = require('axios');
+const Groq = require('groq-sdk');
 
 // Route to render the AI Resume Builder UI
 router.get('/resume', (req, res) => {
@@ -45,15 +46,18 @@ router.post('/api/resume/generate', async (req, res) => {
         }
         `;
 
-        // Call Ollama (Llama 3)
-        const response = await axios.post('http://localhost:11434/api/generate', {
-            model: "llama3",
-            prompt: prompt,
-            stream: false,
-            format: "json"
+        // Call Groq instead of Ollama
+        if (!process.env.GROQ_API_KEY) throw new Error("Missing GROQ_API_KEY");
+        const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+
+        const response = await groq.chat.completions.create({
+            messages: [{ role: "user", content: prompt }],
+            model: "llama-3.1-8b-instant",
+            temperature: 0.5,
+            response_format: { type: "json_object" }
         });
 
-        const aiResponse = response.data.response;
+        const aiResponse = response.choices[0]?.message?.content || "{}";
 
         // Parse JSON
         let structuredData;
@@ -74,7 +78,7 @@ router.post('/api/resume/generate', async (req, res) => {
 
     } catch (error) {
         console.error("AI Resume Error:", error.message);
-        res.status(500).json({ success: false, error: "Failed to generate resume. Ensure Ollama is running." });
+        res.status(500).json({ success: false, error: "Failed to generate resume. " + error.message });
     }
 });
 

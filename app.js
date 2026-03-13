@@ -63,8 +63,6 @@ const integrations = require('./routes/integrations.js')
 const careerTrendsPredictor = require('./routes/career_trends_predictor.js')
 const studyAbroadRoute = require('./routes/studyAbroadRoute.js'); // Global Studies & Advisor Module
 const ollamaChat = require('./routes/ollamaChat.js');
-const smartQuiz = require('./routes/smart_quiz.js');
-const leaderboard = require('./routes/leaderboard.js');
 const userDashboard = require('./routes/user_dashboard.js');
 const resumeBuilder = require('./routes/resume_builder.js');
 const parentDashboard = require('./routes/parent_dashboard.js');
@@ -127,7 +125,8 @@ passport.deserializeUser(User.deserializeUser());
 
 
 app.use((req, res, next) => {
-    res.locals.userId = req.session.userId || null;  // `userId` will be available in all templates
+    res.locals.userId = req.session.userId || null;
+    res.locals.role = req.session.role || null;
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
     next();
@@ -176,8 +175,6 @@ app.use(integrations)
 app.use(careerTrendsPredictor)
 app.use(studyAbroadRoute);
 app.use(ollamaChat);
-app.use(smartQuiz);
-app.use(leaderboard);
 app.use(userDashboard);
 app.use(resumeBuilder);
 app.use(parentDashboard);
@@ -186,6 +183,10 @@ app.use(require('./routes/jee_search.js')); // Register JEE Search
 app.use(teacherHomeRoutes); // Use teacher home routes
 app.use('/api', require('./routes/api_webinars.js')); // Live webinars API
 app.use('/api/roadmap', require('./routes/api_roadmap.js')); // Real user progress tracking API
+app.use(require('./routes/collegeDashboard.js'));
+app.use(require('./routes/adminDashboard.js'));
+app.use(require('./routes/feedback.js'));
+app.use(require('./routes/admission.js'));
 
 
 
@@ -226,13 +227,6 @@ server.listen(4000, () => {
 });
 app.get('/vid', (req, res) => {
     res.render('vid')
-});
-app.get('/resources', (req, res) => {
-    res.render('resources')
-});
-
-app.get('/mentor', (req, res) => {
-    res.render('mentor');
 });
 
 app.get('/an', (req, res) => {

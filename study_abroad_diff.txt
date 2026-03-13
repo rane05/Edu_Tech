@@ -1,0 +1,13 @@
+﻿diff --git a/views/study_abroad.ejs b/views/study_abroad.ejs
+index 95ebea7..f1bc5b9 100644
+--- a/views/study_abroad.ejs
++++ b/views/study_abroad.ejs
+@@ -200,6 +200,8 @@
+                 </div>
+             </header>
+ 
++            <!-- Global Study Modules -->
++            <!-- Main Content Container for Global Studies -->
+             <div class="container py-20">
+                 <!-- AI Spotlight Section (IELTS) -->
+                 <div class="glass-card p-10 mb-20 border-2 border-indigo-500 relative overflow-hidden">

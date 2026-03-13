@@ -27,7 +27,13 @@ const CollegeSchema = new mongoose.Schema({
   placement: { type: Number },
   accommodation: { type: Number },
   socialLife: { type: Number },
-  branches: [BranchSchema]
+  branches: [BranchSchema],
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  isSponsored: { type: Boolean, default: false },
+  description: { type: String },
+  contactEmail: { type: String },
+  website: { type: String },
+  logo: { type: String }
 });
 
 const College = mongoose.model('College', CollegeSchema);

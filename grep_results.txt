@@ -1,0 +1,10 @@
+﻿remotes/origin/Teachers-students-connect:views/home.ejs:                    <h4 class="font-bold text-lg mb-1">Global Coverage</h4>
+remotes/origin/Teachers-students-connect:views/home.ejs:                on the global stage.</p>
+remotes/origin/Teachers-students-connect:views/home_backup.ejs:              milestone you complete. Showcase your expertise on our global leaderboard.</p>
+remotes/origin/Teachers-students-connect:views/home_backup.ejs:              <li><i class="fas fa-trophy"></i> Global & Regional rankings</li>
+remotes/origin/Teachers-students-connect:views/interview_simulator.ejs:                let currentQuestions = []; // Store questions globally
+remotes/origin/Teachers-students-connect:views/interview_simulator.ejs:                    // Let's rely on the existing global vars if possible.
+remotes/origin/Teachers-students-connect:views/leaderboard.ejs:                        <h1 class="h3 mb-0 text-gray-800">Global Leaderboard</h1>
+remotes/origin/Teachers-students-connect:views/scholarship.ejs:        'Global Open University', 
+remotes/origin/Teachers-students-connect:views/teacher_home.ejs:                                    <input type="text" placeholder="Global search..."
+remotes/origin/Teachers-students-connect:views/user_dashboard.ejs:                                    profile.collegeName : 'Global Learner' %>

@@ -327,8 +327,10 @@
                     <a href="/career-bank" class="dropdown-link">Career Bank</a>
                     <a href="/career-counseling" class="dropdown-link">Skills & Interests</a>
                     <a href="/career-trends-predictor" class="dropdown-link">AI Career Trends</a>
-                    <a href="/study-abroad" class="dropdown-link" style="color:#FFB800; font-weight:700;">Global Studies
-                        🌍</a>
+                    <a href="/study-abroad" class="dropdown-link"
+                        style="color:var(--c-teal, #00A8FF); font-weight:600;">Global AI 🌍</a>
+                    <a href="/student/colleges" class="dropdown-link"
+                        style="color:var(--c-indigo, #4F46E5); font-weight:600;">Partner Colleges 🎓</a>
                     <a href="/exam_choice" class="dropdown-link"
                         style="color:var(--c-indigo, #4F46E5); font-weight:600;">College Predictor ✨</a>
                 </div>
@@ -348,12 +350,29 @@
 
             <!-- Assessment Dropdown -->
             <div class="nav-item">
-                <a href="#" class="nav-link">Assessment <i class="fas fa-chevron-down"></i></a>
+                <a href="#" class="nav-link">Dashboard <i class="fas fa-chevron-down"></i></a>
                 <div class="nav-dropdown">
-                    <a href="/apti" class="dropdown-link" style="color: #6C63FF; font-weight: 600;">Aptitude Test</a>
-                    <a href="/smart-quiz" class="dropdown-link">Smart Quiz</a>
-                    <a href="/leaderboard" class="dropdown-link">Leaderboard</a>
-                    <a href="/dashboard" class="dropdown-link">My Dashboard</a>
+                    <% if (role==='student' || !role) { %>
+                        <a href="/dashboard" class="dropdown-link">Student Dashboard</a>
+                        <% } %>
+                            <% if (role==='teacher' ) { %>
+                                <a href="/teacher_home" class="dropdown-link">Teacher Dashboard</a>
+                                <% } %>
+                                    <% if (role==='parent' ) { %>
+                                        <a href="/parentprofile" class="dropdown-link">Parent Dashboard</a>
+                                        <% } %>
+                                            <% if (role==='college' ) { %>
+                                                <a href="/college/dashboard" class="dropdown-link">College Dashboard</a>
+                                                <% } %>
+                                                    <% if (role==='admin' ) { %>
+                                                        <a href="/admin/dashboard" class="dropdown-link">Admin
+                                                            Dashboard</a>
+                                                        <% } %>
+                                                            <a href="/apti" class="dropdown-link"
+                                                                style="color: #6C63FF; font-weight: 600;">Aptitude
+                                                                Test</a>
+                                                            <a href="/smart-quiz" class="dropdown-link">Smart Quiz</a>
+                                                            <a href="/leaderboard" class="dropdown-link">Leaderboard</a>
                 </div>
             </div>
 
@@ -366,6 +385,7 @@
                     <a href="/career-roadmap" class="dropdown-link">Career Roadmap</a>
                     <a href="/scholarship" class="dropdown-link">Scholarships</a>
                     <a href="/mentor" class="dropdown-link">Mentorship</a>
+                    <a href="/feedback" class="dropdown-link" style="border-top: 1px solid #f0f0f0;">Give Feedback</a>
                 </div>
             </div>
         </div>
@@ -405,6 +425,7 @@
         <a href="/career-bank" class="mobile-link">Career Bank</a>
         <a href="/career-counseling" class="mobile-link">Skills & Interests</a>
         <a href="/career-trends-predictor" class="mobile-link">AI Career Trends</a>
+        <a href="/study-abroad" class="mobile-link" style="color:var(--c-teal, #00A8FF);">Global AI 🌍</a>
         <a href="/exam_choice" class="mobile-link" style="color:var(--c-indigo, #4F46E5);">College Predictor ✨</a>
     </div>
 

@@ -551,7 +551,7 @@
             if (!transcript) { alert("Please speak an answer first."); return; }
 
             els.analyzeBtn.disabled = true;
-            els.statusBadge.textContent = "Analyzing w/ Ollama...";
+            els.statusBadge.textContent = "Analyzing response...";
 
             try {
                 const res = await fetch('/interview/analyze', {
@@ -577,10 +577,16 @@
                     }
 
                 }
-            } catch (e) { console.error(e); }
+            } catch (e) {
+                console.error(e);
+                els.statusBadge.textContent = "Analysis failed";
+                els.statusBadge.style.color = "var(--error)";
+            }
 
             els.analyzeBtn.disabled = false;
-            els.statusBadge.textContent = "Idle";
+            if (els.statusBadge.textContent !== "Analysis failed") {
+                els.statusBadge.textContent = "Idle";
+            }
         }
 
         function showFeedback(analysis) {

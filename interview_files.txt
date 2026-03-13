@@ -1,0 +1,9 @@
+﻿app.js
+model/Certification.js
+routes/Ai_Interview.js
+routes/career_trends_predictor.js
+routes/integrations.js
+views/career_trends_predictor.ejs
+views/integrations.ejs
+views/interview_simulator.ejs
+views/layouts/navbar.ejs

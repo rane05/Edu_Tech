@@ -1,0 +1,152 @@
+<%- include('../layouts/header') %>
+
+    <style>
+        .college-grid-bg {
+            background: radial-gradient(circle at 0% 0%, #f1f5f9 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, #e2e8f0 0%, transparent 50%);
+        }
+
+        .college-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .college-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 40px 60px -15px rgba(0, 0, 0, 0.1);
+            border-color: rgba(99, 102, 241, 0.3);
+        }
+
+        .featured-badge {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.3);
+        }
+
+        .view-btn {
+            background: #0f172a;
+            transition: all 0.3s ease;
+        }
+
+        .view-btn:hover {
+            letter-spacing: 0.05em;
+            background: #1e293b;
+        }
+
+        .header-gradient {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+        }
+    </style>
+
+    <div class="min-h-screen bg-slate-50 pt-24 pb-20 px-4 md:px-8 college-grid-bg">
+        <div class="max-w-7xl mx-auto">
+            <!-- Explorer Header -->
+            <div class="mb-16 relative">
+                <div
+                    class="header-gradient rounded-[3rem] p-12 md:p-20 text-center relative overflow-hidden shadow-2xl">
+                    <div
+                        class="absolute top-0 right-0 w-96 h-96 bg-indigo-500/20 rounded-full blur-[100px] -mr-48 -mt-48">
+                    </div>
+                    <div
+                        class="absolute bottom-0 left-0 w-96 h-96 bg-purple-500/10 rounded-full blur-[100px] -ml-48 -mb-48">
+                    </div>
+
+                    <h1 class="text-4xl md:text-6xl font-black text-white mb-6 tracking-tight relative z-10">
+                        Find Your <span class="text-indigo-400">Perfect</span> Institution
+                    </h1>
+                    <p
+                        class="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto font-medium leading-relaxed relative z-10">
+                        Connect directly with India's premier colleges. Explore programs, chat with admissions, and
+                        secure your professional future today.
+                    </p>
+
+                    <!-- Simple Search Mockup -->
+                    <div class="mt-12 max-w-2xl mx-auto relative z-10">
+                        <div class="bg-white/10 backdrop-blur-md p-2 rounded-2xl border border-white/20 flex gap-2">
+                            <div class="flex-1 flex items-center px-4 gap-3">
+                                <i class="fas fa-search text-slate-400"></i>
+                                <input type="text" placeholder="Search by name, courses, or location..."
+                                    class="bg-transparent border-none text-white placeholder:text-slate-500 w-full focus:ring-0 text-sm font-bold">
+                            </div>
+                            <button
+                                class="px-8 py-3 bg-indigo-500 text-white rounded-xl font-bold text-xs uppercase tracking-widest hover:bg-indigo-400 transition-all">Filter</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Directory Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                <% colleges.forEach(college=> { %>
+                    <div class="college-card rounded-[2.5rem] overflow-hidden group">
+                        <!-- Visual Header -->
+                        <div class="h-48 bg-slate-900 relative overflow-hidden flex items-center justify-center">
+                            <% if (college.logo) { %>
+                                <img src="<%= college.logo %>" alt="<%= college.name %>"
+                                    class="max-h-24 object-contain filter group-hover:scale-110 transition-transform duration-700 relative z-10">
+                                <% } else { %>
+                                    <i
+                                        class="fas fa-university text-7xl text-white/10 group-hover:scale-125 transition-transform duration-700"></i>
+                                    <span
+                                        class="absolute font-black text-white/5 text-8xl -bottom-4 right-0 pointer-events-none uppercase italic tracking-tighter">
+                                        <%= college.name.charAt(0) %>
+                                    </span>
+                                    <% } %>
+
+                                        <% if (college.isSponsored) { %>
+                                            <div
+                                                class="absolute top-6 right-6 z-10 featured-badge text-white text-[9px] font-black uppercase tracking-[0.2em] px-4 py-2 rounded-full flex items-center gap-2">
+                                                <i class="fas fa-gem text-[10px]"></i> Featured
+                                            </div>
+                                            <% } %>
+
+                                                <div
+                                                    class="absolute inset-0 bg-gradient-to-t from-slate-900 to-transparent opacity-60">
+                                                </div>
+                        </div>
+
+                        <!-- Details Area -->
+                        <div class="p-10">
+                            <div class="mb-6">
+                                <h2
+                                    class="text-2xl font-black text-slate-900 group-hover:text-indigo-600 transition-colors line-clamp-1 mb-2">
+                                    <%= college.name %>
+                                </h2>
+                                <div class="flex items-center gap-2">
+                                    <div
+                                        class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-500 flex items-center justify-center text-xs">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </div>
+                                    <p class="text-slate-500 text-xs font-black uppercase tracking-widest">
+                                        <%= college.location %>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <p class="text-slate-500 text-sm font-medium line-clamp-2 mb-8 leading-relaxed italic">
+                                <%= college.description
+                                    || "Shaping the leaders of tomorrow through academic excellence and state-of-the-art infrastructure."
+                                    %>
+                            </p>
+
+                            <div class="flex items-center gap-4">
+                                <a href="/colleges/view/<%= college._id %>"
+                                    class="view-btn flex-1 py-4 text-white text-center rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl shadow-slate-200">
+                                    View Profile
+                                </a>
+                                <a href="/student/chat/<%= college.userId %>"
+                                    class="w-14 h-14 flex items-center justify-center bg-indigo-50 text-indigo-600 rounded-2xl hover:bg-indigo-600 hover:text-white transition-all shadow-sm group/chat"
+                                    title="Intant Message">
+                                    <i
+                                        class="fas fa-comment-dots text-lg group-hover/chat:scale-110 transition-transform"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <% }) %>
+            </div>
+        </div>
+    </div>
+
+    <%- include('../layouts/footer') %>

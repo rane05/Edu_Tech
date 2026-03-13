@@ -1,7 +1,10 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
 const QuizResult = require('../model/QuizResult');
 const User = require('../model/User');
+const AdmissionRequest = require('../model/AdmissionRequest');
+const College = require('../model/cetCollege');
 
 router.get('/dashboard', async (req, res) => {
     const userId = req.session.userId || (req.user && req.user._id);
@@ -20,7 +23,9 @@ router.get('/dashboard', async (req, res) => {
         const Profile = require('../model/profile');
         const TeacherWork = require('../model/teacherwork');
         const Doubt = require('../model/Doubt');
-        const studentProfile = await Profile.findOne({ userId });
+        const studentProfile = await Profile.findOne({
+            $or: [{ userId: userId }, { userId: new mongoose.Types.ObjectId(userId) }, { userId: userId.toString() }]
+        });
 
         let teacherUpdates = [];
         let resources = [];
@@ -28,19 +33,26 @@ router.get('/dashboard', async (req, res) => {
         let myDoubts = [];
 
         if (studentProfile && studentProfile.collegeName) {
+            const safeCollegeName = studentProfile.collegeName.trim();
+            const collegeRegex = new RegExp(`^${safeCollegeName}$`, 'i'); // Case-insensitive exact match
+
             // Find all work shared with THIS college
-            teacherUpdates = await TeacherWork.find({ collegeName: studentProfile.collegeName, type: { $in: ["task", "announcement"] } })
+            teacherUpdates = await TeacherWork.find({ collegeName: collegeRegex, type: { $in: ["task", "announcement"] } })
                 .sort({ createdAt: -1 })
                 .limit(10);
 
-            resources = await TeacherWork.find({ collegeName: studentProfile.collegeName, type: "resource" })
+            resources = await TeacherWork.find({ collegeName: collegeRegex, type: "resource" })
                 .sort({ createdAt: -1 });
 
-            doubtSessions = await TeacherWork.find({ collegeName: studentProfile.collegeName, type: "doubt_session" })
+            doubtSessions = await TeacherWork.find({ collegeName: collegeRegex, type: "doubt_session" })
                 .sort({ date: 1 });
 
             myDoubts = await Doubt.find({ studentId: userId }).sort({ createdAt: -1 });
         }
+
+        const admissionRequests = await AdmissionRequest.find({ studentId: userId })
+            .populate('collegeId', 'name location userId')
+            .sort({ createdAt: -1 });
 
         res.render('user_dashboard', {
             username: req.user.username,
@@ -51,7 +63,8 @@ router.get('/dashboard', async (req, res) => {
             teacherUpdates,
             resources,
             doubtSessions,
-            myDoubts
+            myDoubts,
+            admissionRequests
         });
     } catch (err) {
         console.error(err);

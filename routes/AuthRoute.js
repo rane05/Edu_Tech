@@ -20,6 +20,11 @@ router.post('/register', async (req, res) => {
     try {
         const { username, password, role } = req.body;
 
+        if (role === 'admin') {
+            req.flash('error', 'Admin registration is disabled for security reasons.');
+            return res.redirect('/register');
+        }
+
         const user = new User({ username, role });
 
         await User.register(user, password); // Use `await` instead of callback
@@ -51,6 +56,36 @@ router.post('/login', async (req, res, next) => {
             return res.redirect('/login');
         }
 
+        // Special check for Admin credentials - Direct login
+        if (role === 'admin') {
+            if (username === 'admin@gmail.com' && password === 'Admin@2005') {
+                let adminUser = await User.findOne({ username: 'admin@gmail.com', role: 'admin' });
+                if (!adminUser) {
+                    try {
+                        const newAdmin = new User({ username: 'admin@gmail.com', role: 'admin' });
+                        adminUser = await User.register(newAdmin, 'Admin@2005');
+                        console.log('Admin user auto-created.');
+                    } catch (seedErr) {
+                        console.error('Error auto-creating admin:', seedErr);
+                        req.flash('error', 'System error initializing admin access.');
+                        return res.redirect('/login');
+                    }
+                }
+
+                // Directly login the admin without multi-step passport.authenticate
+                return req.login(adminUser, (err) => {
+                    if (err) return next(err);
+                    req.session.userId = adminUser._id;
+                    req.session.role = adminUser.role;
+                    req.flash('success', 'Master Admin Access Granted.');
+                    return res.redirect('/admin/dashboard');
+                });
+            } else {
+                req.flash('error', 'Invalid Administrative Credentials.');
+                return res.redirect('/login');
+            }
+        }
+
         // First find user by username to provide better feedback
         const user = await User.findOne({ username });
         if (!user) {
@@ -79,6 +114,8 @@ router.post('/login', async (req, res, next) => {
             req.login(authedUser, (err) => {
                 if (err) return next(err);
 
+                console.log("LOGIN SUCCESS:", authedUser.username);
+                console.log("AUTHED USER ID TYPE:", typeof authedUser._id, "VALUE:", authedUser._id);
                 // Set custom session data for legacy route checks
                 req.session.userId = authedUser._id;
                 req.session.role = authedUser.role;
@@ -87,11 +124,15 @@ router.post('/login', async (req, res, next) => {
 
                 // Redirect based on role
                 if (authedUser.role === 'student') {
-                    return res.redirect('/');
+                    return res.redirect('/dashboard'); // Fix redirect to dashboard for student
                 } else if (authedUser.role === 'parent') {
                     return res.redirect('/parentprofile'); // Consistent with parent dashboard
                 } else if (authedUser.role === 'teacher') {
                     return res.redirect('/teacher_home');
+                } else if (authedUser.role === 'college') {
+                    return res.redirect('/college/dashboard');
+                } else if (authedUser.role === 'admin') {
+                    return res.redirect('/admin/dashboard');
                 }
                 res.redirect('/');
             });
