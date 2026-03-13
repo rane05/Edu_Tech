@@ -23,8 +23,8 @@ function isLoggedIn(req, res, next) {
 // List all colleges for students
 router.get('/student/colleges', async (req, res) => {
     try {
-        // Show all colleges from the database
-        const colleges = await College.find({}).sort({ isSponsored: -1, name: 1 });
+        // Only show colleges that have a userId (i.e., they are registered via the platform)
+        const colleges = await College.find({ userId: { $ne: null } }).sort({ isSponsored: -1, name: 1 });
         res.render('student/colleges_list', { colleges, user: req.user });
     } catch (err) {
         console.error(err);

@@ -10,17 +10,14 @@ let allColleges = [];
 // Load data into memory on startup
 const loadColleges = async () => {
     try {
-        console.log("Fetching colleges from MongoDB (CollegeRecommend collection)...");
-        allColleges = await College.find({}).lean();
-
-        if (allColleges.length === 0 && fs.existsSync(COLLEGES_DATA_PATH)) {
-            console.log("MongoDB empty, fallback: Loading from JSON...");
+        if (fs.existsSync(COLLEGES_DATA_PATH)) {
+            console.log("Loading predictor colleges from JSON...");
             const rawData = fs.readFileSync(COLLEGES_DATA_PATH, 'utf8');
             const collegesObj = JSON.parse(rawData);
             allColleges = Object.values(collegesObj);
             console.log(`Loaded ${allColleges.length} colleges from JSON.`);
         } else {
-            console.log(`Loaded ${allColleges.length} colleges from MongoDB.`);
+            console.log("JSON file missing, no predictor data loaded.");
         }
     } catch (err) {
         console.error("Error loading college data:", err);
