@@ -26,10 +26,7 @@ router.get("/studentlist", async (req, res) => {
             return res.status(404).send("User not found");
         }
 
-<<<<<<< HEAD
         // Fetch the teacher's profile safely
-=======
->>>>>>> origin/Teachers-students-connect
         const teacherProfile = await TeacherProfile.findOne({ userId });
 
         if (!teacherProfile) {
