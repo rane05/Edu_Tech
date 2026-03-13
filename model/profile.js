@@ -11,18 +11,13 @@ const ProfileSchema = new mongoose.Schema({
     collegeName: { type: String },
     course: { type: String },
     year: { type: String },
-    linkedin: { type: String },
-    twitter: { type: String },
-    // schoolName: { type: String, required: true },
-    // schoolBoard: { type: String, required: true },
-    // passingYear: { type: Number, required: true },
+    linkedin: { type: String, default: 'N/A' },
+    twitter: { type: String, default: 'N/A' },
     skills: { type: String, default: '' },
     careerGoal: { type: String, default: '' },
-    uniqueCode: { type: String, unique: true }, // Unique code for linking
+    uniqueCode: { type: String, unique: true, sparse: true }, // Unique code for linking (sparse to allow nulls)
     parentUsername: { type: String, default: null }, // Store parent's username if linked
-    linkedTeacher: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null } // Explicit link to teacher
-
-
+    linkedTeachers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] // Link to multiple teachers in same college
 });
 
 module.exports = mongoose.model('Profile', ProfileSchema);

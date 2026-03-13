@@ -19,7 +19,7 @@ const upload = multer({ storage });
 // Route to render the profile page
 router.get("/profile", async (req, res) => {
     try {
-        const userId = req.session.userId;
+        const userId = req.session.userId || (req.user && req.user._id);
         if (!userId) {
             return res.redirect("/login");
         }
@@ -46,7 +46,7 @@ router.get("/profile", async (req, res) => {
 // Handle Profile Save (POST)
 router.post("/profile", upload.single("profileImage"), async (req, res) => {
     try {
-        const userId = req.session.userId;
+        const userId = req.session.userId || (req.user && req.user._id);
         if (!userId) {
             return res.status(401).send("Unauthorized");
         }
@@ -69,7 +69,24 @@ router.post("/profile", upload.single("profileImage"), async (req, res) => {
             careerGoal
         } = req.body;
 
-        // Ensure required fields are not undefined
+        // Auto-link to teachers from the same college
+        const TeacherProfile = require("../model/TeacherProfile");
+        const teachersInCollege = await TeacherProfile.find({
+            collegeName: { $regex: new RegExp("^" + collegeName?.trim() + "$", "i") }
+        });
+        const teacherUserIds = teachersInCollege.map(t => t.userId);
+
+        // Check if profile exists, update or create new
+        let profile = await Profile.findOne({ userId });
+
+        let finalLinkedTeachers = teacherUserIds;
+        if (profile && profile.linkedTeachers) {
+            // Merge institutional teachers with manually linked ones, avoiding duplicates
+            const existingLinks = profile.linkedTeachers.map(id => id.toString());
+            const newLinks = teacherUserIds.map(id => id.toString());
+            finalLinkedTeachers = [...new Set([...existingLinks, ...newLinks])];
+        }
+
         const profileData = {
             userId,
             fullName: fullName?.trim() || "",
@@ -82,17 +99,12 @@ router.post("/profile", upload.single("profileImage"), async (req, res) => {
             year: year?.trim() || "N/A",
             linkedin: linkedin?.trim() || "N/A",
             twitter: twitter?.trim() || "N/A",
-            // Default value if missing
-            // schoolName: schoolName?.trim() || "N/A",
-            // schoolBoard: schoolBoard?.trim() || "N/A",
-            // passingYear: passingYear?.trim() || "N/A",
             skills: skills?.trim() || "",
             careerGoal: careerGoal?.trim() || "",
-            profileImage: req.file ? `/uploads/${req.file.filename}` : req.body.existingProfileImage
+            profileImage: req.file ? `/uploads/${req.file.filename}` : req.body.existingProfileImage,
+            linkedTeachers: finalLinkedTeachers
         };
 
-        // Check if profile exists, update or create new
-        let profile = await Profile.findOne({ userId });
         if (profile) {
             await Profile.updateOne({ userId }, profileData);
         } else {
@@ -184,8 +196,10 @@ router.post("/profile/link-teacher", async (req, res) => {
             return res.status(404).json({ success: false, message: "Student profile not found" });
         }
 
-        studentProfile.linkedTeacher = teacherProfile.userId;
-        await studentProfile.save();
+        if (!studentProfile.linkedTeachers.includes(teacherProfile.userId)) {
+            studentProfile.linkedTeachers.push(teacherProfile.userId);
+            await studentProfile.save();
+        }
 
         res.json({ success: true, message: "Connected to teacher successfully", teacherName: teacherProfile.fullName });
     } catch (error) {
