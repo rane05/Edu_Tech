@@ -43,7 +43,8 @@ router.get("/tprofile", async (req, res) => {
         res.render("teacher_profile", {
             profile,
             username: user.username,
-            role: user.role,  // Fetching the role from the User model
+            role: user.role,
+            collegeName: profile ? profile.collegeName : "Not Set",
             profileImage: profile?.profileImage || "/images/default-profile.png"
         });
     } catch (error) {
@@ -59,6 +60,7 @@ router.post("/tprofile", upload.single("profileImage"), async (req, res) => {
         if (!userId) {
             return res.status(401).send("Unauthorized");
         }
+<<<<<<< HEAD
         const {
             fullName,
             email,
@@ -111,6 +113,33 @@ router.post("/tprofile", upload.single("profileImage"), async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).send("Error saving profile");
+=======
+
+        const { fullName, email, phone, state, district, collegeName } = req.body;
+
+        const profileData = {
+            userId,
+            fullName: fullName?.trim() || "N/A",
+            email: email?.trim() || "N/A",
+            phone: phone?.trim() || "N/A",
+            state: state?.trim() || "N/A",
+            district: district?.trim() || "N/A",
+            collegeName: collegeName?.trim() || "N/A",
+            profileImage: req.file ? `/uploads/${req.file.filename}` : req.body.existingProfileImage
+        };
+
+        console.log("Saving teacher profile for:", userId, profileData);
+        await TeacherProfile.findOneAndUpdate(
+            { userId },
+            { $set: profileData },
+            { upsert: true, new: true, runValidators: true }
+        );
+
+        res.redirect("/tprofile");
+    } catch (error) {
+        console.error("CRITICAL Teacher Profile Save Error:", error);
+        res.status(500).send("Error saving teacher profile: " + error.message);
+>>>>>>> origin/Teachers-students-connect
     }
 });
 

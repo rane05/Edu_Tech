@@ -61,6 +61,10 @@ router.get('/login', (req, res) => {
     res.render('login');
 });
 
+<<<<<<< HEAD
+=======
+// Login POST request
+>>>>>>> origin/Teachers-students-connect
 router.post('/login', async (req, res, next) => {
     try {
         const { username, password, role } = req.body;
@@ -107,6 +111,7 @@ router.post('/login', async (req, res, next) => {
             return res.redirect('/login');
         }
 
+<<<<<<< HEAD
         // Check if role matches
         if (user.role !== role) {
             req.flash('error', `This account is registered as a ${user.role}, not a ${role}.`);
@@ -167,6 +172,35 @@ router.post('/login', async (req, res, next) => {
                 res.redirect('/');
             });
         })(req, res, next);
+=======
+        // Use Passport's authenticate method
+        const { user: authenticatedUser, error } = await user.authenticate(password);
+
+        if (error || !authenticatedUser) {
+            return res.status(401).send('Invalid credentials');
+        }
+
+        // Use Passport's logIn method to establish a session
+        req.logIn(authenticatedUser, (err) => {
+            if (err) {
+                console.error("Passport login error:", err);
+                return next(err);
+            }
+
+            // Maintain manual session variables for legacy routes
+            req.session.userId = authenticatedUser._id;
+            req.session.role = authenticatedUser.role;
+
+            // Redirect based on role
+            if (authenticatedUser.role === 'student') {
+                return res.redirect('/');
+            } else if (authenticatedUser.role === 'parent') {
+                return res.redirect('/parent_home');
+            } else if (authenticatedUser.role === 'teacher') {
+                return res.redirect('/teacher_home');
+            }
+        });
+>>>>>>> origin/Teachers-students-connect
 
     } catch (err) {
         console.error("Login unexpected error:", err);
