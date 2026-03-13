@@ -61,10 +61,8 @@ router.get('/login', (req, res) => {
     res.render('login');
 });
 
-<<<<<<< HEAD
-=======
 // Login POST request
->>>>>>> origin/Teachers-students-connect
+
 router.post('/login', async (req, res, next) => {
     try {
         const { username, password, role } = req.body;
