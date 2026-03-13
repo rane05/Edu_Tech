@@ -79,27 +79,64 @@
                                 </div>
                             </div>
 
-                            <!-- Education Details -->
+                            <!-- Education & Social Details -->
                             <div class="mb-6 p-6 bg-indigo-100 rounded-lg border-2 border-indigo-300">
-                                <h5 class="text-xl font-semibold text-gray-800 mb-4">Education Details</h5>
-                                <div class="space-y-4">
-                                    <div>
+                                <h5 class="text-xl font-semibold text-gray-800 mb-4">Education & Social Presence</h5>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="md:col-span-2">
                                         <label class="block text-gray-700 text-sm font-medium mb-1">College Name</label>
                                         <input type="text" name="collegeName" id="collegeName"
                                             value="<%= profile ? profile.collegeName : '' %>"
-                                            class="w-full px-4 py-2 bg-white rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                            placeholder="Enter your current college"
+                                            class="w-full px-4 py-2 bg-white rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                            required>
                                     </div>
                                     <div>
                                         <label class="block text-gray-700 text-sm font-medium mb-1">Course</label>
                                         <input type="text" name="course" id="course"
                                             value="<%= profile ? profile.course : '' %>"
+                                            placeholder="e.g. B.Tech Computer Science"
+                                            class="w-full px-4 py-2 bg-white rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                            required>
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 text-sm font-medium mb-1">Year of
+                                            Study</label>
+                                        <input type="text" name="year" id="year"
+                                            value="<%= profile ? profile.year : '' %>" placeholder="e.g. 3rd Year"
+                                            class="w-full px-4 py-2 bg-white rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                                            required>
+                                    </div>
+                                    <div>
+                                        <label class="block text-gray-700 text-sm font-medium mb-1">LinkedIn
+                                            Profile</label>
+                                        <input type="url" name="linkedin" id="linkedin"
+                                            value="<%= profile ? profile.linkedin : '' %>"
+                                            placeholder="https://linkedin.com/in/yourprofile"
                                             class="w-full px-4 py-2 bg-white rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
                                     </div>
                                     <div>
-                                        <label class="block text-gray-700 text-sm font-medium mb-1">Year</label>
-                                        <input type="text" name="year" id="year"
-                                            value="<%= profile ? profile.year : '' %>"
+                                        <label class="block text-gray-700 text-sm font-medium mb-1">Twitter (X)
+                                            Profile</label>
+                                        <input type="url" name="twitter" id="twitter"
+                                            value="<%= profile ? profile.twitter : '' %>"
+                                            placeholder="https://twitter.com/yourprofile"
                                             class="w-full px-4 py-2 bg-white rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                    </div>
+                                    <div class="md:col-span-2">
+                                        <label class="block text-gray-700 text-sm font-medium mb-1">Skills (Comma
+                                            separated)</label>
+                                        <input type="text" name="skills" id="skills"
+                                            value="<%= profile ? profile.skills : '' %>"
+                                            placeholder="e.g. Python, JavaScript, Public Speaking"
+                                            class="w-full px-4 py-2 bg-white rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                                    </div>
+                                    <div class="md:col-span-2">
+                                        <label class="block text-gray-700 text-sm font-medium mb-1">Career Goals &
+                                            Aspirations</label>
+                                        <textarea name="careerGoal" id="careerGoal" rows="3"
+                                            placeholder="Tell us about your future plans..."
+                                            class="w-full px-4 py-2 bg-white rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"><%= profile ? profile.careerGoal : '' %></textarea>
                                     </div>
                                 </div>
                             </div>
