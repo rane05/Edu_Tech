@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const AdmissionRequestSchema = new Schema({
     studentId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-    collegeId: { type: Schema.Types.ObjectId, ref: 'College', required: true },
+    collegeId: { type: Schema.Types.ObjectId, ref: 'CollegeRecommend', required: true },
     status: {
         type: String,
         enum: ['pending', 'accepted', 'rejected'],
