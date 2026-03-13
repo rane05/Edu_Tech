@@ -67,7 +67,7 @@ router.post('/generate', async (req, res) => {
 
         // 2. Build the User Profile Input
         // Fallback to db properties if req.user exists, but override with any new form data
-        let userProfile = req.user ? userProfile = {
+        let userProfile = req.user ? {
             skills: req.user.skills || [],
             interests: req.user.interests || [],
             education: req.user.education,
