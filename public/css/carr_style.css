@@ -115,13 +115,13 @@
 .career-card h3 {
     font-size: 18px;
     margin: 10px 0;
-    color: white;
+    color: #1e3a5f; /* Deep blue for visibility */
 }
 
 .career-card p {
     font-size: 14px;
     margin-bottom: 15px;
-    color: #ddd;
+    color: #555; /* Medium gray for better contrast */
 }
 
 .career-card .btn {
