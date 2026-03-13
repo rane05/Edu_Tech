@@ -11,14 +11,13 @@ let allColleges = [];
 const loadColleges = async () => {
     try {
         if (fs.existsSync(COLLEGES_DATA_PATH)) {
+            console.log("Loading predictor colleges from JSON...");
             const rawData = fs.readFileSync(COLLEGES_DATA_PATH, 'utf8');
             const collegesObj = JSON.parse(rawData);
             allColleges = Object.values(collegesObj);
             console.log(`Loaded ${allColleges.length} colleges from JSON.`);
         } else {
-            console.log("JSON file missing, fetching colleges from MongoDB...");
-            allColleges = await College.find({}).lean();
-            console.log(`Loaded ${allColleges.length} colleges from MongoDB.`);
+            console.log("JSON file missing, no predictor data loaded.");
         }
     } catch (err) {
         console.error("Error loading college data:", err);

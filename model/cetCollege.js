@@ -36,6 +36,6 @@ const CollegeSchema = new mongoose.Schema({
   logo: { type: String }
 });
 
-const College = mongoose.model('College', CollegeSchema);
+const College = mongoose.model('CollegeRecommend', CollegeSchema);
 
 module.exports = College;
