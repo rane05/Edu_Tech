@@ -830,14 +830,29 @@
                 </div>
 
                 <div style="flex: 1;">
-                    <a href="/dashboard" class="nav-item active">
-                        <i class="fas fa-th-large"></i> Dashboard
+                    <a href="#overview" class="nav-item active">
+                        <i class="fas fa-home"></i> Overview
+                    </a>
+                    <a href="#assessments" class="nav-item">
+                        <i class="fas fa-chart-pie"></i> Assessments
+                    </a>
+                    <a href="#performance" class="nav-item">
+                        <i class="fas fa-chart-line"></i> Performance
+                    </a>
+                    <a href="#assignments" class="nav-item">
+                        <i class="fas fa-tasks"></i> Assignments
+                    </a>
+                    <a href="#schedule" class="nav-item">
+                        <i class="far fa-calendar-alt"></i> Schedule
+                    </a>
+                    <a href="#applications" class="nav-item">
+                        <i class="fas fa-graduation-cap"></i> Applications
                     </a>
                 </div>
             </aside>
 
             <!-- Main Content -->
-            <main class="main-content">
+            <main class="main-content" id="overview">
                 <!-- Header -->
                 <header class="top-header">
                     <div class="greeting-area">
@@ -869,7 +884,7 @@
 
                 <!-- Stats Grid matching the 4 blocks exactly -->
                 <div class="card-title" style="margin-bottom: 20px;">Overview</div>
-                <div class="stats-grid">
+                <div class="stats-grid" id="assessments">
                     <!-- 1. Course in Progress (mapped to Peak Score) -->
                     <div class="stat-card">
                         <div class="stat-header">
@@ -945,7 +960,7 @@
                     <!-- LEFT PANEL -->
                     <div class="left-panel">
                         <!-- Charts Row -->
-                        <div class="charts-grid">
+                        <div class="charts-grid" id="performance">
                             <!-- Bar Chart: Actively Hours -->
                             <div class="chart-card">
                                 <div class="card-header">
@@ -979,7 +994,7 @@
                         </div>
 
                         <!-- My Assignments Table -->
-                        <div class="assignments-card">
+                        <div class="assignments-card" id="assignments">
                             <div class="card-header">
                                 <h3 class="card-title">My Assignments</h3>
                             </div>
@@ -1041,7 +1056,7 @@
                         </div>
 
                         <!-- Additional Data row: My Doubts mapped here subtly -->
-                        <div class="assignments-card">
+                        <div class="assignments-card" id="consultation">
                             <div class="card-header">
                                 <h3 class="card-title">Consultation Inbox</h3>
                             </div>
@@ -1091,7 +1106,7 @@
                     </div>
 
                     <!-- RIGHT PANEL -->
-                    <div class="right-panel">
+                    <div class="right-panel" id="schedule">
                         <!-- Calendar Widget -->
                         <div class="calendar-widget">
                             <div class="cal-header">
@@ -1192,6 +1207,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <!-- Doubt Sessions (NEW) -->
                         <div class="assignments-card" style="margin-top: 30px;">
                             <div class="card-header">

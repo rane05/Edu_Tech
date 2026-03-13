@@ -68,7 +68,7 @@ router.get("/teacher_home", isAuthenticated, async (req, res) => {
             const roadmap = await UserRoadmap.findOne({ userId: student.userId }).lean();
             return {
                 ...student,
-                progress: roadmap && roadmap.progress ? Math.round(roadmap.progress.overall_percentage) : 10
+                progress: roadmap && roadmap.progress ? Math.round(roadmap.progress.overall_percentage) : 0
             };
         }));
 
@@ -80,7 +80,10 @@ router.get("/teacher_home", isAuthenticated, async (req, res) => {
             ? Math.round(students.reduce((acc, s) => acc + s.progress, 0) / students.length)
             : 0;
 
-        const topPerformer = students.length > 0 ? students[0] : null;
+        // Top performer
+        const topPerformer = students.length > 0
+            ? students.reduce((max, s) => (s.progress > max.progress ? s : max), students[0])
+            : null;
 
         // Fetch work (tasks, announcements, resources)
         const tasks = await TeacherWork.find({ collegeName: collegeRegex, type: "task" });
