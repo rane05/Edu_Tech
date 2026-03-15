@@ -68,6 +68,10 @@
                         class="px-6 py-3 bg-white border border-slate-200 rounded-2xl text-slate-800 font-black text-xs uppercase tracking-widest hover:bg-slate-50 transition-all flex items-center gap-3 shadow-sm">
                         <i class="fas fa-comment-alt text-indigo-500"></i> Feedback Logs
                     </a>
+                    <a href="/admin/export-analytics"
+                        class="px-6 py-3 bg-indigo-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-100 flex items-center gap-3">
+                        <i class="fas fa-file-csv text-emerald-400"></i> Export Analytics
+                    </a>
                     <button
                         class="px-6 py-3 bg-slate-900 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-800 transition-all shadow-xl shadow-slate-200 flex items-center gap-3">
                         <i class="fas fa-shield-alt text-emerald-400"></i> Security Audit
@@ -149,6 +153,39 @@
                     </h3>
                     <p class="text-xs text-slate-400 font-bold uppercase tracking-tight">Registered Colleges</p>
                 </a>
+            </div>
+
+            <!-- Institutional Intelligence -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-16">
+                <div class="glass-panel p-10 rounded-[2.5rem] border border-slate-100">
+                    <div class="flex justify-between items-center mb-10">
+                        <div>
+                            <h2 class="text-2xl font-black text-slate-900 tracking-tight">Placement Outcomes</h2>
+                            <p class="text-[10px] font-black text-slate-300 uppercase tracking-[0.2em] mt-1">Institutional Tracking</p>
+                        </div>
+                        <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                    </div>
+                    <div class="h-[300px] relative">
+                        <canvas id="placementChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="glass-panel p-10 rounded-[2.5rem] border border-slate-100">
+                    <div class="flex justify-between items-center mb-10">
+                        <div>
+                            <h2 class="text-2xl font-black text-slate-900 tracking-tight">Performance Trends</h2>
+                            <p class="text-[10px] font-black text-slate-300 uppercase tracking-[0.2em] mt-1">Student Progress Index</p>
+                        </div>
+                        <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                    </div>
+                    <div class="h-[300px] relative">
+                        <canvas id="performanceChart"></canvas>
+                    </div>
+                </div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
@@ -304,4 +341,78 @@
         </div>
     </div>
 
+    <script>
+        // Placement Outcomes Chart
+        const placementCtx = document.getElementById('placementChart').getContext('2d');
+        const placementData = <%- JSON.stringify(placementOutcomes) %>;
+        
+        new Chart(placementCtx, {
+            type: 'doughnut',
+            data: {
+                labels: placementData.map(d => d._id || 'Pending'),
+                datasets: [{
+                    data: placementData.map(d => d.count),
+                    backgroundColor: ['#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#64748b'],
+                    borderWidth: 0,
+                    hoverOffset: 20
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '75%',
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20,
+                            font: { family: 'Outfit', weight: 'bold', size: 10 }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Performance Trends Chart
+        const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+        const trendData = <%- JSON.stringify(quizTrends) %>;
+
+        new Chart(performanceCtx, {
+            type: 'line',
+            data: {
+                labels: trendData.map(d => d._id),
+                datasets: [{
+                    label: 'Avg Quiz Score',
+                    data: trendData.map(d => d.avgScore),
+                    borderColor: '#10b981',
+                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 4,
+                    pointRadius: 6,
+                    pointBackgroundColor: '#fff',
+                    pointBorderWidth: 3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { borderDash: [5, 5], color: '#f1f5f9' },
+                        ticks: { font: { family: 'Outfit', weight: 'bold' } }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { font: { family: 'Outfit', weight: 'bold' } }
+                    }
+                }
+            }
+        });
+    </script>
     <%- include('../layouts/footer') %>

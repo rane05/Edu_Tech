@@ -4,6 +4,9 @@ const User = require('../model/User');
 const College = require('../model/cetCollege');
 const Feedback = require('../model/Feedback');
 const AdmissionRequest = require('../model/AdmissionRequest');
+const QuizResult = require('../model/QuizResult');
+const Interview = require('../model/Interview');
+const StudentResponse = require('../model/student_res');
 
 // Middleware to check if user is an admin
 function isAdmin(req, res, next) {
@@ -25,10 +28,34 @@ router.get('/admin/dashboard', isAdmin, async (req, res) => {
         const feedbacks = await Feedback.find().sort({ createdAt: -1 }).limit(10);
         const recentColleges = await College.find().sort({ _id: -1 }).limit(5);
 
+        // Fetch Trend Data (Placement Outcomes & Progress)
+        const placementOutcomes = await Interview.aggregate([
+            { $match: { status: 'completed' } },
+            {
+                $group: {
+                    _id: "$finalEvaluation.recommendation",
+                    count: { $sum: 1 }
+                }
+            }
+        ]);
+
+        const quizTrends = await QuizResult.aggregate([
+            {
+                $group: {
+                    _id: { $dateToString: { format: "%Y-%m", date: "$date" } },
+                    avgScore: { $avg: "$score" }
+                }
+            },
+            { $sort: { "_id": 1 } },
+            { $limit: 12 }
+        ]);
+
         res.render('admin/dashboard', {
             stats: { studentCount, teacherCount, parentCount, collegeCount },
             feedbacks,
             recentColleges,
+            placementOutcomes,
+            quizTrends,
             user: req.user
         });
     } catch (err) {
@@ -97,6 +124,56 @@ router.post('/admin/feedback/delete/:id', isAdmin, async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).send('Server Error');
+    }
+});
+
+// Export Analytics CSV
+router.get('/admin/export-analytics', isAdmin, async (req, res) => {
+    try {
+        const students = await User.find({ role: 'student' });
+        const interviews = await Interview.find({ status: 'completed' }).populate('userId');
+        const quizResults = await QuizResult.find().populate('userId');
+
+        let csvRows = [];
+        // Header
+        csvRows.push(['Student Name', 'Email', 'Average Quiz Score', 'Interview Recommendation', 'Technical Accuracy', 'Roadmap Progress %'].join(','));
+
+        for (const student of students) {
+            const studentQuizzes = quizResults.filter(q => q.userId && q.userId._id.toString() === student._id.toString());
+            const avgScore = studentQuizzes.length > 0 
+                ? (studentQuizzes.reduce((acc, q) => acc + q.score, 0) / studentQuizzes.length).toFixed(2) 
+                : 'N/A';
+
+            const latestInterview = interviews
+                .filter(i => i.userId && i.userId._id.toString() === student._id.toString())
+                .sort((a, b) => b.updatedAt - a.updatedAt)[0];
+
+            const recommendation = latestInterview ? latestInterview.finalEvaluation.recommendation : 'None';
+            const techAccuracy = latestInterview && latestInterview.conversationHistory.length > 0
+                ? latestInterview.conversationHistory[0].evaluation.technicalAccuracy || 'N/A'
+                : 'N/A';
+            
+            // Assume max roadmap steps is 20 for progress calculation
+            const roadmapProgress = ((student.roadmapProgress.length / 20) * 100).toFixed(0);
+
+            csvRows.push([
+                `"${student.username || student.name}"`,
+                `"${student.email}"`,
+                avgScore,
+                `"${recommendation}"`,
+                `"${techAccuracy.replace(/"/g, '""')}"`,
+                `${roadmapProgress}%`
+            ].join(','));
+        }
+
+        const csvString = csvRows.join('\n');
+        res.setHeader('Content-Type', 'text/csv');
+        res.setHeader('Content-Disposition', 'attachment; filename=student_analytics_report.csv');
+        res.status(200).send(csvString);
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Export Failed');
     }
 });
 

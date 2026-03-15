@@ -610,6 +610,14 @@
         setTimeout(() => card.classList.remove('shake'), 400);
       }
     });
+
+    // Back-forward cache (BFCache) handling
+    // Forces reload when hitting back button to trigger server-side auth check
+    window.onpageshow = function(event) {
+      if (event.persisted) {
+        window.location.reload();
+      }
+    };
   </script>
   </body>
 

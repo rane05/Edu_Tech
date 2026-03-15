@@ -639,6 +639,13 @@
     // Save minimal draft to memory to persist between reloads (like err states)
     emailInput.addEventListener('blur', (e) => localStorage.setItem('edu_draft_user', e.target.value));
 
+    // Back-forward cache (BFCache) handling
+    // Forces reload when hitting back button to trigger server-side auth check
+    window.onpageshow = function(event) {
+      if (event.persisted) {
+        window.location.reload();
+      }
+    };
   </script>
   </body>
 

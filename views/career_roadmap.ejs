@@ -407,7 +407,8 @@
                         </div>
 
                         <!-- RIGHT COLUMN: Analytics, Projects, Dashboard (5 cols) -->
-                        <div class="lg:col-span-5 space-y-8">
+                        <div class="lg:col-span-5 space-y-8 lg:sticky lg:top-24 self-start">
+                            <%- include('partials/roadmap/milestones') %>
                             <%- include('partials/roadmap/dashboard', { roadmap: roadmap }) %>
                                 <%- include('partials/roadmap/skill_gap', { roadmap: roadmap }) %>
                                     <%- include('partials/roadmap/projects', { roadmap: roadmap }) %>

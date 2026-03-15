@@ -1,0 +1,236 @@
+<!-- views/partials/roadmap/milestones.ejs -->
+<div class="glass-card p-6 border-l-4 border-indigo-500 overflow-hidden relative">
+    <!-- Decorative background icon -->
+    <i class="fas fa-trophy absolute -right-4 -bottom-4 text-8xl text-indigo-500/5 rotate-12"></i>
+
+    <div class="relative z-10">
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-xl font-bold text-slate-800">
+                <i class="fas fa-flag-checkered text-indigo-600 mr-2"></i> Journey Milestones
+            </h2>
+            <span id="milestone-count" class="bg-indigo-100 text-indigo-700 text-xs font-bold px-2.5 py-1 rounded-full">
+                0 / 6 Unlocked
+            </span>
+        </div>
+
+        <!-- Major Progress Bar -->
+        <div class="mb-8">
+            <div class="flex justify-between text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">
+                <span>Current Readiness</span>
+                <span id="milestone-pct">0%</span>
+            </div>
+            <div class="h-4 w-full bg-slate-100 rounded-full overflow-hidden p-1 border border-slate-200">
+                <div id="milestone-progress-fill" 
+                     class="h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-teal-500 rounded-full transition-all duration-1000 ease-out shadow-[0_0_15px_rgba(99,102,241,0.4)]"
+                     style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- Milestones List -->
+        <div class="space-y-6 relative">
+            <!-- Vertical Line Connector -->
+            <div class="absolute left-[19px] top-2 bottom-2 w-0.5 bg-slate-100 z-0"></div>
+
+            <!-- Milestone 1: Start -->
+            <div class="milestone-item flex items-center group relative z-10" data-threshold="5">
+                <div class="milestone-icon w-10 h-10 rounded-full flex items-center justify-center bg-slate-100 border-2 border-white shadow-sm transition-all duration-500 group-[.unlocked]:bg-indigo-600 group-[.unlocked]:shadow-indigo-200 group-[.unlocked]:shadow-lg">
+                    <i class="fas fa-seedling text-slate-400 group-[.unlocked]:text-white transition-colors duration-500"></i>
+                </div>
+                <div class="ml-4 flex-1">
+                    <h4 class="text-sm font-bold text-slate-400 group-[.unlocked]:text-slate-800 transition-colors duration-500">The Spark</h4>
+                    <p class="text-[10px] font-medium text-slate-400 group-[.unlocked]:text-indigo-500 uppercase tracking-tighter">Initial Progress</p>
+                </div>
+                <div class="milestone-badge opacity-0 group-[.unlocked]:opacity-100 transform scale-50 group-[.unlocked]:scale-100 transition-all duration-700 delay-300">
+                    <i class="fas fa-check-circle text-teal-500"></i>
+                </div>
+            </div>
+
+            <!-- Milestone 2: 25% -->
+            <div class="milestone-item flex items-center group relative z-10" data-threshold="25">
+                <div class="milestone-icon w-10 h-10 rounded-full flex items-center justify-center bg-slate-100 border-2 border-white shadow-sm transition-all duration-500 group-[.unlocked]:bg-purple-600 group-[.unlocked]:shadow-purple-200 group-[.unlocked]:shadow-lg">
+                    <i class="fas fa-bolt text-slate-400 group-[.unlocked]:text-white transition-colors duration-500"></i>
+                </div>
+                <div class="ml-4 flex-1">
+                    <h4 class="text-sm font-bold text-slate-400 group-[.unlocked]:text-slate-800 transition-colors duration-500">Fast Starter</h4>
+                    <p class="text-[10px] font-medium text-slate-400 group-[.unlocked]:text-purple-500 uppercase tracking-tighter">25% Completion</p>
+                </div>
+                <div class="milestone-badge opacity-0 group-[.unlocked]:opacity-100 transform scale-50 group-[.unlocked]:scale-100 transition-all duration-700 delay-300">
+                    <i class="fas fa-award text-amber-500"></i>
+                </div>
+            </div>
+
+            <!-- Milestone 3: 50% -->
+            <div class="milestone-item flex items-center group relative z-10" data-threshold="50">
+                <div class="milestone-icon w-10 h-10 rounded-full flex items-center justify-center bg-slate-100 border-2 border-white shadow-sm transition-all duration-500 group-[.unlocked]:bg-teal-600 group-[.unlocked]:shadow-teal-200 group-[.unlocked]:shadow-lg">
+                    <i class="fas fa-mountain text-slate-400 group-[.unlocked]:text-white transition-colors duration-500"></i>
+                </div>
+                <div class="ml-4 flex-1">
+                    <h4 class="text-sm font-bold text-slate-400 group-[.unlocked]:text-slate-800 transition-colors duration-500">Pathfinder</h4>
+                    <p class="text-[10px] font-medium text-slate-400 group-[.unlocked]:text-teal-500 uppercase tracking-tighter">Halfway Point</p>
+                </div>
+                <div class="milestone-badge opacity-0 group-[.unlocked]:opacity-100 transform scale-50 group-[.unlocked]:scale-100 transition-all duration-700 delay-300">
+                    <i class="fas fa-medal text-slate-400"></i>
+                </div>
+            </div>
+
+            <!-- Milestone 4: 75% -->
+            <div class="milestone-item flex items-center group relative z-10" data-threshold="75">
+                <div class="milestone-icon w-10 h-10 rounded-full flex items-center justify-center bg-slate-100 border-2 border-white shadow-sm transition-all duration-500 group-[.unlocked]:bg-orange-600 group-[.unlocked]:shadow-orange-200 group-[.unlocked]:shadow-lg">
+                    <i class="fas fa-rocket text-slate-400 group-[.unlocked]:text-white transition-colors duration-500"></i>
+                </div>
+                <div class="ml-4 flex-1">
+                    <h4 class="text-sm font-bold text-slate-400 group-[.unlocked]:text-slate-800 transition-colors duration-500">Elite Specialist</h4>
+                    <p class="text-[10px] font-medium text-slate-400 group-[.unlocked]:text-orange-500 uppercase tracking-tighter">75% Completion</p>
+                </div>
+                <div class="milestone-badge opacity-0 group-[.unlocked]:opacity-100 transform scale-50 group-[.unlocked]:scale-100 transition-all duration-700 delay-300">
+                    <i class="fas fa-fire text-orange-500"></i>
+                </div>
+            </div>
+
+            <!-- Milestone 5: 90% -->
+            <div class="milestone-item flex items-center group relative z-10" data-threshold="90">
+                <div class="milestone-icon w-10 h-10 rounded-full flex items-center justify-center bg-slate-100 border-2 border-white shadow-sm transition-all duration-500 group-[.unlocked]:bg-blue-600 group-[.unlocked]:shadow-blue-200 group-[.unlocked]:shadow-lg">
+                    <i class="fas fa-briefcase text-slate-400 group-[.unlocked]:text-white transition-colors duration-500"></i>
+                </div>
+                <div class="ml-4 flex-1">
+                    <h4 class="text-sm font-bold text-slate-400 group-[.unlocked]:text-slate-800 transition-colors duration-500">Ready for Hire</h4>
+                    <p class="text-[10px] font-medium text-slate-400 group-[.unlocked]:text-blue-500 uppercase tracking-tighter">Project Ready</p>
+                </div>
+                <div class="milestone-badge opacity-0 group-[.unlocked]:opacity-100 transform scale-50 group-[.unlocked]:scale-100 transition-all duration-700 delay-300">
+                    <i class="fas fa-crown text-yellow-500"></i>
+                </div>
+            </div>
+
+            <!-- Milestone 6: 100% -->
+            <div class="milestone-item flex items-center group relative z-10" data-threshold="100">
+                <div class="milestone-icon w-10 h-10 rounded-full flex items-center justify-center bg-slate-100 border-2 border-white shadow-sm transition-all duration-500 group-[.unlocked]:bg-indigo-900 group-[.unlocked]:shadow-indigo-300 group-[.unlocked]:shadow-lg">
+                    <i class="fas fa-graduation-cap text-slate-400 group-[.unlocked]:text-white transition-colors duration-500"></i>
+                </div>
+                <div class="ml-4 flex-1">
+                    <h4 class="text-sm font-bold text-slate-400 group-[.unlocked]:text-slate-800 transition-colors duration-500">Supreme Master</h4>
+                    <p class="text-[10px] font-medium text-slate-400 group-[.unlocked]:text-indigo-900 uppercase tracking-tighter">100% Mastery</p>
+                </div>
+                <div class="milestone-badge opacity-0 group-[.unlocked]:opacity-100 transform scale-50 group-[.unlocked]:scale-100 transition-all duration-700 delay-300">
+                    <i class="fas fa-star text-yellow-500 animate-pulse"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Career Readiness Insight -->
+        <div class="mt-8 pt-6 border-t border-slate-100">
+            <div id="readiness-insight" class="bg-indigo-50 rounded-xl p-4 border border-indigo-100 text-center">
+                <p class="text-xs text-indigo-600 font-bold mb-1">PRO TIP</p>
+                <p class="text-[11px] text-slate-600 leading-relaxed" id="milestone-tip">
+                    Complete your first 3 modules to unlock the "The Spark" badge and reveal your first project!
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .milestone-item.unlocked .milestone-icon {
+        animation: unlock-pop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .group.unlocked .milestone-icon {
+        box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+        position: relative;
+    }
+
+    .group.unlocked .milestone-icon::after {
+        content: '';
+        position: absolute;
+        inset: -4px;
+        border-radius: 50%;
+        border: 2px solid rgba(99, 102, 241, 0.3);
+        animation: pulse-ring 2s infinite;
+    }
+
+    @keyframes pulse-ring {
+        0% { transform: scale(1); opacity: 0.8; }
+        100% { transform: scale(1.4); opacity: 0; }
+    }
+
+    @keyframes unlock-pop {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.2); }
+        100% { transform: scale(1); }
+    }
+</style>
+
+<script>
+    // Integration into the global progress system
+    (function() {
+        const originalUpdateProgress = window.updateGlobalProgress;
+
+        window.updateGlobalProgress = function() {
+            // Call original if it exists
+            if (originalUpdateProgress) originalUpdateProgress();
+
+            const checkboxes = document.querySelectorAll('input[type="checkbox"][data-task-id]');
+            const total = checkboxes.length;
+            if (total === 0) return;
+
+            let checked = 0;
+            checkboxes.forEach(cb => { if (cb.checked) checked++; });
+
+            const pct = Math.round((checked / total) * 100);
+
+            // Update Milestone UI
+            const fill = document.getElementById('milestone-progress-fill');
+            const pctText = document.getElementById('milestone-pct');
+            const milestoneItems = document.querySelectorAll('.milestone-item');
+            const milestoneCount = document.getElementById('milestone-count');
+            const tipText = document.getElementById('milestone-tip');
+
+            if (fill) fill.style.width = pct + '%';
+            if (pctText) pctText.innerText = pct + '%';
+
+            let unlockedCount = 0;
+            milestoneItems.forEach(item => {
+                const threshold = parseInt(item.dataset.threshold);
+                if (pct >= threshold) {
+                    item.classList.add('unlocked');
+                    unlockedCount++;
+                } else {
+                    item.classList.remove('unlocked');
+                }
+            });
+
+            if (milestoneCount) milestoneCount.innerText = unlockedCount + ' / 6 Unlocked';
+            
+            // Sync with dashboard badges count if it exists
+            const dashboardBadges = document.getElementById('dashboard-badges-count');
+            if (dashboardBadges) dashboardBadges.innerText = unlockedCount + ' Badges Earned';
+
+            // Update Tip
+            const tips = [
+                "Complete your first few modules to unlock 'The Spark'! 🚀",
+                "Great start! Keep pushing to reach 25% and earn your 'Fast Starter' badge. ⚡",
+                "You're making real progress. 50% is just around the corner! 🏔️",
+                "Over halfway there! You're becoming a true Pathfinder. 🗺️",
+                "Advanced topics ahead! Reach 75% to unlock 'Elite Specialist'. 🚀",
+                "Almost project-ready! Just a few more steps to 'Ready for Hire'. 💼",
+                "Final stretch! Complete everything for 'Supreme Mastery'. 👑",
+                "Congratulations Master! Your roadmap is 100% complete. 🏆"
+            ];
+
+            let tipIndex = 0;
+            if (pct < 5) tipIndex = 0;
+            else if (pct < 25) tipIndex = 1;
+            else if (pct < 50) tipIndex = 2;
+            else if (pct < 75) tipIndex = 3;
+            else if (pct < 90) tipIndex = 5;
+            else if (pct < 100) tipIndex = 6;
+            else tipIndex = 7;
+
+            if (tipText) tipText.innerText = tips[tipIndex];
+        };
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            setTimeout(window.updateGlobalProgress, 500);
+        });
+    })();
+</script>

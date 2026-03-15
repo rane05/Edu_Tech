@@ -12,6 +12,14 @@ const clientSecret = process.env.CLIENT_SECRET;
 
 // Registration route
 router.get('/register', (req, res) => {
+    // Aggressive cache prevention
+    res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
+
+    if (req.isAuthenticated() || req.session.userId) {
+        return redirectUserByRole(req, res);
+    }
     res.render('register');
 });
 
@@ -58,8 +66,29 @@ router.post('/register', async (req, res) => {
 
 // Login routes
 router.get('/login', (req, res) => {
+    // Aggressive cache prevention
+    res.set('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+    res.set('Pragma', 'no-cache');
+    res.set('Expires', '0');
+
+    if (req.isAuthenticated() || req.session.userId) {
+        return redirectUserByRole(req, res);
+    }
     res.render('login');
 });
+
+// Helper function to redirect user based on role
+function redirectUserByRole(req, res) {
+    const userRole = (req.user && req.user.role) || req.session.role;
+    console.log("Redirecting authenticated user. Role:", userRole);
+    
+    if (userRole === 'student') return res.redirect('/');
+    if (userRole === 'parent') return res.redirect('/parentprofile');
+    if (userRole === 'teacher') return res.redirect('/teacher_home');
+    if (userRole === 'college') return res.redirect('/college/dashboard');
+    if (userRole === 'admin') return res.redirect('/admin/dashboard');
+    return res.redirect('/');
+}
 
 // Login POST request
 
