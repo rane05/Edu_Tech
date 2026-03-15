@@ -242,6 +242,15 @@ app.get('/verify', (req, res) => {
 
 });
 
+
+app.get('/parent_home', (req, res) => {
+    if (req.session.role !== 'parent') {
+        return res.redirect('/login');
+    }
+    res.render('parent_home');
+});
+
+
 app.get('/career_resources', (req, res) => {
     res.render('career_resources')
 })

@@ -61,6 +61,8 @@ router.get('/login', (req, res) => {
     res.render('login');
 });
 
+// Login POST request
+
 router.post('/login', async (req, res, next) => {
     try {
         const { username, password, role } = req.body;
@@ -167,6 +169,8 @@ router.post('/login', async (req, res, next) => {
                 res.redirect('/');
             });
         })(req, res, next);
+
+
 
     } catch (err) {
         console.error("Login unexpected error:", err);

@@ -205,6 +205,7 @@ router.post("/profile/link-teacher", async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: "Error linking teacher" });
+
     }
 });
 

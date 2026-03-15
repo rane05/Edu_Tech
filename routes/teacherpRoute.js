@@ -43,7 +43,8 @@ router.get("/tprofile", async (req, res) => {
         res.render("teacher_profile", {
             profile,
             username: user.username,
-            role: user.role,  // Fetching the role from the User model
+            role: user.role,
+            collegeName: profile ? profile.collegeName : "Not Set",
             profileImage: profile?.profileImage || "/images/default-profile.png"
         });
     } catch (error) {

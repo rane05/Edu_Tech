@@ -243,3 +243,4 @@ router.post('/api/cet/predict', async (req, res) => {
 });
 
 module.exports = router;
+

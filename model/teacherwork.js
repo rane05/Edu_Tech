@@ -12,6 +12,10 @@ const TeacherWorkSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    description: {
+        type: String,
+        required: false // For longer descriptions
+    },
     dueDate: {
         type: String,
         default: null
@@ -31,6 +35,15 @@ const TeacherWorkSchema = new mongoose.Schema({
     sessionDuration: {
         type: String, // e.g., "45 mins"
         default: null
+    },
+    teacherId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    collegeName: {
+        type: String,
+        required: true
     },
     createdAt: {
         type: Date,
