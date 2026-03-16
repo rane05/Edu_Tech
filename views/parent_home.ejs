@@ -1,289 +1,264 @@
 <%- include('layouts/header'); %>
-    <%- include('layouts/pnavbar'); %>
-
+<%- include('layouts/pnavbar'); %>
         <style>
-            @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap');
+             @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
             :root {
-                --parent-primary: linear-gradient(135deg, #059669 0%, #10b981 100%);
-                --parent-secondary: linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%);
-                --parent-accent: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
-                --parent-glass: rgba(255, 255, 255, 0.85);
+                --p-primary: #0ea5e9;
+                --p-secondary: #6366f1;
+                --p-accent: #f59e0b;
+                --p-surface: #ffffff;
+                --p-bg: #f8fafc;
+                --p-glass: rgba(255, 255, 255, 0.75);
+                --p-border: rgba(255, 255, 255, 0.2);
             }
 
             body {
                 font-family: 'Outfit', sans-serif;
-                background-color: #f1f5f9;
+                background: radial-gradient(circle at top right, #f1f5f9, #e2e8f0);
                 color: #1e293b;
+                overflow-x: hidden;
             }
 
-            .glass-card {
-                background: var(--parent-glass);
-                backdrop-filter: blur(16px);
-                -webkit-backdrop-filter: blur(16px);
-                border: 1px solid rgba(255, 255, 255, 0.4);
-                border-radius: 2rem;
-                box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.05);
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            .bento-grid {
+                display: grid;
+                grid-template-columns: repeat(12, 1fr);
+                gap: 24px;
             }
 
-            .stat-badge {
-                background: white;
-                padding: 0.5rem 1rem;
-                border-radius: 1rem;
-                font-weight: 700;
+            .premium-card {
+                background: var(--p-glass);
+                backdrop-filter: blur(20px);
+                border: 1px solid var(--p-border);
+                border-radius: 2.5rem;
+                box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.04);
+                transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
+                overflow: hidden;
+            }
+
+            .premium-card:hover {
+                transform: translateY(-8px);
+                box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.1);
+            }
+
+            .hero-gradient {
+                background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
+                color: white;
+            }
+
+            .card-title {
+                font-size: 1.25rem;
+                font-weight: 800;
+                letter-spacing: -0.02em;
+            }
+
+            .nav-pill {
+                padding: 6px 16px;
+                border-radius: 99px;
+                background: rgba(255, 255, 255, 0.1);
                 font-size: 0.75rem;
+                font-weight: 700;
                 text-transform: uppercase;
                 letter-spacing: 0.05em;
-                color: #64748b;
-                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
             }
 
-            .gradient-text {
-                background: var(--parent-primary);
-                -webkit-background-clip: text;
-                background-clip: text;
-                -webkit-text-fill-color: transparent;
-            }
-
-            .btn-link-student {
-                background: var(--parent-accent);
-                color: white;
-                padding: 1rem 2rem;
-                border-radius: 1.25rem;
-                font-weight: 700;
-                transition: all 0.3s ease;
-                display: inline-flex;
+            .stat-circle {
+                width: 120px;
+                height: 120px;
+                border-radius: 50%;
+                display: flex;
+                flex-direction: column;
                 align-items: center;
-                gap: 0.75rem;
+                justify-content: center;
+                background: white;
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+                position: relative;
             }
 
-            .btn-link-student:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
-                color: white;
+            .stat-icon-bg {
+                width: 48px;
+                height: 48px;
+                border-radius: 14px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 12px;
             }
 
-            .custom-scroll::-webkit-scrollbar {
-                width: 5px;
+            .timeline-item {
+                position: relative;
+                padding-left: 32px;
+                padding-bottom: 24px;
             }
 
-            .custom-scroll::-webkit-scrollbar-thumb {
-                background: #cbd5e1;
-                border-radius: 10px;
+            .timeline-item::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: 2px;
+                background: #e2e8f0;
+            }
+
+            .timeline-dot {
+                position: absolute;
+                left: -5px;
+                top: 0;
+                width: 12px;
+                height: 12px;
+                border-radius: 50%;
+                background: var(--p-primary);
+                border: 3px solid white;
+            }
+
+            @media (max-width: 1024px) {
+                .bento-grid { grid-template-columns: 1fr; }
+                .col-span-8, .col-span-4, .col-span-12 { grid-column: span 1; }
             }
         </style>
 
-        <div class="min-h-screen pt-24 pb-12">
-            <div class="container mx-auto px-4 lg:px-8">
-
-                <!-- Parent Welcome Header -->
-                <div
-                    class="glass-card p-8 mb-10 flex flex-col md:flex-row items-center justify-between gap-6 border-l-[6px] border-emerald-500">
-                    <div>
-                        <h1 class="text-3xl md:text-5xl font-black text-slate-900 mb-2">
-                            Welcome, <span class="gradient-text">
-                                <%= username %>
-                            </span> 🍀
-                        </h1>
-                        <p class="text-slate-500 font-medium text-lg print-hidden">Your perspective matters. Track your child's
-                            growth and future goals.</p>
+        <div class="min-h-screen pt-24 pb-12 px-6 lg:px-12">
+            <div class="max-w-7xl mx-auto">
+                
+                <!-- Welcome Section -->
+                <div class="premium-card hero-gradient p-10 mb-10 flex flex-col md:flex-row items-center justify-between gap-8 relative">
+                    <div class="absolute -top-24 -right-24 w-64 h-64 bg-white/10 rounded-full blur-3xl"></div>
+                    <div class="relative z-10">
+                        <span class="nav-pill mb-4 inline-block">Parent Portal v2.0</span>
+                        <h1 class="text-4xl md:text-6xl font-black mb-3">Hello, <%= username %> 👨‍👩‍👧</h1>
+                        <p class="text-sky-100 font-medium text-lg max-w-xl">EduNavigator AI has generated your child's weekly performance report. Check the latest growth metrics below.</p>
                     </div>
-                    <div class="flex gap-4 items-center print-hidden">
-                        <% if (studentData) { %>
-                            <button onclick="window.print()" class="px-6 py-3 bg-white border-2 border-slate-200 text-slate-700 font-bold rounded-xl shadow-sm hover:border-emerald-500 hover:text-emerald-600 transition-all flex items-center gap-2">
-                                <i class="fas fa-file-pdf text-red-500"></i> Export Report
-                            </button>
-                        <% } %>
-                        <% if (!studentData) { %>
-                            <a href="/parentprofile" class="btn-link-student">
-                                <i class="fas fa-link"></i> Link Your Student
-                            </a>
-                        <% } %>
+                    <div class="flex gap-4 relative z-10">
+                        <button onclick="window.print()" class="px-8 py-4 bg-white text-sky-600 font-extrabold rounded-2xl shadow-xl hover:bg-sky-50 transition-all flex items-center gap-3">
+                            <i class="fas fa-file-pdf"></i> Download PDF
+                        </button>
                     </div>
                 </div>
 
                 <% if (studentData) { %>
-                    <!-- Student Quick Overview -->
-                    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-10">
-                        <div class="lg:col-span-1 glass-card p-6 flex flex-col items-center text-center">
-                            <div
-                                class="w-24 h-24 rounded-3xl bg-emerald-100 flex items-center justify-center text-emerald-600 mb-4 shadow-inner">
-                                <i class="fas fa-user-graduate text-4xl"></i>
+                <div class="bento-grid">
+                    
+                    <!-- Student Profile Brief -->
+                    <div class="col-span-12 lg:col-span-4 premium-card p-8 flex flex-col items-center justify-center bg-white">
+                        <div class="relative mb-6">
+                            <div class="w-32 h-32 rounded-[2.5rem] bg-sky-100 flex items-center justify-center text-sky-600 shadow-inner">
+                                <i class="fas fa-user-astronaut text-5xl"></i>
                             </div>
-                            <h2 class="text-xl font-bold text-slate-900">
-                                <%= studentData.fullName %>
-                            </h2>
-                            <p class="text-sm text-slate-400 font-medium mb-4">
-                                <%= studentData.collegeName %>
-                            </p>
-                            <div class="stat-badge">Linked via Code: <%= studentData.uniqueCode %>
-                            </div>
+                            <div class="absolute -bottom-2 -right-2 w-10 h-10 bg-green-500 border-4 border-white rounded-full"></div>
                         </div>
-
-                        <!-- Academic Stats -->
-                        <div class="lg:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div class="glass-card p-6 border-b-4 border-emerald-400">
-                                <div class="flex items-center gap-4 mb-4">
-                                    <i class="fas fa-star text-emerald-500 text-xl"></i>
-                                    <span class="text-xs font-black uppercase tracking-tighter text-slate-400">Best
-                                        Performance</span>
-                                </div>
-                                <div class="text-4xl font-black text-slate-900">
-                                    <%= bestScore || 0 %><span class="text-sm text-slate-300">/60</span>
-                                </div>
+                        <h2 class="text-3xl font-black text-slate-900 mb-1"><%= studentData.fullName %></h2>
+                        <p class="text-slate-400 font-bold uppercase tracking-widest text-xs mb-6"><%= studentData.collegeName %></p>
+                        
+                        <div class="w-full flex justify-between gap-4">
+                            <div class="flex-1 p-4 bg-slate-50 rounded-3xl text-center">
+                                <span class="block text-2xl font-black text-slate-900"><%= totalAttempts %></span>
+                                <span class="text-[10px] font-bold text-slate-400 uppercase">Tests</span>
                             </div>
-                            <div class="glass-card p-6 border-b-4 border-blue-400">
-                                <div class="flex items-center gap-4 mb-4">
-                                    <i class="fas fa-chart-line text-blue-500 text-xl"></i>
-                                    <span class="text-xs font-black uppercase tracking-tighter text-slate-400">Average
-                                        Rating</span>
-                                </div>
-                                <div class="text-4xl font-black text-slate-900">
-                                    <%= avgScore || 0 %>
-                                </div>
+                            <div class="flex-1 p-4 bg-slate-50 rounded-3xl text-center">
+                                <span class="block text-2xl font-black text-slate-900"><%= bestScore || 0 %></span>
+                                <span class="text-[10px] font-bold text-slate-400 uppercase">Peak</span>
                             </div>
-                            <div class="glass-card p-6 border-b-4 border-indigo-400">
-                                <div class="flex items-center gap-4 mb-4">
-                                    <i class="fas fa-check-circle text-indigo-500 text-xl"></i>
-                                    <span class="text-xs font-black uppercase tracking-tighter text-slate-400">Total
-                                        Checkpoints</span>
-                                </div>
-                                <div class="text-4xl font-black text-slate-900">
-                                    <%= totalAttempts %>
-                                </div>
+                            <div class="flex-1 p-4 bg-slate-50 rounded-3xl text-center">
+                                <span class="block text-2xl font-black text-slate-900"><%= avgScore || 0 %></span>
+                                <span class="text-[10px] font-bold text-slate-400 uppercase">Avg</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                        <!-- Left: Analytics & Feed -->
-                        <div class="lg:col-span-8 space-y-8">
-
-                            <!-- Performance Chart -->
-                            <div class="glass-card p-8">
-                                <div class="flex justify-between items-center mb-8">
-                                    <h3 class="text-2xl font-black text-slate-900">Growth Trajectory</h3>
-                                    <span
-                                        class="px-4 py-1.5 bg-slate-100 rounded-full text-xs font-bold text-slate-500">Live
-                                        academic data</span>
-                                </div>
-                                <div class="h-[350px]">
-                                    <canvas id="parentStudentChart"></canvas>
-                                </div>
-                            </div>
-
-                            <!-- Career Roadmap Progress -->
-                            <div class="glass-card p-8">
-                                <h3 class="text-2xl font-black text-slate-900 mb-6">Career Milestone Tracker</h3>
-                                <div class="space-y-6">
-                                    <% const roadmapSteps=[ { name: "Foundational Skills" , progress:
-                                        (studentData.skills ? 100 : 20), icon: "seedling" , color: "emerald" }, {
-                                        name: "Academic Excellence" , progress: (avgScore> 40 ? 80 : 50), icon:
-                                        "graduation-cap", color: "blue" },
-                                        { name: "Professional Portfolio", progress: 30, icon: "briefcase", color:
-                                        "indigo" }
-                                        ];
-                                        %>
-                                        <% roadmapSteps.forEach(step=> { %>
-                                            <div>
-                                                <div class="flex justify-between mb-2 items-center">
-                                                    <div class="flex items-center gap-3">
-                                                        <div
-                                                            class="w-8 h-8 rounded-lg bg-emerald-100 flex items-center justify-center text-emerald-600">
-                                                            <i class="fas fa-<%= step.icon %> text-xs"></i>
-                                                        </div>
-                                                        <span class="font-bold text-slate-700 text-sm">
-                                                            <%= step.name %>
-                                                        </span>
-                                                    </div>
-                                                    <span class="text-xs font-black text-emerald-500">
-                                                        <%= step.progress %>%
-                                                    </span>
-                                                </div>
-                                                <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
-                                                    <div class="bg-emerald-500 h-full rounded-full transition-all duration-1000"
-                                                        style="width: '<%= step.progress %>%';"></div>
-                                                </div>
-                                            </div>
-                                            <% }) %>
-                                </div>
+                    <!-- Growth Trajectory -->
+                    <div class="col-span-12 lg:col-span-8 premium-card p-8 bg-white">
+                        <div class="flex justify-between items-center mb-8">
+                            <h3 class="card-title text-slate-900">Academic Growth Pulse</h3>
+                            <div class="flex gap-2">
+                                <span class="w-3 h-3 rounded-full bg-sky-500"></span>
+                                <span class="text-[10px] font-bold uppercase text-slate-400 tracking-widest">Real-time Analysis</span>
                             </div>
                         </div>
-
-                        <!-- Right: Institutional Updates -->
-                        <div class="lg:col-span-4 space-y-8">
-                            <div class="glass-card p-8 bg-slate-900 text-white shadow-2xl relative overflow-hidden">
-                                <div
-                                    class="absolute -top-10 -right-10 w-40 h-40 bg-emerald-500/20 rounded-full blur-3xl">
-                                </div>
-
-                                <h3 class="text-xl font-black mb-6 flex items-center gap-3 relative z-10">
-                                    <i class="fas fa-broadcast-tower text-emerald-400"></i>
-                                    Institutional Hub
-                                </h3>
-
-                                <div class="space-y-4 custom-scroll max-h-[500px] overflow-y-auto pr-2 relative z-10">
-                                    <% if (teacherUpdates.length> 0) { %>
-                                        <% teacherUpdates.forEach(update=> { %>
-                                            <div
-                                                class="p-4 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-colors">
-                                                <div class="flex justify-between items-center mb-2">
-                                                    <span
-                                                        class="px-2 py-0.5 bg-emerald-500/20 text-emerald-400 rounded text-[9px] font-black uppercase tracking-wider">
-                                                        <%= update.type %>
-                                                    </span>
-                                                    <span class="text-[9px] text-slate-500 font-bold">
-                                                        <%= new Date(update.createdAt).toLocaleDateString() %>
-                                                    </span>
-                                                </div>
-                                                <h4 class="text-sm font-bold text-slate-100 mb-1">
-                                                    <%= update.title %>
-                                                </h4>
-                                                <p class="text-xs text-slate-400 line-clamp-2">
-                                                    <%= update.desc || "New announcement for verified institutions." %>
-                                                </p>
-                                            </div>
-                                            <% }) %>
-                                                <% } else { %>
-                                                    <div class="py-12 text-center">
-                                                        <i class="fas fa-bell-slash text-slate-700 text-3xl mb-4"></i>
-                                                        <p class="text-sm text-slate-500 font-bold italic">No active
-                                                            broadcasts for this institution</p>
-                                                    </div>
-                                                    <% } %>
-                                </div>
-                            </div>
-
-                            <!-- Guidance Tip -->
-                            <div class="glass-card p-8 bg-gradient-to-br from-indigo-600 to-indigo-800 text-white">
-                                <h4 class="font-black text-lg mb-3">Parenting Tip 💡</h4>
-                                <p class="text-sm text-indigo-100 font-medium leading-relaxed">
-                                    Positive reinforcement increases student confidence by 40%. Celebrate the recent
-                                    checkpoint scores with your child to encourage consistent effort!
-                                </p>
-                            </div>
+                        <div class="h-[300px]">
+                            <canvas id="parentStudentChart"></canvas>
                         </div>
                     </div>
 
-                    <% } else { %>
-                        <!-- Empty State / Linking Guide -->
-                        <div class="glass-card p-12 text-center max-w-2xl mx-auto mt-12">
-                            <div
-                                class="w-32 h-32 bg-slate-100 rounded-full flex items-center justify-center text-slate-400 mx-auto mb-8">
-                                <i class="fas fa-user-plus text-5xl"></i>
-                            </div>
-                            <h2 class="text-3xl font-black text-slate-900 mb-4">Link Your Student</h2>
-                            <p class="text-slate-500 font-medium mb-8 leading-relaxed">
-                                To start tracking academic progress, career goals, and institutional updates, please
-                                link your child using their **Unique Enrollment Code**.
-                            </p>
-                            <a href="/parentprofile" class="btn-link-student">
-                                Proceed to Linking <i class="fas fa-arrow-right"></i>
-                            </a>
+                    <!-- Left: Milestone Tracker -->
+                    <div class="col-span-12 lg:col-span-8 premium-card p-10 bg-white">
+                        <h3 class="card-title text-slate-900 mb-8 flex items-center gap-3">
+                            <i class="fas fa-tasks text-sky-500"></i> Career Milestone Tracker
+                        </h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <% const steps = [
+                                { name: "Foundational Skills", val: (studentData.skills ? 90 : 30), icon: "vial", color: "#0ea5e9" },
+                                { name: "Analytical IQ", val: (avgScore > 30 ? 85 : 45), icon: "brain", color: "#6366f1" },
+                                { name: "Project Readiness", val: 40, icon: "cube", color: "#f59e0b" },
+                                { name: "Placement Quality", val: 15, icon: "trophy", color: "#10b981" }
+                            ]; %>
+                            <% steps.forEach(step => { %>
+                                <div class="bg-slate-50 p-6 rounded-[2rem] border border-slate-100">
+                                    <div class="flex justify-between mb-4">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-white shadow-sm" style="color: <%= step.color %>">
+                                                <i class="fas fa-<%= step.icon %>"></i>
+                                            </div>
+                                            <span class="font-bold text-slate-700"><%= step.name %></span>
+                                        </div>
+                                        <span class="font-black text-slate-900"><%= step.val %>%</span>
+                                    </div>
+                                    <div class="w-full bg-white h-3 rounded-full overflow-hidden border border-slate-200">
+                                        <div class="h-full rounded-full" style="width: <%= step.val %>%; background: <%= step.color %>"></div>
+                                    </div>
+                                </div>
+                            <% }) %>
                         </div>
-                        <% } %>
+                    </div>
 
+                    <!-- Right: Feed -->
+                    <div class="col-span-12 lg:col-span-4 premium-card bg-slate-900 p-8 text-white">
+                        <h3 class="card-title mb-8 flex items-center gap-3">
+                            <i class="fas fa-university text-sky-400"></i> Campus Radar
+                        </h3>
+                        <div class="space-y-6 custom-scroll max-h-[400px] overflow-y-auto pr-2">
+                            <% if (teacherUpdates.length > 0) { %>
+                                <% teacherUpdates.forEach(update => { %>
+                                    <div class="timeline-item">
+                                        <div class="timeline-dot"></div>
+                                        <div class="flex justify-between mb-1">
+                                            <span class="text-[9px] font-black uppercase text-sky-400 tracking-widest"><%= update.type %></span>
+                                            <span class="text-[9px] text-slate-500 font-bold"><%= new Date(update.createdAt).toLocaleDateString() %></span>
+                                        </div>
+                                        <h4 class="text-sm font-bold text-slate-100 mb-1"><%= update.title %></h4>
+                                        <p class="text-xs text-slate-500"><%= update.desc || "Verified announcement from the faculty board." %></p>
+                                    </div>
+                                <% }) %>
+                            <% } else { %>
+                                <div class="text-center py-10">
+                                    <i class="fas fa-ghost text-4xl text-slate-800 mb-4"></i>
+                                    <p class="text-slate-500 font-bold text-sm">No new updates found.</p>
+                                </div>
+                            <% } %>
+                        </div>
+                        
+                        <div class="mt-8 p-6 bg-gradient-to-br from-sky-500 to-indigo-600 rounded-[2rem]">
+                            <h4 class="font-black text-sm mb-2">AI Perspective 🤖</h4>
+                            <p class="text-[11px] text-sky-100 font-medium leading-relaxed">Based on recent data points, we suggest focusing on Logical Reasoning topics for the next 7 days.</p>
+                        </div>
+                    </div>
+
+                </div>
+                <% } else { %>
+                    <!-- Linking State -->
+                    <div class="premium-card p-16 text-center max-w-2xl mx-auto mt-12 bg-white">
+                        <div class="w-32 h-32 bg-slate-50 rounded-full flex items-center justify-center text-slate-300 mx-auto mb-8">
+                            <i class="fas fa-key text-5xl"></i>
+                        </div>
+                        <h2 class="text-4xl font-black text-slate-900 mb-4">Secure Sync Pending</h2>
+                        <p class="text-slate-500 font-medium mb-10 leading-relaxed text-lg italic">
+                            "Connecting you to your child's future, one milestone at a time."
+                        </p>
+                        <a href="/parentprofile" class="px-10 py-5 bg-slate-900 text-white font-extrabold rounded-2xl shadow-2xl hover:bg-sky-600 transition-all inline-flex items-center gap-4">
+                            Proceed to Linking <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                <% } %>
             </div>
         </div>
 
@@ -295,26 +270,27 @@
 
                 const resultsRaw = JSON.parse(`<%- JSON.stringify(results || []) %>`);
                 const dataPoints = resultsRaw.map(r => r.score);
-                const labels = resultsRaw.map((_, i) => `Check ${i + 1}`);
+                const labels = resultsRaw.map((_, i) => `${i + 1}`);
 
-                const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 400);
-                gradient.addColorStop(0, 'rgba(16, 185, 129, 0.3)');
-                gradient.addColorStop(1, 'rgba(16, 185, 129, 0)');
+                const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 300);
+                gradient.addColorStop(0, 'rgba(14, 165, 233, 0.4)');
+                gradient.addColorStop(1, 'rgba(14, 165, 233, 0)');
 
                 new Chart(ctx, {
                     type: 'line',
                     data: {
                         labels: labels,
                         datasets: [{
-                            label: 'Academic Growth',
+                            label: 'Growth Score',
                             data: dataPoints,
-                            borderColor: '#10b981',
-                            borderWidth: 4,
+                            borderColor: '#0ea5e9',
+                            borderWidth: 6,
                             pointBackgroundColor: '#ffffff',
-                            pointBorderColor: '#10b981',
+                            pointBorderColor: '#0ea5e9',
                             pointBorderWidth: 4,
                             pointRadius: 6,
-                            tension: 0.4,
+                            pointHoverRadius: 10,
+                            tension: 0.5,
                             fill: true,
                             backgroundColor: gradient
                         }]
@@ -326,21 +302,23 @@
                             legend: { display: false },
                             tooltip: {
                                 backgroundColor: '#0f172a',
-                                titleFont: { size: 14, weight: 'bold' },
-                                padding: 12,
-                                cornerRadius: 12
+                                titleFont: { size: 14, weight: 'bold', family: 'Outfit' },
+                                bodyFont: { size: 13, family: 'Outfit' },
+                                padding: 16,
+                                cornerRadius: 16,
+                                displayColors: false
                             }
                         },
                         scales: {
                             y: {
                                 beginAtZero: true,
                                 max: 60,
-                                grid: { color: '#f1f5f9', drawBorder: false },
-                                ticks: { font: { weight: 'bold' }, color: '#94a3b8' }
+                                grid: { color: 'rgba(0,0,0,0.03)', drawBorder: false },
+                                ticks: { font: { weight: '800', size: 11 }, color: '#94a3b8' }
                             },
                             x: {
                                 grid: { display: false },
-                                ticks: { font: { weight: 'bold' }, color: '#94a3b8' }
+                                ticks: { font: { weight: '800', size: 11 }, color: '#94a3b8' }
                             }
                         }
                     }
@@ -350,15 +328,12 @@
 
         <style>
             @media print {
-                body { background: white !important; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
-                .print-hidden, nav, footer, .btn-link-student, header { display: none !important; }
-                .glass-card { border: none !important; box-shadow: none !important; margin-bottom: 2rem !important; }
-                .lg\:col-span-8 { width: 100% !important; }
-                .lg\:col-span-4 { display: none !important; }
-                canvas { max-width: 100% !important; height: auto !important; }
-                h1, h2, h3 { color: #000 !important; }
-                .gradient-text { background: none; -webkit-text-fill-color: #000; color: #000; }
-                p, span, div { page-break-inside: avoid; }
+                body { background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                .glass-nav, .premium-card:hover, .hero-gradient::after { display: none !important; }
+                .premium-card { border: 1px solid #eee !important; box-shadow: none !important; margin-bottom: 2rem; break-inside: avoid; }
+                .hero-gradient { background: #000 !important; color: #fff !important; }
+                .lg\:col-span-12, .lg\:col-span-8, .lg\:col-span-4 { width: 100% !important; grid-column: span 12 !important; }
+                canvas { max-width: 100% !important; }
             }
         </style>
 

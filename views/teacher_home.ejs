@@ -572,7 +572,7 @@
             <a href="#" class="nav-item">
                 <i class="far fa-envelope"></i> Inbox
             </a>
-            <a href="#" class="nav-item">
+            <a href="/studentlist" class="nav-item">
                 <i class="far fa-user"></i> Students
             </a>
             <a href="#" onclick="toggleModal('taskModal')" class="nav-item">
@@ -639,9 +639,9 @@
                                 <%= teacherCode %>
                             </strong></p>
                         <div class="profile-stats">
-                            <div class="p-stat">Students: <span>
+                            <a href="/studentlist" class="p-stat" style="text-decoration: none; color: inherit;">Students: <span>
                                     <%= analytics.studentCount %>
-                                </span></div>
+                                </span></a>
                             <div class="p-stat">Classes: <span>
                                     <%= doubtSessions.length %>
                                 </span></div>
@@ -659,7 +659,7 @@
                         <h3 class="card-title">Overview Stats</h3>
                     </div>
                     <div class="stat-bar-container">
-                        <div class="stat-row">
+                        <a href="/studentlist" class="stat-row" style="text-decoration: none; color: inherit;">
                             <div>
                                 <div class="stat-label">Total Enrolled</div>
                                 <div class="stat-val">
@@ -667,7 +667,7 @@
                                 </div>
                             </div>
                             <i class="fas fa-users" style="color: #64748b; font-size: 20px;"></i>
-                        </div>
+                        </a>
                         <div class="stat-row">
                             <div>
                                 <div class="stat-label">Pending Doubts</div>

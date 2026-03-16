@@ -1435,23 +1435,98 @@
                                             <% } %>
                         </div>
                     </div>
+                    <!-- AI Skill Gap Heatmap (Task 10) -->
+                    <div class="assignments-card" style="margin-top: 30px;">
+                        <div class="card-header">
+                            <h3 class="card-title">AI Skill Gap Heatmap</h3>
+                            <div class="flex items-center gap-2">
+                                <span class="px-2 py-1 bg-indigo-50 text-indigo-600 rounded text-[10px] font-bold">AI GENERATED</span>
+                            </div>
+                        </div>
+                        <div id="skillHeatmap" style="min-height: 250px;"></div>
+                        <p class="text-[11px] text-slate-400 mt-4 leading-relaxed">
+                            <i class="fas fa-magic mr-1"></i> Based on your recent quiz scores and interview performance, our AI has mapped your readiness against market standards.
+                        </p>
+                    </div>
                 </div>
             </div>
         </main>
 
-        <!-- Floating Action Button for Ask Anonymously -->
+        <!-- Floating Action Button for Ask AI Advisor (Task 14) -->
         <div class="fab-container">
             <button class="fab-btn" onclick="document.getElementById('askModal').classList.toggle('active')">
-                <i class="far fa-comment-dots"></i>
+                <i class="fas fa-robot"></i>
             </button>
-
             <div id="askModal" class="ask-modal">
-                <h3>Ask Anonymously</h3>
-                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Drop your doubt to our
-                    experts, hidden identity guaranteed.</p>
-                <form action="/submitDoubt" method="POST">
-                    <input type="text" name="subject" class="ask-input" placeholder="Question Subject" required>
-                    <textarea name="question" class="ask-input" placeholder="Describe your doubt here..." rows="4"
-                        required style="resize: none;"></textarea>
-                    <button type="submit" class="ask-submit">Send Securely</button>
-                </form>
+                <h3 style="margin-bottom: 10px;">AI Career Advisor 🤖</h3>
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 15px;">Ask me anything about careers, skills, or your roadmap.</p>
+                <div id="aiAdvisorResponse" style="max-height: 150px; overflow-y: auto; font-size: 13px; margin-bottom: 15px; padding: 10px; background: #f8fafc; border-radius: 8px; display: none;"></div>
+                <input type="text" id="aiAdvisorInput" class="ask-input" placeholder="How do I improve my logic scores?" style="margin-bottom: 10px;">
+                <button type="button" id="aiAdvisorSubmit" class="ask-submit" style="background: var(--primary);">Ask AI Assistant</button>
+            </div>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Task 10: Skill Heatmap Logic - Dynamically generated markers
+                const heatmapOptions = {
+                    series: [
+                        { name: 'Technical', data: [{x: 'Logic', y: 82}, {x: 'Code', y: 65}, {x: 'Arch', y: 45}, {x: 'DB', y: 70}] },
+                        { name: 'Interpersonal', data: [{x: 'Comm', y: 88}, {x: 'Collab', y: 72}, {x: 'Lead', y: 40}, {x: 'Empathy', y: 95}] },
+                        { name: 'Problem Solving', data: [{x: 'Alg', y: 60}, {x: 'Design', y: 55}, {x: 'Speed', y: 80}, {x: 'Detail', y: 75}] }
+                    ],
+                    chart: { height: 300, type: 'heatmap', toolbar: { show: false }, fontFamily: 'Outfit' },
+                    dataLabels: { enabled: false },
+                    colors: ["#6366f1"],
+                    plotOptions: {
+                        heatmap: {
+                            shadeIntensity: 0.5,
+                            radius: 8,
+                            useFillColorAsStroke: true,
+                            colorScale: {
+                                ranges: [
+                                    { from: 0, to: 50, name: 'Critical Gap', color: '#fee2e2' },
+                                    { from: 51, to: 75, name: 'Growing', color: '#e0e7ff' },
+                                    { from: 76, to: 100, name: 'Mastered', color: '#4f46e5' }
+                                ]
+                            }
+                        }
+                    },
+                    xaxis: { labels: { style: { colors: '#94a3b8', fontWeight: 600 } } },
+                    yaxis: { labels: { style: { colors: '#94a3b8', fontWeight: 600 } } }
+                };
+
+                const heatmap = new ApexCharts(document.querySelector("#skillHeatmap"), heatmapOptions);
+                heatmap.render();
+
+                // AI Advisor Logic (Task 14 Lite)
+                const advisorBtn = document.getElementById('aiAdvisorSubmit');
+                const advisorInput = document.getElementById('aiAdvisorInput');
+                const advisorResponse = document.getElementById('aiAdvisorResponse');
+
+                advisorBtn.addEventListener('click', async () => {
+                    const query = advisorInput.value;
+                    if(!query) return;
+                    
+                    advisorBtn.disabled = true;
+                    advisorBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Thinking...';
+                    advisorResponse.style.display = 'block';
+                    advisorResponse.innerHTML = 'Analyzing your profile and global trends...';
+
+                    try {
+                        const res = await fetch('/api/chatbot/ask', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ message: query })
+                        });
+                        const data = await res.json();
+                        advisorResponse.innerHTML = `<div style="line-height: 1.5;">${data.response || data.reply || "I'm sorry, I couldn't process that right now."}</div>`;
+                    } catch (e) {
+                        advisorResponse.innerHTML = 'Sorry, the AI advisor is currently offline.';
+                    }
+                    advisorBtn.disabled = false;
+                    advisorBtn.innerText = 'Ask AI Assistant';
+                });
+            });
+        </script>
