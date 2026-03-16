@@ -100,4 +100,38 @@ router.post('/admin/feedback/delete/:id', isAdmin, async (req, res) => {
     }
 });
 
+// Export Analytics as CSV
+router.get('/admin/export/analytics', isAdmin, async (req, res) => {
+    try {
+        const Profile = require('../model/profile');
+        const UserRoadmap = require('../model/UserRoadmap');
+        
+        const students = await Profile.find({});
+        
+        let csvContent = 'Student Name,College Name,Target Career,Progress %,Expected Placement Outcome\n';
+        
+        for (const student of students) {
+            const roadmap = await UserRoadmap.findOne({ userId: student.userId });
+            const progress = roadmap && roadmap.progress ? Math.round(roadmap.progress.overall_percentage) : 0;
+            const target = roadmap ? roadmap.careerTitle : (student.careerGoal || 'N/A');
+            const college = student.collegeName && student.collegeName.includes(',') 
+                            ? `"${student.collegeName}"` : (student.collegeName || 'N/A');
+            const name = student.fullName && student.fullName.includes(',')
+                            ? `"${student.fullName}"` : (student.fullName || 'Anonymous');
+            
+            const outcome = progress > 70 ? 'High Probability' : (progress > 30 ? 'On Track' : 'Needs Support');
+            
+            csvContent += `${name},${college},${target},${progress}%,${outcome}\n`;
+        }
+        
+        res.setHeader('Content-Type', 'text/csv');
+        res.setHeader('Content-Disposition', 'attachment; filename="student_analytics_export.csv"');
+        res.send(csvContent);
+    } catch (err) {
+        console.error("Export Analytics Error:", err);
+        req.flash('error', 'Failed to generate analytics export.');
+        res.redirect('/admin/dashboard');
+    }
+});
+
 module.exports = router;

@@ -1,0 +1,147 @@
+<!-- views/partials/roadmap/milestones.ejs -->
+<div class="glass-card p-6 relative overflow-hidden bg-white border border-slate-200 mt-8">
+    <div class="flex items-center justify-between mb-6">
+        <h2 class="text-lg font-bold text-slate-800 flex items-center">
+            <i class="fas fa-trophy text-orange-400 mr-2"></i> Milestone Badges
+        </h2>
+    </div>
+
+    <div class="space-y-4">
+        <div class="relative pt-2 pb-2">
+            <!-- Gamified Progress Line -->
+            <div class="absolute left-6 top-6 bottom-6 w-1 bg-slate-100 rounded-full"></div>
+            <div id="milestoneProgressLine" class="absolute left-6 top-6 w-1 bg-gradient-to-b from-teal-400 to-indigo-500 rounded-full transition-all duration-1000 ease-out shadow-[0_0_10px_rgba(20,184,166,0.5)]" style="height: 0%"></div>
+            
+            <!-- Milestones mapping -->
+            <% 
+            const milestoneBadges = [
+                { icon: 'fa-seedling', color: 'text-emerald-500', name: 'Starter' },
+                { icon: 'fa-cogs', color: 'text-blue-500', name: 'Builder' },
+                { icon: 'fa-lightbulb', color: 'text-amber-500', name: 'Innovator' },
+                { icon: 'fa-rocket', color: 'text-indigo-500', name: 'Advanced' },
+                { icon: 'fa-crown', color: 'text-purple-500', name: 'Master' },
+                { icon: 'fa-star', color: 'text-yellow-500', name: 'Ultimate' }
+            ];
+            %>
+
+            <% roadmap.generated_phases.forEach(function(phase, idx) { 
+                const badge = milestoneBadges[idx % milestoneBadges.length];
+                const topicsCount = phase.topics.length;
+            %>
+            <div class="relative flex items-center mb-8 last:mb-0 milestone-item" data-phase-idx="<%= idx %>" data-topics-count="<%= topicsCount %>">
+                <!-- Milestone Icon Container -->
+                <div class="z-10 w-12 h-12 rounded-full bg-slate-100 border-4 border-white shadow-sm flex items-center justify-center transition-all duration-500 milestone-icon-box filter grayscale opacity-50 relative">
+                    <i class="fas <%= badge.icon %> text-xl <%= badge.color %>"></i>
+                    <!-- Animated generic pulse for unlocked item -->
+                    <div class="unlock-pulse absolute inset-0 rounded-full border-2 border-indigo-400 opacity-0 scale-100"></div>
+                </div>
+                
+                <div class="ml-4 flex-1">
+                    <h4 class="text-sm font-bold milestone-title text-slate-400 transition-colors duration-500 mb-0.5"><%= badge.name %> Badge</h4>
+                    <p class="text-[11px] font-semibold text-slate-500 uppercase tracking-wide">Phase <%= phase.phaseNumber %> Mastery</p>
+                </div>
+                
+                <div class="text-xs font-bold text-slate-300 milestone-status transition-colors duration-500 w-8 text-center">
+                    <i class="fas fa-lock"></i>
+                </div>
+            </div>
+            <% }); %>
+        </div>
+    </div>
+</div>
+
+<style>
+    @keyframes pulse-ring {
+        0% { transform: scale(0.8); opacity: 0.5; }
+        100% { transform: scale(1.5); opacity: 0; }
+    }
+    .milestone-icon-box.unlocked .unlock-pulse {
+        animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+    }
+    .milestone-icon-box.unlocked {
+        filter: none;
+        opacity: 1;
+        background: white;
+        transform: scale(1.1);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Intercept global progress update to include game UI updates
+        const originalUpdate = window.updateGlobalProgress;
+        
+        window.updateGlobalProgress = function() {
+            if (originalUpdate) originalUpdate();
+            updateMilestonesGamified();
+        };
+
+        function updateMilestonesGamified() {
+            const milestones = document.querySelectorAll('.milestone-item');
+            if (milestones.length === 0) return;
+
+            let completedPhases = 0;
+
+            milestones.forEach((item, index) => {
+                const phaseId = `phase${item.dataset.phaseIdx}`;
+                const checkboxes = document.querySelectorAll(`input[data-task-id^="${phaseId}-"]`);
+                const total = checkboxes.length;
+                
+                let checked = 0;
+                checkboxes.forEach(cb => { if (cb.checked) checked++; });
+
+                const iconBox = item.querySelector('.milestone-icon-box');
+                const title = item.querySelector('.milestone-title');
+                const status = item.querySelector('.milestone-status');
+
+                if (total > 0 && checked === total) {
+                    if (!iconBox.classList.contains('unlocked')) {
+                        iconBox.classList.add('unlocked');
+                        title.classList.remove('text-slate-400');
+                        title.classList.add('text-slate-800');
+                        status.innerHTML = '<i class="fas fa-unlock text-emerald-500 drop-shadow-sm scale-110 transition-transform"></i>';
+                    }
+                    completedPhases++;
+                } else {
+                    if (iconBox.classList.contains('unlocked')) {
+                        iconBox.classList.remove('unlocked');
+                        title.classList.add('text-slate-400');
+                        title.classList.remove('text-slate-800');
+                        status.innerHTML = '<i class="fas fa-lock text-slate-300"></i>';
+                    }
+                }
+            });
+
+            // Smooth fill vertical progress line
+            const progressLine = document.getElementById('milestoneProgressLine');
+            if (progressLine) {
+                // Calculate percentage based on completed milestones
+                let pct = 0;
+                if (milestones.length > 1) {
+                    pct = (completedPhases / (milestones.length - 1)) * 100;
+                    if(pct > 100) pct = 100;
+                } else if (milestones.length === 1) {
+                    pct = completedPhases === 1 ? 100 : 0;
+                }
+                setTimeout(() => {
+                    progressLine.style.height = `${pct}%`;
+                }, 100);
+            }
+            
+            // Update UI badge tracker in dashboard.ejs if present
+            const badgeNodes = document.querySelectorAll('.bg-indigo-800\\/50 .fa-medal');
+            if (badgeNodes.length > 0) {
+                badgeNodes.forEach(node => {
+                    const txtNode = node.nextElementSibling;
+                    if (txtNode) {
+                        txtNode.innerText = `${completedPhases} Badges Earned`;
+                    }
+                });
+            }
+        }
+        
+        // Trigger initial checks
+        setTimeout(updateMilestonesGamified, 500);
+    });
+</script>

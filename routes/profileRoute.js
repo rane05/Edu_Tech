@@ -209,4 +209,34 @@ router.post("/profile/link-teacher", async (req, res) => {
     }
 });
 
+// Task 8: Quick-Resume Builder & LinkedIn/Portfolio Builder Integration
+router.get("/profile/resume-export", async (req, res) => {
+    try {
+        const userId = req.session.userId || (req.user && req.user._id);
+        if (!userId) {
+            return res.redirect("/login");
+        }
+
+        const user = await User.findById(userId);
+        const profile = await Profile.findOne({ userId });
+        
+        if (!profile) {
+            return res.redirect("/profile");
+        }
+
+        // Fetch UserRoadmap for skills/progress
+        const UserRoadmap = require('../model/UserRoadmap');
+        const roadmap = await UserRoadmap.findOne({ userId }).lean();
+
+        res.render("resume_export", {
+            profile,
+            user,
+            roadmap
+        });
+    } catch (error) {
+        console.error("Resume Export Error:", error);
+        res.status(500).send("Error generating resume");
+    }
+});
+
 module.exports = router;
