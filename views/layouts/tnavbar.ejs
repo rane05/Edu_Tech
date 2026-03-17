@@ -136,13 +136,13 @@
             <a href="/studentlist" class="t-nav-link">Roster Control</a>
             <a href="/tprofile" class="t-nav-link">Faculty Profile</a>
 
-            <% if (userId) { %>
-                <a href="/logout" class="t-logout-btn">Terminate Session</a>
-                <% } else { %>
-                    <a href="/login" class="t-logout-btn"
-                        style="background: rgba(99, 102, 241, 0.1); color: #6366f1; border-color: rgba(99, 102, 241, 0.2);">Faculty
-                        Login</a>
-                    <% } %>
+            <% if ((typeof userId !== 'undefined' && userId) || (typeof username !== 'undefined' && username)) { %>
+                <a href="/logout" class="t-logout-btn">Log Out</a>
+            <% } else { %>
+                <a href="/login" class="t-logout-btn"
+                    style="background: rgba(99, 102, 241, 0.1); color: #6366f1; border-color: rgba(99, 102, 241, 0.2);">Faculty
+                    Login</a>
+            <% } %>
         </div>
 
         <button class="lg:hidden p-2 text-slate-500" id="t-mobile-menu-toggle">

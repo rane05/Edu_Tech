@@ -261,4 +261,26 @@ async function generateTitle(convId, userMessage) {
     } catch (e) { console.log("Title Gen Error", e.message); }
 }
 
+// Endpoint for quick dashboard advisor (Task 14)
+router.post('/api/chatbot/ask', async (req, res) => {
+    try {
+        const { message } = req.body;
+        if (!process.env.GROQ_API_KEY) throw new Error("Missing GROQ_API_KEY");
+        const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+
+        const response = await groq.chat.completions.create({
+            messages: [
+                { role: "system", content: "You are EduNavigator AI Advisor. Give short, professional, and actionable advice to students based on their queries. Max 2-3 sentences." },
+                { role: "user", content: message }
+            ],
+            model: "llama-3.1-8b-instant",
+        });
+
+        res.json({ response: response.choices[0]?.message?.content || "I'm not sure, please try again." });
+    } catch (error) {
+        console.error("Advisor Error:", error);
+        res.status(500).json({ error: "AI processing failed" });
+    }
+});
+
 module.exports = router;

@@ -17,7 +17,14 @@ const ProfileSchema = new mongoose.Schema({
     careerGoal: { type: String, default: '' },
     uniqueCode: { type: String, unique: true, sparse: true }, // Unique code for linking (sparse to allow nulls)
     parentUsername: { type: String, default: null }, // Store parent's username if linked
-    linkedTeachers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] // Link to multiple teachers in same college
+    linkedTeachers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }], // Link to multiple teachers in same college
+    interviewStats: [{
+        role: String,
+        date: Date,
+        confidenceScore: Number,
+        clarityScore: Number,
+        overallSentiment: String
+    }]
 });
 
 module.exports = mongoose.model('Profile', ProfileSchema);

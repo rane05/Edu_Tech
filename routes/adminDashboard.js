@@ -127,18 +127,35 @@ router.post('/admin/feedback/delete/:id', isAdmin, async (req, res) => {
     }
 });
 
-// Export Analytics CSV
-router.get('/admin/export-analytics', isAdmin, async (req, res) => {
+// Export Analytics as CSV
+router.get('/admin/export/analytics', isAdmin, async (req, res) => {
     try {
+        const Profile = require('../model/profile');
+        const UserRoadmap = require('../model/UserRoadmap');
+        const QuizResult = require('../model/QuizResult');
+        const Interview = require('../model/Interview');
+        
         const students = await User.find({ role: 'student' });
+        const profiles = await Profile.find({});
         const interviews = await Interview.find({ status: 'completed' }).populate('userId');
         const quizResults = await QuizResult.find().populate('userId');
-
+        
         let csvRows = [];
         // Header
-        csvRows.push(['Student Name', 'Email', 'Average Quiz Score', 'Interview Recommendation', 'Technical Accuracy', 'Roadmap Progress %'].join(','));
-
+        csvRows.push(['Student Name', 'College', 'Target Career', 'Progress %', 'Avg Quiz Score', 'Interview Recommendation', 'Expected Outcome'].join(','));
+        
         for (const student of students) {
+            const profile = profiles.find(p => p.userId && p.userId.toString() === student._id.toString());
+            const roadmap = await UserRoadmap.findOne({ userId: student._id });
+            
+            // Stats from Profile/Roadmap
+            const progress = roadmap && roadmap.progress ? Math.round(roadmap.progress.overall_percentage) : 
+                             (student.roadmapProgress ? ((student.roadmapProgress.length / 20) * 100).toFixed(0) : 0);
+            const target = roadmap ? roadmap.careerTitle : (profile ? profile.careerGoal || 'N/A' : 'N/A');
+            const college = (profile && profile.collegeName) ? (profile.collegeName.includes(',') ? `"${profile.collegeName}"` : profile.collegeName) : 'N/A';
+            const name = (profile && profile.fullName) ? (profile.fullName.includes(',') ? `"${profile.fullName}"` : profile.fullName) : (student.username || 'Anonymous');
+            
+            // Stats from Quizzes/Interviews
             const studentQuizzes = quizResults.filter(q => q.userId && q.userId._id.toString() === student._id.toString());
             const avgScore = studentQuizzes.length > 0 
                 ? (studentQuizzes.reduce((acc, q) => acc + q.score, 0) / studentQuizzes.length).toFixed(2) 
@@ -149,31 +166,27 @@ router.get('/admin/export-analytics', isAdmin, async (req, res) => {
                 .sort((a, b) => b.updatedAt - a.updatedAt)[0];
 
             const recommendation = latestInterview ? latestInterview.finalEvaluation.recommendation : 'None';
-            const techAccuracy = latestInterview && latestInterview.conversationHistory.length > 0
-                ? latestInterview.conversationHistory[0].evaluation.technicalAccuracy || 'N/A'
-                : 'N/A';
+            const outcome = progress > 70 ? 'High Probability' : (progress > 30 ? 'On Track' : 'Needs Support');
             
-            // Assume max roadmap steps is 20 for progress calculation
-            const roadmapProgress = ((student.roadmapProgress.length / 20) * 100).toFixed(0);
-
             csvRows.push([
-                `"${student.username || student.name}"`,
-                `"${student.email}"`,
+                name,
+                college,
+                `"${target}"`,
+                `${progress}%`,
                 avgScore,
                 `"${recommendation}"`,
-                `"${techAccuracy.replace(/"/g, '""')}"`,
-                `${roadmapProgress}%`
+                outcome
             ].join(','));
         }
-
+        
         const csvString = csvRows.join('\n');
         res.setHeader('Content-Type', 'text/csv');
-        res.setHeader('Content-Disposition', 'attachment; filename=student_analytics_report.csv');
+        res.setHeader('Content-Disposition', 'attachment; filename="student_analytics_report.csv"');
         res.status(200).send(csvString);
-
     } catch (err) {
-        console.error(err);
-        res.status(500).send('Export Failed');
+        console.error("Export Analytics Error:", err);
+        req.flash('error', 'Failed to generate analytics export.');
+        res.redirect('/admin/dashboard');
     }
 });
 

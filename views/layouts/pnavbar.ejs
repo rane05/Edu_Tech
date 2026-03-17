@@ -158,11 +158,11 @@
             <a href="/parent_home" class="nav-link">Dashboard</a>
             <a href="/parentprofile" class="nav-link">My Profile</a>
 
-            <% if (typeof userId !=='undefined' && userId) { %>
+            <% if ((typeof userId !== 'undefined' && userId) || (typeof username !== 'undefined' && username)) { %>
                 <a href="/logout" class="btn-logout">Log Out</a>
-                <% } else { %>
-                    <a href="/login" class="nav-link">Log In</a>
-                    <% } %>
+            <% } else { %>
+                <a href="/login" class="nav-link">Log In</a>
+            <% } %>
         </div>
     </div>
 </nav>

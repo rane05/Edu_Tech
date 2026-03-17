@@ -10,6 +10,21 @@ const Doubt = require('../model/Doubt');
 const AdmissionRequest = require('../model/AdmissionRequest');
 const College = require('../model/cetCollege');
 
+// Task 9: Social Learning Feed Snippet (cron job simulation)
+let currentSocialFeeds = [
+    "A batchmate just aced the Machine Learning mock interview!",
+    "A peer from your college completed their Software Engineering Roadmap."
+];
+setInterval(() => {
+    const pool = [
+        "A student in your district unlocked the 'Innovator' badge.",
+        "Batchmate aced mock interview with a 95% rating.",
+        "A peer completed their Data Structures roadmap.",
+        "Someone from your course just ranked top 10 in a recent aptitude quiz."
+    ];
+    currentSocialFeeds = pool.sort(() => 0.5 - Math.random()).slice(0, 2);
+}, 3600000); // refresh every hour
+
 router.get('/dashboard', async (req, res) => {
     const userId = req.session.userId || (req.user && req.user._id);
     if (!userId) return res.redirect('/login');
@@ -117,7 +132,8 @@ router.get('/dashboard', async (req, res) => {
                 meetings: res.locals.institutionalMeetings || [],
                 teachers: collegeTeachers,
                 doubts: myDoubts
-            }
+            },
+            socialFeed: currentSocialFeeds
         });
     } catch (err) {
         console.error("Dashboard Error:", err);
@@ -188,6 +204,33 @@ router.post('/submitDoubt', async (req, res) => {
     } catch (err) {
         console.error("Doubt submission error:", err);
         res.status(500).send("Error submitting doubt");
+    }
+});
+
+// POST: Submit AI Suggestion Feedback
+router.post('/submitAIFeedback', async (req, res) => {
+    try {
+        const { subject, message, rating } = req.body;
+        const userId = req.session.userId || (req.user && req.user._id);
+
+        const User = require('../model/User');
+        const Feedback = require('../model/Feedback');
+
+        const user = await User.findById(userId);
+
+        await Feedback.create({
+            userId,
+            username: user.username,
+            role: user.role || 'student',
+            subject: subject || "AI Suggestion Rating",
+            message: message || "Rated through carousel",
+            rating: parseInt(rating) || 5
+        });
+
+        res.redirect('/dashboard');
+    } catch (err) {
+        console.error("AI Feedback submission error:", err);
+        res.status(500).send("Error submitting feedback");
     }
 });
 

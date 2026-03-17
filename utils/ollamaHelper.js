@@ -58,13 +58,58 @@ async function generateQuestions(role, seniority) {
 }
 
 /**
- * Analyzes the candidate's answer.
+ * Deep Analysis of candidate's answer using Groq
+ */
+async function deepAnalyzeResponse(role, seniority, transcript) {
+    const prompt = `
+    You are an expert Interview Coach and Sentiment Specialist.
+    Candidate Role: ${role}
+    Seniority: ${seniority}
+    Answer: "${transcript}"
+
+    Perform a deep analysis of this answer. Evaluate:
+    1. Technical Accuracy (score 0-100)
+    2. Communication Clarity (score 0-100)
+    3. Sentiment & Confidence (Highly Confident, Neutral, Hesitant)
+    4. Key Weaknesses
+    5. Improvement Tips
+
+    Output exactly this JSON format:
+    {
+        "technicalScore": number,
+        "communicationScore": number,
+        "confidenceScore": number,
+        "overallSentiment": "string",
+        "strengths": ["string"],
+        "weaknesses": ["string"],
+        "tips": ["string"],
+        "feedback": "string",
+        "followUp": "string"
+    }
+    `;
+
+    try {
+        return await generateJSON(prompt);
+    } catch (e) {
+        console.error("Deep Analysis Error:", e);
+        return {
+            technicalScore: 50,
+            communicationScore: 50,
+            confidenceScore: 50,
+            overallSentiment: "Neutral",
+            strengths: ["Communication"],
+            weaknesses: ["Technical depth"],
+            tips: ["Provide more specific examples using STAR method"],
+            feedback: "Analysis took too long. Keep practicing!",
+            followUp: "Could you explain a specific time you faced a challenge?"
+        };
+    }
+}
+
+/**
+ * Analyzes the candidate's answer (Legacy Hook)
  */
 async function analyzeResponse(role, seniority, transcript) {
-    // Note: We don't have the specific question in the simplified 'analyze' endpoint of the enhanced UI 
-    // (the frontend just sends transcript, role, seniority). 
-    // We'll trust the transcript contains enough context or assumes a general technical/behavioral answer check.
-
     const prompt = `
     You are an expert Interview Coach.
     Candidate Role: ${role}
@@ -103,5 +148,6 @@ async function analyzeResponse(role, seniority, transcript) {
 
 module.exports = {
     generateQuestions,
-    analyzeResponse
+    analyzeResponse,
+    deepAnalyzeResponse
 };

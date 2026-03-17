@@ -410,10 +410,11 @@
                         <div class="lg:col-span-5 space-y-8 lg:sticky lg:top-24 self-start">
                             <%- include('partials/roadmap/milestones') %>
                             <%- include('partials/roadmap/dashboard', { roadmap: roadmap }) %>
-                                <%- include('partials/roadmap/skill_gap', { roadmap: roadmap }) %>
-                                    <%- include('partials/roadmap/projects', { roadmap: roadmap }) %>
-                                        <%- include('partials/roadmap/salary_graph', { roadmap: roadmap }) %>
-                                            <%- include('partials/roadmap/pivot_suggestions', { roadmap: roadmap }) %>
+                            <%- include('partials/roadmap/milestones', { roadmap: roadmap }) %>
+                            <%- include('partials/roadmap/skill_gap', { roadmap: roadmap }) %>
+                            <%- include('partials/roadmap/projects', { roadmap: roadmap }) %>
+                            <%- include('partials/roadmap/salary_graph', { roadmap: roadmap }) %>
+                            <%- include('partials/roadmap/pivot_suggestions', { roadmap: roadmap }) %>
                         </div>
 
                     </div>

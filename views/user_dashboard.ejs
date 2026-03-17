@@ -941,6 +941,22 @@
                 </div>
             </div>
 
+            <!-- Social Learning Feed Snippet (Task 9) -->
+            <% if (typeof socialFeed !== 'undefined' && socialFeed.length > 0) { %>
+            <div style="margin-bottom: 30px; background: linear-gradient(135deg, #e0e7ff 0%, #ede9fe 100%); border-radius: 16px; padding: 12px 20px; display: flex; align-items: center; gap: 15px; border: 1px solid #c7d2fe;">
+                <div style="background: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary); font-size: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); flex-shrink: 0;">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div style="flex: 1; overflow: hidden; white-space: nowrap; font-size: 13px; font-weight: 600; color: #4338ca;">
+                    <span style="font-weight: 800; text-transform: uppercase; font-size: 10px; margin-right: 8px; background: white; padding: 2px 6px; border-radius: 4px;">Community</span>
+                    <marquee behavior="scroll" direction="left" scrollamount="4" style="vertical-align: middle;">
+                        <% socialFeed.forEach((item, i) => { %>
+                            <%= item %> &nbsp;&nbsp;&nbsp;&nbsp; • &nbsp;&nbsp;&nbsp;&nbsp;
+                        <% }); %>
+                    </marquee>
+                </div>
+            </div>
+            <% } %>
             <div class="dashboard-grid">
                 <!-- LEFT PANEL -->
                 <div class="left-panel">
@@ -1081,6 +1097,138 @@
                                                         style="text-align: center; color: var(--text-muted); padding: 30px;">
                                                         Inbox zero. Use the chat button bottom right to ask an
                                                         expert.
+                                                    </td>
+                                                </tr>
+                                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Feedback Carousel Card -->
+                    <div class="assignments-card">
+                        <div class="card-header">
+                            <div>
+                                <h3 class="card-title">Rate AI Suggestions</h3>
+                                <p style="font-size: 12px; color: var(--text-muted); margin: 0;">Post-Session Feedback on Analytics</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Simple CSS Carousel Implementation mapped to task -->
+                        <div style="position: relative; width: 100%; overflow: hidden; border-radius: 12px; border: 1px solid var(--border-color); background: #fafafa; padding: 20px;">
+                            <style>
+                                .ai-fb-carousel { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 20px; padding-bottom: 10px; }
+                                .ai-fb-carousel::-webkit-scrollbar { height: 6px; }
+                                .ai-fb-carousel::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+                                .ai-fb-item { flex: 0 0 calc(100% - 10px); scroll-snap-align: start; background: white; padding: 20px; border-radius: 16px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+                                .star-rating { direction: rtl; display: inline-flex; font-size: 24px; color: #cbd5e1; }
+                                .star-rating input { display: none; }
+                                .star-rating label { cursor: pointer; padding: 0 4px; transition: color 0.2s; }
+                                .star-rating input:checked ~ label, .star-rating label:hover, .star-rating label:hover ~ label { color: #fbbf24; }
+                                .fb-submit-btn { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; float: right; margin-top: 10px; font-family: inherit; font-size: 13px; }
+                            </style>
+                            
+                            <div class="ai-fb-carousel">
+                                <!-- Item 1 -->
+                                <div class="ai-fb-item">
+                                    <h4 style="margin: 0 0 5px 0; font-size: 15px; font-weight: 700; color: var(--primary);">Resume Parsing Suggestion</h4>
+                                    <p style="margin: 0 0 15px 0; font-size: 12px; color: var(--text-muted);">How accurate was our latest AI suggestion for your Skill Gaps?</p>
+                                    <form action="/submitAIFeedback" method="POST">
+                                        <input type="hidden" name="subject" value="Resume Parsing AI">
+                                        <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                                            <div class="star-rating">
+                                                <input type="radio" id="st5-1" name="rating" value="5" required/><label for="st5-1" title="5 stars"><i class="fas fa-star"></i></label>
+                                                <input type="radio" id="st4-1" name="rating" value="4"/><label for="st4-1" title="4 stars"><i class="fas fa-star"></i></label>
+                                                <input type="radio" id="st3-1" name="rating" value="3"/><label for="st3-1" title="3 stars"><i class="fas fa-star"></i></label>
+                                                <input type="radio" id="st2-1" name="rating" value="2"/><label for="st2-1" title="2 stars"><i class="fas fa-star"></i></label>
+                                                <input type="radio" id="st1-1" name="rating" value="1"/><label for="st1-1" title="1 star"><i class="fas fa-star"></i></label>
+                                            </div>
+                                            <button type="submit" class="fb-submit-btn">Submit Rating</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                
+                                <!-- Item 2 -->
+                                <div class="ai-fb-item">
+                                    <h4 style="margin: 0 0 5px 0; font-size: 15px; font-weight: 700; color: var(--stat-green);">Interview Simulator Match</h4>
+                                    <p style="margin: 0 0 15px 0; font-size: 12px; color: var(--text-muted);">Was the generated HR mock interview helpful for your career trajectory?</p>
+                                    <form action="/submitAIFeedback" method="POST">
+                                        <input type="hidden" name="subject" value="Interview Simulator AI">
+                                        <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                                            <div class="star-rating">
+                                                <input type="radio" id="st5-2" name="rating" value="5" required/><label for="st5-2" title="5 stars"><i class="fas fa-star"></i></label>
+                                                <input type="radio" id="st4-2" name="rating" value="4"/><label for="st4-2" title="4 stars"><i class="fas fa-star"></i></label>
+                                                <input type="radio" id="st3-2" name="rating" value="3"/><label for="st3-2" title="3 stars"><i class="fas fa-star"></i></label>
+                                                <input type="radio" id="st2-2" name="rating" value="2"/><label for="st2-2" title="2 stars"><i class="fas fa-star"></i></label>
+                                                <input type="radio" id="st1-2" name="rating" value="1"/><label for="st1-2" title="1 star"><i class="fas fa-star"></i></label>
+                                            </div>
+                                            <button type="submit" class="fb-submit-btn" style="background: var(--stat-green);">Submit Rating</button>
+                                        </div>
+                                    </form>
+                                </div>
+                                
+                                <!-- Item 3 -->
+                                <div class="ai-fb-item">
+                                    <h4 style="margin: 0 0 5px 0; font-size: 15px; font-weight: 700; color: var(--stat-blue);">Career Path Roadmap</h4>
+                                    <p style="margin: 0 0 15px 0; font-size: 12px; color: var(--text-muted);">Rate the dynamically suggested roadmap for your chosen goal.</p>
+                                    <form action="/submitAIFeedback" method="POST">
+                                        <input type="hidden" name="subject" value="Career Roadmap AI">
+                                        <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                                            <div class="star-rating">
+                                                <input type="radio" id="st5-3" name="rating" value="5" required/><label for="st5-3" title="5 stars"><i class="fas fa-star"></i></label>
+                                                <input type="radio" id="st4-3" name="rating" value="4"/><label for="st4-3" title="4 stars"><i class="fas fa-star"></i></label>
+                                                <input type="radio" id="st3-3" name="rating" value="3"/><label for="st3-3" title="3 stars"><i class="fas fa-star"></i></label>
+                                                <input type="radio" id="st2-3" name="rating" value="2"/><label for="st2-3" title="2 stars"><i class="fas fa-star"></i></label>
+                                                <input type="radio" id="st1-3" name="rating" value="1"/><label for="st1-3" title="1 star"><i class="fas fa-star"></i></label>
+                                            </div>
+                                            <button type="submit" class="fb-submit-btn" style="background: var(--stat-blue);">Submit Rating</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <p style="text-align: center; font-size: 10px; color: var(--text-muted); margin: 10px 0 0 0;"><i class="fas fa-arrows-alt-h"></i> Swipe to see more sessions</p>
+                        </div>
+                    </div>
+
+                    <!-- Shared Resources Card -->
+                    <div class="assignments-card">
+                        <div class="card-header">
+                            <h3 class="card-title">Shared Resources</h3>
+                        </div>
+                        <table class="data-table">
+                            <tbody>
+                                <% if (typeof resources !=='undefined' && resources.length> 0) { %>
+                                    <% resources.forEach(resource=> { %>
+                                        <tr>
+                                            <td>
+                                                <div class="task-cell">
+                                                    <div class="task-icon"
+                                                        style="background: rgba(168, 85, 247, 0.1); color: #a855f7;">
+                                                        <i class="fas fa-file-pdf"></i>
+                                                    </div>
+                                                    <div class="task-info">
+                                                        <h4>
+                                                            <%= resource.title %>
+                                                        </h4>
+                                                        <p>
+                                                            <%= resource.description || 'Reference Material' %>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td style="text-align: right;">
+                                                <a href="<%= resource.link %>" target="_blank" class="pill-completed"
+                                                    style="text-decoration: none; display: inline-block;">Access</a>
+                                            </td>
+                                        </tr>
+                                        <% }); %>
+                                            <% } else { %>
+                                                <tr>
+                                                    <td colspan="2"
+                                                        style="text-align: center; color: var(--text-muted); padding: 30px;">
+                                                        No resources shared with you yet.
+                                                    </td>
+                                                </tr>
+                                                <% } %>
                                                     </td>
                                                 </tr>
                                                 <% } %>
@@ -1238,8 +1386,7 @@
                         <div class="card-header">
                             <div>
                                 <h3 class="card-title">Admission Journey</h3>
-                                <p style="font-size: 12px; color: var(--text-muted);">Track your applications to partner
-                                    colleges</p>
+                                <p style="font-size: 12px; color: var(--text-muted);">Track your applications to partner colleges</p>
                             </div>
                         </div>
                         <div style="display: flex; flex-direction: column; gap: 15px;">
@@ -1287,25 +1434,42 @@
                                             <% } %>
                         </div>
                     </div>
+                    <!-- AI Skill Gap Heatmap (Task 10) -->
+                    <div class="assignments-card" style="margin-top: 30px;">
+                        <div class="card-header">
+                            <h3 class="card-title">AI Skill Gap Heatmap</h3>
+                            <div class="flex items-center gap-2">
+                                <span class="px-2 py-1 bg-indigo-50 text-indigo-600 rounded text-[10px] font-bold">AI GENERATED</span>
+                            </div>
+                        </div>
+                        <div id="skillHeatmap" style="min-height: 250px;"></div>
+                        <p class="text-[11px] text-slate-400 mt-4 leading-relaxed">
+                            <i class="fas fa-magic mr-1"></i> Based on your recent quiz scores and interview performance, our AI has mapped your readiness against market standards.
+                        </p>
+                    </div>
                 </div>
             </div>
         </main>
 
-        <!-- Floating Action Button for Ask Anonymously -->
+        <!-- AI Advisor Floating Action Button -->
         <div class="fab-container">
             <button class="fab-btn" onclick="document.getElementById('askModal').classList.toggle('active')">
-                <i class="far fa-comment-dots"></i>
+                <i class="fas fa-robot"></i>
             </button>
-
             <div id="askModal" class="ask-modal">
-                <h3>Ask Anonymously</h3>
-                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Drop your doubt to our
-                    experts, hidden identity guaranteed.</p>
+                <h3 style="margin-bottom: 10px;">AI Career Advisor 🤖</h3>
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 15px;">Ask me anything about careers, skills, or your roadmap.</p>
+                <div id="aiAdvisorResponse" style="max-height: 150px; overflow-y: auto; font-size: 13px; margin-bottom: 15px; padding: 10px; background: #f8fafc; border-radius: 8px; display: none;"></div>
+                <input type="text" id="aiAdvisorInput" class="ask-input" placeholder="How do I improve my logic scores?" style="margin-bottom: 10px;">
+                <button type="button" id="aiAdvisorSubmit" class="ask-submit" style="background: var(--primary);">Ask AI Assistant</button>
+                
+                <hr style="margin: 15px 0; border: 0; border-top: 1px solid #eee;">
+                
+                <h4 style="font-size: 14px; margin-bottom: 8px;">Ask Expert Anonymously</h4>
                 <form action="/submitDoubt" method="POST">
-                    <input type="text" name="subject" class="ask-input" placeholder="Question Subject" required>
-                    <textarea name="question" class="ask-input" placeholder="Describe your doubt here..." rows="4"
-                        required style="resize: none;"></textarea>
-                    <button type="submit" class="ask-submit">Send Securely</button>
+                    <input type="text" name="subject" class="ask-input" placeholder="Question Subject" required style="font-size: 12px; padding: 8px;">
+                    <textarea name="question" class="ask-input" placeholder="Describe your doubt here..." rows="2" required style="resize: none; font-size: 12px; padding: 8px;"></textarea>
+                    <button type="submit" class="ask-submit" style="background: #333; padding: 8px;">Send to Expert</button>
                 </form>
             </div>
         </div>
@@ -1313,12 +1477,75 @@
 
     <!-- Scripts for Charts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script id="chart-data" type="application/json">
     <%- JSON.stringify(results || []) %>
 </script>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+             // Task 10: Skill Heatmap Logic
+                const heatmapOptions = {
+                    series: [
+                        { name: 'Technical', data: [{x: 'Logic', y: 82}, {x: 'Code', y: 65}, {x: 'Arch', y: 45}, {x: 'DB', y: 70}] },
+                        { name: 'Interpersonal', data: [{x: 'Comm', y: 88}, {x: 'Collab', y: 72}, {x: 'Lead', y: 40}, {x: 'Empathy', y: 95}] },
+                        { name: 'Problem Solving', data: [{x: 'Alg', y: 60}, {x: 'Design', y: 55}, {x: 'Speed', y: 80}, {x: 'Detail', y: 75}] }
+                    ],
+                    chart: { height: 300, type: 'heatmap', toolbar: { show: false }, fontFamily: 'Outfit' },
+                    dataLabels: { enabled: false },
+                    colors: ["#6366f1"],
+                    plotOptions: {
+                        heatmap: {
+                            shadeIntensity: 0.5,
+                            radius: 8,
+                            useFillColorAsStroke: true,
+                            colorScale: {
+                                ranges: [
+                                    { from: 0, to: 50, name: 'Critical Gap', color: '#fee2e2' },
+                                    { from: 51, to: 75, name: 'Growing', color: '#e0e7ff' },
+                                    { from: 76, to: 100, name: 'Mastered', color: '#4f46e5' }
+                                ]
+                            }
+                        }
+                    },
+                    xaxis: { labels: { style: { colors: '#94a3b8', fontWeight: 600 } } },
+                    yaxis: { labels: { style: { colors: '#94a3b8', fontWeight: 600 } } }
+                };
+
+                const heatmap = new ApexCharts(document.querySelector("#skillHeatmap"), heatmapOptions);
+                heatmap.render();
+
+                // AI Advisor Logic
+                const advisorBtn = document.getElementById('aiAdvisorSubmit');
+                const advisorInput = document.getElementById('aiAdvisorInput');
+                const advisorResponse = document.getElementById('aiAdvisorResponse');
+
+                if (advisorBtn) {
+                    advisorBtn.addEventListener('click', async () => {
+                        const query = advisorInput.value;
+                        if(!query) return;
+                        
+                        advisorBtn.disabled = true;
+                        advisorBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Thinking...';
+                        advisorResponse.style.display = 'block';
+                        advisorResponse.innerHTML = 'Analyzing your profile and global trends...';
+
+                        try {
+                            const res = await fetch('/api/chatbot/ask', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ message: query })
+                            });
+                            const data = await res.json();
+                            advisorResponse.innerHTML = `<div style="line-height: 1.5;">${data.response || data.reply || "I'm sorry, I couldn't process that right now."}</div>`;
+                        } catch (e) {
+                            advisorResponse.innerHTML = 'Sorry, the AI advisor is currently offline.';
+                        }
+                        advisorBtn.disabled = false;
+                        advisorBtn.innerText = 'Ask AI Assistant';
+                    });
+                }
+
             // Apply widths to stat indicators
             document.querySelectorAll('.stat-indicator-fill').forEach(el => {
                 if (el.dataset.width) el.style.width = el.dataset.width + '%';
@@ -1328,15 +1555,15 @@
             const resultsRawText = document.getElementById('chart-data').textContent;
             const resultsRaw = resultsRawText ? JSON.parse(resultsRawText) : [];
 
-            // Use real backend data or fallback dummy data to match the UI visual exactly
+            // Use real backend data or fallback dummy data
             const dataPoints = resultsRaw.length > 0 ? resultsRaw.map(r => r.score) : [2, 5, 3, 7, 4, 3, 5];
             const labels = resultsRaw.length > 0 ? resultsRaw.map((_, i) => 'T' + (i + 1)) : ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
-            // 1. Bar Chart (Actively Hours equivalent mapping)
+            // 1. Bar Chart
             const ctxBar = document.getElementById('activeHoursChart').getContext('2d');
             const gradientBar = ctxBar.createLinearGradient(0, 0, 0, 200);
-            gradientBar.addColorStop(0, '#6366f1');   // Indigo
-            gradientBar.addColorStop(1, '#a5b4fc');   // Light Indigo
+            gradientBar.addColorStop(0, '#6366f1');
+            gradientBar.addColorStop(1, '#a5b4fc');
 
             new Chart(ctxBar, {
                 type: 'bar',
@@ -1358,22 +1585,20 @@
                     scales: {
                         x: {
                             grid: { display: false },
-                            border: { display: false },
                             ticks: { font: { family: 'Outfit', size: 12, weight: 600 }, color: '#94a3b8' }
                         },
                         y: {
                             beginAtZero: true,
                             grid: { borderDash: [4, 4], color: '#f1f5f9' },
-                            border: { display: false },
                             ticks: { font: { family: 'Outfit', size: 12, weight: 600 }, color: '#94a3b8', stepSize: 2 }
                         }
                     }
                 }
             });
 
-            // 2. Line Chart (Performance)
+            // 2. Line Chart
             const ctxLine = document.getElementById('performanceChart').getContext('2d');
-            const secondaryData = dataPoints.map(v => v * 0.8 + 1); // Fake 2nd line for visual flair
+            const secondaryData = dataPoints.map(v => v * 0.8 + 1);
 
             new Chart(ctxLine, {
                 type: 'line',
@@ -1402,21 +1627,13 @@
                     maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
                     scales: {
-                        x: {
-                            display: true,
-                            grid: { display: false },
-                            border: { display: false },
-                            ticks: { font: { family: 'Outfit', size: 10, weight: 600 }, color: '#94a3b8' }
-                        },
-                        y: {
-                            display: false
-                        }
+                        x: { display: true, grid: { display: false }, ticks: { font: { family: 'Outfit', size: 10, weight: 600 }, color: '#94a3b8' } },
+                        y: { display: false }
                     }
                 }
             });
         });
     </script>
-
     <style>
         .footer {
             margin-left: 250px;
