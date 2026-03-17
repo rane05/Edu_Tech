@@ -706,13 +706,23 @@
                                 </div>
                                 <div class="chat-info">
                                     <h4>
-                                        <%= doubt.studentName %>
+                                        <%= doubt.studentName || (doubt.studentId ? doubt.studentId.username : 'Student') %>
                                     </h4>
+                                    <p style="font-weight: 700; color: var(--text-dark); margin-bottom: 2px;">
+                                        <%= doubt.subject || doubt.title || 'Doubt' %>
+                                    </p>
                                     <p>
-                                        <%= doubt.question %>
+                                        <%= doubt.question || doubt.description %>
                                     </p>
                                 </div>
-                                <div class="badge">1</div>
+                                <button 
+                                    data-id="<%= doubt._id %>" 
+                                    data-question="<%= (doubt.question || doubt.description || '').replace(/"/g, '&quot;') %>" 
+                                    onclick="openAnswerModalFromBtn(this)" 
+                                    class="view-all" 
+                                    style="background: var(--primary); color: white; margin-left: auto;">
+                                    Answer
+                                </button>
                             </div>
                             <% }) %>
                                 <% } else { %>
@@ -897,8 +907,6 @@
             </form>
         </div>
     </div>
-
-    <!-- Resource Modal -->
     <div id="resourceModal"
         style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; align-items: center; justify-content: center;">
         <div
@@ -921,7 +929,41 @@
             </form>
         </div>
     </div>
+
+    <div id="answerDoubtModal"
+        style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1001; align-items: center; justify-content: center;">
+        <div
+            style="background: white; padding: 32px; border-radius: 24px; width: 100%; max-width: 500px; margin: auto; margin-top: 10vh;">
+            <h3 style="margin-top: 0;">Resolve Doubt 💡</h3>
+            <p id="modalQuestionDisplay" style="font-size: 14px; color: var(--text-muted); background: #f8fafc; padding: 12px; border-radius: 12px; border-left: 4px solid var(--primary); margin-bottom: 20px;"></p>
+            <form action="/answerDoubt" method="POST">
+                <input type="hidden" name="doubtId" id="modalDoubtId">
+                <label style="display: block; font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase;">Your Solution</label>
+                <textarea name="answer" placeholder="Explain the solution clearly..." required
+                    style="width: 100%; padding: 12px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #e2e8f0; height: 150px; resize: none;"></textarea>
+                <div style="display: flex; gap: 12px; margin-top: 16px;">
+                    <button type="submit"
+                        style="flex: 1; background: var(--primary); color: white; padding: 12px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold;">Send Solution</button>
+                    <button type="button" onclick="toggleModal('answerDoubtModal')"
+                        style="flex: 1; background: #e2e8f0; color: #1e293b; padding: 12px; border: none; border-radius: 12px; cursor: pointer; font-weight: bold;">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
+        function openAnswerModalFromBtn(btn) {
+            const id = btn.getAttribute('data-id');
+            const question = btn.getAttribute('data-question');
+            openAnswerModal(id, question);
+        }
+
+        function openAnswerModal(id, question) {
+            document.getElementById('modalDoubtId').value = id;
+            document.getElementById('modalQuestionDisplay').innerText = "Q: " + question;
+            document.getElementById('answerDoubtModal').style.display = 'flex';
+        }
+
         function toggleModal(id) {
             const modal = document.getElementById(id);
             if (modal.style.display === 'none' || modal.style.display === '') {

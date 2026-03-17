@@ -164,7 +164,10 @@ router.post('/ask-doubt', async (req, res) => {
 
         await Doubt.create({
             studentId: userId,
+            studentName: profile.fullName,
             teacherId: teacherId,
+            subject: title,
+            question: description,
             title,
             description,
             collegeName: profile.collegeName,

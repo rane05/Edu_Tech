@@ -193,10 +193,10 @@
                                 { name: "Placement Quality", val: 15, icon: "trophy", color: "#10b981" }
                             ]; %>
                             <% steps.forEach(step => { %>
-                                <div class="bg-slate-50 p-6 rounded-[2rem] border border-slate-100">
+                                <div class="bg-slate-50 p-6 rounded-[2rem] border border-slate-100" style="--p-val: <%= step.val %>%; --p-col: <%= step.color %>;">
                                     <div class="flex justify-between mb-4">
                                         <div class="flex items-center gap-3">
-                                            <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-white shadow-sm" style="color: <%= step.color %>">
+                                            <div class="w-10 h-10 rounded-xl flex items-center justify-center bg-white shadow-sm" style="color: var(--p-col);">
                                                 <i class="fas fa-<%= step.icon %>"></i>
                                             </div>
                                             <span class="font-bold text-slate-700"><%= step.name %></span>
@@ -204,7 +204,7 @@
                                         <span class="font-black text-slate-900"><%= step.val %>%</span>
                                     </div>
                                     <div class="w-full bg-white h-3 rounded-full overflow-hidden border border-slate-200">
-                                        <div class="h-full rounded-full" style="width: <%= step.val %>%; background: <%= step.color %>"></div>
+                                        <div class="h-full rounded-full" style="width: var(--p-val); background-color: var(--p-col);"></div>
                                     </div>
                                 </div>
                             <% }) %>

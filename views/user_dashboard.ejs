@@ -215,6 +215,29 @@
             color: var(--text-muted);
         }
 
+        .back-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-right: 20px;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background: var(--bg-main);
+            color: var(--text-dark);
+            border-color: #cbd5e1;
+            transform: translateX(-3px);
+        }
+
         .notification-btn {
             width: 40px;
             height: 40px;
@@ -840,9 +863,14 @@
         <main class="main-content">
             <!-- Header -->
             <header class="top-header">
-                <div class="greeting-area">
-                    <h1>Hello <%= username.split('@')[0] %> 👋</h1>
-                    <p>Let's learn something new today!</p>
+                <div style="display: flex; align-items: center;">
+                    <a href="javascript:history.back()" class="back-btn" title="Go Back">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                    <div class="greeting-area">
+                        <h1>Hello <%= username.split('@')[0] %> 👋</h1>
+                        <p>Let's learn something new today!</p>
+                    </div>
                 </div>
 
                 <div class="header-right">
@@ -1060,6 +1088,9 @@
                     <div class="assignments-card">
                         <div class="card-header">
                             <h3 class="card-title">Consultation Inbox</h3>
+                                                            <button 
+                                                                onclick="document.getElementById('teacherDoubtModal').classList.add('active'); document.getElementById('modalOverlay').classList.add('active');" 
+                                                                style="padding: 6px 16px; border-radius: 99px; background: var(--primary); color: white; border: none; font-size: 11px; font-weight: 700; cursor: pointer; text-transform: uppercase; letter-spacing: 0.05em;">Ask a Expert</button>
                         </div>
                         <table class="data-table">
                             <tbody>
@@ -1085,10 +1116,16 @@
                                             </td>
                                             <td>
                                                 <% if(doubt.status==='resolved' ){ %>
-                                                    <span class="pill-completed">Resolved</span>
-                                                    <% } else { %>
-                                                        <span class="pill-upcoming">Pending</span>
-                                                        <% } %>
+                                                    <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 5px;">
+                                                        <span class="pill-completed">Resolved</span>
+                                                        <button 
+                                                            data-answer="<%= (doubt.answer || '').replace(/"/g, '&quot;') %>" 
+                                                            onclick="showDoubtAnswer(this)" 
+                                                            style="background: none; border: none; color: var(--primary); font-size: 11px; font-weight: 700; cursor: pointer; text-decoration: underline;">View Solution</button>
+                                                    </div>
+                                                <% } else { %>
+                                                    <span class="pill-upcoming">Pending</span>
+                                                <% } %>
                                             </td>
                                         </tr>
                                         <% }); %>
@@ -1465,6 +1502,85 @@
                 <button type="button" id="aiAdvisorSubmit" class="ask-submit" style="background: var(--primary);">Ask AI Assistant</button>
             </div>
         </div>
+
+        <!-- Teacher Doubt Modal -->
+        <div id="teacherDoubtModal" class="ask-modal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); bottom: auto; right: auto; z-index: 1001; width: 450px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 style="margin: 0;">Ask Your Teacher 👨‍🏫</h3>
+                <button onclick="document.getElementById('teacherDoubtModal').classList.remove('active')" style="background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-muted);">&times;</button>
+            </div>
+            <form action="/ask-doubt" method="POST">
+                <label style="display: block; font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase;">Select Teacher</label>
+                <select name="teacherId" class="ask-input" required style="appearance: auto;">
+                    <option value="" disabled selected>Choose a teacher...</option>
+                    <% if (feed && feed.teachers && feed.teachers.length > 0) { %>
+                        <% feed.teachers.forEach(teacher => { %>
+                            <option value="<%= teacher.userId._id || teacher.userId %>"><%= teacher.fullName %></option>
+                        <% }) %>
+                    <% } else { %>
+                        <option disabled>No teachers available for your college</option>
+                    <% } %>
+                </select>
+
+                <label style="display: block; font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase;">Subject / Title</label>
+                <input type="text" name="title" class="ask-input" placeholder="e.g., Question about Physics Lab" required>
+
+                <label style="display: block; font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase;">Detailed Explanation</label>
+                <textarea name="description" class="ask-input" rows="4" placeholder="Explain your doubt in detail..." required style="resize: none;"></textarea>
+
+                <button type="submit" class="ask-submit" style="background: var(--primary); margin-top: 10px;">Send Doubt to Teacher</button>
+            </form>
+        </div>
+
+        <!-- Overlay for Modal -->
+        <style>
+            #teacherDoubtModal.active { display: block !important; }
+            .modal-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.5);
+                backdrop-filter: blur(4px);
+                z-index: 1000;
+            }
+            .modal-overlay.active { display: block; }
+        </style>
+        <div id="modalOverlay" class="modal-overlay" onclick="closeAllModals()"></div>
+
+        <!-- View Answer Modal -->
+        <div id="viewAnswerModal" class="ask-modal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); bottom: auto; right: auto; z-index: 1001; width: 450px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 style="margin: 0;">Teacher's Solution 💡</h3>
+                <button onclick="closeAllModals()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-muted);">&times;</button>
+            </div>
+            <div id="doubtAnswerContent" style="font-size: 14px; line-height: 1.6; color: var(--text-dark); background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; max-height: 300px; overflow-y: auto;">
+            </div>
+            <button onclick="closeAllModals()" class="ask-submit" style="background: var(--primary); margin-top: 20px;">Got it, thanks!</button>
+        </div>
+
+        <!-- Teacher Doubt Modal -->
+        <div id="teacherDoubtModal" class="ask-modal" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); bottom: auto; right: auto; z-index: 1001; width: 450px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 style="margin: 0;">Ask Your Teacher 👨‍🏫</h3>
+                <button onclick="closeAllModals()" style="background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-muted);">&times;</button>
+            </div>
+
+        <script>
+            function showDoubtAnswer(btn) {
+                const answer = btn.getAttribute('data-answer');
+                document.getElementById('doubtAnswerContent').innerText = answer;
+                document.getElementById('viewAnswerModal').classList.add('active');
+                document.getElementById('modalOverlay').classList.add('active');
+            }
+
+            function closeAllModals() {
+                document.querySelectorAll('.ask-modal').forEach(m => m.classList.remove('active'));
+                document.getElementById('modalOverlay').classList.remove('active');
+            }
+        </script>
 
         <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
         <script>
