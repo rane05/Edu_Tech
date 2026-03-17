@@ -411,9 +411,8 @@
     justify-content: space-between;
     text-align: left;
     padding: 100px 20px;
-    background: linear-gradient(135deg, #88d3ce, #6e9eaf);
-    /* New gradient: blue, red, yellow */
-    color: #f0f0f0;
+    background: #FFFFFF;
+    color: #1A1A2E;
     /* Light gray for better contrast */
     position: relative;
     overflow: hidden;
@@ -620,8 +619,8 @@ html {
 /* About Section */
 .about {
     padding: 100px 20px;
-    background: linear-gradient(135deg, burlywood, #2575fc);
-    color: white;
+    background: #FFFFFF;
+    color: #1A1A2E;
     text-align: center;
 }
 
@@ -640,7 +639,7 @@ html {
 /* Features Section */
 .features {
     padding: 100px 20px;
-    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    background: #FFFFFF;
     text-align: center;
 }
 
@@ -691,7 +690,7 @@ html {
 /* How It Works Section */
 .how-it-works {
     padding: 100px 20px;
-    background: linear-gradient(135deg, #a1c4fd, #c2e9fb);
+    background: #FFFFFF;
     text-align: center;
 }
 
@@ -717,7 +716,7 @@ html {
 
 
 .testimonials {
-    background: linear-gradient(135deg, #84fab0, #8fd3f4);
+    background: #FFFFFF;
     padding: 100px 0;
 }
 

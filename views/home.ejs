@@ -7,7 +7,7 @@
         /* Global Platform Theme Remapping (V7 - Yellow Theme) */
 
         /* Backgrounds */
-        --c-cream: #F7FAFC;
+        --c-cream: #FFFFFF;
         /* Global light bg */
         --c-cream-alt: #FFFFFF;
         /* Global white */
@@ -41,17 +41,17 @@
         --c-coral-soft: rgba(16, 185, 129, 0.1);
 
         /* Ambient Glows Adjusted for new palette */
-        --c-indigo-glow: rgba(255, 184, 0, 0.15);
+        --c-indigo-glow: rgba(255, 184, 0, 0.05);
         /* Yellow glow */
-        --c-teal-glow: rgba(0, 168, 255, 0.12);
+        --c-teal-glow: rgba(0, 168, 255, 0.04);
         /* Blue glow */
-        --c-amber-glow: rgba(108, 99, 255, 0.08);
+        --c-amber-glow: rgba(108, 99, 255, 0.03);
         /* Purple glow */
-        --c-coral-glow: rgba(16, 185, 129, 0.08);
+        --c-coral-glow: rgba(16, 185, 129, 0.03);
         /* Green glow */
-        --c-tint-indigo: #FFFaf0;
+        --c-tint-indigo: #FFFFFF;
         /* Yellow tint */
-        --c-tint-lavender: #f0f8ff;
+        --c-tint-lavender: #FFFFFF;
         /* Blue tint */
         /* Spacing System (Maintained from V5) */
         --space-section-ds: 120px;
@@ -92,7 +92,7 @@
 
       body {
         font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Display', sans-serif;
-        background-color: var(--c-cream);
+        background-color: #FFFFFF;
         /* V6: Removed pure white #FFF globally */
         color: var(--c-navy);
         -webkit-font-smoothing: antialiased;
@@ -526,12 +526,11 @@
           transform: scale(1.1) translate(2%, 2%);
           opacity: 0.8;
         }
-      }
 
-      100% {
-        transform: scale(1) translate(0, 0);
-        opacity: 0.6;
-      }
+        100% {
+          transform: scale(1) translate(0, 0);
+          opacity: 0.6;
+        }
       }
 
       /* ================== V5/V6: 1. HERO & PLATFORM OVERVIEW ================== */
