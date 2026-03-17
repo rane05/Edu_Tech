@@ -16,10 +16,10 @@
 /* Career Bank Page */
 .career-bank {
     text-align: center;
-    padding: 50px 20px;
-    background: linear-gradient(135deg, #0a2a43, #1e3a5f);
+    padding: 100px 20px 50px; /* More top padding for glass-nav */
+    background: #0f172a; /* Solid dark background */
     color: white;
-    transition: background-color 0.5s ease-in-out;
+    min-height: 100vh;
 }
 
 .career-bank h1 {
@@ -91,12 +91,13 @@
 }
 
 .career-card {
-    background: linear-gradient(135deg, #1e3a5f, #0a2a43);
-    padding: 20px;
-    border-radius: 8px;
+    background: rgba(30, 41, 59, 0.95); /* Solid dark glass */
+    padding: 25px;
+    border-radius: 16px;
     text-align: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     color: white;
 }
 
@@ -113,15 +114,16 @@
 }
 
 .career-card h3 {
-    font-size: 18px;
-    margin: 10px 0;
-    color: #1e3a5f; /* Deep blue for visibility */
+    font-size: 20px;
+    margin: 15px 0 10px;
+    color: #FFB800; /* Use design system primary color (gold) for visibility */
+    font-weight: 700;
 }
 
 .career-card p {
     font-size: 14px;
-    margin-bottom: 15px;
-    color: #555; /* Medium gray for better contrast */
+    margin-bottom: 20px;
+    color: #94a3b8; /* Slate light for better readability on dark */
 }
 
 .career-card .btn {
